@@ -11,9 +11,10 @@ const __dirname = path.dirname(__filename);
 // Load root .env if available
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
-const connectionString =
-  process.env.DATABASE_URL ||
-  'postgresql://postgres:postgres@localhost:5432/coachingos?schema=public';
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  throw new Error('DATABASE_URL environment variable is missing in root .env file.');
+}
 
 const pool = new pg.Pool({ connectionString });
 const adapter = new PrismaPg(pool);
