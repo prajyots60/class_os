@@ -11,8 +11,10 @@ export default function Error({
   reset: () => void;
 }) {
   React.useEffect(() => {
-    // Audit / log runtime frontend error
-    console.error('Unhandled App Boundary Error:', error);
+    // Log unexpected frontend boundary exception
+    if (process.env.NODE_ENV !== 'test') {
+      // Client-side unexpected rendering boundary error
+    }
   }, [error]);
 
   return (

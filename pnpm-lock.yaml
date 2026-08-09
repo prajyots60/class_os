@@ -26,6 +26,12 @@ importers:
       '@coaching-os/auth':
         specifier: workspace:*
         version: link:../../infrastructure/auth
+      '@coaching-os/database':
+        specifier: workspace:*
+        version: link:../../infrastructure/database
+      '@coaching-os/observability':
+        specifier: workspace:*
+        version: link:../../infrastructure/observability
       '@coaching-os/shared':
         specifier: workspace:*
         version: link:../../packages/shared

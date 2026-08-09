@@ -33,7 +33,7 @@ export const SENSITIVE_FIELDS_REDACT_PATHS = [
 ];
 
 export const basePinoInstance = pino({
-  level: serverConfig.NODE_ENV === 'test' ? 'silent' : 'info',
+  level: serverConfig.NODE_ENV === 'test' ? 'silent' : serverConfig.LOG_LEVEL || 'info',
   formatters: {
     level(label) {
       return { level: label };

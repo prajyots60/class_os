@@ -16,7 +16,8 @@
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "verify:infra": "tsx src/verify.ts"
+    "verify:infra": "tsx src/verify.ts",
+    "verify:observability": "tsx src/verify.ts"
   },
   "dependencies": {
     "@coaching-os/config": "workspace:*",

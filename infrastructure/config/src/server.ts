@@ -42,6 +42,19 @@ const serverSchema = z.object({
     .string()
     .url('BETTER_AUTH_URL must be a valid URL (e.g. http://localhost:3000)')
     .default('http://localhost:3000'),
+  LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
+  ERROR_TRACKING_DSN: z.string().optional(),
+  SLOW_REQUEST_WARN_MS: z
+    .string()
+    .default('500')
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().positive()),
+  SLOW_REQUEST_ERROR_MS: z
+    .string()
+    .default('2000')
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().positive()),
+  GIT_COMMIT_SHA: z.string().optional(),
 });
 
 export type ServerConfig = z.infer<typeof serverSchema>;

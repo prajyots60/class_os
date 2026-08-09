@@ -47,8 +47,8 @@ Phase 0.6 — Authentication Foundation          ✅ COMPLETED
 Phase 0.7 — Shared Engineering Infrastructure  ✅ COMPLETED
 Phase 0.8 — Testing Infrastructure              ✅ COMPLETED
 Phase 0.9 — Git & CI Pipelines                 ✅ COMPLETED
-Phase 0.10 — Observability Setup                🚧 NEXT
-Phase 0.11 — Production Deployment             ⏳ PENDING
+Phase 0.10 — Observability Setup                ✅ COMPLETED
+Phase 0.11 — Production Deployment             🚧 NEXT
                                                 ↓
                                           PHASE 0 GATE
 ```
@@ -104,12 +104,22 @@ Phase 0.11 — Production Deployment             ⏳ PENDING
 - Configured Playwright Chromium E2E browser test execution in CI with automated failure artifact upload (`upload-artifact@v4`, 7-day retention).
 - Formally declared `engines` in root `package.json` (`node >=24.0.0`, `pnpm >=11.0.0`).
 - Documented Git branch strategy, Conventional Commits format, PR quality rules, and branch protection expectations in `ENGINEERING_PLAYBOOK.md` and `ADR-0005`.
-- Deferred local Git hooks (Husky / lint-staged) to preserve fast developer iteration, relying on GitHub Actions CI as the authoritative gatekeeper. Zero production deployment or observability expansion configured in Phase 0.9.
+
+### ✅ Phase 0.10 — Observability Setup
+
+- Evaluated error tracking vendors (Sentry vs Better Stack vs Pino) through documented research (Date: August 9, 2026).
+- Built vendor-neutral `ErrorReporter` interface (`captureException`, `captureMessage`, `setUser`, `setContext`) and `PinoErrorReporter` implementation in `@coaching-os/observability`.
+- Enforced automated redaction of 24 sensitive field paths and expected business error filtering (`ValidationError`, `NotFoundError`, `ConflictError` mapped to `info`/`warn` without external error reports).
+- Implemented high-precision monotonic request timing using `performance.now()` with configurable slow request thresholds (`< 500ms` info, `500ms - 2000ms` warn, `> 2000ms` critical slow).
+- Standardized structured security and auth event logging using `domain.action.result` conventions (`auth.sign_in.success`, `security.authorization.denied`).
+- Created `/api/health` application and database readiness endpoint (`NextResponse.json`, `db.$queryRaw\`SELECT 1\``) returning HTTP 200 OK or 503 Service Unavailable without leaking internal stack traces or connection strings.
+- Added Playwright E2E health check suite (`health.spec.ts`) and `pnpm verify:observability` CLI script.
+- Documented `ADR-0006` and updated `ENGINEERING_PLAYBOOK.md` Section 16.
 
 ---
 
 ## 4. Next Milestone Roadmap
 
-### 🚧 Phase 0.10 — Observability Setup
+### 🚧 Phase 0.11 — Production Deployment
 
-- Establish production logging pipeline, error tracking integration, health check endpoints, and telemetry contracts.
+- Prepare production deployment configuration, environment hardening, Vercel/Docker build targets, and Phase 0 acceptance gate.

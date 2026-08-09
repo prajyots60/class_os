@@ -452,6 +452,25 @@ Examples:
 
 ---
 
+## 16. Observability & Health Standards
+
+CoachingOS implements a production-grade, low-complexity observability architecture using structured Pino logging, vendor-neutral error reporting, monotonic request timing (`performance.now()`), slow request thresholds, structured event naming, and database health endpoints.
+
+### Key Observability Rules
+
+1. **Vendor Independence via ErrorReporter Abstraction:** Application code must NEVER import or depend directly on vendor error tracking SDKs (e.g. `@sentry/nextjs`). All exception reporting flows through the provider-neutral `ErrorReporter` interface (`@coaching-os/observability`).
+2. **Privacy & Zero PII Exposure:** Automatically redact all 24 sensitive field paths (`password`, `token`, `authorization`, `DATABASE_URL`, `BETTER_AUTH_SECRET`, `otp`). Never log passwords, tokens, full domain entities, or connection strings.
+3. **Expected vs Unexpected Error Classification:** Expected business conditions (`ValidationError`, `AuthenticationError`, `AuthorizationError`, `NotFoundError`, `ConflictError`) are logged cleanly via Pino and NEVER sent to external exception reporting services. Only unexpected runtime failures (`InternalError`, uncaught exceptions) trigger error reports.
+4. **Request Correlation & Monotonic Timing:** All incoming requests receive a server-generated canonical UUID v4 correlation ID in `x-request-id`. Duration is measured via `performance.now()`.
+5. **Slow Request Thresholds:**
+   - `< 500ms`: `info` level (`http.request.completed`).
+   - `500ms - 2000ms`: `warn` level (`http.request.slow`).
+   - `> 2000ms`: `warn`/`error` level (`http.request.critical_slow`).
+6. **Structured Event Naming:** Use `domain.action.result` naming for events (e.g., `auth.sign_in.success`, `security.authorization.denied`).
+7. **Application & Database Readiness Health Endpoint:** `GET /api/health` evaluates process liveness and PostgreSQL database connection readiness (`SELECT 1`), returning HTTP 200 `{ status: 'ok', checks: { database: 'ok' } }` on success or HTTP 503 on database connection failure. Internal stack traces and database credentials are strictly omitted from public health payloads.
+
+---
+
 ## 16. Database Standards
 
 Every table contains:

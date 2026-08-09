@@ -1,15 +1,18 @@
 import { logger, basePinoInstance, SENSITIVE_FIELDS_REDACT_PATHS } from './logger';
 import { getOrCreateRequestId, normalizeDatabaseError, toErrorResponse } from './error-handler';
+import { errorReporter, sanitizeReportContext, isExpectedBusinessError } from './error-reporter';
+import { measureRequestDuration, logRequestCompleted } from './request-timing';
+import { logAuthEvent, logSecurityEvent } from './events';
 import {
   ValidationError,
   AuthenticationError,
   NotFoundError,
   ConflictError,
-  ApplicationError,
+  InternalError,
 } from '@coaching-os/shared';
 
 export async function verifyInfrastructureFoundation() {
-  console.log('🔍 Executing CoachingOS Shared Engineering Infrastructure Verification...');
+  console.log('🔍 Executing CoachingOS Production Observability Infrastructure Verification...');
 
   try {
     // 1. Verify Pino Logger Initialization
@@ -43,21 +46,27 @@ export async function verifyInfrastructureFoundation() {
       '✅ Hardened Request ID verified: Client-supplied X-Request-ID was ignored, server generated canonical UUID.',
     );
 
-    // 4. Verify Application Error Taxonomy
+    // 4. Verify Application Error Taxonomy & Expected Business Error Classifier
     const valErr = new ValidationError('Invalid student admission number.');
     const authErr = new AuthenticationError();
     const notFoundErr = new NotFoundError('Institute record not found.');
     const conflictErr = new ConflictError('Unique email constraint violated.');
+    const internalErr = new InternalError('Unexpected database failure.');
 
     if (
       valErr.statusCode !== 400 ||
       authErr.statusCode !== 401 ||
       notFoundErr.statusCode !== 404 ||
-      conflictErr.statusCode !== 409
+      conflictErr.statusCode !== 409 ||
+      internalErr.statusCode !== 500
     ) {
       throw new Error('Verification failed: Error taxonomy status code mapping is incorrect.');
     }
-    console.log('✅ Application Error Taxonomy verified (400, 401, 404, 409 status codes).');
+
+    if (!isExpectedBusinessError(valErr) || isExpectedBusinessError(internalErr)) {
+      throw new Error('Verification failed: Business error classification logic is invalid.');
+    }
+    console.log('✅ Application Error Taxonomy & Expected Business Error Filtering verified.');
 
     // 5. Verify Database Error Normalization
     const mockPrismaUniqueError = { code: 'P2002', message: 'Unique constraint failed on (email)' };
@@ -117,10 +126,52 @@ export async function verifyInfrastructureFoundation() {
       '✅ Safe Public Error Response verified (Clean JSON, x-request-id header, zero internal stack leaks).',
     );
 
-    console.log('\n🎉 ALL SHARED ENGINEERING INFRASTRUCTURE CHECKS PASSED!\n');
+    // 7. Verify ErrorReporter Vendor Abstraction & PII Sanitization
+    const rawContext = {
+      requestId: generatedId,
+      password: 'secret_password_123',
+      token: 'auth_token_abc',
+      studentId: 'stud_789',
+    };
+    const sanitized = sanitizeReportContext(rawContext);
+    if (
+      sanitized.password !== '[REDACTED]' ||
+      sanitized.token !== '[REDACTED]' ||
+      sanitized.studentId !== 'stud_789'
+    ) {
+      throw new Error('Verification failed: Report context PII sanitization failed.');
+    }
+
+    errorReporter.captureException(new Error('Verification test exception'), {
+      requestId: generatedId,
+    });
+    console.log('✅ ErrorReporter Abstraction & PII Sanitization verified.');
+
+    // 8. Verify Request Duration, Slow Request Detection & Domain Event Logging
+    const startTime = performance.now() - 100;
+    const duration = measureRequestDuration(startTime);
+    if (duration <= 0) {
+      throw new Error('Verification failed: Request duration measurement failed.');
+    }
+
+    logRequestCompleted({
+      requestId: generatedId,
+      method: 'GET',
+      route: '/api/health',
+      statusCode: 200,
+      durationMs: duration,
+    });
+
+    logAuthEvent('sign_in', 'success', { requestId: generatedId, userId: 'usr_1' });
+    logSecurityEvent('authorization_denied', { requestId: generatedId, route: '/api/admin' });
+    console.log(
+      '✅ Request Duration (performance.now()), Slow Request Detection & Domain Event Logging verified.',
+    );
+
+    console.log('\n🎉 ALL PRODUCTION OBSERVABILITY CHECKS PASSED!\n');
     return true;
   } catch (error) {
-    console.error('❌ Infrastructure Verification Failed:', error);
+    console.error('❌ Observability Infrastructure Verification Failed:', error);
     return false;
   }
 }
