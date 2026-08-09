@@ -9,7 +9,12 @@
     "typecheck": "turbo typecheck",
     "test": "turbo test",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "db:validate": "pnpm --filter @coaching-os/database run db:validate",
+    "db:generate": "pnpm --filter @coaching-os/database run db:generate",
+    "db:migrate": "pnpm --filter @coaching-os/database run db:migrate",
+    "db:seed": "pnpm --filter @coaching-os/database run db:seed",
+    "db:health": "pnpm --filter @coaching-os/database run db:health"
   },
   "devDependencies": {
     "prettier": "^3.5.3",

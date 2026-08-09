@@ -4,4 +4,7 @@ packages:
   - 'infrastructure/*'
   - 'tooling/*'
 allowBuilds:
+  '@prisma/engines': true
+  esbuild: true
+  prisma: true
   unrs-resolver: true

@@ -1,0 +1,35 @@
+{
+  "name": "@coaching-os/database",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "db:validate": "prisma validate --config ./prisma.config.ts",
+    "db:generate": "prisma generate --config ./prisma.config.ts",
+    "db:migrate": "prisma migrate dev --config ./prisma.config.ts",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:health": "tsx src/health.ts"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "^7.9.1",
+    "dotenv": "^17.4.2",
+    "pg": "^8.22.0",
+    "prisma": "^7.9.1",
+    "tsx": "^4.23.11"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.21.0"
+  }
+}

@@ -1,0 +1,622 @@
+// CoachingOS Database Schema (Prisma ORM 7 Baseline)
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ==========================================
+// ENUMS
+// ==========================================
+
+enum UserStatus {
+  active
+  invited
+  suspended
+}
+
+enum InstituteStatus {
+  active
+  suspended
+  archived
+}
+
+enum StudentStatus {
+  active
+  archived
+}
+
+enum BatchStatus {
+  draft
+  open
+  running
+  completed
+  archived
+}
+
+enum EnrollmentStatus {
+  pending
+  active
+  completed
+  cancelled
+}
+
+enum DiscountType {
+  none
+  percentage
+  fixed
+}
+
+enum SessionStatus {
+  scheduled
+  completed
+  cancelled
+}
+
+enum AttendanceStatus {
+  present
+  absent
+  late
+}
+
+enum AttendanceSource {
+  manual
+  rfid
+}
+
+enum TestStatus {
+  draft
+  scheduled
+  marks_entered
+  published
+}
+
+enum BillingType {
+  monthly
+  one_time
+  installment
+}
+
+enum InvoiceStatus {
+  pending
+  partial
+  paid
+}
+
+enum PaymentMode {
+  cash
+  upi
+  bank_transfer
+}
+
+enum Relation {
+  mother
+  father
+  guardian
+  other
+}
+
+// ==========================================
+// PLATFORM LAYER (Global — owned by CoachingOS)
+// ==========================================
+
+model ParentIdentity {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  phone     String   @unique @db.VarChar(20)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  memberships   InstituteMembership[]
+  childProfiles ChildProfile[]
+
+  @@map("parent_identities")
+}
+
+model InstituteMembership {
+  id                String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parentIdentityId  String @map("parent_identity_id") @db.Uuid
+  instituteId       String @map("institute_id") @db.Uuid
+  instituteParentId String @map("institute_parent_id") @db.Uuid
+
+  parentIdentity  ParentIdentity  @relation(fields: [parentIdentityId], references: [id], onDelete: Cascade)
+  institute       Institute       @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  instituteParent InstituteParent @relation(fields: [instituteParentId], references: [id], onDelete: Cascade)
+
+  @@unique([parentIdentityId, instituteId])
+  @@map("institute_memberships")
+}
+
+model ChildProfile {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parentIdentityId String   @map("parent_identity_id") @db.Uuid
+  name             String   @db.VarChar(100)
+  avatar           String?  @db.VarChar(255)
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  parentIdentity ParentIdentity @relation(fields: [parentIdentityId], references: [id], onDelete: Cascade)
+  studentLinks   StudentLink[]
+
+  @@map("child_profiles")
+}
+
+model StudentLink {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  childProfileId String @map("child_profile_id") @db.Uuid
+  studentId      String @map("student_id") @db.Uuid
+  instituteId    String @map("institute_id") @db.Uuid
+
+  childProfile ChildProfile @relation(fields: [childProfileId], references: [id], onDelete: Cascade)
+  student      Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  institute    Institute    @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+
+  @@unique([childProfileId, studentId])
+  @@index([instituteId])
+  @@map("student_links")
+}
+
+// ==========================================
+// INSTITUTE TENANT LAYER
+// ==========================================
+
+model Institute {
+  id           String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String          @db.VarChar(255)
+  slug         String          @unique @db.VarChar(100)
+  phone        String          @db.VarChar(20)
+  email        String          @db.VarChar(255)
+  logoUrl      String?         @map("logo_url") @db.Text
+  primaryColor String?         @map("primary_color") @db.VarChar(50)
+  timezone     String          @default("Asia/Kolkata") @db.VarChar(50)
+  status       InstituteStatus @default(active)
+  createdAt    DateTime        @default(now()) @map("created_at")
+  updatedAt    DateTime        @updatedAt @map("updated_at")
+
+  users               User[]
+  instituteParents    InstituteParent[]
+  students            Student[]
+  programs            Program[]
+  subjects            Subject[]
+  batches             Batch[]
+  batchSessions       BatchSession[]
+  enrollments         Enrollment[]
+  attendance          Attendance[]
+  homework            Homework[]
+  tests               Test[]
+  marks               Marks[]
+  receipts            Receipt[]
+  announcements       Announcement[]
+  settings            Settings?
+  branding            Branding?
+  auditLogs           AuditLog[]
+  memberships         InstituteMembership[]
+  studentLinks        StudentLink[]
+
+  @@map("institutes")
+}
+
+model User {
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId  String     @map("institute_id") @db.Uuid
+  name         String     @db.VarChar(255)
+  phone        String     @db.VarChar(20)
+  email        String     @db.VarChar(255)
+  passwordHash String?    @map("password_hash") @db.Text
+  status       UserStatus @default(active)
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  deletedAt    DateTime?  @map("deleted_at")
+
+  institute         Institute      @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  assignedBatches   Batch[]        @relation("TeacherBatches")
+  assignedSchedules Schedule[]     @relation("TeacherSchedules")
+  substituteSessions BatchSession[] @relation("SubstituteTeacherSessions")
+  collectedPayments Payment[]      @relation("CollectedByPayments")
+  auditLogs         AuditLog[]
+
+  @@index([instituteId, status])
+  @@map("users")
+}
+
+model InstituteParent {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId    String    @map("institute_id") @db.Uuid
+  name           String    @db.VarChar(255)
+  primaryPhone   String    @map("primary_phone") @db.VarChar(20)
+  secondaryPhone String?   @map("secondary_phone") @db.VarChar(20)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  institute   Institute                @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  students    InstituteParentStudent[]
+  memberships InstituteMembership[]
+
+  @@unique([primaryPhone, instituteId])
+  @@index([instituteId])
+  @@map("institute_parents")
+}
+
+model InstituteParentStudent {
+  instituteParentId String   @map("institute_parent_id") @db.Uuid
+  studentId        String   @map("student_id") @db.Uuid
+  relation         Relation @default(father)
+
+  instituteParent InstituteParent @relation(fields: [instituteParentId], references: [id], onDelete: Cascade)
+  student         Student         @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@id([instituteParentId, studentId])
+  @@map("institute_parent_students")
+}
+
+model Student {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId     String        @map("institute_id") @db.Uuid
+  admissionNumber String?       @map("admission_number") @db.VarChar(50)
+  firstName       String        @map("first_name") @db.VarChar(100)
+  lastName        String        @map("last_name") @db.VarChar(100)
+  dateOfBirth     DateTime?     @map("date_of_birth") @db.Date
+  status          StudentStatus @default(active)
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  deletedAt       DateTime?     @map("deleted_at")
+
+  institute    Institute                @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  parents      InstituteParentStudent[]
+  enrollments  Enrollment[]
+  studentLinks StudentLink[]
+
+  @@index([instituteId, status])
+  @@index([firstName, lastName])
+  @@map("students")
+}
+
+model Program {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId String   @map("institute_id") @db.Uuid
+  name        String   @db.VarChar(100)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  institute Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  subjects  Subject[]
+
+  @@index([instituteId])
+  @@map("programs")
+}
+
+model Subject {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId String    @map("institute_id") @db.Uuid
+  programId   String?   @map("program_id") @db.Uuid
+  name        String    @db.VarChar(100)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  institute Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  program   Program?  @relation(fields: [programId], references: [id], onDelete: SetNull)
+  batches   Batch[]
+
+  @@unique([instituteId, name])
+  @@map("subjects")
+}
+
+model Batch {
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId String      @map("institute_id") @db.Uuid
+  subjectId   String      @map("subject_id") @db.Uuid
+  teacherId   String?     @map("teacher_id") @db.Uuid
+  name        String      @db.VarChar(100)
+  capacity    Int?
+  status      BatchStatus @default(draft)
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  deletedAt   DateTime?   @map("deleted_at")
+
+  institute     Institute      @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  subject       Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  teacher       User?          @relation("TeacherBatches", fields: [teacherId], references: [id], onDelete: SetNull)
+  schedules     Schedule[]
+  batchSessions BatchSession[]
+  enrollments   Enrollment[]
+  homework      Homework[]
+  tests         Test[]
+  announcements Announcement[]
+
+  @@unique([instituteId, subjectId, name])
+  @@index([instituteId, status])
+  @@map("batches")
+}
+
+model Enrollment {
+  id            String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId   String           @map("institute_id") @db.Uuid
+  studentId     String           @map("student_id") @db.Uuid
+  batchId       String           @map("batch_id") @db.Uuid
+  joinedOn      DateTime         @map("joined_on") @db.Date
+  status        EnrollmentStatus @default(pending)
+  discountType  DiscountType?    @map("discount_type")
+  discountValue Decimal?         @map("discount_value") @db.Decimal(10, 2)
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+  deletedAt     DateTime?        @map("deleted_at")
+
+  institute    Institute     @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  student      Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  batch        Batch         @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  attendance   Attendance[]
+  marks        Marks[]
+  billingPlans BillingPlan[]
+
+  @@index([instituteId, status])
+  @@index([studentId])
+  @@index([batchId])
+  @@map("enrollments")
+}
+
+// ==========================================
+// ACADEMICS LAYER
+// ==========================================
+
+model Schedule {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  batchId   String   @map("batch_id") @db.Uuid
+  dayOfWeek String   @map("day_of_week") @db.VarChar(20)
+  startTime String   @map("start_time") @db.VarChar(10)
+  endTime   String   @map("end_time") @db.VarChar(10)
+  teacherId String?  @map("teacher_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+
+  batch   Batch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  teacher User? @relation("TeacherSchedules", fields: [teacherId], references: [id], onDelete: SetNull)
+
+  @@index([batchId])
+  @@map("schedules")
+}
+
+model BatchSession {
+  id                  String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId         String            @map("institute_id") @db.Uuid
+  batchId             String            @map("batch_id") @db.Uuid
+  date                DateTime          @db.Date
+  startTime           String?           @map("start_time") @db.VarChar(10)
+  endTime             String?           @map("end_time") @db.VarChar(10)
+  status              SessionStatus     @default(scheduled)
+  attendanceTaken     Boolean           @default(false) @map("attendance_taken")
+  source              AttendanceSource?
+  substituteTeacherId String?           @map("substitute_teacher_id") @db.Uuid
+  createdAt           DateTime          @default(now()) @map("created_at")
+  updatedAt           DateTime          @updatedAt @map("updated_at")
+
+  institute         Institute    @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  batch             Batch        @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  substituteTeacher User?        @relation("SubstituteTeacherSessions", fields: [substituteTeacherId], references: [id], onDelete: SetNull)
+  attendance        Attendance[]
+
+  @@index([batchId, date])
+  @@index([instituteId])
+  @@map("batch_sessions")
+}
+
+model Attendance {
+  id           String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId  String           @map("institute_id") @db.Uuid
+  sessionId    String           @map("session_id") @db.Uuid
+  enrollmentId String           @map("enrollment_id") @db.Uuid
+  status       AttendanceStatus
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+
+  institute  Institute    @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  session    BatchSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  enrollment Enrollment   @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, enrollmentId])
+  @@index([enrollmentId])
+  @@index([instituteId])
+  @@map("attendance")
+}
+
+model Homework {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId   String    @map("institute_id") @db.Uuid
+  batchId       String    @map("batch_id") @db.Uuid
+  title         String    @db.VarChar(255)
+  description   String?   @db.Text
+  attachmentUrl String?   @map("attachment_url") @db.Text
+  publishedAt   DateTime? @map("published_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  institute Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  batch     Batch     @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  @@index([batchId])
+  @@index([instituteId])
+  @@map("homework")
+}
+
+model Test {
+  id            String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId   String     @map("institute_id") @db.Uuid
+  batchId       String     @map("batch_id") @db.Uuid
+  title         String     @db.VarChar(255)
+  maximumMarks  Int        @map("maximum_marks")
+  scheduledDate DateTime?  @map("scheduled_date") @db.Date
+  status        TestStatus @default(draft)
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+
+  institute Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  batch     Batch     @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  marks     Marks[]
+
+  @@index([batchId])
+  @@index([instituteId])
+  @@map("tests")
+}
+
+model Marks {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId   String   @map("institute_id") @db.Uuid
+  testId        String   @map("test_id") @db.Uuid
+  enrollmentId  String   @map("enrollment_id") @db.Uuid
+  marksObtained Decimal  @map("marks_obtained") @db.Decimal(6, 2)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  institute  Institute  @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  test       Test       @relation(fields: [testId], references: [id], onDelete: Cascade)
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  @@unique([testId, enrollmentId])
+  @@index([enrollmentId])
+  @@index([instituteId])
+  @@map("marks")
+}
+
+// ==========================================
+// BILLING LAYER
+// ==========================================
+
+model BillingPlan {
+  id                          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  enrollmentId                String       @map("enrollment_id") @db.Uuid
+  type                        BillingType
+  amount                      Decimal      @db.Decimal(10, 2)
+  discountType                DiscountType? @map("discount_type")
+  discountValue               Decimal?     @map("discount_value") @db.Decimal(10, 2)
+  billingStartDate            DateTime     @map("billing_start_date") @db.Date
+  firstInvoiceAmountOverride Decimal?     @map("first_invoice_amount_override") @db.Decimal(10, 2)
+  createdAt                   DateTime     @default(now()) @map("created_at")
+  updatedAt                   DateTime     @updatedAt @map("updated_at")
+
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  invoices   Invoice[]
+
+  @@index([enrollmentId])
+  @@map("billing_plans")
+}
+
+model Invoice {
+  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  billingPlanId String        @map("billing_plan_id") @db.Uuid
+  amount        Decimal       @db.Decimal(10, 2)
+  dueDate       DateTime      @map("due_date") @db.Date
+  status        InvoiceStatus @default(pending)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  billingPlan BillingPlan @relation(fields: [billingPlanId], references: [id], onDelete: Cascade)
+  payments    Payment[]
+
+  @@index([billingPlanId])
+  @@index([dueDate])
+  @@index([status])
+  @@map("invoices")
+}
+
+model Payment {
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  invoiceId   String      @map("invoice_id") @db.Uuid
+  amount      Decimal     @db.Decimal(10, 2)
+  paymentMode PaymentMode @map("payment_mode")
+  receivedOn  DateTime    @map("received_on") @db.Date
+  collectedBy String?     @map("collected_by") @db.Uuid
+  remarks     String?     @db.Text
+  createdAt   DateTime    @default(now()) @map("created_at")
+
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  collector   User?    @relation("CollectedByPayments", fields: [collectedBy], references: [id], onDelete: SetNull)
+  receipt     Receipt?
+
+  @@index([invoiceId])
+  @@map("payments")
+}
+
+model Receipt {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId   String   @map("institute_id") @db.Uuid
+  paymentId     String   @unique @map("payment_id") @db.Uuid
+  receiptNumber String   @map("receipt_number") @db.VarChar(100)
+  generatedAt   DateTime @default(now()) @map("generated_at")
+
+  institute Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  payment   Payment   @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@index([instituteId])
+  @@map("receipts")
+}
+
+// ==========================================
+// COMMUNICATION & ADMINISTRATION LAYER
+// ==========================================
+
+model Announcement {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId String    @map("institute_id") @db.Uuid
+  batchId     String?   @map("batch_id") @db.Uuid
+  title       String    @db.VarChar(255)
+  body        String    @db.Text
+  publishedAt DateTime? @map("published_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  institute Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  batch     Batch?    @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  @@index([instituteId])
+  @@index([batchId])
+  @@map("announcements")
+}
+
+model Settings {
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId    String           @unique @map("institute_id") @db.Uuid
+  attendanceMode AttendanceSource @default(manual) @map("attendance_mode")
+  academicYear   String           @default("2025-26") @map("academic_year") @db.VarChar(20)
+  notifyAbsent   Boolean          @default(true) @map("notify_absent")
+  notifyFeeDue   Boolean          @default(true) @map("notify_fee_due")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+
+  institute Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+
+  @@map("settings")
+}
+
+model Branding {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId    String   @unique @map("institute_id") @db.Uuid
+  logoUrl        String?  @map("logo_url") @db.Text
+  primaryColor   String?  @map("primary_color") @db.VarChar(50)
+  secondaryColor String?  @map("secondary_color") @db.VarChar(50)
+  accentColor    String?  @map("accent_color") @db.VarChar(50)
+  fontFamily     String?  @map("font_family") @db.VarChar(50)
+  radiusStyle    String?  @map("radius_style") @db.VarChar(50)
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  institute Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+
+  @@map("branding")
+}
+
+model AuditLog {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId String   @map("institute_id") @db.Uuid
+  userId      String?  @map("user_id") @db.Uuid
+  action      String   @db.VarChar(100)
+  entityType  String   @map("entity_type") @db.VarChar(100)
+  entityId    String?  @map("entity_id") @db.Uuid
+  details     Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  institute Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([instituteId, createdAt])
+  @@map("audit_logs")
+}
