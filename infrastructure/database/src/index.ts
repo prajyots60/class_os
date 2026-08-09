@@ -1,20 +1,9 @@
 import { PrismaClient } from './generated/client/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import pg from 'pg';
-import dotenv from 'dotenv';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { serverConfig } from '@coaching-os/config';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Load root .env if available
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
-
-const connectionString = process.env.DATABASE_URL;
-if (!connectionString) {
-  throw new Error('DATABASE_URL environment variable is missing in root .env file.');
-}
+const connectionString = serverConfig.DATABASE_URL;
 
 const pool = new pg.Pool({ connectionString });
 const adapter = new PrismaPg(pool);

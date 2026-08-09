@@ -10,6 +10,7 @@
     "test": "turbo test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "env:check": "pnpm --filter @coaching-os/config run env:check",
     "db:validate": "pnpm --filter @coaching-os/database run db:validate",
     "db:generate": "pnpm --filter @coaching-os/database run db:generate",
     "db:migrate": "pnpm --filter @coaching-os/database run db:migrate",
