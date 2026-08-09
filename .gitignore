@@ -1,0 +1,20 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Next.js
+.next/
+out/
+
+# Turborepo
+.turbo
+
+# Build outputs
+dist
+build
+
+# Environment & OS
+.DS_Store
+*.pem
+.env*.local
+.env
