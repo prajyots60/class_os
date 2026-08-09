@@ -31,6 +31,7 @@ CoachingOS is a multi-tenant SaaS operating system built for founder-led coachin
 - **[ADR-0003: Asynchronous Workflow Engine Strategy](file:///home/supra/Desktop/class_os/docs/adr/0003-async-workflow-engine-strategy.md)**
 - **[ADR-0004: Testing Database & Isolation Strategy](file:///home/supra/Desktop/class_os/docs/adr/0004-testing-database-strategy.md)**
 - **[ADR-0005: GitHub Actions Continuous Integration Strategy](file:///home/supra/Desktop/class_os/docs/adr/0005-ci-strategy.md)**
+- **[Phase 1 Domain & Architecture Contract](file:///home/supra/Desktop/class_os/docs/phases/phase1.md)**
 - **[Engineering Backlog](file:///home/supra/Desktop/class_os/docs/BACKLOG.md)**
 
 ---
@@ -147,12 +148,24 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 
 ## 4. Next Milestone Roadmap
 
-### 🚧 PHASE 1 — IDENTITY MODULE (ACTIVE)
+### 🚧 PHASE 1 — IDENTITY MODULE (NOW ACTIVE)
 
-- **Objective:** Establish the tenant onboarding, user role/permissions management, student admission & profile management, and two-layer parent identity foundation.
-- **Key Deliverables:**
-  1. Institute Tenant Onboarding API & UI
-  2. Staff User Creation & Role Assignment (Owner, Teacher, Assistant)
-  3. Student Admission & Profile Management (admission number, DOB, status)
-  4. ParentIdentity & ChildProfile link management
-  5. Multi-Tenant Scoping enforcement (`institute_id`) at repository boundary
+- **Domain Contract Specification:** Documented in [docs/phases/phase1.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.md) (Phase 1.0 Architecture Freeze).
+- **Subphase Tracking Rule:** Subphases are added to the tracker in `docs/CONTEXT.md` as each subphase is approved and implemented.
+- **Phase 1 Implementation Map:**
+  - **Phase 1.0:** Domain & Architecture Contract Freeze ✅
+  - **Phase 1.1:** Institute Tenant Core (Next)
+  - **Phase 1.2:** Users & Memberships
+  - **Phase 1.3:** Capability-Based RBAC
+  - **Phase 1.4:** Institute Onboarding Workflow
+  - **Phase 1.5:** Institute Settings & White-Label Branding
+  - **Phase 1.6:** Global ParentIdentity Platform Layer
+  - **Phase 1.7:** Tenant InstituteParent CRM Layer
+  - **Phase 1.8:** Student Admission & Profile Core
+  - **Phase 1.9:** Guardian & Student Links
+  - **Phase 1.10:** Academic Hierarchy (Programs, Subjects, Batches)
+  - **Phase 1.11:** Student Enrollment Lifecycle
+  - **Phase 1.12:** Protected Identity APIs (`/api/v1/...`)
+  - **Phase 1.13:** Staff UI & Onboarding Workflows
+  - **Phase 1.14:** Multi-Tenant Cross-Tenant Access Security Hardening
+  - **Phase 1.15:** Phase 1 Acceptance Gate
