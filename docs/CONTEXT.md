@@ -38,8 +38,8 @@ Phase 0.2 — Monorepo Architecture              ✅ COMPLETED
 Phase 0.3 — Web Application Foundation         ✅ COMPLETED
 Phase 0.4 — Database + Prisma Foundation        ✅ COMPLETED
 Phase 0.5 — Environment & Configuration         ✅ COMPLETED
-Phase 0.6 — Authentication Foundation          🚧 NEXT
-Phase 0.7 — Shared Engineering Infrastructure  ⏳ PENDING
+Phase 0.6 — Authentication Foundation          ✅ COMPLETED
+Phase 0.7 — Shared Engineering Infrastructure  🚧 NEXT
 Phase 0.8 — Testing Infrastructure              ⏳ PENDING
 Phase 0.9 — Git & CI Pipelines                 ⏳ PENDING
 Phase 0.10 — Observability Setup                ⏳ PENDING
@@ -65,16 +65,21 @@ Phase 0.11 — Production Deployment             ⏳ PENDING
 - Prisma ORM 7.9.1 with `@prisma/adapter-pg` driver adapter, modern `prisma.config.ts`, canonical schema (27 models), initial migration `20260809052250_init_coachingos_schema`, deterministic development seed (`seed.ts`), CLI health check (`src/health.ts`), `ADR-0002`.
 
 ### ✅ Phase 0.5 — Environment & Configuration Foundation
-- Created strongly typed, Zod-validated environment configuration infrastructure package `@coaching-os/config` (`infrastructure/config`).
-- Strict server/client isolation (`serverConfig` for Node/Prisma/Server Components vs `clientConfig` for `NEXT_PUBLIC_*`).
-- Actionable, redacted Zod error formatting (no passwords or secrets leaked in logs).
-- CLI environment check script (`pnpm env:check`).
-- Sanitized `.env.example` with placeholders only.
+- Zod-validated configuration package `@coaching-os/config` (`infrastructure/config`), server/client boundary separation (`serverConfig` & `clientConfig`), redacted log error formatting, CLI check script (`pnpm env:check`).
+
+### ✅ Phase 0.6 — Authentication Foundation
+- Upgraded to stable `better-auth@1.6.26` in dedicated infrastructure package `@coaching-os/auth` (`infrastructure/auth`).
+- Mapped Better Auth user model to existing `users` table without duplicating identity tables.
+- Streamlined credential storage: removed legacy `users.password_hash` column via migration `20260809071200_remove_legacy_password_hash`, establishing `Account` (`accounts.password`) as the single source of truth for credentials.
+- Configured UUID v4 generation (`advanced: { database: { generateId: 'uuid' } }`) for PostgreSQL UUID compatibility.
+- Implemented global & endpoint-specific rate limiting (`/sign-in/email`, `/sign-up/email`, `/forget-password`, `/reset-password`).
+- Created server-side session and tenant context resolution helpers (`getAuthenticatedSession`, `requireSession`, `requireInstituteMembership`).
+- Mounted dynamic Next.js App Router API route handler at `apps/web/src/app/api/auth/[...all]/route.ts`.
+- Verified end-to-end authentication flow via `pnpm verify:auth`.
 
 ---
 
 ## 4. Next Milestone Roadmap
 
-### 🚧 Phase 0.6 — Authentication Foundation
-- Integrate Better Auth / OTP authentication foundation in `@coaching-os/identity` and `infrastructure/auth`.
-- Establish session handling, multi-tenant RBAC context (`owner`, `teacher`, `assistant`, `parent`), and parent identity linking.
+### 🚧 Phase 0.7 — Shared Engineering Infrastructure
+- Configure logging (Pino baseline), error tracking / reporting boundary, background job queue setup (Trigger.dev baseline), and event emitter patterns.
