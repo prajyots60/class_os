@@ -26,6 +26,7 @@ CoachingOS is a multi-tenant SaaS operating system built for founder-led coachin
 - **[Milestone Roadmap](file:///home/supra/Desktop/class_os/docs/ROADMAP.md)**
 - **[ADR-0001: Monorepo Architecture Strategy](file:///home/supra/Desktop/class_os/docs/adr/0001-monorepo-architecture.md)**
 - **[ADR-0002: Physical Database Schema Reconciliation](file:///home/supra/Desktop/class_os/docs/adr/0002-database-schema-reconciliation.md)**
+- **[ADR-0003: Asynchronous Workflow Engine Strategy](file:///home/supra/Desktop/class_os/docs/adr/0003-async-workflow-engine-strategy.md)**
 - **[Engineering Backlog](file:///home/supra/Desktop/class_os/docs/BACKLOG.md)**
 
 ---
@@ -39,8 +40,8 @@ Phase 0.3 — Web Application Foundation         ✅ COMPLETED
 Phase 0.4 — Database + Prisma Foundation        ✅ COMPLETED
 Phase 0.5 — Environment & Configuration         ✅ COMPLETED
 Phase 0.6 — Authentication Foundation          ✅ COMPLETED
-Phase 0.7 — Shared Engineering Infrastructure  🚧 NEXT
-Phase 0.8 — Testing Infrastructure              ⏳ PENDING
+Phase 0.7 — Shared Engineering Infrastructure  ✅ COMPLETED
+Phase 0.8 — Testing Infrastructure              🚧 NEXT
 Phase 0.9 — Git & CI Pipelines                 ⏳ PENDING
 Phase 0.10 — Observability Setup                ⏳ PENDING
 Phase 0.11 — Production Deployment             ⏳ PENDING
@@ -68,18 +69,19 @@ Phase 0.11 — Production Deployment             ⏳ PENDING
 - Zod-validated configuration package `@coaching-os/config` (`infrastructure/config`), server/client boundary separation (`serverConfig` & `clientConfig`), redacted log error formatting, CLI check script (`pnpm env:check`).
 
 ### ✅ Phase 0.6 — Authentication Foundation
-- Upgraded to stable `better-auth@1.6.26` in dedicated infrastructure package `@coaching-os/auth` (`infrastructure/auth`).
-- Mapped Better Auth user model to existing `users` table without duplicating identity tables.
-- Streamlined credential storage: removed legacy `users.password_hash` column via migration `20260809071200_remove_legacy_password_hash`, establishing `Account` (`accounts.password`) as the single source of truth for credentials.
-- Configured UUID v4 generation (`advanced: { database: { generateId: 'uuid' } }`) for PostgreSQL UUID compatibility.
-- Implemented global & endpoint-specific rate limiting (`/sign-in/email`, `/sign-up/email`, `/forget-password`, `/reset-password`).
-- Created server-side session and tenant context resolution helpers (`getAuthenticatedSession`, `requireSession`, `requireInstituteMembership`).
-- Mounted dynamic Next.js App Router API route handler at `apps/web/src/app/api/auth/[...all]/route.ts`.
-- Verified end-to-end authentication flow via `pnpm verify:auth`.
+- Better Auth `1.6.26` in `@coaching-os/auth`, mapped user model to `users` table, removed legacy `password_hash`, UUID v4 generation, rate limiting (`/sign-in/email`, `/sign-up/email`), server session & tenant context helpers (`requireInstituteMembership`).
+
+### ✅ Phase 0.7 — Shared Engineering Infrastructure
+- Created `@coaching-os/observability` with structured Pino logger abstraction (`logger.info`, `logger.error`, `logger.child`), standard metadata (`timestamp`, `level`, `service`, `environment`), automated redaction for 24 sensitive field paths, and Error object serialization (`serializers: { err: pino.stdSerializers.err }`).
+- Created framework-independent Application Error Taxonomy in `@coaching-os/shared` (`ValidationError`, `AuthenticationError`, `AuthorizationError`, `NotFoundError`, `ConflictError`, `RateLimitError`, `InternalError`) and stable error codes (`VALIDATION_ERROR`, `UNAUTHENTICATED`, `FORBIDDEN`, `NOT_FOUND`, `CONFLICT`, `RATE_LIMITED`, `INTERNAL_ERROR`).
+- Implemented `getOrCreateRequestId(headers)` (`crypto.randomUUID()`) and `toErrorResponse(error, requestId)` producing clean public JSON responses with `x-request-id` header without leaking stack traces or internal secrets.
+- Defined Domain Event Contract Principles (`ApplicationEvent`, `DomainEventEnvelope`) in `@coaching-os/shared`.
+- Authored `ADR-0003: Asynchronous Workflow Engine Strategy` (`docs/adr/0003-async-workflow-engine-strategy.md`) documenting zero workflow engine installation in Phase 0.7 and decision framework for Inngest vs Trigger.dev when real async workloads arrive.
+- Zero database schema modifications or migrations.
 
 ---
 
 ## 4. Next Milestone Roadmap
 
-### 🚧 Phase 0.7 — Shared Engineering Infrastructure
-- Configure logging (Pino baseline), error tracking / reporting boundary, background job queue setup (Trigger.dev baseline), and event emitter patterns.
+### 🚧 Phase 0.8 — Testing Infrastructure
+- Configure Vitest unit/integration testing framework, Playwright end-to-end testing setup, test DB isolation utilities, mock factories, and execution scripts (`pnpm test`, `pnpm test:e2e`).
