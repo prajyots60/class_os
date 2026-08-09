@@ -18,3 +18,9 @@ build
 *.pem
 .env*.local
 .env
+
+# Testing & Coverage
+test-results/
+playwright-report/
+coverage/
+

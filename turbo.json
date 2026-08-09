@@ -14,6 +14,12 @@
     "test": {
       "dependsOn": ["^test"]
     },
+    "test:unit": {
+      "dependsOn": ["^test:unit"]
+    },
+    "test:integration": {
+      "dependsOn": ["^test:integration"]
+    },
     "dev": {
       "cache": false,
       "persistent": true

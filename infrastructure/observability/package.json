@@ -15,6 +15,7 @@
     "build": "tsc --noEmit",
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "verify:infra": "tsx src/verify.ts"
   },
   "dependencies": {

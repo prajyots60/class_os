@@ -17,6 +17,13 @@ const serverSchema = z.object({
       (val) => val.startsWith('postgres://') || val.startsWith('postgresql://'),
       'DATABASE_URL must be a valid PostgreSQL connection string starting with postgresql://',
     ),
+  TEST_DATABASE_URL: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || val.startsWith('postgres://') || val.startsWith('postgresql://'),
+      'TEST_DATABASE_URL must be a valid PostgreSQL connection string starting with postgresql://',
+    ),
   NODE_ENV: z
     .enum(['development', 'test', 'production'])
     .default('development'),

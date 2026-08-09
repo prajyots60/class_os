@@ -10,3 +10,4 @@ const adapter = new PrismaPg(pool);
 
 export const db = new PrismaClient({ adapter });
 export * from './generated/client/client';
+export * from './testing';

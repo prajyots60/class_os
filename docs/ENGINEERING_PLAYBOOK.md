@@ -340,24 +340,29 @@ Critical operations include trace IDs.
 
 ---
 
-## 12. Authentication Standards
-
-- **Staff:** Password login.
-- **Parents:** OTP login.
-
-All authentication goes through Better Auth wrapped by our Auth module. Never use Better Auth directly outside the auth boundary.
-
 ---
 
-## 13. Authorization
+## 14. Testing Infrastructure & Standards
 
-Evaluation order:
+CoachingOS adheres to a strict 3-tier testing pyramid:
+
 ```text
-Authentication → Membership → Feature Enabled → Permission → Business Rule → Execute
+       ┌───────────┐
+       │    E2E    │  Playwright (Chromium, semantic selectors)
+       ├───────────┤
+       │Integration│  Vitest + Real PostgreSQL (TEST_DATABASE_URL)
+       ├───────────┤
+       │   Unit    │  Vitest (Fast, behavior-focused, zero mocks of DB)
+       └───────────┘
 ```
-Always in this exact order.
 
----
+### Key Testing Rules
+1. **Real PostgreSQL for Integration:** Integration tests run against PostgreSQL via `TEST_DATABASE_URL` (`coachingos_test`). SQLite is strictly prohibited as a fake replacement.
+2. **Fail-Closed Database Safety Guard:** `validateTestEnvironment()` aborts immediately if `TEST_DATABASE_URL` is missing or matches `DATABASE_URL`.
+3. **Database Isolation Strategy:** `cleanTestDatabase()` performs synchronized `TRUNCATE TABLE ... CASCADE` via `db.$executeRawUnsafe` before/between tests.
+4. **Deterministic Test Data Factories:** Use `createTestInstitute`, `createTestUser`, `createTestStudent`, `createTestBatch`, `createTestEnrollment` from `@coaching-os/database` to construct isolated entities with unique UUID suffixes.
+5. **Multi-Tenant Isolation Testing:** Every query boundary must be tested to ensure an authenticated user from Institute A can NEVER read or mutate Institute B data by tampering with ID parameters.
+6. **Hardened Request ID Verification:** Integration tests verify that client-supplied `X-Request-ID` headers are ignored and server-side UUID v4 is always generated as the canonical request ID.
 
 ## 14. Database Standards
 

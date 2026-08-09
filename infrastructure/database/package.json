@@ -20,7 +20,11 @@
     "db:migrate": "prisma migrate dev --name init_coachingos_schema --config ./prisma.config.ts",
     "db:status": "prisma migrate status --config ./prisma.config.ts",
     "db:seed": "tsx prisma/seed.ts",
-    "db:health": "tsx src/health.ts"
+    "db:health": "tsx src/health.ts",
+    "test:db:setup": "tsx src/testing/setup-test-db.ts",
+    "test": "vitest run",
+    "test:unit": "vitest run src/unit",
+    "test:integration": "vitest run src/integration"
   },
   "dependencies": {
     "@coaching-os/config": "workspace:*",

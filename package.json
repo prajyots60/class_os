@@ -8,6 +8,10 @@
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
+    "test:unit": "turbo test:unit",
+    "test:integration": "turbo test:integration",
+    "test:e2e": "pnpm --filter @coaching-os/web run test:e2e",
+    "test:db:setup": "pnpm --filter @coaching-os/database run test:db:setup",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "env:check": "pnpm --filter @coaching-os/config run env:check",
@@ -22,7 +26,8 @@
   "devDependencies": {
     "prettier": "^3.5.3",
     "turbo": "^2.4.4",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vitest": "^4.1.10"
   },
   "packageManager": "pnpm@11.15.0"
 }
