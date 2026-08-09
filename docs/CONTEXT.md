@@ -27,6 +27,7 @@ CoachingOS is a multi-tenant SaaS operating system built for founder-led coachin
 - **[ADR-0001: Monorepo Architecture Strategy](file:///home/supra/Desktop/class_os/docs/adr/0001-monorepo-architecture.md)**
 - **[ADR-0002: Physical Database Schema Reconciliation](file:///home/supra/Desktop/class_os/docs/adr/0002-database-schema-reconciliation.md)**
 - **[ADR-0003: Asynchronous Workflow Engine Strategy](file:///home/supra/Desktop/class_os/docs/adr/0003-async-workflow-engine-strategy.md)**
+- **[ADR-0004: Testing Database & Isolation Strategy](file:///home/supra/Desktop/class_os/docs/adr/0004-testing-database-strategy.md)**
 - **[Engineering Backlog](file:///home/supra/Desktop/class_os/docs/BACKLOG.md)**
 
 ---
@@ -41,8 +42,8 @@ Phase 0.4 — Database + Prisma Foundation        ✅ COMPLETED
 Phase 0.5 — Environment & Configuration         ✅ COMPLETED
 Phase 0.6 — Authentication Foundation          ✅ COMPLETED
 Phase 0.7 — Shared Engineering Infrastructure  ✅ COMPLETED
-Phase 0.8 — Testing Infrastructure              🚧 NEXT
-Phase 0.9 — Git & CI Pipelines                 ⏳ PENDING
+Phase 0.8 — Testing Infrastructure              ✅ COMPLETED
+Phase 0.9 — Git & CI Pipelines                 🚧 NEXT
 Phase 0.10 — Observability Setup                ⏳ PENDING
 Phase 0.11 — Production Deployment             ⏳ PENDING
                                                 ↓
@@ -69,19 +70,23 @@ Phase 0.11 — Production Deployment             ⏳ PENDING
 - Zod-validated configuration package `@coaching-os/config` (`infrastructure/config`), server/client boundary separation (`serverConfig` & `clientConfig`), redacted log error formatting, CLI check script (`pnpm env:check`).
 
 ### ✅ Phase 0.6 — Authentication Foundation
-- Better Auth `1.6.26` in `@coaching-os/auth`, mapped user model to `users` table, removed legacy `password_hash`, UUID v4 generation, rate limiting (`/sign-in/email`, `/sign-up/email`), server session & tenant context helpers (`requireInstituteMembership`).
+- Better Auth `1.6.25` in `@coaching-os/auth`, mapped user model to `users` table, removed legacy `password_hash`, UUID v4 generation, rate limiting (`/sign-in/email`, `/sign-up/email`), server session & tenant context helpers (`requireInstituteMembership`).
 
 ### ✅ Phase 0.7 — Shared Engineering Infrastructure
-- Created `@coaching-os/observability` with structured Pino logger abstraction (`logger.info`, `logger.error`, `logger.child`), standard metadata (`timestamp`, `level`, `service`, `environment`), automated redaction for 24 sensitive field paths, and Error object serialization (`serializers: { err: pino.stdSerializers.err }`).
-- Created framework-independent Application Error Taxonomy in `@coaching-os/shared` (`ValidationError`, `AuthenticationError`, `AuthorizationError`, `NotFoundError`, `ConflictError`, `RateLimitError`, `InternalError`) and stable error codes (`VALIDATION_ERROR`, `UNAUTHENTICATED`, `FORBIDDEN`, `NOT_FOUND`, `CONFLICT`, `RATE_LIMITED`, `INTERNAL_ERROR`).
-- Implemented `getOrCreateRequestId(headers)` (`crypto.randomUUID()`) and `toErrorResponse(error, requestId)` producing clean public JSON responses with `x-request-id` header without leaking stack traces or internal secrets.
-- Defined Domain Event Contract Principles (`ApplicationEvent`, `DomainEventEnvelope`) in `@coaching-os/shared`.
-- Authored `ADR-0003: Asynchronous Workflow Engine Strategy` (`docs/adr/0003-async-workflow-engine-strategy.md`) documenting zero workflow engine installation in Phase 0.7 and decision framework for Inngest vs Trigger.dev when real async workloads arrive.
-- Zero database schema modifications or migrations.
+- Pino `9.6.0` logger abstraction (`@coaching-os/observability`), sensitive path redaction (24 paths), framework-independent error taxonomy (`@coaching-os/shared`), hardened server-side request ID generation (`crypto.randomUUID()`), `toErrorResponse` HTTP boundary, `ADR-0003`.
+
+### ✅ Phase 0.8 — Testing Infrastructure
+- Established Vitest `4.1.10` for unit and integration testing and Playwright `1.62.1` for browser E2E testing (Chromium).
+- Configured dedicated PostgreSQL test database `TEST_DATABASE_URL` (`coachingos_test`) with fail-closed safety guard `validateTestEnvironment()`. Zero SQLite substitute mocking.
+- Synchronized table truncation strategy `cleanTestDatabase()` via `db.$executeRawUnsafe`.
+- Created deterministic data factories (`createTestInstitute`, `createTestUser`, `createTestStudent`, `createTestBatch`, `createTestEnrollment`, `createTestParentIdentity`, `createTestChildProfile`).
+- Multi-tenant data isolation suite (`tenant-isolation.test.ts`), ParentIdentity two-layer architecture suite (`parent-identity.test.ts`), Better Auth session suite (`auth.test.ts`), Error taxonomy & Pino security suite (`logger.test.ts`, `errors.test.ts`).
+- Playwright E2E smoke suite (`smoke.spec.ts`) with semantic selectors.
+- Zero Prisma schema changes or fake migrations created. `ADR-0004`.
 
 ---
 
 ## 4. Next Milestone Roadmap
 
-### 🚧 Phase 0.8 — Testing Infrastructure
-- Configure Vitest unit/integration testing framework, Playwright end-to-end testing setup, test DB isolation utilities, mock factories, and execution scripts (`pnpm test`, `pnpm test:e2e`).
+### 🚧 Phase 0.9 — Git & CI Pipelines
+- Establish GitHub Actions workflow matrix (`lint`, `typecheck`, `test`, `test:e2e`, `build`), branch protection rules, commit hooks via Husky / lint-staged.
