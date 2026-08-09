@@ -617,10 +617,6 @@ export type EnumSessionStatusFieldUpdateOperationsInput = {
   set?: $Enums.SessionStatus
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type NullableEnumAttendanceSourceFieldUpdateOperationsInput = {
   set?: $Enums.AttendanceSource | null
 }

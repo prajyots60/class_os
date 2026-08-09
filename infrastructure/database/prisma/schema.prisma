@@ -200,26 +200,78 @@ model Institute {
 }
 
 model User {
-  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  instituteId  String     @map("institute_id") @db.Uuid
-  name         String     @db.VarChar(255)
-  phone        String     @db.VarChar(20)
-  email        String     @db.VarChar(255)
-  passwordHash String?    @map("password_hash") @db.Text
-  status       UserStatus @default(active)
-  createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
-  deletedAt    DateTime?  @map("deleted_at")
+  id            String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId   String     @map("institute_id") @db.Uuid
+  name          String     @db.VarChar(255)
+  phone         String     @db.VarChar(20)
+  email         String     @unique @db.VarChar(255)
+  emailVerified Boolean    @default(false) @map("email_verified")
+  image         String?    @db.Text
+  passwordHash  String?    @map("password_hash") @db.Text
+  status        UserStatus @default(active)
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+  deletedAt     DateTime?  @map("deleted_at")
 
-  institute         Institute      @relation(fields: [instituteId], references: [id], onDelete: Cascade)
-  assignedBatches   Batch[]        @relation("TeacherBatches")
-  assignedSchedules Schedule[]     @relation("TeacherSchedules")
+  institute          Institute      @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  assignedBatches    Batch[]        @relation("TeacherBatches")
+  assignedSchedules  Schedule[]     @relation("TeacherSchedules")
   substituteSessions BatchSession[] @relation("SubstituteTeacherSessions")
-  collectedPayments Payment[]      @relation("CollectedByPayments")
-  auditLogs         AuditLog[]
+  collectedPayments  Payment[]      @relation("CollectedByPayments")
+  auditLogs          AuditLog[]
+  sessions           Session[]
+  accounts           Account[]
 
   @@index([instituteId, status])
   @@map("users")
+}
+
+model Session {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  expiresAt DateTime @map("expires_at")
+  token     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  ipAddress String?  @map("ip_address") @db.VarChar(255)
+  userAgent String?  @map("user_agent") @db.Text
+  userId    String   @map("user_id") @db.Uuid
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  accountId             String    @map("account_id")
+  providerId            String    @map("provider_id")
+  userId                String    @map("user_id") @db.Uuid
+  accessToken           String?   @map("access_token") @db.Text
+  refreshToken          String?   @map("refresh_token") @db.Text
+  idToken               String?   @map("id_token") @db.Text
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at")
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at")
+  scope                 String?   @db.Text
+  password              String?   @db.Text
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  identifier String
+  value      String
+  expiresAt  DateTime @map("expires_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("verifications")
 }
 
 model InstituteParent {

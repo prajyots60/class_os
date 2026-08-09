@@ -155,8 +155,10 @@ export async function main() {
   });
 
   // Global Child Profile 1
-  const child1 = await db.childProfile.create({
-    data: {
+  const child1 = await db.childProfile.upsert({
+    where: { id: '55555555-5555-4555-a555-555555555551' },
+    update: {},
+    create: {
       id: '55555555-5555-4555-a555-555555555551',
       parentIdentityId: parentId1.id,
       name: 'Aarav Gupta',
@@ -197,8 +199,10 @@ export async function main() {
   });
 
   // Tenant Student 1
-  const student1 = await db.student.create({
-    data: {
+  const student1 = await db.student.upsert({
+    where: { id: '77777777-7777-4777-a777-777777777771' },
+    update: {},
+    create: {
       id: '77777777-7777-4777-a777-777777777771',
       instituteId: institute.id,
       admissionNumber: 'ADM-2025-001',
@@ -215,8 +219,15 @@ export async function main() {
   });
 
   // Cross-layer link
-  await db.studentLink.create({
-    data: {
+  await db.studentLink.upsert({
+    where: {
+      childProfileId_studentId: {
+        childProfileId: child1.id,
+        studentId: student1.id,
+      },
+    },
+    update: {},
+    create: {
       childProfileId: child1.id,
       studentId: student1.id,
       instituteId: institute.id,
@@ -224,8 +235,10 @@ export async function main() {
   });
 
   // Student 2 (Enrolled in Physics)
-  const student2 = await db.student.create({
-    data: {
+  const student2 = await db.student.upsert({
+    where: { id: '77777777-7777-4777-a777-777777777772' },
+    update: {},
+    create: {
       id: '77777777-7777-4777-a777-777777777772',
       instituteId: institute.id,
       admissionNumber: 'ADM-2025-002',
@@ -236,8 +249,10 @@ export async function main() {
   });
 
   // 6. Enrollments (Student 1 enrolled in Physics & Maths; Student 2 in Physics)
-  const enroll1A = await db.enrollment.create({
-    data: {
+  const enroll1A = await db.enrollment.upsert({
+    where: { id: '88888888-8888-4888-a888-888888888881' },
+    update: {},
+    create: {
       id: '88888888-8888-4888-a888-888888888881',
       instituteId: institute.id,
       studentId: student1.id,
@@ -247,8 +262,10 @@ export async function main() {
     },
   });
 
-  const enroll1B = await db.enrollment.create({
-    data: {
+  const enroll1B = await db.enrollment.upsert({
+    where: { id: '88888888-8888-4888-a888-888888888882' },
+    update: {},
+    create: {
       id: '88888888-8888-4888-a888-888888888882',
       instituteId: institute.id,
       studentId: student1.id,
@@ -258,8 +275,10 @@ export async function main() {
     },
   });
 
-  const enroll2A = await db.enrollment.create({
-    data: {
+  const enroll2A = await db.enrollment.upsert({
+    where: { id: '88888888-8888-4888-a888-888888888883' },
+    update: {},
+    create: {
       id: '88888888-8888-4888-a888-888888888883',
       instituteId: institute.id,
       studentId: student2.id,
@@ -270,18 +289,23 @@ export async function main() {
   });
 
   // 7. Schedule & Batch Session
-  await db.schedule.create({
-    data: {
-      batchId: batchA.id,
-      dayOfWeek: 'Monday',
-      startTime: '08:00',
-      endTime: '09:30',
-      teacherId: teacher.id,
-    },
-  });
+  const scheduleCount = await db.schedule.count({ where: { batchId: batchA.id } });
+  if (scheduleCount === 0) {
+    await db.schedule.create({
+      data: {
+        batchId: batchA.id,
+        dayOfWeek: 'Monday',
+        startTime: '08:00',
+        endTime: '09:30',
+        teacherId: teacher.id,
+      },
+    });
+  }
 
-  const session = await db.batchSession.create({
-    data: {
+  const session = await db.batchSession.upsert({
+    where: { id: '99999999-9999-4999-a999-999999999991' },
+    update: {},
+    create: {
       id: '99999999-9999-4999-a999-999999999991',
       instituteId: institute.id,
       batchId: batchA.id,
@@ -295,36 +319,57 @@ export async function main() {
   });
 
   // 8. Attendance
-  await db.attendance.createMany({
-    data: [
-      {
-        instituteId: institute.id,
+  await db.attendance.upsert({
+    where: {
+      sessionId_enrollmentId: {
         sessionId: session.id,
         enrollmentId: enroll1A.id,
-        status: 'present',
       },
-      {
-        instituteId: institute.id,
-        sessionId: session.id,
-        enrollmentId: enroll2A.id,
-        status: 'absent',
-      },
-    ],
-  });
-
-  // 9. Homework, Tests & Marks
-  await db.homework.create({
-    data: {
+    },
+    update: {},
+    create: {
       instituteId: institute.id,
-      batchId: batchA.id,
-      title: 'Newton Laws Problem Set 1',
-      description: 'Solve questions 1 to 15 from Chapter 3',
-      publishedAt: new Date(),
+      sessionId: session.id,
+      enrollmentId: enroll1A.id,
+      status: 'present',
     },
   });
 
-  const test = await db.test.create({
-    data: {
+  await db.attendance.upsert({
+    where: {
+      sessionId_enrollmentId: {
+        sessionId: session.id,
+        enrollmentId: enroll2A.id,
+      },
+    },
+    update: {},
+    create: {
+      instituteId: institute.id,
+      sessionId: session.id,
+      enrollmentId: enroll2A.id,
+      status: 'absent',
+    },
+  });
+
+  // 9. Homework, Tests & Marks
+  const homeworkCount = await db.homework.count({ where: { batchId: batchA.id } });
+  if (homeworkCount === 0) {
+    await db.homework.create({
+      data: {
+        instituteId: institute.id,
+        batchId: batchA.id,
+        title: 'Newton Laws Problem Set 1',
+        description: 'Solve questions 1 to 15 from Chapter 3',
+        publishedAt: new Date(),
+      },
+    });
+  }
+
+  const test = await db.test.upsert({
+    where: { id: 'aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa' },
+    update: {},
+    create: {
+      id: 'aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa',
       instituteId: institute.id,
       batchId: batchA.id,
       title: 'Kinematics Unit Test 1',
@@ -334,8 +379,15 @@ export async function main() {
     },
   });
 
-  await db.marks.create({
-    data: {
+  await db.marks.upsert({
+    where: {
+      testId_enrollmentId: {
+        testId: test.id,
+        enrollmentId: enroll1A.id,
+      },
+    },
+    update: {},
+    create: {
       instituteId: institute.id,
       testId: test.id,
       enrollmentId: enroll1A.id,
@@ -344,8 +396,11 @@ export async function main() {
   });
 
   // 10. Billing Plan, Invoices, Payments, Receipts
-  const plan = await db.billingPlan.create({
-    data: {
+  const plan = await db.billingPlan.upsert({
+    where: { id: 'bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb' },
+    update: {},
+    create: {
+      id: 'bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb',
       enrollmentId: enroll1A.id,
       type: 'monthly',
       amount: 3500.0,
@@ -353,8 +408,11 @@ export async function main() {
     },
   });
 
-  const invoice = await db.invoice.create({
-    data: {
+  const invoice = await db.invoice.upsert({
+    where: { id: 'cccccccc-cccc-4ccc-cccc-cccccccccccc' },
+    update: {},
+    create: {
+      id: 'cccccccc-cccc-4ccc-cccc-cccccccccccc',
       billingPlanId: plan.id,
       amount: 3500.0,
       dueDate: new Date('2025-04-10'),
@@ -362,8 +420,11 @@ export async function main() {
     },
   });
 
-  const payment = await db.payment.create({
-    data: {
+  const payment = await db.payment.upsert({
+    where: { id: 'dddddddd-dddd-4ddd-dddd-dddddddddddd' },
+    update: {},
+    create: {
+      id: 'dddddddd-dddd-4ddd-dddd-dddddddddddd',
       invoiceId: invoice.id,
       amount: 3500.0,
       paymentMode: 'upi',
@@ -373,8 +434,10 @@ export async function main() {
     },
   });
 
-  await db.receipt.create({
-    data: {
+  await db.receipt.upsert({
+    where: { paymentId: payment.id },
+    update: {},
+    create: {
       instituteId: institute.id,
       paymentId: payment.id,
       receiptNumber: 'RCP-2025-0001',
@@ -382,15 +445,18 @@ export async function main() {
   });
 
   // 11. Announcements
-  await db.announcement.create({
-    data: {
-      instituteId: institute.id,
-      batchId: batchA.id,
-      title: 'Extra Physics Problem Solving Session on Sunday',
-      body: 'All students must attend the special session scheduled for 10 AM on Sunday.',
-      publishedAt: new Date(),
-    },
-  });
+  const annCount = await db.announcement.count({ where: { instituteId: institute.id } });
+  if (annCount === 0) {
+    await db.announcement.create({
+      data: {
+        instituteId: institute.id,
+        batchId: batchA.id,
+        title: 'Extra Physics Problem Solving Session on Sunday',
+        body: 'All students must attend the special session scheduled for 10 AM on Sunday.',
+        publishedAt: new Date(),
+      },
+    });
+  }
 
   console.log('✅ Seeding completed successfully!');
 }
