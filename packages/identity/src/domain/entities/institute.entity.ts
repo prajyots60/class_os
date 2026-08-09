@@ -35,7 +35,6 @@ export interface UpdateInstituteDetailsProps {
   timezone?: string;
   logoUrl?: string | null;
   primaryColor?: string | null;
-  slug?: string;
 }
 
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -185,20 +184,6 @@ export class InstituteEntity {
         throw new ValidationError('Institute name cannot be empty');
       }
       this._name = trimmedName;
-      updated = true;
-    }
-
-    if (props.slug !== undefined) {
-      const trimmedSlug = props.slug.trim();
-      if (!trimmedSlug) {
-        throw new ValidationError('Institute slug cannot be empty');
-      }
-      if (!InstituteEntity.validateSlug(trimmedSlug)) {
-        throw new ValidationError(
-          'Institute slug must contain only lowercase alphanumeric characters and single hyphens',
-        );
-      }
-      this._slug = trimmedSlug;
       updated = true;
     }
 

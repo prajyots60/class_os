@@ -21,14 +21,6 @@ export const createInstituteSchema = z.object({
 
 export const updateInstituteSchema = z.object({
   name: z.string().trim().min(1, 'Institute name cannot be empty').optional(),
-  slug: z
-    .string()
-    .trim()
-    .regex(
-      SLUG_REGEX,
-      'Institute slug must contain only lowercase alphanumeric characters and hyphens',
-    )
-    .optional(),
   phone: z.string().trim().optional(),
   email: z.string().trim().email('Invalid email address').optional(),
   timezone: z.string().trim().min(1, 'Timezone cannot be empty').optional(),

@@ -40,9 +40,7 @@ export class PrismaInstituteRepository implements InstituteRepository {
       return this.toDomain(created);
     } catch (error: any) {
       if (error?.code === 'P2002') {
-        const target = error.meta?.target;
-        const field = Array.isArray(target) ? target.join(', ') : 'slug/email';
-        throw new ConflictError(`An institute with this ${field} already exists.`);
+        throw new ConflictError(`An institute with slug '${institute.slug}' already exists.`);
       }
       throw error;
     }
@@ -87,9 +85,7 @@ export class PrismaInstituteRepository implements InstituteRepository {
       return this.toDomain(updated);
     } catch (error: any) {
       if (error?.code === 'P2002') {
-        const target = error.meta?.target;
-        const field = Array.isArray(target) ? target.join(', ') : 'slug/email';
-        throw new ConflictError(`An institute with this ${field} already exists.`);
+        throw new ConflictError(`An institute with slug '${institute.slug}' already exists.`);
       }
       if (error?.code === 'P2025') {
         throw new NotFoundError(`Institute with ID ${institute.id} not found.`);
