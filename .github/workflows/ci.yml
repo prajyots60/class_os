@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:17-alpine
+        image: postgres:18-alpine
         env:
           POSTGRES_DB: coachingos_ci
           POSTGRES_USER: ci
@@ -107,8 +107,11 @@ jobs:
       - name: Deploy Prisma migrations to clean CI PostgreSQL
         run: pnpm db:migrate:deploy
 
-      - name: Verify Prisma migration status & schema drift
+      - name: Verify Prisma migration status
         run: pnpm db:status
+
+      - name: Verify Prisma schema drift (schema vs database migrations)
+        run: pnpm db:drift:check
 
       - name: Verify PostgreSQL connectivity & health
         run: pnpm db:health
@@ -131,7 +134,7 @@ jobs:
     needs: [quality, database-and-tests]
     services:
       postgres:
-        image: postgres:17-alpine
+        image: postgres:18-alpine
         env:
           POSTGRES_DB: coachingos_ci
           POSTGRES_USER: ci

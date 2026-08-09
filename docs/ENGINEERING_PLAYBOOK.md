@@ -76,19 +76,19 @@ Business logic must never depend directly on Prisma, Better Auth, WhatsApp, Razo
 
 ### Infrastructure
 
-| Category         | Technology           |
-| ---------------- | -------------------- |
-| Hosting          | Vercel               |
-| Database Hosting | Neon PostgreSQL      |
-| Storage          | Cloudflare R2        |
-| CDN              | Cloudflare           |
-| Jobs             | Trigger.dev          |
-| Logging          | Pino                 |
-| Monitoring       | Sentry               |
-| Email            | Resend (Future)      |
-| WhatsApp         | Meta Cloud API       |
-| SMS              | Provider Abstraction |
-| Payments         | Manual (Razorpay V2) |
+| Category         | Technology                     |
+| ---------------- | ------------------------------ |
+| Hosting          | Vercel                         |
+| Database Hosting | Neon PostgreSQL                |
+| Storage          | Cloudflare R2                  |
+| CDN              | Cloudflare                     |
+| Jobs             | Deferred (ADR-0003 evaluation) |
+| Logging          | Pino                           |
+| Monitoring       | Sentry                         |
+| Email            | Resend (Future)                |
+| WhatsApp         | Meta Cloud API                 |
+| SMS              | Provider Abstraction           |
+| Payments         | Manual (Razorpay V2)           |
 
 ---
 
@@ -516,7 +516,7 @@ Jobs handle:
 - Reminders
 - Scheduled tasks
 
-Trigger.dev owns execution.
+Durable workflow engine (to be evaluated per ADR-0003 when real workloads exist) owns execution.
 
 ---
 
@@ -706,7 +706,7 @@ Examples of documented decisions:
 
 - Why Next.js (App Router) was chosen.
 - Why Billing is enrollment-centric.
-- Why Trigger.dev is used for background jobs instead of BullMQ.
+- Why background workflow engine selection is deferred until real asynchronous workloads exist (ADR-0003).
 - Why modules communicate via domain events.
 
 ---

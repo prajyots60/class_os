@@ -42,7 +42,7 @@ Phase 7  → Production & Beta Readiness
 - PostgreSQL database integration
 - Better Auth wrapper & authentication pipeline
 - Zod schema validation
-- Background job infrastructure (Trigger.dev)
+- Async event pipeline contracts (ADR-0003 engine evaluation deferred)
 - Pino logging configuration
 - Environment variable management
 
@@ -190,7 +190,7 @@ Assistant records fee → Invoice status updates → Receipt generated → Paren
 ### 2. Notification Pipeline
 
 - In-app notification delivery
-- Event-driven background queue workers (Trigger.dev)
+- Event-driven background queue workers (ADR-0003 engine evaluation)
 
 ### 3. WhatsApp Integration
 

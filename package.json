@@ -22,6 +22,7 @@
     "db:migrate": "pnpm --filter @coaching-os/database run db:migrate",
     "db:migrate:deploy": "pnpm --filter @coaching-os/database run db:migrate:deploy",
     "db:status": "pnpm --filter @coaching-os/database run db:status",
+    "db:drift:check": "pnpm --filter @coaching-os/database run db:drift:check",
     "db:seed": "pnpm --filter @coaching-os/database run db:seed",
     "db:health": "pnpm --filter @coaching-os/database run db:health"
   },

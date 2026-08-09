@@ -5,6 +5,7 @@ dist
 build
 pnpm-lock.yaml
 infrastructure/database/src/generated
+apps/web/next-env.d.ts
 test-results
 playwright-report
 coverage
