@@ -17,11 +17,32 @@ export const auth = betterAuth({
   },
   rateLimit: {
     enabled: true,
-    window: 60, // 60 seconds
-    max: 100, // 100 requests per minute
+    window: 60, // 60s global window
+    max: 100, // 100 requests per minute global baseline
+    customRules: {
+      '/sign-in/email': {
+        window: 10,
+        max: 3, // Stricter rate limit: 3 login attempts per 10s
+      },
+      '/sign-up/email': {
+        window: 60,
+        max: 5, // Stricter rate limit: 5 sign-up attempts per 60s
+      },
+      '/forget-password': {
+        window: 60,
+        max: 3, // Stricter rate limit: 3 recovery requests per 60s
+      },
+      '/reset-password': {
+        window: 60,
+        max: 3, // Stricter rate limit: 3 password resets per 60s
+      },
+    },
   },
   advanced: {
     useSecureCookies: serverConfig.NODE_ENV === 'production',
+    database: {
+      generateId: 'uuid',
+    },
   },
 });
 

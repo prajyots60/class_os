@@ -78,29 +78,31 @@ export async function requireInstituteMembership(
     };
   }
 
-  // 3. Check Parent Identity Institute Membership
-  const membership = await db.instituteMembership.findFirst({
-    where: {
-      instituteId: requestedInstituteId,
-      parentIdentity: {
-        phone: user.phone,
+  // 3. Check Parent Identity Institute Membership if phone exists
+  if (user.phone) {
+    const membership = await db.instituteMembership.findFirst({
+      where: {
+        instituteId: requestedInstituteId,
+        parentIdentity: {
+          phone: user.phone,
+        },
       },
-    },
-  });
+    });
 
-  if (membership) {
-    return {
-      userId: user.id,
-      instituteId: requestedInstituteId,
-      membershipId: membership.id,
-      role: 'parent',
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        status: user.status,
-      },
-    };
+    if (membership) {
+      return {
+        userId: user.id,
+        instituteId: requestedInstituteId,
+        membershipId: membership.id,
+        role: 'parent',
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          status: user.status,
+        },
+      };
+    }
   }
 
   throw new Error(

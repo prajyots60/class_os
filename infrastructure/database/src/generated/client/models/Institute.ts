@@ -575,6 +575,11 @@ export type InstituteMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type InstituteNullableScalarRelationFilter = {
+  is?: Prisma.InstituteWhereInput | null
+  isNot?: Prisma.InstituteWhereInput | null
+}
+
 export type InstituteCreateNestedOneWithoutMembershipsInput = {
   create?: Prisma.XOR<Prisma.InstituteCreateWithoutMembershipsInput, Prisma.InstituteUncheckedCreateWithoutMembershipsInput>
   connectOrCreate?: Prisma.InstituteCreateOrConnectWithoutMembershipsInput
@@ -613,10 +618,12 @@ export type InstituteCreateNestedOneWithoutUsersInput = {
   connect?: Prisma.InstituteWhereUniqueInput
 }
 
-export type InstituteUpdateOneRequiredWithoutUsersNestedInput = {
+export type InstituteUpdateOneWithoutUsersNestedInput = {
   create?: Prisma.XOR<Prisma.InstituteCreateWithoutUsersInput, Prisma.InstituteUncheckedCreateWithoutUsersInput>
   connectOrCreate?: Prisma.InstituteCreateOrConnectWithoutUsersInput
   upsert?: Prisma.InstituteUpsertWithoutUsersInput
+  disconnect?: Prisma.InstituteWhereInput | boolean
+  delete?: Prisma.InstituteWhereInput | boolean
   connect?: Prisma.InstituteWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.InstituteUpdateToOneWithWhereWithoutUsersInput, Prisma.InstituteUpdateWithoutUsersInput>, Prisma.InstituteUncheckedUpdateWithoutUsersInput>
 }

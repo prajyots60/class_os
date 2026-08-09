@@ -24,7 +24,7 @@
   "dependencies": {
     "@coaching-os/config": "workspace:*",
     "@coaching-os/database": "workspace:*",
-    "better-auth": "^1.6.26"
+    "better-auth": "^1.6.25"
   },
   "devDependencies": {
     "@types/node": "^22.13.10",
