@@ -66,7 +66,19 @@
 
 ### INF-002 — Multi-Channel Notification Background Queue
 - **Status:** ⏳ Scheduled (Phase 4 / Phase 0.7)
-- **Description:** Configure Trigger.dev workers for WhatsApp Cloud API & SMS delivery retry queues, decoupled from HTTP request loops.
+- **Description:** Configure background job workers for WhatsApp Cloud API & SMS delivery retry queues, decoupled from HTTP request loops.
+
+### INF-003 — Shared Infrastructure & Telemetry Stack Strategy
+- **Status:** 🚧 Active (Phase 0.7 Strategy)
+- **Tooling Decisions:**
+  - **Logging Library:** **Pino** (Structured JSON logging to stdout, zero SaaS cost, fast Node ecosystem standard).
+  - **Error Monitoring:** **Sentry** (Application exception capture, stack traces, release tracking for Next.js).
+  - **Workflow Engine / Async Platform Mandate:**
+    > *"CoachingOS will use a managed durable workflow platform when asynchronous workloads become necessary. The initial candidate is Inngest for event-driven workflows and Trigger.dev for long-running/compute-heavy workflows. The final platform will be selected when the first real asynchronous workload is implemented."*
+  - **Infrastructure Principles:**
+    1. **No Premature Workflow Engine:** Do NOT install Trigger.dev or Inngest in Phase 0.7 before actual background jobs exist.
+    2. **No Redis / BullMQ Operational Overhead:** Do NOT operate Redis + worker processes during Phase 0 MVP.
+    3. **Phase 0.7 Core Focus:** Establish structured logging (Pino), correlation IDs (`x-request-id`), standardized error handling, log data redaction, event contract principles, and async work abstraction.
 
 ---
 
