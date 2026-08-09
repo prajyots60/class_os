@@ -471,6 +471,19 @@ CoachingOS implements a production-grade, low-complexity observability architect
 
 ---
 
+## 17. Production Deployment & Infrastructure Standards
+
+CoachingOS follows a serverless, low-complexity deployment architecture combining Next.js 16 (App Router) on Vercel with managed Neon PostgreSQL, GitHub Actions CI, and Pino/ErrorReporter observability.
+
+### Key Deployment Rules
+
+1. **Vercel Monorepo Target:** Deploy `apps/web` within the pnpm monorepo using standard build command `pnpm build` under Node.js 24 LTS runtime.
+2. **Dual Database Connections:** Runtime serverless application routes must use the pooled connection string (`DATABASE_URL` via PgBouncer pooler). Schema migrations must use the direct connection string (`DIRECT_URL`).
+3. **Environment Separation:** Maintain 4 isolated trust boundaries (Development, Test, Preview, Production). Production connection strings and secrets MUST NEVER appear in Preview or Development environments.
+4. **Authoritative Migration Execution:** Production database schema evolution uses `prisma migrate deploy` exclusively. `prisma db push` and `prisma db seed` are strictly PROHIBITED in production environments.
+5. **Forward-Compatible Schema Changes:** Database migrations must be designed for zero-downtime forward compatibility (add nullable columns -> deploy application code -> backfill -> enforce constraints).
+6. **No Unnecessary Infrastructure:** Microservices, Kubernetes, Docker registries, Terraform, Redis, Kafka, and OpenTelemetry collectors are explicitly deferred until concrete workload requirements justify their operational cost.
+
 ## 16. Database Standards
 
 Every table contains:
