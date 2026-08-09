@@ -9,6 +9,7 @@ CoachingOS is a multi-tenant SaaS platform built specifically for founder-led co
 CoachingOS is engineered as a **Modular Monolith**.
 
 Key architectural characteristics:
+
 - Single codebase managed via pnpm workspaces and Turborepo.
 - Clean separation between presentation layer (`apps/web`), domain modules (`packages/*`), and infrastructure adapters (`infrastructure/*`).
 - Multi-tenancy achieved via database-level tenant scoping (`institute_id`).

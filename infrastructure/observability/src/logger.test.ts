@@ -53,7 +53,9 @@ describe('Shared Infrastructure & Observability Suite', () => {
     expect(response.status).toBe(400);
     expect(response.headers.get('x-request-id')).toBe(reqId);
 
-    const body = (await response.json()) as { error: { code: string; message: string; requestId: string } };
+    const body = (await response.json()) as {
+      error: { code: string; message: string; requestId: string };
+    };
     expect(body.error.code).toBe('VALIDATION_ERROR');
     expect(body.error.message).toBe('Admission number ADM-001 is invalid.');
     expect(body.error.requestId).toBe(reqId);

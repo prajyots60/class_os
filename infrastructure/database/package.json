@@ -18,6 +18,7 @@
     "db:validate": "prisma validate --config ./prisma.config.ts",
     "db:generate": "prisma generate --config ./prisma.config.ts",
     "db:migrate": "prisma migrate dev --name init_coachingos_schema --config ./prisma.config.ts",
+    "db:migrate:deploy": "prisma migrate deploy --config ./prisma.config.ts",
     "db:status": "prisma migrate status --config ./prisma.config.ts",
     "db:seed": "tsx prisma/seed.ts",
     "db:health": "tsx src/health.ts",

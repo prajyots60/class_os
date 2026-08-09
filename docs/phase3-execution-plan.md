@@ -29,11 +29,11 @@
 
 **Product Discovery is over.**
 
-| What is over                          | What begins              |
-|---------------------------------------|--------------------------|
-| "What if we add this feature?"        | Implementation design    |
-| Redesigning entities                  | Freezing schema          |
-| Changing workflows speculatively      | Writing module specs     |
+| What is over                     | What begins           |
+| -------------------------------- | --------------------- |
+| "What if we add this feature?"   | Implementation design |
+| Redesigning entities             | Freezing schema       |
+| Changing workflows speculatively | Writing module specs  |
 
 From this point forward, every technical decision must trace back to the SRS, SDD, or DADD. No new product ideas enter the system without a formal change to those documents first.
 
@@ -45,29 +45,29 @@ From this point forward, every technical decision must trace back to the SRS, SD
 
 ### Phase 1 — Product Discovery ✅ Complete
 
-| Deliverable          | Status   |
-|----------------------|----------|
-| Vision               | ✅ Done  |
-| ICP                  | ✅ Done  |
-| Product Principles   | ✅ Done  |
-| User Personas        | ✅ Done  |
-| Business Workflows   | ✅ Done  |
-| MVP Scope            | ✅ Done  |
-| V1 & V2 Roadmap      | ✅ Done  |
+| Deliverable        | Status  |
+| ------------------ | ------- |
+| Vision             | ✅ Done |
+| ICP                | ✅ Done |
+| Product Principles | ✅ Done |
+| User Personas      | ✅ Done |
+| Business Workflows | ✅ Done |
+| MVP Scope          | ✅ Done |
+| V1 & V2 Roadmap    | ✅ Done |
 
 ### Phase 2 — Architecture ✅ Complete
 
-| Deliverable          | Status   | Document           |
-|----------------------|----------|--------------------|
-| Business Rules       | ✅ Done  | SRS                |
-| Domain Model         | ✅ Done  | SRS                |
-| ERD (logical)        | ✅ Done  | DADD               |
-| Permission Model     | ✅ Done  | SDD                |
-| SRS                  | ✅ Done  | srs.md             |
-| SDD                  | ✅ Done  | sdd.md             |
-| Database Design      | ✅ Done  | dadd.md            |
-| API Contract         | ✅ Done  | dadd.md            |
-| Parent Identity ADR  | ✅ Done  | adr-001-parent-identity.md |
+| Deliverable         | Status  | Document                   |
+| ------------------- | ------- | -------------------------- |
+| Business Rules      | ✅ Done | SRS                        |
+| Domain Model        | ✅ Done | SRS                        |
+| ERD (logical)       | ✅ Done | DADD                       |
+| Permission Model    | ✅ Done | SDD                        |
+| SRS                 | ✅ Done | srs.md                     |
+| SDD                 | ✅ Done | sdd.md                     |
+| Database Design     | ✅ Done | dadd.md                    |
+| API Contract        | ✅ Done | dadd.md                    |
+| Parent Identity ADR | ✅ Done | adr-001-parent-identity.md |
 
 ### Phase 3 — Implementation Design 🔄 In Progress
 
@@ -99,13 +99,13 @@ Implementation follows this exact sequence. Each step depends on the previous.
 
 ### Why this order matters
 
-| Step | Reason                                                                 |
-|------|------------------------------------------------------------------------|
-| ERD first | Architecture is cheap to change. Implementation is expensive.   |
-| Schema before Prisma | Prisma is generated from the ERD — not designed in Prisma |
-| Auth before modules | Every module depends on the auth context                   |
-| Modules before APIs | APIs expose module behavior — they don't define it         |
-| APIs before frontend | Frontend consumes the contract — doesn't dictate it        |
+| Step                 | Reason                                                        |
+| -------------------- | ------------------------------------------------------------- |
+| ERD first            | Architecture is cheap to change. Implementation is expensive. |
+| Schema before Prisma | Prisma is generated from the ERD — not designed in Prisma     |
+| Auth before modules  | Every module depends on the auth context                      |
+| Modules before APIs  | APIs expose module behavior — they don't define it            |
+| APIs before frontend | Frontend consumes the contract — doesn't dictate it           |
 
 ---
 
@@ -115,17 +115,17 @@ The Master ERD is not a box-and-arrow diagram.
 
 For every entity we define:
 
-| Field              | Description                              |
-|--------------------|------------------------------------------|
-| Column name        | Exact snake_case name                    |
-| Data type          | PostgreSQL type (UUID, VARCHAR, ENUM...) |
-| Nullable           | NULL or NOT NULL                         |
-| Default value      | Database or application default          |
-| Constraints        | UNIQUE, CHECK                            |
-| Foreign keys       | FK → table with cascade rule             |
-| Indexes            | Which columns, composite or single       |
-| Lifecycle          | Entity state transitions                 |
-| Business notes     | Why this field exists                    |
+| Field          | Description                              |
+| -------------- | ---------------------------------------- |
+| Column name    | Exact snake_case name                    |
+| Data type      | PostgreSQL type (UUID, VARCHAR, ENUM...) |
+| Nullable       | NULL or NOT NULL                         |
+| Default value  | Database or application default          |
+| Constraints    | UNIQUE, CHECK                            |
+| Foreign keys   | FK → table with cascade rule             |
+| Indexes        | Which columns, composite or single       |
+| Lifecycle      | Entity state transitions                 |
+| Business notes | Why this field exists                    |
 
 ### Example Entity Specification
 
@@ -160,12 +160,12 @@ Business Notes:
 
 ### Why not jump directly into Prisma
 
-| ERD (Architecture)              | Prisma (Implementation)          |
-|---------------------------------|----------------------------------|
-| Cheap to change                 | Expensive to change              |
-| Language-agnostic               | Tied to Node.js ecosystem        |
+| ERD (Architecture)                  | Prisma (Implementation)       |
+| ----------------------------------- | ----------------------------- |
+| Cheap to change                     | Expensive to change           |
+| Language-agnostic                   | Tied to Node.js ecosystem     |
 | Forces explicit constraint thinking | Hides some PostgreSQL details |
-| Reviewable by anyone            | Requires Prisma knowledge        |
+| Reviewable by anyone                | Requires Prisma knowledge     |
 
 Once the ERD is frozen, Prisma schema generation becomes nearly mechanical.
 
@@ -278,13 +278,13 @@ Future Features      — Deferred capabilities
 
 ### Modules to specify
 
-| Module          | Priority |
-|-----------------|----------|
-| Identity        | 1st      |
-| Academics       | 2nd      |
-| Finance         | 3rd      |
-| Communication   | 4th      |
-| Administration  | 5th      |
+| Module         | Priority |
+| -------------- | -------- |
+| Identity       | 1st      |
+| Academics      | 2nd      |
+| Finance        | 3rd      |
+| Communication  | 4th      |
+| Administration | 5th      |
 
 ---
 
@@ -340,14 +340,14 @@ Every module has identical internal structure. A contributor working in any modu
 
 The following authentication decisions are deferred from Phase 2 and must be finalized before module implementation begins.
 
-| Decision                    | Options                            | Notes                                      |
-|-----------------------------|------------------------------------|--------------------------------------------|
-| Staff login method          | Password vs OTP vs Hybrid          | Daily staff need convenient repeated access |
-| Parent session duration     | 30 days vs 90 days vs indefinite   | OTP-based — longer sessions reduce friction |
-| Permission caching          | In-memory vs Redis vs none         | Relevant at scale — not needed in MVP       |
-| Session storage             | HTTP-only cookie vs JWT            | Cookie preferred for security              |
-| Staff invite flow           | Email link vs OTP vs temporary password | Must work before email is confirmed   |
-| Parent first-login flow     | Auto-create vs explicit onboarding | What happens when a new phone logs in first |
+| Decision                | Options                                 | Notes                                       |
+| ----------------------- | --------------------------------------- | ------------------------------------------- |
+| Staff login method      | Password vs OTP vs Hybrid               | Daily staff need convenient repeated access |
+| Parent session duration | 30 days vs 90 days vs indefinite        | OTP-based — longer sessions reduce friction |
+| Permission caching      | In-memory vs Redis vs none              | Relevant at scale — not needed in MVP       |
+| Session storage         | HTTP-only cookie vs JWT                 | Cookie preferred for security               |
+| Staff invite flow       | Email link vs OTP vs temporary password | Must work before email is confirmed         |
+| Parent first-login flow | Auto-create vs explicit onboarding      | What happens when a new phone logs in first |
 
 These are resolved in the Auth Architecture document (Phase 3.5).
 
@@ -431,14 +431,14 @@ Teachers don't need cross-institute identity in MVP. If a teacher teaches at two
 
 ### Identity Domain — Freeze Scorecard
 
-| Entity             | Status               |
-|--------------------|----------------------|
-| Student            | ✅ Frozen            |
-| Batch              | ✅ Frozen            |
-| Enrollment         | ✅ Frozen            |
-| User               | ✅ Frozen            |
-| Subject            | ✅ Frozen            |
-| Parent             | ✅ Frozen (redesigned per ADR-001) |
+| Entity     | Status                             |
+| ---------- | ---------------------------------- |
+| Student    | ✅ Frozen                          |
+| Batch      | ✅ Frozen                          |
+| Enrollment | ✅ Frozen                          |
+| User       | ✅ Frozen                          |
+| Subject    | ✅ Frozen                          |
+| Parent     | ✅ Frozen (redesigned per ADR-001) |
 
 ---
 
@@ -450,15 +450,15 @@ Teachers don't need cross-institute identity in MVP. If a teacher teaches at two
 
 The `fee_plans` table stores billing rules — not invoices. This separation means:
 
-| Scenario                         | Handled?                                |
-|----------------------------------|-----------------------------------------|
-| Monthly fees                     | ✅ `type = monthly`                     |
-| One-time fees                    | ✅ `type = one_time`                    |
-| Installments                     | ✅ `type = installment`                 |
-| Discount on enrollment           | ✅ `discount_type` + `discount_value` on Enrollment |
-| Late join (mid-month)            | ✅ Invoice `amount` is set at generation — can reflect pro-rata |
-| Partial payment                  | ✅ Multiple `payments` per `invoice`    |
-| Future payment gateway           | ✅ Add `gateway_reference` to payments — no core schema change |
+| Scenario               | Handled?                                                        |
+| ---------------------- | --------------------------------------------------------------- |
+| Monthly fees           | ✅ `type = monthly`                                             |
+| One-time fees          | ✅ `type = one_time`                                            |
+| Installments           | ✅ `type = installment`                                         |
+| Discount on enrollment | ✅ `discount_type` + `discount_value` on Enrollment             |
+| Late join (mid-month)  | ✅ Invoice `amount` is set at generation — can reflect pro-rata |
+| Partial payment        | ✅ Multiple `payments` per `invoice`                            |
+| Future payment gateway | ✅ Add `gateway_reference` to payments — no core schema change  |
 
 **Verdict: APPROVED — Finance schema is sufficiently flexible**
 
@@ -472,13 +472,13 @@ The `fee_plans` table stores billing rules — not invoices. This separation mea
 
 Permissions are atomic strings (e.g. `attendance.create`, `marks.publish`). Roles are templates that bundle permissions. Institutes can override individual permissions per user.
 
-| Scenario                                      | Handled?                                    |
-|-----------------------------------------------|---------------------------------------------|
-| Founder has all permissions                   | ✅ Default template                         |
-| Teacher can only manage own batch             | ✅ Permission scoping at application layer  |
-| Assistant can manage fees but not settings    | ✅ Custom permission set                    |
-| Permission added in future without migration  | ✅ Permissions are strings — no enum change |
-| Permission check is fast                      | ✅ Cached per session at application layer  |
+| Scenario                                     | Handled?                                    |
+| -------------------------------------------- | ------------------------------------------- |
+| Founder has all permissions                  | ✅ Default template                         |
+| Teacher can only manage own batch            | ✅ Permission scoping at application layer  |
+| Assistant can manage fees but not settings   | ✅ Custom permission set                    |
+| Permission added in future without migration | ✅ Permissions are strings — no enum change |
+| Permission check is fast                     | ✅ Cached per session at application layer  |
 
 **Verdict: APPROVED — Permission model is clean and extensible**
 
@@ -486,12 +486,12 @@ Permissions are atomic strings (e.g. `attendance.create`, `marks.publish`). Role
 
 ## 10. Schema Freeze Verdict
 
-| Domain      | Result              | Notes                                       |
-|-------------|---------------------|---------------------------------------------|
-| Identity    | ✅ Frozen           | Parent redesigned per ADR-001               |
-| Academics   | ✅ Frozen           | No issues found                             |
-| Finance     | ✅ Frozen           | Flexible enough for 10-year operation       |
-| Permissions | ✅ Frozen           | Atomic strings — extensible without migration |
+| Domain      | Result    | Notes                                         |
+| ----------- | --------- | --------------------------------------------- |
+| Identity    | ✅ Frozen | Parent redesigned per ADR-001                 |
+| Academics   | ✅ Frozen | No issues found                               |
+| Finance     | ✅ Frozen | Flexible enough for 10-year operation         |
+| Permissions | ✅ Frozen | Atomic strings — extensible without migration |
 
 **The schema is ready for Master ERD specification.**
 
@@ -501,19 +501,19 @@ No further domain redesigns are expected. Any future changes require a formal AD
 
 ## 11. Phase 3 Milestones
 
-| Milestone    | Deliverable                         | Status         |
-|--------------|-------------------------------------|----------------|
-| Phase 3.1    | Master ERD — all entities, all fields | 🔄 Next        |
-| Phase 3.2    | PostgreSQL Schema                   | Pending        |
-| Phase 3.3    | Prisma Models                       | Pending        |
-| Phase 3.4    | Folder Structure                    | Pending        |
-| Phase 3.5    | Auth Architecture (final decisions) | Pending        |
-| Phase 3.6    | Module Specifications (all 5)       | Pending        |
-| Phase 3.7    | REST API implementation             | Pending        |
-| Phase 3.8    | Frontend                            | Pending        |
+| Milestone | Deliverable                           | Status  |
+| --------- | ------------------------------------- | ------- |
+| Phase 3.1 | Master ERD — all entities, all fields | 🔄 Next |
+| Phase 3.2 | PostgreSQL Schema                     | Pending |
+| Phase 3.3 | Prisma Models                         | Pending |
+| Phase 3.4 | Folder Structure                      | Pending |
+| Phase 3.5 | Auth Architecture (final decisions)   | Pending |
+| Phase 3.6 | Module Specifications (all 5)         | Pending |
+| Phase 3.7 | REST API implementation               | Pending |
+| Phase 3.8 | Frontend                              | Pending |
 
 ---
 
-*Phase 3 Execution Plan — Version 1.0*  
-*Schema Freeze Review — Complete*  
-*Next: Phase 3.1 — Master ERD*
+_Phase 3 Execution Plan — Version 1.0_  
+_Schema Freeze Review — Complete_  
+_Next: Phase 3.1 — Master ERD_

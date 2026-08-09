@@ -7,7 +7,7 @@
 **Audience:** Engineering, Founders, Future Contributors
 
 > This document defines **how CoachingOS is engineered**.
-> The SRS defines *what* to build. This document defines *how* to build it.
+> The SRS defines _what_ to build. This document defines _how_ to build it.
 
 ---
 
@@ -107,15 +107,15 @@ This document defines **how CoachingOS is engineered**.
 
 While the SRS defines **what** the system should do, this document defines:
 
-| Concern                    |
-|----------------------------|
-| Software architecture      |
-| Module boundaries          |
-| Security model             |
-| Scalability strategy       |
-| Deployment architecture    |
-| Engineering standards      |
-| Technical trade-offs       |
+| Concern                 |
+| ----------------------- |
+| Software architecture   |
+| Module boundaries       |
+| Security model          |
+| Scalability strategy    |
+| Deployment architecture |
+| Engineering standards   |
+| Technical trade-offs    |
 
 This document is the **authoritative engineering reference** for implementation.
 
@@ -246,10 +246,10 @@ Every endpoint requires:
 
 **Two API surfaces, one application:**
 
-| Surface           | Layer     | Auth Resolves         |
-|-------------------|-----------|-----------------------|
-| Parent Hub API    | Platform  | `ParentIdentity` → `InstituteMembership` → `ChildProfile` |
-| Staff API         | Institute | Session → `institute_id` → Permission |
+| Surface        | Layer     | Auth Resolves                                             |
+| -------------- | --------- | --------------------------------------------------------- |
+| Parent Hub API | Platform  | `ParentIdentity` → `InstituteMembership` → `ChildProfile` |
+| Staff API      | Institute | Session → `institute_id` → Permission                     |
 
 ---
 
@@ -257,24 +257,24 @@ Every endpoint requires:
 
 ### External Actors
 
-| Actor     | Role                                    |
-|-----------|-----------------------------------------|
-| Founder   | Primary operator and owner              |
-| Assistant | Daily operations — admissions and fees  |
-| Teacher   | Academic operations                     |
-| Parent    | Read-only visibility via Parent Portal  |
-| Student   | Passive — data subject                  |
+| Actor     | Role                                   |
+| --------- | -------------------------------------- |
+| Founder   | Primary operator and owner             |
+| Assistant | Daily operations — admissions and fees |
+| Teacher   | Academic operations                    |
+| Parent    | Read-only visibility via Parent Portal |
+| Student   | Passive — data subject                 |
 
 ### External Systems
 
-| System                   | Status      |
-|--------------------------|-------------|
-| RFID Attendance Device   | MVP         |
-| WhatsApp Provider        | Future      |
-| SMS Provider             | Optional    |
-| Object Storage           | MVP         |
-| Email Provider           | Future      |
-| Payment Gateway          | V2          |
+| System                 | Status   |
+| ---------------------- | -------- |
+| RFID Attendance Device | MVP      |
+| WhatsApp Provider      | Future   |
+| SMS Provider           | Optional |
+| Object Storage         | MVP      |
+| Email Provider         | Future   |
+| Payment Gateway        | V2       |
 
 The core application remains the **system of record** for all business data.
 
@@ -289,12 +289,14 @@ The platform is divided into bounded business contexts. Each module is a self-co
 > **Updated per ADR-001.** Identity now spans two layers — Platform and Institute.
 
 **Platform Layer (Global — owned by CoachingOS):**
+
 - `ParentIdentity` — global phone-anchored parent record
 - `ChildProfile` — parent-created child labels (personal, invisible to institutes)
 - `StudentLink` — maps ChildProfile → institute Student
 - `InstituteMembership` — links ParentIdentity to an institute
 
 **Institute Layer (Tenant — owned by each institute):**
+
 - Institute
 - Users
 - `InstituteParent` — tenant-scoped parent record
@@ -308,6 +310,7 @@ The platform is divided into bounded business contexts. Each module is a self-co
 ### Academics Module
 
 **Owns:**
+
 - Subjects
 - Batches
 - Attendance
@@ -321,6 +324,7 @@ The platform is divided into bounded business contexts. Each module is a self-co
 ### Finance Module
 
 **Owns:**
+
 - Fee Plans
 - Invoices
 - Payment Records
@@ -331,6 +335,7 @@ The platform is divided into bounded business contexts. Each module is a self-co
 ### Communication Module
 
 **Owns:**
+
 - Announcements
 - Notifications
 - Delivery Adapters
@@ -340,6 +345,7 @@ The platform is divided into bounded business contexts. Each module is a self-co
 ### Administration Module
 
 **Owns:**
+
 - Branding
 - Settings
 - Reports
@@ -352,7 +358,7 @@ The platform is divided into bounded business contexts. Each module is a self-co
 Contains **only** cross-cutting concerns.
 
 | Allowed Contents       |
-|------------------------|
+| ---------------------- |
 | Database client        |
 | Authentication helpers |
 | Logging                |
@@ -379,11 +385,11 @@ Shared     ←   All modules
 
 ### Forbidden Dependencies
 
-| Forbidden Action                                       | Reason                              |
-|--------------------------------------------------------|-------------------------------------|
-| Finance directly modifying Academic data               | Violates module ownership           |
-| Communication directly updating Finance                | Violates module ownership           |
-| Administration directly changing Academic state        | Violates module ownership           |
+| Forbidden Action                                | Reason                    |
+| ----------------------------------------------- | ------------------------- |
+| Finance directly modifying Academic data        | Violates module ownership |
+| Communication directly updating Finance         | Violates module ownership |
+| Administration directly changing Academic state | Violates module ownership |
 
 Inter-module interaction must occur through **published interfaces** or **domain events** only.
 
@@ -395,11 +401,11 @@ Inter-module interaction must occur through **published interfaces** or **domain
 
 **Shared PostgreSQL database with tenant scoping.**
 
-| Design Decision                          | Value                        |
-|------------------------------------------|------------------------------|
-| Isolation mechanism                      | `institute_id` column on every tenant-owned table |
-| Institute resolution                     | Server-side only — client never provides institute identity |
-| Scope enforcement                        | Repository layer — automatic on every query |
+| Design Decision      | Value                                                       |
+| -------------------- | ----------------------------------------------------------- |
+| Isolation mechanism  | `institute_id` column on every tenant-owned table           |
+| Institute resolution | Server-side only — client never provides institute identity |
+| Scope enforcement    | Repository layer — automatic on every query                 |
 
 ### Tenant Resolution Flow
 
@@ -449,11 +455,11 @@ Background Processing
 
 Transactions represent **business operations** — not database convenience.
 
-| Business Operation    | Transaction Boundary                                   |
-|-----------------------|--------------------------------------------------------|
-| Student Admission     | Student + Parent Link + Enrollment + Fee Plan (atomic) |
-| Attendance Recording  | Attendance record (separate transaction)               |
-| Payment Recording     | Payment + Invoice update (separate transaction)        |
+| Business Operation   | Transaction Boundary                                   |
+| -------------------- | ------------------------------------------------------ |
+| Student Admission    | Student + Parent Link + Enrollment + Fee Plan (atomic) |
+| Attendance Recording | Attendance record (separate transaction)               |
+| Payment Recording    | Payment + Invoice update (separate transaction)        |
 
 Transactions should be scoped to the minimum necessary to maintain consistency.
 
@@ -463,17 +469,17 @@ Transactions should be scoped to the minimum necessary to maintain consistency.
 
 Business events are **immutable facts** published after a successful transaction.
 
-| Event                  | Trigger                                    |
-|------------------------|--------------------------------------------|
-| StudentEnrolled        | Enrollment created and activated           |
-| AttendanceRecorded     | Attendance saved for a batch session       |
-| HomeworkPublished      | Homework published to a batch              |
-| TestCreated            | A test is created for a batch              |
-| MarksPublished         | Test results are published                 |
-| InvoiceGenerated       | Invoice created from a fee plan            |
-| PaymentRecorded        | Payment recorded against an invoice        |
-| AnnouncementPublished  | Announcement published to institute/batch  |
-| UserInvited            | A staff user is invited to the institute   |
+| Event                 | Trigger                                   |
+| --------------------- | ----------------------------------------- |
+| StudentEnrolled       | Enrollment created and activated          |
+| AttendanceRecorded    | Attendance saved for a batch session      |
+| HomeworkPublished     | Homework published to a batch             |
+| TestCreated           | A test is created for a batch             |
+| MarksPublished        | Test results are published                |
+| InvoiceGenerated      | Invoice created from a fee plan           |
+| PaymentRecorded       | Payment recorded against an invoice       |
+| AnnouncementPublished | Announcement published to institute/batch |
+| UserInvited           | A staff user is invited to the institute  |
 
 Events enable downstream consumers — notifications, analytics, audit — without coupling modules.
 
@@ -483,14 +489,14 @@ Events enable downstream consumers — notifications, analytics, audit — witho
 
 Background workers process **non-critical, non-blocking** operations.
 
-| Operation               | Notes                                    |
-|-------------------------|------------------------------------------|
-| WhatsApp delivery       | Retried on provider failure              |
-| SMS delivery            | Optional channel                         |
-| Receipt generation      | PDF produced asynchronously              |
-| Analytics aggregation   | Attendance and fee summaries             |
-| Audit processing        | Append-only write                        |
-| Scheduled reminders     | Fee due, upcoming tests                  |
+| Operation             | Notes                        |
+| --------------------- | ---------------------------- |
+| WhatsApp delivery     | Retried on provider failure  |
+| SMS delivery          | Optional channel             |
+| Receipt generation    | PDF produced asynchronously  |
+| Analytics aggregation | Attendance and fee summaries |
+| Audit processing      | Append-only write            |
+| Scheduled reminders   | Fee due, upcoming tests      |
 
 > Business operations must **never fail** because an external provider is unavailable.
 
@@ -500,21 +506,21 @@ Background workers process **non-critical, non-blocking** operations.
 
 ### Staff Authentication
 
-| Property | Value                                      |
-|----------|--------------------------------------------|
-| Method   | Email + Password (preferred)               |
-| Future   | OTP (optional addition)                    |
+| Property | Value                                                          |
+| -------- | -------------------------------------------------------------- |
+| Method   | Email + Password (preferred)                                   |
+| Future   | OTP (optional addition)                                        |
 | Reason   | Staff require convenient repeated access on desktop and mobile |
 
 ### Parent Authentication
 
 > **Updated per ADR-001.** Parent authentication now resolves through the two-layer model.
 
-| Property        | Value                                                              |
-|-----------------|--------------------------------------------------------------------|
-| Method          | Mobile Number + OTP                                                |
-| Resolves        | `ParentIdentity` (global) → `InstituteMembership` → `ChildProfile` |
-| Reason          | Lowest onboarding friction. One login spans all coaching institutes. |
+| Property | Value                                                                |
+| -------- | -------------------------------------------------------------------- |
+| Method   | Mobile Number + OTP                                                  |
+| Resolves | `ParentIdentity` (global) → `InstituteMembership` → `ChildProfile`   |
+| Reason   | Lowest onboarding friction. One login spans all coaching institutes. |
 
 **Parent Authentication Flow:**
 
@@ -538,12 +544,12 @@ Parent selects an institute  → Coaching Workspace (tenant-isolated)
 
 ### Session Strategy
 
-| Property           | Value                                          |
-|--------------------|------------------------------------------------|
-| Web storage        | Secure HTTP-only cookies                       |
-| Session lifetime   | Short-lived access sessions                    |
-| Refresh            | Handled by authentication provider            |
-| Invalidation       | On logout or credential changes                |
+| Property         | Value                              |
+| ---------------- | ---------------------------------- |
+| Web storage      | Secure HTTP-only cookies           |
+| Session lifetime | Short-lived access sessions        |
+| Refresh          | Handled by authentication provider |
+| Invalidation     | On logout or credential changes    |
 
 ---
 
@@ -558,14 +564,14 @@ Permissions are atomic capabilities.
 
 ### Example Permissions
 
-| Permission          | Capability                      |
-|---------------------|---------------------------------|
-| attendance.create   | Record attendance               |
-| attendance.update   | Edit attendance records         |
-| marks.publish       | Publish test results            |
-| invoice.create      | Generate invoices               |
-| payment.record      | Record payment                  |
-| branding.update     | Modify institute branding       |
+| Permission        | Capability                |
+| ----------------- | ------------------------- |
+| attendance.create | Record attendance         |
+| attendance.update | Edit attendance records   |
+| marks.publish     | Publish test results      |
+| invoice.create    | Generate invoices         |
+| payment.record    | Record payment            |
+| branding.update   | Modify institute branding |
 
 ### Authorization Pipeline
 
@@ -587,22 +593,22 @@ All five gates must pass before any action executes.
 
 ### Security Objectives
 
-| Objective      | Description                                        |
-|----------------|----------------------------------------------------|
-| Confidentiality | Data is only accessible to authorized principals  |
-| Integrity       | Data cannot be tampered with undetected           |
+| Objective       | Description                                        |
+| --------------- | -------------------------------------------------- |
+| Confidentiality | Data is only accessible to authorized principals   |
+| Integrity       | Data cannot be tampered with undetected            |
 | Availability    | System is reliably accessible for daily operations |
 | Auditability    | All security-sensitive actions are traceable       |
 
 ### Security Principles
 
-| Principle           | Application                                      |
-|---------------------|--------------------------------------------------|
-| Least privilege     | Users have only the permissions they need        |
-| Defense in depth    | Multiple layers of validation and control        |
-| Secure defaults     | Features default to restricted, not open         |
-| Fail closed         | Deny on ambiguity — never permit on error        |
-| Immutable audit     | Audit logs are append-only and cannot be altered |
+| Principle        | Application                                      |
+| ---------------- | ------------------------------------------------ |
+| Least privilege  | Users have only the permissions they need        |
+| Defense in depth | Multiple layers of validation and control        |
+| Secure defaults  | Features default to restricted, not open         |
+| Fail closed      | Deny on ambiguity — never permit on error        |
+| Immutable audit  | Audit logs are append-only and cannot be altered |
 
 ### Tenant Isolation
 
@@ -633,12 +639,12 @@ Responses must **never** expose:
 
 The following actions are always audited:
 
-| Category              | Actions                                         |
-|-----------------------|-------------------------------------------------|
-| Identity              | User creation, permission changes, login failures |
-| Academics             | Attendance edits, marks publication             |
-| Finance               | Payment modifications                           |
-| Administration        | Branding changes, security-sensitive settings   |
+| Category       | Actions                                           |
+| -------------- | ------------------------------------------------- |
+| Identity       | User creation, permission changes, login failures |
+| Academics      | Attendance edits, marks publication               |
+| Finance        | Payment modifications                             |
+| Administration | Branding changes, security-sensitive settings     |
 
 > Audit logs are **append-only**. No record is ever modified or deleted.
 
@@ -650,13 +656,13 @@ The following actions are always audited:
 
 Domain-specific errors are returned for expected business failures.
 
-| Error                        | Scenario                                 |
-|------------------------------|------------------------------------------|
-| `StudentAlreadyEnrolled`     | Duplicate enrollment attempt             |
-| `BatchClosed`                | Action attempted on a closed batch       |
-| `InvoiceAlreadyPaid`         | Payment recorded against a paid invoice  |
-| `PermissionDenied`           | User lacks required permission           |
-| `AttendanceAlreadyRecorded`  | Duplicate attendance submission          |
+| Error                       | Scenario                                |
+| --------------------------- | --------------------------------------- |
+| `StudentAlreadyEnrolled`    | Duplicate enrollment attempt            |
+| `BatchClosed`               | Action attempted on a closed batch      |
+| `InvoiceAlreadyPaid`        | Payment recorded against a paid invoice |
+| `PermissionDenied`          | User lacks required permission          |
+| `AttendanceAlreadyRecorded` | Duplicate attendance submission         |
 
 ### Unexpected Failures
 
@@ -670,59 +676,59 @@ Domain-specific errors are returned for expected business failures.
 
 ### ADR-001 — Modular Monolith
 
-| Field    | Value                                                                  |
-|----------|------------------------------------------------------------------------|
-| Decision | Implement as a modular monolith                                        |
+| Field    | Value                                                                                                 |
+| -------- | ----------------------------------------------------------------------------------------------------- |
+| Decision | Implement as a modular monolith                                                                       |
 | Reason   | Simpler operations, easier development for a small team, natural migration path to services if needed |
-| Rejected | Microservices — premature complexity for current scale                 |
+| Rejected | Microservices — premature complexity for current scale                                                |
 
 ---
 
 ### ADR-002 — Shared PostgreSQL Database
 
-| Field    | Value                                                                  |
-|----------|------------------------------------------------------------------------|
-| Decision | Single shared PostgreSQL database with `institute_id` scoping          |
-| Reason   | Operational simplicity, lower infrastructure cost, easier backups      |
+| Field    | Value                                                                         |
+| -------- | ----------------------------------------------------------------------------- |
+| Decision | Single shared PostgreSQL database with `institute_id` scoping                 |
+| Reason   | Operational simplicity, lower infrastructure cost, easier backups             |
 | Rejected | Database-per-tenant (too expensive), Schema-per-tenant (migration complexity) |
 
 ---
 
 ### ADR-003 — Enrollment as Operational Entity
 
-| Field    | Value                                                                   |
-|----------|-------------------------------------------------------------------------|
-| Decision | Enrollment is the operational entity — not Student                      |
+| Field    | Value                                                                                      |
+| -------- | ------------------------------------------------------------------------------------------ |
+| Decision | Enrollment is the operational entity — not Student                                         |
 | Reason   | Supports multiple batch enrollments, historical records, and per-enrollment fee structures |
 
 ---
 
 ### ADR-004 — Batch-Centric Academic Model
 
-| Field    | Value                                                  |
-|----------|--------------------------------------------------------|
+| Field    | Value                                                                  |
+| -------- | ---------------------------------------------------------------------- |
 | Decision | All academic operations (attendance, homework, tests) are batch-scoped |
-| Reason   | Matches real coaching institute workflows exactly      |
+| Reason   | Matches real coaching institute workflows exactly                      |
 
 ---
 
 ### ADR-005 — Permission-Based Authorization
 
-| Field    | Value                                                                  |
-|----------|------------------------------------------------------------------------|
-| Decision | Authorization uses atomic permissions, not hardcoded roles             |
+| Field    | Value                                                                             |
+| -------- | --------------------------------------------------------------------------------- |
+| Decision | Authorization uses atomic permissions, not hardcoded roles                        |
 | Reason   | Avoids rigid role assumptions; supports institute-specific staff responsibilities |
 
 ---
 
 ### ADR-006 — Two-Layer Parent Identity Architecture
 
-| Field    | Value                                                                                      |
-|----------|--------------------------------------------------------------------------------------------|
-| Decision | Separate global `ParentIdentity` (platform layer) from tenant-scoped `InstituteParent`    |
+| Field    | Value                                                                                                                                                                                      |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Decision | Separate global `ParentIdentity` (platform layer) from tenant-scoped `InstituteParent`                                                                                                     |
 | Reason   | Automatic cross-institute identity matching is unreliable — names differ per institute. Parent controls their own child organization via `ChildProfile`. Institutes remain fully isolated. |
-| Rejected | Single global student identity (unreliable auto-merge), fully tenant-scoped parent with no cross-institute view (poor parent UX) |
-| Detail   | See `adr-001-parent-identity.md` for full decision record                                  |
+| Rejected | Single global student identity (unreliable auto-merge), fully tenant-scoped parent with no cross-institute view (poor parent UX)                                                           |
+| Detail   | See `adr-001-parent-identity.md` for full decision record                                                                                                                                  |
 
 ---
 
@@ -730,24 +736,24 @@ Domain-specific errors are returned for expected business failures.
 
 Every new feature must satisfy all of the following before being considered complete:
 
-| Standard                    | Requirement                                               |
-|-----------------------------|-----------------------------------------------------------|
-| Module ownership            | Feature belongs to exactly one module                     |
-| Business rule documentation | Business rule is documented before implementation         |
-| Permission evaluation       | All actions check permissions before executing            |
-| Tenant scoping              | Every query is scoped to the authenticated institute      |
-| Audit consideration         | Sensitive actions are audited                             |
-| Domain events               | Events are published where applicable                     |
-| Tests                       | Feature has appropriate test coverage                     |
-| Documentation               | SDD is updated if architectural behavior changes          |
+| Standard                    | Requirement                                          |
+| --------------------------- | ---------------------------------------------------- |
+| Module ownership            | Feature belongs to exactly one module                |
+| Business rule documentation | Business rule is documented before implementation    |
+| Permission evaluation       | All actions check permissions before executing       |
+| Tenant scoping              | Every query is scoped to the authenticated institute |
+| Audit consideration         | Sensitive actions are audited                        |
+| Domain events               | Events are published where applicable                |
+| Tests                       | Feature has appropriate test coverage                |
+| Documentation               | SDD is updated if architectural behavior changes     |
 
 ---
 
-*Chapter 1 Status: Complete*
+_Chapter 1 Status: Complete_
 
-*This chapter establishes the architectural foundation for CoachingOS. Subsequent chapters build on these principles without contradicting them.*
+_This chapter establishes the architectural foundation for CoachingOS. Subsequent chapters build on these principles without contradicting them._
 
-*Future architectural changes must be recorded as new ADRs rather than silently modifying existing decisions.*
+_Future architectural changes must be recorded as new ADRs rather than silently modifying existing decisions._
 
 ---
 
@@ -761,12 +767,12 @@ This chapter establishes engineering conventions for CoachingOS.
 
 Its objectives are:
 
-| Objective                                              |
-|--------------------------------------------------------|
-| Keep the codebase maintainable                         |
-| Prevent architectural drift                            |
-| Make onboarding future engineers straightforward       |
-| Ensure consistency across every module                 |
+| Objective                                        |
+| ------------------------------------------------ |
+| Keep the codebase maintainable                   |
+| Prevent architectural drift                      |
+| Make onboarding future engineers straightforward |
+| Ensure consistency across every module           |
 
 Every implementation should follow this document unless an Architecture Decision Record (ADR) explicitly supersedes it.
 
@@ -785,10 +791,10 @@ Business logic must never depend on UI implementation.
 Every feature belongs to exactly one business module.
 
 | Feature    | Owner Module |
-|------------|-------------|
-| Attendance | Academics   |
-| Invoices   | Finance     |
-| Students   | Identity    |
+| ---------- | ------------ |
+| Attendance | Academics    |
+| Invoices   | Finance      |
+| Students   | Identity     |
 
 Finance never implements attendance logic. Academics never implements fee logic.
 
@@ -875,13 +881,13 @@ This structure creates consistency and predictability across all modules. A cont
 
 ### Domain Layer
 
-| Contains           | Does NOT contain     |
-|--------------------|----------------------|
-| Business entities  | SQL / Prisma queries |
-| Business rules     | HTTP concerns        |
-| Domain events      | External API calls   |
-| Policies           |                      |
-| Value Objects      |                      |
+| Contains          | Does NOT contain     |
+| ----------------- | -------------------- |
+| Business entities | SQL / Prisma queries |
+| Business rules    | HTTP concerns        |
+| Domain events     | External API calls   |
+| Policies          |                      |
+| Value Objects     |                      |
 
 The Domain layer is the most protected layer. It has zero external dependencies.
 
@@ -892,6 +898,7 @@ Coordinates business use cases.
 **Examples:** `RecordAttendance`, `PublishMarks`, `GenerateInvoice`
 
 **Responsibilities:**
+
 - Input validation
 - Transaction management
 - Calling repositories
@@ -906,6 +913,7 @@ Responsible for implementation details that can change without affecting busines
 ### Presentation Layer
 
 **Responsibilities:**
+
 - REST endpoint definitions
 - Authentication
 - Request validation
@@ -921,11 +929,11 @@ Repositories represent collections of domain entities.
 
 **Example — `AttendanceRepository`**
 
-| Responsibility       |
-|----------------------|
-| Find attendance      |
-| Save attendance      |
-| Query attendance     |
+| Responsibility   |
+| ---------------- |
+| Find attendance  |
+| Save attendance  |
+| Query attendance |
 
 Repositories must not contain business decisions. They are data access abstractions only.
 
@@ -937,12 +945,12 @@ Application Services orchestrate business workflows.
 
 **Example — `RecordAttendanceService`**
 
-| Step | Action                          |
-|------|---------------------------------|
-| 1    | Validate request                |
-| 2    | Verify permissions              |
-| 3    | Start transaction               |
-| 4    | Store attendance via repository |
+| Step | Action                             |
+| ---- | ---------------------------------- |
+| 1    | Validate request                   |
+| 2    | Verify permissions                 |
+| 3    | Start transaction                  |
+| 4    | Store attendance via repository    |
 | 5    | Publish `AttendanceRecorded` event |
 
 Application Services **coordinate**. They do not own business rules — those live in the Domain layer.
@@ -953,11 +961,11 @@ Application Services **coordinate**. They do not own business rules — those li
 
 Domain Services contain business logic that does not naturally belong to a single entity.
 
-| Domain Service                  | Responsibility                          |
-|---------------------------------|-----------------------------------------|
+| Domain Service                   | Responsibility                           |
+| -------------------------------- | ---------------------------------------- |
 | `AttendancePercentageCalculator` | Compute attendance % for a student/batch |
-| `FeeScheduleGenerator`           | Generate invoice schedule from fee plan |
-| `RankCalculator`                 | Compute student rank within a batch     |
+| `FeeScheduleGenerator`           | Generate invoice schedule from fee plan  |
+| `RankCalculator`                 | Compute student rank within a batch      |
 
 Domain Services must remain **deterministic** and **side-effect free** wherever possible.
 
@@ -967,11 +975,11 @@ Domain Services must remain **deterministic** and **side-effect free** wherever 
 
 Every transaction represents exactly one business operation.
 
-| Business Operation   | Transaction Boundary                               |
-|----------------------|----------------------------------------------------|
-| Student Admission    | Student + Parent Link + Enrollment + Fee Plan      |
-| Attendance Recording | Attendance record + Domain Event                   |
-| Payment Recording    | Payment record + Invoice status update             |
+| Business Operation   | Transaction Boundary                          |
+| -------------------- | --------------------------------------------- |
+| Student Admission    | Student + Parent Link + Enrollment + Fee Plan |
+| Attendance Recording | Attendance record + Domain Event              |
+| Payment Recording    | Payment record + Invoice status update        |
 
 Do not create transactions that span unrelated modules.
 
@@ -983,12 +991,12 @@ Every important business action produces a Domain Event.
 
 **Example — `AttendanceRecorded`**
 
-| Consumer              | Action                        |
-|-----------------------|-------------------------------|
-| Notification Service  | Sends absent notification     |
-| Analytics             | Updates attendance aggregates |
-| Audit Logger          | Writes audit trail entry      |
-| Future integrations   | Extensible without code change |
+| Consumer             | Action                         |
+| -------------------- | ------------------------------ |
+| Notification Service | Sends absent notification      |
+| Analytics            | Updates attendance aggregates  |
+| Audit Logger         | Writes audit trail entry       |
+| Future integrations  | Extensible without code change |
 
 > Events are published **only after** a successful transaction commit.
 
@@ -998,13 +1006,13 @@ Every important business action produces a Domain Event.
 
 Background workers process slow or external operations that must not block the HTTP response.
 
-| Job                     | Notes                                |
-|-------------------------|--------------------------------------|
-| WhatsApp delivery       | Retried on provider failure          |
-| SMS delivery            | Optional channel                     |
-| Receipt PDF generation  | Produced asynchronously              |
-| Scheduled reminders     | Fee due dates, upcoming tests        |
-| Analytics aggregation   | Attendance and fee summaries         |
+| Job                    | Notes                         |
+| ---------------------- | ----------------------------- |
+| WhatsApp delivery      | Retried on provider failure   |
+| SMS delivery           | Optional channel              |
+| Receipt PDF generation | Produced asynchronously       |
+| Scheduled reminders    | Fee due dates, upcoming tests |
+| Analytics aggregation  | Attendance and fee summaries  |
 
 > Background workers must be **idempotent** so retries are always safe.
 
@@ -1025,7 +1033,7 @@ Delivery Log
 ```
 
 | Channel  | MVP Status |
-|----------|------------|
+| -------- | ---------- |
 | In-App   | MVP        |
 | WhatsApp | Future     |
 | SMS      | Optional   |
@@ -1043,7 +1051,7 @@ Configuration is separated into three levels.
 Infrastructure-level settings managed via environment variables.
 
 | Examples         |
-|------------------|
+| ---------------- |
 | Database URL     |
 | Storage endpoint |
 | Queue URL        |
@@ -1053,20 +1061,20 @@ Infrastructure-level settings managed via environment variables.
 
 Per-institute settings stored in the database.
 
-| Examples                  |
-|---------------------------|
-| Branding                  |
-| Attendance mode           |
-| Notification preferences  |
+| Examples                 |
+| ------------------------ |
+| Branding                 |
+| Attendance mode          |
+| Notification preferences |
 
 ### User Preferences
 
 Per-user settings (minimal in MVP).
 
-| Examples           |
-|--------------------|
-| Theme              |
-| Language (future)  |
+| Examples          |
+| ----------------- |
+| Theme             |
+| Language (future) |
 
 > Configuration values must **never** be hardcoded inside business services.
 
@@ -1076,11 +1084,11 @@ Per-user settings (minimal in MVP).
 
 Feature flags enable or disable capabilities without code changes.
 
-| Flag                 | Controls                  |
-|----------------------|---------------------------|
-| `rfid_attendance`    | RFID attendance mode      |
-| `homework_module`    | Homework feature          |
-| `sms_notifications`  | SMS delivery channel      |
+| Flag                | Controls             |
+| ------------------- | -------------------- |
+| `rfid_attendance`   | RFID attendance mode |
+| `homework_module`   | Homework feature     |
+| `sms_notifications` | SMS delivery channel |
 
 Feature flag evaluation occurs **before** permission evaluation in the request pipeline.
 
@@ -1092,13 +1100,13 @@ Feature flag evaluation occurs **before** permission evaluation in the request p
 
 Business failures must produce explicit, named domain errors.
 
-| Error                         | Scenario                                  |
-|-------------------------------|-------------------------------------------|
-| `StudentAlreadyEnrolled`      | Duplicate enrollment attempted            |
-| `BatchClosed`                 | Action on a closed batch                  |
-| `InvoiceNotFound`             | Invoice does not exist                    |
-| `PermissionDenied`            | User lacks required permission            |
-| `AttendanceAlreadyRecorded`   | Duplicate attendance submission           |
+| Error                       | Scenario                        |
+| --------------------------- | ------------------------------- |
+| `StudentAlreadyEnrolled`    | Duplicate enrollment attempted  |
+| `BatchClosed`               | Action on a closed batch        |
+| `InvoiceNotFound`           | Invoice does not exist          |
+| `PermissionDenied`          | User lacks required permission  |
+| `AttendanceAlreadyRecorded` | Duplicate attendance submission |
 
 ### Unexpected Errors
 
@@ -1121,7 +1129,7 @@ System lifecycle information: startup, shutdown, request handling.
 Security and business-sensitive events.
 
 | Examples                  |
-|---------------------------|
+| ------------------------- |
 | Payment modified          |
 | Attendance record changed |
 | Permission updated        |
@@ -1141,13 +1149,13 @@ External system interactions: database queries, storage operations, queue messag
 
 The system should expose the following signals for operational visibility.
 
-| Signal                         | Purpose                              |
-|--------------------------------|--------------------------------------|
-| Request duration               | API performance tracking             |
-| Error rate                     | Failure detection                    |
-| Background job failures        | Worker health                        |
-| Notification delivery success  | Communication reliability            |
-| Database query latency         | Persistence performance              |
+| Signal                        | Purpose                   |
+| ----------------------------- | ------------------------- |
+| Request duration              | API performance tracking  |
+| Error rate                    | Failure detection         |
+| Background job failures       | Worker health             |
+| Notification delivery success | Communication reliability |
+| Database query latency        | Persistence performance   |
 
 Future metrics may be exported to a dedicated monitoring platform.
 
@@ -1155,9 +1163,9 @@ Future metrics may be exported to a dedicated monitoring platform.
 
 ## 18. Caching Strategy
 
-| Phase  | Strategy                                         |
-|--------|--------------------------------------------------|
-| MVP    | No distributed cache                             |
+| Phase  | Strategy                                                     |
+| ------ | ------------------------------------------------------------ |
+| MVP    | No distributed cache                                         |
 | Future | Redis for sessions, rate limiting, expensive reports, queues |
 
 > Caching should solve **measured** bottlenecks, not anticipated ones.
@@ -1170,12 +1178,12 @@ Resource-oriented REST APIs.
 
 ### URL Conventions
 
-| Method | Example                   | Purpose              |
-|--------|---------------------------|----------------------|
-| GET    | `/students`               | List students        |
-| POST   | `/attendance`             | Record attendance    |
-| PATCH  | `/payments/{id}`          | Update payment       |
-| GET    | `/batches/{id}/homework`  | List batch homework  |
+| Method | Example                  | Purpose             |
+| ------ | ------------------------ | ------------------- |
+| GET    | `/students`              | List students       |
+| POST   | `/attendance`            | Record attendance   |
+| PATCH  | `/payments/{id}`         | Update payment      |
+| GET    | `/batches/{id}/homework` | List batch homework |
 
 ### Delete Behaviour
 
@@ -1194,7 +1202,7 @@ API responses follow a consistent envelope structure for predictability across a
 Validation occurs in three sequential stages.
 
 | Stage | Type                    | Example                                  |
-|-------|-------------------------|------------------------------------------|
+| ----- | ----------------------- | ---------------------------------------- |
 | 1     | Request schema          | Required fields, types, formats          |
 | 2     | Business rule           | Student already enrolled, batch closed   |
 | 3     | Persistence constraints | Database-level unique and FK constraints |
@@ -1228,7 +1236,7 @@ Audit
 The following must **never** appear in logs:
 
 | Sensitive Data |
-|----------------|
+| -------------- |
 | Passwords      |
 | OTPs           |
 | API secrets    |
@@ -1238,11 +1246,11 @@ The following must **never** appear in logs:
 
 ## 22. File Storage
 
-| Rule                             | Detail                                          |
-|----------------------------------|-------------------------------------------------|
-| Binary files → Object Storage    | Logos, Homework PDFs, Receipt PDFs              |
-| Database stores metadata only    | File name, path, MIME type, upload timestamp    |
-| Access via signed URLs           | Time-limited, authenticated URLs for downloads  |
+| Rule                          | Detail                                         |
+| ----------------------------- | ---------------------------------------------- |
+| Binary files → Object Storage | Logos, Homework PDFs, Receipt PDFs             |
+| Database stores metadata only | File name, path, MIME type, upload timestamp   |
+| Access via signed URLs        | Time-limited, authenticated URLs for downloads |
 
 Direct public URLs to storage buckets are not permitted.
 
@@ -1250,14 +1258,14 @@ Direct public URLs to storage buckets are not permitted.
 
 ## 23. Coding Standards
 
-| Standard                                          |
-|---------------------------------------------------|
-| Prefer composition over inheritance               |
-| Keep functions focused on a single responsibility |
-| Avoid circular dependencies between modules       |
-| Avoid static mutable state                        |
-| Use immutable DTOs where practical                |
-| Prefer descriptive names over abbreviations       |
+| Standard                                                           |
+| ------------------------------------------------------------------ |
+| Prefer composition over inheritance                                |
+| Keep functions focused on a single responsibility                  |
+| Avoid circular dependencies between modules                        |
+| Avoid static mutable state                                         |
+| Use immutable DTOs where practical                                 |
+| Prefer descriptive names over abbreviations                        |
 | Name classes and functions using Canonical Vocabulary from the SRS |
 
 ---
@@ -1269,7 +1277,7 @@ Direct public URLs to storage buckets are not permitted.
 Target the most business-critical code.
 
 | Test Target       |
-|-------------------|
+| ----------------- |
 | Business rules    |
 | Domain Services   |
 | Utility functions |
@@ -1278,22 +1286,22 @@ Target the most business-critical code.
 
 Verify that components work correctly together.
 
-| Test Target         |
-|---------------------|
-| Repositories        |
-| Application Services |
+| Test Target           |
+| --------------------- |
+| Repositories          |
+| Application Services  |
 | Database interactions |
 
 ### End-to-End Tests
 
 Cover critical user-facing workflows.
 
-| Workflow          |
-|-------------------|
-| Student Admission |
+| Workflow             |
+| -------------------- |
+| Student Admission    |
 | Attendance Recording |
-| Fee Recording     |
-| Parent Login      |
+| Fee Recording        |
+| Parent Login         |
 
 ---
 
@@ -1301,15 +1309,15 @@ Cover critical user-facing workflows.
 
 Every Pull Request must verify all of the following before approval:
 
-| Check                              | Verified |
-|------------------------------------|----------|
-| Business rule correctly implemented | ☐       |
-| Permission enforced                 | ☐       |
-| Tenant isolation preserved          | ☐       |
-| Input validation complete           | ☐       |
-| Tests added                         | ☐       |
-| Logging appropriate (no secrets)    | ☐       |
-| Documentation updated if required   | ☐       |
+| Check                               | Verified |
+| ----------------------------------- | -------- |
+| Business rule correctly implemented | ☐        |
+| Permission enforced                 | ☐        |
+| Tenant isolation preserved          | ☐        |
+| Input validation complete           | ☐        |
+| Tests added                         | ☐        |
+| Logging appropriate (no secrets)    | ☐        |
+| Documentation updated if required   | ☐        |
 
 ---
 
@@ -1317,16 +1325,16 @@ Every Pull Request must verify all of the following before approval:
 
 Before merging any feature branch:
 
-| Check                                              | Verified |
-|----------------------------------------------------|----------|
-| Module ownership confirmed                         | ☐       |
-| No cross-module business logic                     | ☐       |
-| Transactions scoped to one business operation      | ☐       |
-| Domain events published where required             | ☐       |
-| Audit implications reviewed                        | ☐       |
-| Security pipeline respected                        | ☐       |
-| Performance acceptable for target institute sizes  | ☐       |
-| Naming consistent with Canonical Vocabulary (SRS)  | ☐       |
+| Check                                             | Verified |
+| ------------------------------------------------- | -------- |
+| Module ownership confirmed                        | ☐        |
+| No cross-module business logic                    | ☐        |
+| Transactions scoped to one business operation     | ☐        |
+| Domain events published where required            | ☐        |
+| Audit implications reviewed                       | ☐        |
+| Security pipeline respected                       | ☐        |
+| Performance acceptable for target institute sizes | ☐        |
+| Naming consistent with Canonical Vocabulary (SRS) | ☐        |
 
 ---
 
@@ -1334,11 +1342,11 @@ Before merging any feature branch:
 
 The modular monolith is intentionally designed so that individual modules can later become independent services if scale justifies it.
 
-| Principle                                                              |
-|------------------------------------------------------------------------|
-| No module assumes it will always execute in the same process           |
-| Module boundaries are respected today to enable extraction tomorrow    |
-| Future migration paths remain open without premature complexity today  |
+| Principle                                                             |
+| --------------------------------------------------------------------- |
+| No module assumes it will always execute in the same process          |
+| Module boundaries are respected today to enable extraction tomorrow   |
+| Future migration paths remain open without premature complexity today |
 
 When a module needs to be extracted, the interfaces and events already define the contract. The work becomes an infrastructure concern, not a business logic rewrite.
 
@@ -1350,36 +1358,36 @@ A permanent, non-negotiable set of rules that keeps the codebase consistent as i
 
 > The Engineering Constitution is short by design. Twenty rules that prevent the most expensive classes of mistakes.
 
-| Code   | Rule                          | Detail                                                                                      |
-|--------|-------------------------------|---------------------------------------------------------------------------------------------|
-| EC-001 | Repository Boundary           | Never bypass repositories. All database access goes through the repository layer.           |
-| EC-002 | Module Isolation              | Never access another module's tables directly. Cross-module access uses published interfaces or domain events only. |
-| EC-003 | Authorization is Mandatory    | Every endpoint requires authentication, tenant resolution, and permission evaluation before business logic executes. No exceptions, including internal APIs. |
-| EC-004 | Tenant Scope is Automatic     | Repositories automatically scope every query by `institute_id`. Manual tenant filtering inside business services is prohibited. |
-| EC-005 | Domain Layer Independence     | Business rules live in the domain layer. The domain layer has zero knowledge of HTTP, Prisma, or external APIs. |
-| EC-006 | No Business Logic in Components | No business logic inside React components or API route handlers. Components render. Handlers route. Business logic belongs in services. |
-| EC-007 | Migrations for Every Schema Change | Every database change uses a versioned migration file. No manual changes to production schema. Ever. |
-| EC-008 | Tests for Every Feature       | Every new feature must include tests. Business rules get unit tests. Workflows get integration tests. Critical paths get end-to-end tests. |
-| EC-009 | Audit Sensitive Actions       | Every security-sensitive or financially-sensitive action is audited. Audit logs are append-only and never modified. |
-| EC-010 | Events After Commit           | Domain events are published only after a successful transaction commit. Never inside the transaction. |
-| EC-011 | No Internal IDs in Responses  | Never return internal database identifiers unnecessarily in API responses. Use UUIDs for public-facing references. |
-| EC-012 | No Secrets in Logs            | Passwords, OTPs, API keys, and authentication tokens must never appear in any log.          |
-| EC-013 | Canonical Vocabulary          | All code, variables, and documentation must use the canonical vocabulary from the SRS. No local synonyms or abbreviations that conflict with the domain language. |
-| EC-014 | Soft Delete by Default        | Business entities are archived — never hard-deleted — unless the SRS explicitly permits physical deletion for that entity. |
-| EC-015 | Configuration Over Hardcoding | No business configuration values are hardcoded inside services. All configuration comes from environment variables or the database settings layer. |
-| EC-016 | Idempotent Workers            | All background workers and scheduled jobs must be idempotent. Retrying a job must never produce duplicate business effects. |
-| EC-017 | Forward-Only Migrations       | Migrations are forward-only. Destructive rollbacks require an explicit ADR. Data migrations are separated from schema migrations. |
-| EC-018 | One Transaction Per Business Operation | A database transaction represents exactly one business operation. Transactions must not span unrelated business concerns or multiple modules. |
-| EC-019 | External Calls Never Block Responses | External integrations (WhatsApp, SMS, storage) are always handled asynchronously via background workers. They never block an HTTP response. |
-| EC-020 | Feature Flags Before Permissions | Feature flag evaluation occurs before permission evaluation in every request pipeline. |
+| Code   | Rule                                   | Detail                                                                                                                                                            |
+| ------ | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| EC-001 | Repository Boundary                    | Never bypass repositories. All database access goes through the repository layer.                                                                                 |
+| EC-002 | Module Isolation                       | Never access another module's tables directly. Cross-module access uses published interfaces or domain events only.                                               |
+| EC-003 | Authorization is Mandatory             | Every endpoint requires authentication, tenant resolution, and permission evaluation before business logic executes. No exceptions, including internal APIs.      |
+| EC-004 | Tenant Scope is Automatic              | Repositories automatically scope every query by `institute_id`. Manual tenant filtering inside business services is prohibited.                                   |
+| EC-005 | Domain Layer Independence              | Business rules live in the domain layer. The domain layer has zero knowledge of HTTP, Prisma, or external APIs.                                                   |
+| EC-006 | No Business Logic in Components        | No business logic inside React components or API route handlers. Components render. Handlers route. Business logic belongs in services.                           |
+| EC-007 | Migrations for Every Schema Change     | Every database change uses a versioned migration file. No manual changes to production schema. Ever.                                                              |
+| EC-008 | Tests for Every Feature                | Every new feature must include tests. Business rules get unit tests. Workflows get integration tests. Critical paths get end-to-end tests.                        |
+| EC-009 | Audit Sensitive Actions                | Every security-sensitive or financially-sensitive action is audited. Audit logs are append-only and never modified.                                               |
+| EC-010 | Events After Commit                    | Domain events are published only after a successful transaction commit. Never inside the transaction.                                                             |
+| EC-011 | No Internal IDs in Responses           | Never return internal database identifiers unnecessarily in API responses. Use UUIDs for public-facing references.                                                |
+| EC-012 | No Secrets in Logs                     | Passwords, OTPs, API keys, and authentication tokens must never appear in any log.                                                                                |
+| EC-013 | Canonical Vocabulary                   | All code, variables, and documentation must use the canonical vocabulary from the SRS. No local synonyms or abbreviations that conflict with the domain language. |
+| EC-014 | Soft Delete by Default                 | Business entities are archived — never hard-deleted — unless the SRS explicitly permits physical deletion for that entity.                                        |
+| EC-015 | Configuration Over Hardcoding          | No business configuration values are hardcoded inside services. All configuration comes from environment variables or the database settings layer.                |
+| EC-016 | Idempotent Workers                     | All background workers and scheduled jobs must be idempotent. Retrying a job must never produce duplicate business effects.                                       |
+| EC-017 | Forward-Only Migrations                | Migrations are forward-only. Destructive rollbacks require an explicit ADR. Data migrations are separated from schema migrations.                                 |
+| EC-018 | One Transaction Per Business Operation | A database transaction represents exactly one business operation. Transactions must not span unrelated business concerns or multiple modules.                     |
+| EC-019 | External Calls Never Block Responses   | External integrations (WhatsApp, SMS, storage) are always handled asynchronously via background workers. They never block an HTTP response.                       |
+| EC-020 | Feature Flags Before Permissions       | Feature flag evaluation occurs before permission evaluation in every request pipeline.                                                                            |
 
 > The full Engineering Constitution with rationale is in `phase3-execution-plan.md`. This table is the authoritative quick-reference.
 
 ---
 
-*Chapter 2 Status: Complete*
+_Chapter 2 Status: Complete_
 
-*This chapter defines how engineering work is organized and implemented. Future contributors must follow these conventions to maintain architectural consistency as the platform evolves.*
+_This chapter defines how engineering work is organized and implemented. Future contributors must follow these conventions to maintain architectural consistency as the platform evolves._
 
 ---
 
@@ -1391,15 +1399,15 @@ A permanent, non-negotiable set of rules that keeps the codebase consistent as i
 
 This chapter defines the production architecture and operational standards required to run CoachingOS safely and reliably.
 
-| Focus Area               |
-|--------------------------|
-| Production deployment    |
-| Infrastructure           |
-| Security                 |
-| Disaster recovery        |
-| Monitoring               |
-| Scalability              |
-| Production readiness     |
+| Focus Area            |
+| --------------------- |
+| Production deployment |
+| Infrastructure        |
+| Security              |
+| Disaster recovery     |
+| Monitoring            |
+| Scalability           |
+| Production readiness  |
 
 ---
 
@@ -1436,12 +1444,12 @@ Initial deployment may run on a single server. The architecture supports horizon
 
 Four isolated environments — no secrets shared between them.
 
-| Environment | Database       | Logging | Integrations       | Data              |
-|-------------|----------------|---------|--------------------|--------------------|
-| Development | Local          | Debug   | Mock               | Seed / local       |
-| Testing     | Separate DB    | Debug   | Test credentials   | Seeded             |
-| Staging     | Production-like | Info   | Safe integrations  | Realistic dataset  |
-| Production  | Hardened       | Error   | Live               | Real — backups on  |
+| Environment | Database        | Logging | Integrations      | Data              |
+| ----------- | --------------- | ------- | ----------------- | ----------------- |
+| Development | Local           | Debug   | Mock              | Seed / local      |
+| Testing     | Separate DB     | Debug   | Test credentials  | Seeded            |
+| Staging     | Production-like | Info    | Safe integrations | Realistic dataset |
+| Production  | Hardened        | Error   | Live              | Real — backups on |
 
 > No production secrets may exist in any non-production environment.
 
@@ -1453,27 +1461,27 @@ All configuration comes from environment variables or a secure configuration ser
 
 ### System Configuration
 
-| Example              |
-|----------------------|
-| Database URL         |
-| Storage credentials  |
+| Example                |
+| ---------------------- |
+| Database URL           |
+| Storage credentials    |
 | Authentication secrets |
 
 ### External Services
 
-| Example           |
-|-------------------|
-| WhatsApp API key  |
-| SMS provider key  |
-| Email provider    |
+| Example          |
+| ---------------- |
+| WhatsApp API key |
+| SMS provider key |
+| Email provider   |
 
 ### Application Configuration
 
-| Example             |
-|---------------------|
-| Session duration    |
-| File upload limits  |
-| Rate limits         |
+| Example            |
+| ------------------ |
+| Session duration   |
+| File upload limits |
+| Rate limits        |
 
 > Secrets must **never** be committed to version control.
 
@@ -1485,13 +1493,13 @@ All configuration comes from environment variables or a secure configuration ser
 
 **PostgreSQL**
 
-| Reason                |
-|-----------------------|
+| Reason                   |
+| ------------------------ |
 | Mature and battle-tested |
-| ACID compliant        |
-| Excellent indexing    |
-| Full-text search      |
-| Strong ecosystem      |
+| ACID compliant           |
+| Excellent indexing       |
+| Full-text search         |
+| Strong ecosystem         |
 
 ### Multi-Tenant Strategy
 
@@ -1504,11 +1512,11 @@ Shared database with `institute_id` scoping on every tenant-owned table.
 
 Use UUIDs for all external-facing entities.
 
-| Advantage                        |
-|----------------------------------|
-| No predictable sequential IDs    |
+| Advantage                          |
+| ---------------------------------- |
+| No predictable sequential IDs      |
 | Easier data merging across tenants |
-| Better API security              |
+| Better API security                |
 
 ### Foreign Keys
 
@@ -1518,10 +1526,10 @@ Enforce FK constraints at the database level throughout. Application logic alone
 
 Business entities support archival rather than physical deletion.
 
-| Field        | Purpose                        |
-|--------------|--------------------------------|
-| `deleted_at` | Timestamp of archival          |
-| `deleted_by` | User who performed the action  |
+| Field        | Purpose                       |
+| ------------ | ----------------------------- |
+| `deleted_at` | Timestamp of archival         |
+| `deleted_by` | User who performed the action |
 
 Historical records remain available for auditing indefinitely.
 
@@ -1533,22 +1541,22 @@ Binary files are stored in object storage. The database stores metadata only.
 
 ### File Types
 
-| File Type           | Storage Location |
-|---------------------|-----------------|
-| Institute logos     | Object Storage  |
-| Homework attachments | Object Storage |
-| Receipt PDFs        | Object Storage  |
+| File Type            | Storage Location |
+| -------------------- | ---------------- |
+| Institute logos      | Object Storage   |
+| Homework attachments | Object Storage   |
+| Receipt PDFs         | Object Storage   |
 
 ### Metadata Stored in Database
 
-| Field          |
-|----------------|
-| File ID        |
-| Storage Key    |
-| MIME Type      |
-| Size           |
-| Uploaded By    |
-| Created At     |
+| Field       |
+| ----------- |
+| File ID     |
+| Storage Key |
+| MIME Type   |
+| Size        |
+| Uploaded By |
+| Created At  |
 
 > File access must use **short-lived signed URLs**. Direct public bucket URLs are not permitted.
 
@@ -1558,13 +1566,13 @@ Binary files are stored in object storage. The database stores metadata only.
 
 Background jobs execute outside the HTTP request lifecycle and must never block responses.
 
-| Job                       | Notes                              |
-|---------------------------|------------------------------------|
-| WhatsApp delivery         | Retried on provider failure        |
-| SMS delivery              | Optional channel                   |
-| Receipt PDF generation    | Produced asynchronously            |
-| Scheduled fee reminders   | Triggered by fee due dates         |
-| Daily report generation   | Attendance and fee summaries       |
+| Job                     | Notes                        |
+| ----------------------- | ---------------------------- |
+| WhatsApp delivery       | Retried on provider failure  |
+| SMS delivery            | Optional channel             |
+| Receipt PDF generation  | Produced asynchronously      |
+| Scheduled fee reminders | Triggered by fee due dates   |
+| Daily report generation | Attendance and fee summaries |
 
 > Workers must be **idempotent**. Retries must never duplicate business effects.
 
@@ -1572,11 +1580,11 @@ Background jobs execute outside the HTTP request lifecycle and must never block 
 
 ## 8. Scheduled Jobs
 
-| Frequency | Jobs                                             |
-|-----------|--------------------------------------------------|
-| Daily     | Attendance summary, reminder generation          |
-| Weekly    | Report generation                                |
-| Monthly   | Fee invoice generation, payment reminders        |
+| Frequency | Jobs                                      |
+| --------- | ----------------------------------------- |
+| Daily     | Attendance summary, reminder generation   |
+| Weekly    | Report generation                         |
+| Monthly   | Fee invoice generation, payment reminders |
 
 > Scheduled jobs must be resumable after failures. Partial runs must not leave data in inconsistent states.
 
@@ -1586,19 +1594,19 @@ Background jobs execute outside the HTTP request lifecycle and must never block 
 
 ### Authentication
 
-| Actor  | Method                    | Additional Rules                              |
-|--------|---------------------------|-----------------------------------------------|
-| Staff  | Email + Password          | Strong password policy, session expiration    |
-| Parent | Mobile Number + OTP       | Short-lived OTP, one-time use                 |
+| Actor  | Method              | Additional Rules                           |
+| ------ | ------------------- | ------------------------------------------ |
+| Staff  | Email + Password    | Strong password policy, session expiration |
+| Parent | Mobile Number + OTP | Short-lived OTP, one-time use              |
 
 ### Session Properties
 
-| Property      | Value                                               |
-|---------------|-----------------------------------------------------|
-| Storage       | Secure HTTP-only cookies                            |
-| SameSite      | Strict                                              |
-| Rotation      | After every authentication event                    |
-| Expiration    | Short-lived with refresh mechanism                  |
+| Property   | Value                              |
+| ---------- | ---------------------------------- |
+| Storage    | Secure HTTP-only cookies           |
+| SameSite   | Strict                             |
+| Rotation   | After every authentication event   |
+| Expiration | Short-lived with refresh mechanism |
 
 ### Authorization Pipeline
 
@@ -1624,12 +1632,12 @@ Execution
 
 The following data is sensitive and must be handled accordingly:
 
-| Data                  | Rule                                                  |
-|-----------------------|-------------------------------------------------------|
-| Password hashes       | Never logged, never returned to clients               |
-| Authentication tokens | Never logged, stored securely                         |
-| OTP codes             | Never logged, single-use, short expiry                |
-| API secrets           | Never logged, never committed to version control      |
+| Data                  | Rule                                             |
+| --------------------- | ------------------------------------------------ |
+| Password hashes       | Never logged, never returned to clients          |
+| Authentication tokens | Never logged, stored securely                    |
+| OTP codes             | Never logged, single-use, short expiry           |
+| API secrets           | Never logged, never committed to version control |
 
 Personally identifiable information (PII) must be exposed only when strictly necessary for the operation.
 
@@ -1637,12 +1645,12 @@ Personally identifiable information (PII) must be exposed only when strictly nec
 
 ## 11. Transport Security
 
-| Rule                                      |
-|-------------------------------------------|
-| All communication over HTTPS              |
-| HTTP disabled in production               |
-| Cookies: Secure + HTTP-only + SameSite    |
-| TLS managed via Cloudflare or equivalent  |
+| Rule                                     |
+| ---------------------------------------- |
+| All communication over HTTPS             |
+| HTTP disabled in production              |
+| Cookies: Secure + HTTP-only + SameSite   |
+| TLS managed via Cloudflare or equivalent |
 
 ---
 
@@ -1666,13 +1674,13 @@ Unknown request fields are rejected where practical. Database constraints are a 
 
 Responses must **never** include:
 
-| Prohibited Content             |
-|-------------------------------|
-| Stack traces                  |
-| Internal error messages       |
-| Database error details        |
-| Secrets or tokens             |
-| Another institute's data      |
+| Prohibited Content                            |
+| --------------------------------------------- |
+| Stack traces                                  |
+| Internal error messages                       |
+| Database error details                        |
+| Secrets or tokens                             |
+| Another institute's data                      |
 | Internal system identifiers (where avoidable) |
 
 ---
@@ -1681,23 +1689,23 @@ Responses must **never** include:
 
 ### Audited Events
 
-| Category       | Events                                              |
-|----------------|-----------------------------------------------------|
-| Identity       | User login, login failures, permission changes      |
-| Academics      | Attendance edits, marks publication                 |
-| Finance        | Payment modifications                               |
-| Administration | Branding updates, settings changes                  |
+| Category       | Events                                         |
+| -------------- | ---------------------------------------------- |
+| Identity       | User login, login failures, permission changes |
+| Academics      | Attendance edits, marks publication            |
+| Finance        | Payment modifications                          |
+| Administration | Branding updates, settings changes             |
 
 ### Audit Record Structure
 
-| Field             | Description                           |
-|-------------------|---------------------------------------|
-| `user_id`         | Who performed the action              |
-| `institute_id`    | Which institute                       |
-| `timestamp`       | When it occurred (UTC)                |
-| `action`          | What was done                         |
-| `entity`          | Which entity type                     |
-| `entity_id`       | Which specific record                 |
+| Field          | Description              |
+| -------------- | ------------------------ |
+| `user_id`      | Who performed the action |
+| `institute_id` | Which institute          |
+| `timestamp`    | When it occurred (UTC)   |
+| `action`       | What was done            |
+| `entity`       | Which entity type        |
+| `entity_id`    | Which specific record    |
 
 > Audit logs are **append-only**. No record is ever modified or deleted.
 
@@ -1705,13 +1713,13 @@ Responses must **never** include:
 
 ## 15. Rate Limiting
 
-| Endpoint Category | Limit Profile  |
-|-------------------|----------------|
-| Authentication    | Strict         |
-| Attendance APIs   | Moderate       |
-| Parent APIs       | Moderate       |
-| File uploads      | Conservative   |
-| Public endpoints  | Conservative   |
+| Endpoint Category | Limit Profile |
+| ----------------- | ------------- |
+| Authentication    | Strict        |
+| Attendance APIs   | Moderate      |
+| Parent APIs       | Moderate      |
+| File uploads      | Conservative  |
+| Public endpoints  | Conservative  |
 
 Rate limits must be configurable per environment and adjustable without code deployment.
 
@@ -1719,24 +1727,24 @@ Rate limits must be configurable per environment and adjustable without code dep
 
 ## 16. Threat Model
 
-| Threat                    | Mitigation                                                       |
-|---------------------------|------------------------------------------------------------------|
-| Cross-tenant data access  | Automatic `institute_id` scoping in every repository query       |
-| Broken authorization      | Central permission evaluation — no bypass paths                  |
-| Credential theft          | Secure sessions, expiration, HTTP-only cookies                   |
-| OTP replay attacks        | Short-lived OTPs, single-use verification                        |
-| File abuse                | Signed URLs, file size limits, MIME type validation              |
-| Denial of Service         | Rate limiting, monitoring, Cloudflare layer                      |
+| Threat                   | Mitigation                                                 |
+| ------------------------ | ---------------------------------------------------------- |
+| Cross-tenant data access | Automatic `institute_id` scoping in every repository query |
+| Broken authorization     | Central permission evaluation — no bypass paths            |
+| Credential theft         | Secure sessions, expiration, HTTP-only cookies             |
+| OTP replay attacks       | Short-lived OTPs, single-use verification                  |
+| File abuse               | Signed URLs, file size limits, MIME type validation        |
+| Denial of Service        | Rate limiting, monitoring, Cloudflare layer                |
 
 ---
 
 ## 17. Logging Strategy
 
-| Category            | Content                                              | Format     |
-|---------------------|------------------------------------------------------|------------|
-| Application Logs    | Business lifecycle events, request handling          | Structured |
-| Infrastructure Logs | DB queries, storage ops, queue, external API calls   | Structured |
-| Audit Logs          | Security and business-sensitive mutations            | Structured, append-only |
+| Category            | Content                                            | Format                  |
+| ------------------- | -------------------------------------------------- | ----------------------- |
+| Application Logs    | Business lifecycle events, request handling        | Structured              |
+| Infrastructure Logs | DB queries, storage ops, queue, external API calls | Structured              |
+| Audit Logs          | Security and business-sensitive mutations          | Structured, append-only |
 
 Every log entry includes a **correlation ID** to trace a request across all layers.
 
@@ -1746,13 +1754,13 @@ Every log entry includes a **correlation ID** to trace a request across all laye
 
 ## 18. Monitoring
 
-| Layer         | Signals to Monitor                              |
-|---------------|-------------------------------------------------|
-| Application   | Response time, error rate                       |
-| Database      | Slow queries, connection pool usage             |
-| Workers       | Failed jobs, retry counts, queue depth          |
-| Notifications | Delivery success rate, provider failures        |
-| Storage       | Upload failures, download failures              |
+| Layer         | Signals to Monitor                       |
+| ------------- | ---------------------------------------- |
+| Application   | Response time, error rate                |
+| Database      | Slow queries, connection pool usage      |
+| Workers       | Failed jobs, retry counts, queue depth   |
+| Notifications | Delivery success rate, provider failures |
+| Storage       | Upload failures, download failures       |
 
 Alerts should be configured for error rate spikes, worker failures, and slow query thresholds.
 
@@ -1760,10 +1768,10 @@ Alerts should be configured for error rate spikes, worker failures, and slow que
 
 ## 19. Backups
 
-| Asset           | Strategy                                                    |
-|-----------------|-------------------------------------------------------------|
-| PostgreSQL      | Automated daily backup + point-in-time recovery if supported |
-| Object Storage  | Versioning enabled where supported                          |
+| Asset          | Strategy                                                     |
+| -------------- | ------------------------------------------------------------ |
+| PostgreSQL     | Automated daily backup + point-in-time recovery if supported |
+| Object Storage | Versioning enabled where supported                           |
 
 > Backups must be **periodically tested** by restoring to a non-production environment. An untested backup is not a backup.
 
@@ -1774,12 +1782,13 @@ Alerts should be configured for error rate spikes, worker failures, and slow que
 ### Recovery Priority Order
 
 | Priority | Asset          |
-|----------|----------------|
+| -------- | -------------- |
 | Highest  | Database       |
 | Medium   | Uploaded files |
 | Lower    | Cached data    |
 
 Recovery procedures must be:
+
 - Documented before production launch
 - Periodically validated with practice drills
 
@@ -1787,12 +1796,12 @@ Recovery procedures must be:
 
 ## 21. Performance Targets
 
-| Operation            | Target    |
-|----------------------|-----------|
-| Student search       | < 500 ms  |
+| Operation             | Target   |
+| --------------------- | -------- |
+| Student search        | < 500 ms |
 | Attendance submission | < 2 sec  |
-| Dashboard load       | < 3 sec   |
-| Parent login         | < 5 sec   |
+| Dashboard load        | < 3 sec  |
+| Parent login          | < 5 sec  |
 
 > These targets must be validated using production telemetry — not assumptions.
 
@@ -1840,18 +1849,18 @@ only if justified by operational metrics
 
 ### Pipeline Stages
 
-| Stage              | Description                                    |
-|--------------------|------------------------------------------------|
-| Lint               | Code style and formatting checks               |
-| Type Check         | Static type analysis                           |
-| Unit Tests         | Business rule verification                     |
-| Integration Tests  | Repository and service layer verification      |
-| Build              | Application compilation                        |
-| Security Scan      | Dependency vulnerability scan                  |
-| Deploy to Staging  | Automated staging deployment                   |
-| Smoke Tests        | Critical workflow verification on staging      |
-| Manual Approval    | Human gate before production                   |
-| Production Deploy  | Gated production release with rollback support |
+| Stage             | Description                                    |
+| ----------------- | ---------------------------------------------- |
+| Lint              | Code style and formatting checks               |
+| Type Check        | Static type analysis                           |
+| Unit Tests        | Business rule verification                     |
+| Integration Tests | Repository and service layer verification      |
+| Build             | Application compilation                        |
+| Security Scan     | Dependency vulnerability scan                  |
+| Deploy to Staging | Automated staging deployment                   |
+| Smoke Tests       | Critical workflow verification on staging      |
+| Manual Approval   | Human gate before production                   |
+| Production Deploy | Gated production release with rollback support |
 
 > Production deployments must support **one-step rollback**.
 
@@ -1891,20 +1900,20 @@ only if justified by operational metrics
 
 The following decisions are frozen for Version 1. Changes require a formal Architecture Decision Record (ADR).
 
-| Decision                              |
-|---------------------------------------|
-| Modular Monolith                      |
-| Shared PostgreSQL                     |
-| Multi-tenant via `institute_id`       |
-| Batch-centric academic model          |
-| Enrollment-centric operations         |
-| Permission-based authorization        |
-| Event-driven business workflows       |
-| REST API                              |
+| Decision                                     |
+| -------------------------------------------- |
+| Modular Monolith                             |
+| Shared PostgreSQL                            |
+| Multi-tenant via `institute_id`              |
+| Batch-centric academic model                 |
+| Enrollment-centric operations                |
+| Permission-based authorization               |
+| Event-driven business workflows              |
+| REST API                                     |
 | Background workers for external integrations |
-| Object storage for binary files       |
-| Responsive PWA                        |
-| Coaching domain only                  |
+| Object storage for binary files              |
+| Responsive PWA                               |
+| Coaching domain only                         |
 
 ---
 
@@ -1912,16 +1921,16 @@ The following decisions are frozen for Version 1. Changes require a formal Archi
 
 Potential additions in future versions — each must respect the architectural principles established in this document.
 
-| Feature                    | Release Target |
-|----------------------------|----------------|
-| Payment gateway integration | V2            |
-| Multi-branch architecture   | V2            |
-| AI insights and reports     | V2            |
-| QR code attendance          | V1+           |
-| Face recognition            | V2+           |
-| Public APIs                 | Future        |
-| Webhooks                    | Future        |
-| Event streaming             | Future        |
+| Feature                     | Release Target |
+| --------------------------- | -------------- |
+| Payment gateway integration | V2             |
+| Multi-branch architecture   | V2             |
+| AI insights and reports     | V2             |
+| QR code attendance          | V1+            |
+| Face recognition            | V2+            |
+| Public APIs                 | Future         |
+| Webhooks                    | Future         |
+| Event streaming             | Future         |
 
 ---
 
@@ -1931,16 +1940,16 @@ With Chapters 1–3 complete, the System Design Document is now complete.
 
 This document defines:
 
-| Area                      |
-|---------------------------|
-| Architecture              |
-| Module boundaries         |
-| Engineering standards     |
-| Security model            |
-| Infrastructure            |
-| Operations                |
-| Scalability strategy      |
-| Production readiness      |
+| Area                  |
+| --------------------- |
+| Architecture          |
+| Module boundaries     |
+| Engineering standards |
+| Security model        |
+| Infrastructure        |
+| Operations            |
+| Scalability strategy  |
+| Production readiness  |
 
 > **This document is the engineering blueprint for CoachingOS.**
 >
@@ -1948,6 +1957,6 @@ This document defines:
 
 ---
 
-*Chapter 3 Status: Complete*
+_Chapter 3 Status: Complete_
 
-*SDD v1.0 — All chapters complete.*
+_SDD v1.0 — All chapters complete._

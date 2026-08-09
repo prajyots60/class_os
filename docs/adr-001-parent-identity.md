@@ -17,10 +17,10 @@ The initial design modelled Parent as a tenant-scoped entity — a record belong
 
 The answer is **no** — reliably. Each institute stores student names differently:
 
-| Institute       | Name Stored       |
-|-----------------|-------------------|
-| Physics Academy | Rahul Sharma      |
-| Maths Classes   | Rahul S.          |
+| Institute       | Name Stored        |
+| --------------- | ------------------ |
+| Physics Academy | Rahul Sharma       |
+| Maths Classes   | Rahul S.           |
 | Cricket Academy | Rahul Kumar Sharma |
 
 Attempting automatic identity matching across institutes is error-prone and unsafe. It introduces a class of bugs where unrelated students get merged, or real siblings stay separated.
@@ -177,39 +177,39 @@ The parent decides. The platform never assumes.
 
 The Parent Dashboard is renamed conceptually to **Parent Hub** — a global view across all coaching institutes a parent is connected to.
 
-| Parent Hub Features               |
-|-----------------------------------|
-| OTP login via phone               |
-| All connected coaching institutes |
-| Child Profiles                    |
+| Parent Hub Features                 |
+| ----------------------------------- |
+| OTP login via phone                 |
+| All connected coaching institutes   |
+| Child Profiles                      |
 | Cross-institute attendance calendar |
-| Unified notifications             |
-| Per-child academic overview       |
+| Unified notifications               |
+| Per-child academic overview         |
 
 ### Coaching Workspace
 
 Each institute remains a fully isolated tenant workspace.
 
-| Coaching Workspace Features  |
-|------------------------------|
-| Attendance                   |
-| Fees                         |
-| Marks                        |
-| Homework                     |
-| Announcements                |
+| Coaching Workspace Features |
+| --------------------------- |
+| Attendance                  |
+| Fees                        |
+| Marks                       |
+| Homework                    |
+| Announcements               |
 
 ---
 
 ## Benefits
 
-| Benefit                                | Explanation                                                     |
-|----------------------------------------|-----------------------------------------------------------------|
-| No unreliable identity matching        | Parent organizes — platform never assumes                       |
-| Clean tenant isolation preserved       | Institute data never crosses tenant boundaries                  |
-| Phone number is the global anchor      | One phone → one ParentIdentity, regardless of how many institutes |
+| Benefit                                | Explanation                                                        |
+| -------------------------------------- | ------------------------------------------------------------------ |
+| No unreliable identity matching        | Parent organizes — platform never assumes                          |
+| Clean tenant isolation preserved       | Institute data never crosses tenant boundaries                     |
+| Phone number is the global anchor      | One phone → one ParentIdentity, regardless of how many institutes  |
 | Phone change is a single-record update | Only `ParentIdentity.phone` changes — no cascade across institutes |
 | Differentiated product                 | Cross-institute child view is impossible for single-institute apps |
-| Future-proof                           | Smart suggestions can be added later without schema changes     |
+| Future-proof                           | Smart suggestions can be added later without schema changes        |
 
 ---
 
@@ -254,14 +254,14 @@ Global `ParentIdentity` + personal `ChildProfile` + tenant-scoped `InstitutePare
 
 ## Decision Record
 
-| Field        | Value                                                          |
-|--------------|----------------------------------------------------------------|
-| Decision     | Two-layer parent identity — global identity + tenant parent   |
-| Driven by    | Product insight during architecture review                     |
-| Reversible   | Partially — early enough to implement correctly before launch  |
-| Impact       | Schema, auth flow, parent API surface, product naming          |
-| MVP scope    | Platform Layer tables created; ChildProfiles optional in MVP; full cross-institute view in V1 |
+| Field      | Value                                                                                         |
+| ---------- | --------------------------------------------------------------------------------------------- |
+| Decision   | Two-layer parent identity — global identity + tenant parent                                   |
+| Driven by  | Product insight during architecture review                                                    |
+| Reversible | Partially — early enough to implement correctly before launch                                 |
+| Impact     | Schema, auth flow, parent API surface, product naming                                         |
+| MVP scope  | Platform Layer tables created; ChildProfiles optional in MVP; full cross-institute view in V1 |
 
 ---
 
-*ADR-001 — Accepted. This decision supersedes the original single-layer parent model in SRS Chapter 2, SDD Chapter 1, and DADD Chapters 1 and 2.*
+_ADR-001 — Accepted. This decision supersedes the original single-layer parent model in SRS Chapter 2, SDD Chapter 1, and DADD Chapters 1 and 2._

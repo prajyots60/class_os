@@ -39,7 +39,10 @@ export class ApplicationError extends Error {
 }
 
 export class ValidationError extends ApplicationError {
-  constructor(message = 'The request parameters or body are invalid.', details?: Record<string, unknown>) {
+  constructor(
+    message = 'The request parameters or body are invalid.',
+    details?: Record<string, unknown>,
+  ) {
     super('VALIDATION_ERROR', 400, message, details);
   }
 }

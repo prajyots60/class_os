@@ -11,10 +11,8 @@ export const badgeVariants = cva(
           'border-transparent bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:opacity-90',
         secondary:
           'border-transparent bg-[hsl(var(--secondary))] text-[hsl(var(--secondary-foreground))]',
-        success:
-          'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
-        warning:
-          'border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400',
+        success: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+        warning: 'border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400',
         destructive:
           'border-transparent bg-[hsl(var(--destructive,0_84%_60%))] text-[hsl(var(--destructive-foreground,0_0%_100%))]',
         outline: 'text-[hsl(var(--foreground))] border-[hsl(var(--border))]',
@@ -27,8 +25,7 @@ export const badgeVariants = cva(
 );
 
 export interface BadgeProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {}
 
 export function Badge({ className, variant, ...props }: BadgeProps) {
   return <div className={cn(badgeVariants({ variant }), className)} {...props} />;

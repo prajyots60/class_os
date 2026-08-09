@@ -3,6 +3,7 @@
 ## Context & Problem Statement
 
 CoachingOS will eventually require asynchronous background processing for domain events and tasks such as:
+
 1. Multi-channel notifications (WhatsApp Cloud API, SMS retries)
 2. Scheduled monthly fee invoice generation
 3. Report PDF generation
@@ -43,14 +44,14 @@ No background workflow engine (Inngest, Trigger.dev, BullMQ, Redis, SQS, Kafka) 
 
 ## Evaluation Matrix for Future Async Workloads
 
-| Criteria | Inngest | Trigger.dev | BullMQ + Redis |
-| -------- | ------- | ----------- | -------------- |
-| **Primary Focus** | Event-driven workflows | Long-running tasks & AI | Self-hosted Redis queue |
-| **TypeScript Integration** | Excellent | Excellent | Good |
-| **Serverless Compatibility** | Native | Native | Requires worker pool |
-| **Operational Overhead** | Low (Managed) | Low (Managed) | High (Requires Redis & Workers) |
-| **Free Tier** | Generous (50k runs/mo) | Generous ($5 credits/mo) | N/A (Self-hosted) |
-| **Target Workload** | Notification chains, event flows | Heavy processing, AI, PDFs | Self-hosted queue |
+| Criteria                     | Inngest                          | Trigger.dev                | BullMQ + Redis                  |
+| ---------------------------- | -------------------------------- | -------------------------- | ------------------------------- |
+| **Primary Focus**            | Event-driven workflows           | Long-running tasks & AI    | Self-hosted Redis queue         |
+| **TypeScript Integration**   | Excellent                        | Excellent                  | Good                            |
+| **Serverless Compatibility** | Native                           | Native                     | Requires worker pool            |
+| **Operational Overhead**     | Low (Managed)                    | Low (Managed)              | High (Requires Redis & Workers) |
+| **Free Tier**                | Generous (50k runs/mo)           | Generous ($5 credits/mo)   | N/A (Self-hosted)               |
+| **Target Workload**          | Notification chains, event flows | Heavy processing, AI, PDFs | Self-hosted queue               |
 
 ---
 

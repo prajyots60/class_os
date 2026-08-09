@@ -13,21 +13,27 @@
 ## 1. Engineering Philosophy
 
 ### Principle 1 — Product First
+
 Technology serves the product. Never adopt technology because it is popular. Adopt it only if it solves a real engineering problem.
 
 ### Principle 2 — Simplicity Over Cleverness
+
 Simple code is preferred over clever code. Future maintainability is more important than writing fewer lines.
 
 ### Principle 3 — Architecture Before Features
+
 Business rules belong in the Domain. Frameworks and libraries are implementation details.
 
 ### Principle 4 — Build for the Current Stage
+
 Do not prematurely optimize. Build for 100 institutes and 50,000 students, not 10 million users.
 
 ### Principle 5 — Modular Design
+
 Every module owns its business. Modules communicate through events or public interfaces, never through direct database access.
 
 ### Principle 6 — Replaceable Infrastructure
+
 Business logic must never depend directly on Prisma, Better Auth, WhatsApp, Razorpay, or Cloudflare. Always use abstractions.
 
 ---
@@ -35,73 +41,78 @@ Business logic must never depend directly on Prisma, Better Auth, WhatsApp, Razo
 ## 2. Official Technology Stack
 
 ### Frontend
-| Category | Technology |
-| --- | --- |
-| Framework | Next.js 16 (App Router) |
-| Language | TypeScript |
-| Styling | Tailwind CSS v4 |
-| UI Components | shadcn/ui |
-| Icons | Lucide React |
-| Forms | React Hook Form |
-| Validation | Zod |
-| Server State | TanStack Query |
-| Client State | Zustand |
-| Tables | TanStack Table |
-| Charts | Recharts |
-| Motion | Framer Motion (minimal usage) |
-| Dates | date-fns |
+
+| Category      | Technology                    |
+| ------------- | ----------------------------- |
+| Framework     | Next.js 16 (App Router)       |
+| Language      | TypeScript                    |
+| Styling       | Tailwind CSS v4               |
+| UI Components | shadcn/ui                     |
+| Icons         | Lucide React                  |
+| Forms         | React Hook Form               |
+| Validation    | Zod                           |
+| Server State  | TanStack Query                |
+| Client State  | Zustand                       |
+| Tables        | TanStack Table                |
+| Charts        | Recharts                      |
+| Motion        | Framer Motion (minimal usage) |
+| Dates         | date-fns                      |
 
 ---
 
 ### Backend
-| Category | Technology |
-| --- | --- |
-| Runtime | Node.js |
-| API | Next.js Route Handlers |
-| ORM | Prisma |
-| Database | PostgreSQL |
-| Authentication | Better Auth |
-| Validation | Zod |
-| File Upload | Signed Object Storage Uploads |
+
+| Category       | Technology                    |
+| -------------- | ----------------------------- |
+| Runtime        | Node.js                       |
+| API            | Next.js Route Handlers        |
+| ORM            | Prisma                        |
+| Database       | PostgreSQL                    |
+| Authentication | Better Auth                   |
+| Validation     | Zod                           |
+| File Upload    | Signed Object Storage Uploads |
 
 ---
 
 ### Infrastructure
-| Category | Technology |
-| --- | --- |
-| Hosting | Vercel |
-| Database Hosting | Neon PostgreSQL |
-| Storage | Cloudflare R2 |
-| CDN | Cloudflare |
-| Jobs | Trigger.dev |
-| Logging | Pino |
-| Monitoring | Sentry |
-| Email | Resend (Future) |
-| WhatsApp | Meta Cloud API |
-| SMS | Provider Abstraction |
-| Payments | Manual (Razorpay V2) |
+
+| Category         | Technology           |
+| ---------------- | -------------------- |
+| Hosting          | Vercel               |
+| Database Hosting | Neon PostgreSQL      |
+| Storage          | Cloudflare R2        |
+| CDN              | Cloudflare           |
+| Jobs             | Trigger.dev          |
+| Logging          | Pino                 |
+| Monitoring       | Sentry               |
+| Email            | Resend (Future)      |
+| WhatsApp         | Meta Cloud API       |
+| SMS              | Provider Abstraction |
+| Payments         | Manual (Razorpay V2) |
 
 ---
 
 ### Testing
-| Category | Technology |
-| --- | --- |
-| Unit | Vitest |
-| Integration | Vitest |
-| E2E | Playwright |
+
+| Category    | Technology |
+| ----------- | ---------- |
+| Unit        | Vitest     |
+| Integration | Vitest     |
+| E2E         | Playwright |
 
 ---
 
 ### Tooling
-| Category | Tool |
-| --- | --- |
-| Package Manager | pnpm |
-| Monorepo | Turborepo |
-| Linting | ESLint |
-| Formatting | Prettier |
-| Git Hooks | Husky |
-| Staged Checks | lint-staged |
-| Commits | Conventional Commits |
+
+| Category        | Tool                 |
+| --------------- | -------------------- |
+| Package Manager | pnpm                 |
+| Monorepo        | Turborepo            |
+| Linting         | ESLint               |
+| Formatting      | Prettier             |
+| Git Hooks       | Husky                |
+| Staged Checks   | lint-staged          |
+| Commits         | Conventional Commits |
 
 ---
 
@@ -172,15 +183,19 @@ No exceptions.
 ## 5. Folder Conventions
 
 ### Domain
+
 Contains only business logic. Must never import Prisma, React, Next.js, or Better Auth.
 
 ### Application
+
 Coordinates use cases. Contains transactions, authorization, repository calls, and event publishing.
 
 ### Infrastructure
+
 Implements interfaces. Contains Prisma, Storage, Queue, and Third-party APIs.
 
 ### Presentation
+
 Contains route handlers, validation, and DTO mapping.
 
 ---
@@ -188,38 +203,49 @@ Contains route handlers, validation, and DTO mapping.
 ## 6. Naming Conventions
 
 ### Files
+
 Always `kebab-case`.
+
 - `create-student.ts`
 - `record-attendance.ts`
 - `payment-repository.ts`
 
 ### Components
+
 `PascalCase`.
+
 - `StudentCard.tsx`
 - `AttendanceTable.tsx`
 - `FeeStatusBadge.tsx`
 
 ### Hooks
+
 - `useAttendance()`
 - `useCurrentInstitute()`
 
 ### Interfaces
+
 - `StudentRepository`
 - `NotificationProvider`
 
 ### Enums
+
 - `AttendanceStatus`
 - `InvoiceStatus`
 - `BatchStatus`
 
 ### Events
+
 Past tense.
+
 - `AttendanceRecorded`
 - `InvoiceGenerated`
 - `PaymentRecorded`
 
 ### Use Cases
+
 Verb first.
+
 - `CreateStudent`
 - `RecordAttendance`
 - `GenerateInvoice`
@@ -230,18 +256,23 @@ Verb first.
 ## 7. API Conventions
 
 ### REST
+
 Resources only.
 
 **Good:**
+
 - `GET /students`
 - `POST /students`
 - `PATCH /students/{id}`
 
 **Bad:**
+
 - `POST /createStudent`
 
 ### Responses
+
 Always:
+
 ```json
 {
   "success": true,
@@ -251,6 +282,7 @@ Always:
 ```
 
 Errors:
+
 ```json
 {
   "success": false,
@@ -260,6 +292,7 @@ Errors:
   }
 }
 ```
+
 Never return Prisma errors.
 
 ---
@@ -267,6 +300,7 @@ Never return Prisma errors.
 ## 8. Validation Rules
 
 Validation has three layers:
+
 1. **Request Validation:** Zod
 2. **Business Validation:** Domain
 3. **Database Validation:** Constraints
@@ -280,12 +314,14 @@ Never depend only on database constraints.
 ## 9. Error Handling Standards & Taxonomy
 
 Never throw raw untyped strings or generic exceptions in application code:
+
 ```ts
 // Bad
-throw new Error("Something went wrong");
+throw new Error('Something went wrong');
 ```
 
 Use the framework-independent Application Error Taxonomy from `@coaching-os/shared`:
+
 - `ValidationError` (400)
 - `AuthenticationError` (401)
 - `AuthorizationError` (403)
@@ -295,6 +331,7 @@ Use the framework-independent Application Error Taxonomy from `@coaching-os/shar
 - `InternalError` (500)
 
 ### API Response Error Boundaries (`toErrorResponse`)
+
 - The API layer maps application errors and normalized database errors into safe public JSON payloads via `toErrorResponse(err, requestId)`.
 - Public error responses contain `{ error: { code, message, requestId } }` and set the `x-request-id` HTTP header.
 - **Never expose internal details:** Stack traces, SQL queries, Prisma internal codes, file paths, or secrets are redacted from public client responses and logged strictly server-side.
@@ -315,6 +352,7 @@ logger.info(
 ```
 
 ### Logging Rules
+
 1. **Machine-Readable Metadata:** Always pass structured JSON objects as context rather than concatenating strings.
 2. **Correlation / Request IDs:** Every HTTP request receives or generates a unique `x-request-id` (`crypto.randomUUID()`) attached to request logs.
 3. **Automated Redaction:** Pino automatically censors 24 sensitive paths (`password`, `token`, `cookie`, `authorization`, `DATABASE_URL`, `BETTER_AUTH_SECRET`, `otp`, `secret`, `apiKey`).
@@ -325,6 +363,7 @@ logger.info(
 ## 11. Observability & Asynchronous Infrastructure Policy
 
 ### Async Workflow Engine Policy (ADR-0003)
+
 - **No Premature Workflow Infrastructure:** No background workflow engine (Inngest, Trigger.dev, BullMQ, Redis) is installed during Phase 0.
 - **Event Contracts:** Domain code emits typed `ApplicationEvent` payloads defined in `@coaching-os/shared`.
 - **Infrastructure Selection:** When asynchronous business workloads arrive (e.g. Phase 4 Notifications):
@@ -332,6 +371,7 @@ logger.info(
   - **Trigger.dev:** Evaluated for compute-heavy / long-running tasks (PDF rendering, AI summaries, bulk imports).
 
 Sentry captures:
+
 - Exceptions
 - Performance
 - Stack traces
@@ -357,6 +397,7 @@ CoachingOS adheres to a strict 3-tier testing pyramid:
 ```
 
 ### Key Testing Rules
+
 1. **Real PostgreSQL for Integration:** Integration tests run against PostgreSQL via `TEST_DATABASE_URL` (`coachingos_test`). SQLite is strictly prohibited as a fake replacement.
 2. **Fail-Closed Database Safety Guard:** `validateTestEnvironment()` aborts immediately if `TEST_DATABASE_URL` is missing or matches `DATABASE_URL`.
 3. **Database Isolation Strategy:** `cleanTestDatabase()` performs synchronized `TRUNCATE TABLE ... CASCADE` via `db.$executeRawUnsafe` before/between tests.
@@ -364,9 +405,57 @@ CoachingOS adheres to a strict 3-tier testing pyramid:
 5. **Multi-Tenant Isolation Testing:** Every query boundary must be tested to ensure an authenticated user from Institute A can NEVER read or mutate Institute B data by tampering with ID parameters.
 6. **Hardened Request ID Verification:** Integration tests verify that client-supplied `X-Request-ID` headers are ignored and server-side UUID v4 is always generated as the canonical request ID.
 
-## 14. Database Standards
+---
+
+## 15. Git Workflow & CI Standards
+
+### Branch Integration Strategy
+
+CoachingOS follows a protected integration branch workflow:
+
+```text
+feature/*  ──►  master (develop)  ──►  main (production)
+```
+
+- Short-lived feature branches (`feature/<domain>-<description>`).
+- Direct commits to protected branches are prohibited once branch protection is enabled via GitHub settings.
+
+### Conventional Commits Format
+
+Commit messages MUST follow the Conventional Commits specification:
+
+```text
+type(scope): concise imperative description
+```
+
+Examples:
+
+- `feat(auth): add parent session handling`
+- `fix(attendance): prevent duplicate attendance`
+- `test(identity): add tenant isolation coverage`
+- `chore(ci): establish github actions pipeline`
+- `docs(architecture): update SDD`
+
+### Pull Request Quality Checklist
+
+1. **Clear Scope:** PRs must remain focused and address a single architectural concern or feature.
+2. **Mandatory CI Green:** All 4 pipeline jobs (`quality`, `database-and-tests`, `e2e`, `build`) must pass cleanly.
+3. **Database Migration Requirement:** Any change to `prisma/schema.prisma` MUST include a generated migration in `prisma/migrations`. Changing `schema.prisma` without a migration fails CI (`prisma migrate status`).
+4. **Security & Multi-Tenant Isolation:** Zero secrets committed; tenant boundaries (`institute_id`) strictly preserved.
+
+### Recommended GitHub Branch Protection Settings
+
+- Require Pull Request before merging.
+- Require status checks to pass before merging: `quality`, `database-and-tests`, `e2e`, `build`.
+- Require branches to be up to date before merging.
+- Disable force pushes and deletion of protected branches.
+
+---
+
+## 16. Database Standards
 
 Every table contains:
+
 - `id`
 - `created_at`
 - `updated_at`
@@ -391,6 +480,7 @@ Every table contains:
 One use case = One transaction.
 
 Example:
+
 ```text
 Enroll Student → Create Enrollment → Create Billing Plan → Publish Event → Commit
 ```
@@ -402,9 +492,11 @@ Enroll Student → Create Enrollment → Create Billing Plan → Publish Event �
 Modules never call each other directly.
 
 Publish:
+
 - `AttendanceRecorded`
 
 Subscribers:
+
 - Communication subscribes.
 - Audit subscribes.
 - Analytics subscribes.
@@ -418,6 +510,7 @@ Loose coupling only.
 Never send WhatsApp inside HTTP requests.
 
 Jobs handle:
+
 - Notifications
 - Invoice generation
 - Reminders
@@ -430,9 +523,11 @@ Trigger.dev owns execution.
 ## 19. State Management
 
 ### TanStack Query
+
 Owns server state (e.g., Students, Attendance, Invoices).
 
 ### Zustand
+
 Owns UI state (e.g., Sidebar, Theme, Dialogs, Selected batch).
 
 Never duplicate server data in client state.
@@ -444,6 +539,7 @@ Never duplicate server data in client state.
 Branding is token-driven.
 
 Supported customization:
+
 - Logo
 - Institute Name
 - Tagline
@@ -463,19 +559,23 @@ No custom CSS uploads.
 ## 21. Git Workflow
 
 ### Main Branches
+
 - `main`
 - `develop`
 
 ### Feature Branches
+
 - `feature/identity`
 - `feature/attendance`
 - `feature/billing`
 
 ### Bug Fixes
+
 - `fix/login`
 - `fix/attendance`
 
 ### Hotfixes
+
 - `hotfix/payment`
 
 ---
@@ -488,6 +588,7 @@ Types:
 `feat`, `fix`, `refactor`, `perf`, `docs`, `test`, `build`, `ci`, `chore`
 
 Example:
+
 ```bash
 feat(identity): add student enrollment workflow
 ```
@@ -497,6 +598,7 @@ feat(identity): add student enrollment workflow
 ## 23. Pull Request Checklist
 
 Every PR must answer:
+
 - What problem does this solve?
 - Is architecture respected?
 - Are permissions checked?
@@ -511,11 +613,13 @@ Every PR must answer:
 ## 24. Testing Rules
 
 Every feature should include:
+
 - Unit tests for domain logic
 - Integration tests for repositories
 - E2E tests for critical workflows
 
 Critical workflows:
+
 - Student admission
 - Attendance
 - Fee recording
@@ -526,18 +630,22 @@ Critical workflows:
 ## 25. Performance Budgets
 
 ### API
+
 - Average response: `< 200 ms`
 - Heavy endpoints: `< 500 ms`
 
 ### Page Load
+
 - Initial page: `< 2 seconds`
 
 ### Database
+
 - Avoid N+1 queries.
 - Paginate lists.
 - Index frequent filters.
 
 ### Bundle
+
 - Lazy load admin modules.
 - Avoid unnecessary client-side JavaScript.
 
@@ -559,6 +667,7 @@ Critical workflows:
 ## 27. Documentation Standards
 
 Every significant feature should update:
+
 - API documentation
 - Architecture decision records (if applicable)
 - Business rules (if changed)
@@ -569,6 +678,7 @@ Every significant feature should update:
 ## 28. Definition of Done
 
 A feature is complete only if:
+
 - Business requirements implemented.
 - Code reviewed.
 - Tests pass.
@@ -586,12 +696,14 @@ A feature is complete only if:
 Maintain a `docs/adr/` directory containing one-page ADRs for key technical decisions.
 
 Whenever a major technical decision is made, document:
+
 - Context and problem statement.
 - Options considered.
 - Chosen solution and rationale.
 - Consequences (pros and cons).
 
 Examples of documented decisions:
+
 - Why Next.js (App Router) was chosen.
 - Why Billing is enrollment-centric.
 - Why Trigger.dev is used for background jobs instead of BullMQ.

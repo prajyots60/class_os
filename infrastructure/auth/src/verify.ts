@@ -13,7 +13,9 @@ export async function verifyAuthFoundation() {
     });
 
     if (!demoUser || !demoUser.instituteId || !demoUser.institute) {
-      throw new Error('Verification failed: Demo user rakesh@sharmaclasses.com not found or missing institute. Run db:seed first.');
+      throw new Error(
+        'Verification failed: Demo user rakesh@sharmaclasses.com not found or missing institute. Run db:seed first.',
+      );
     }
 
     const demoInstituteId = demoUser.instituteId;
@@ -63,7 +65,9 @@ export async function verifyAuthFoundation() {
 
     const setCookieHeader = signInResult.headers.get('set-cookie');
     if (!setCookieHeader) {
-      throw new Error('Verification failed: Better Auth signInEmail did not issue a set-cookie header.');
+      throw new Error(
+        'Verification failed: Better Auth signInEmail did not issue a set-cookie header.',
+      );
     }
 
     console.log('✅ Better Auth Sign-In Succeeded: Session cookie issued safely.');
@@ -73,7 +77,9 @@ export async function verifyAuthFoundation() {
     const sessionToken = tokenMatch ? tokenMatch[1] : null;
 
     if (!sessionToken) {
-      throw new Error('Verification failed: Session token could not be extracted from auth cookie.');
+      throw new Error(
+        'Verification failed: Session token could not be extracted from auth cookie.',
+      );
     }
 
     // 5. Test Server-Side Session Retrieval
@@ -85,18 +91,26 @@ export async function verifyAuthFoundation() {
     });
 
     if (!retrievedSession || retrievedSession.user.id !== signUpResult.user.id) {
-      throw new Error('Verification failed: Server-side getSession failed to return matching authenticated user.');
+      throw new Error(
+        'Verification failed: Server-side getSession failed to return matching authenticated user.',
+      );
     }
 
-    console.log(`✅ Server-Side Session Retrieval Succeeded: Active session for user ${retrievedSession.user.email}`);
+    console.log(
+      `✅ Server-Side Session Retrieval Succeeded: Active session for user ${retrievedSession.user.email}`,
+    );
 
     // 6. Test Authorized Tenant Context Resolution
     const tenantContext = await requireInstituteMembership(mockAuthHeaders, demoInstituteId);
     if (tenantContext.instituteId !== demoInstituteId || tenantContext.role !== 'owner') {
-      throw new Error('Verification failed: Tenant context resolution returned invalid institute or role.');
+      throw new Error(
+        'Verification failed: Tenant context resolution returned invalid institute or role.',
+      );
     }
 
-    console.log(`✅ Tenant Context Verification Succeeded: Institute ${tenantContext.instituteId}, Role: ${tenantContext.role}`);
+    console.log(
+      `✅ Tenant Context Verification Succeeded: Institute ${tenantContext.instituteId}, Role: ${tenantContext.role}`,
+    );
 
     // 7. Test Unauthorized Institute Access Rejection
     const fakeInstituteId = '00000000-0000-4000-a000-000000000000';

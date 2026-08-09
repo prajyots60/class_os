@@ -19,8 +19,13 @@ export async function verifyInfrastructureFoundation() {
     console.log('✅ Pino Logger Abstraction initialized successfully.');
 
     // 2. Verify Redaction Path Configuration
-    if (!SENSITIVE_FIELDS_REDACT_PATHS.includes('password') || !SENSITIVE_FIELDS_REDACT_PATHS.includes('token')) {
-      throw new Error('Verification failed: Sensitive field redaction paths are missing required keywords.');
+    if (
+      !SENSITIVE_FIELDS_REDACT_PATHS.includes('password') ||
+      !SENSITIVE_FIELDS_REDACT_PATHS.includes('token')
+    ) {
+      throw new Error(
+        'Verification failed: Sensitive field redaction paths are missing required keywords.',
+      );
     }
     console.log('✅ Sensitive field redaction rules configured for 24 sensitive field paths.');
 
@@ -30,9 +35,13 @@ export async function verifyInfrastructureFoundation() {
     const generatedId = getOrCreateRequestId(mockHeaders);
 
     if (!generatedId || generatedId === 'malicious_client_spoofed_id_9999') {
-      throw new Error('Verification failed: Client-supplied x-request-id was erroneously accepted!');
+      throw new Error(
+        'Verification failed: Client-supplied x-request-id was erroneously accepted!',
+      );
     }
-    console.log('✅ Hardened Request ID verified: Client-supplied X-Request-ID was ignored, server generated canonical UUID.');
+    console.log(
+      '✅ Hardened Request ID verified: Client-supplied X-Request-ID was ignored, server generated canonical UUID.',
+    );
 
     // 4. Verify Application Error Taxonomy
     const valErr = new ValidationError('Invalid student admission number.');
@@ -54,15 +63,21 @@ export async function verifyInfrastructureFoundation() {
     const mockPrismaUniqueError = { code: 'P2002', message: 'Unique constraint failed on (email)' };
     const normalizedConflict = normalizeDatabaseError(mockPrismaUniqueError);
     if (normalizedConflict.code !== 'CONFLICT' || normalizedConflict.statusCode !== 409) {
-      throw new Error('Verification failed: Prisma P2002 error was not normalized to CONFLICT (409).');
+      throw new Error(
+        'Verification failed: Prisma P2002 error was not normalized to CONFLICT (409).',
+      );
     }
 
     const mockPrismaNotFoundError = { code: 'P2025', message: 'Record not found' };
     const normalizedNotFound = normalizeDatabaseError(mockPrismaNotFoundError);
     if (normalizedNotFound.code !== 'NOT_FOUND' || normalizedNotFound.statusCode !== 404) {
-      throw new Error('Verification failed: Prisma P2025 error was not normalized to NOT_FOUND (404).');
+      throw new Error(
+        'Verification failed: Prisma P2025 error was not normalized to NOT_FOUND (404).',
+      );
     }
-    console.log('✅ Prisma database error normalization verified (P2002 -> CONFLICT, P2025 -> NOT_FOUND).');
+    console.log(
+      '✅ Prisma database error normalization verified (P2002 -> CONFLICT, P2025 -> NOT_FOUND).',
+    );
 
     // 6. Verify Safe Public Error Response Generation
     const testError = new ValidationError('Admission number ADM-001 is invalid.');
@@ -76,7 +91,9 @@ export async function verifyInfrastructureFoundation() {
       throw new Error('Verification failed: x-request-id header missing from error response.');
     }
 
-    const responseData = (await response.json()) as { error: { code: string; message: string; requestId: string } };
+    const responseData = (await response.json()) as {
+      error: { code: string; message: string; requestId: string };
+    };
     if (
       responseData.error.code !== 'VALIDATION_ERROR' ||
       responseData.error.requestId !== generatedId ||
@@ -87,10 +104,18 @@ export async function verifyInfrastructureFoundation() {
 
     // Verify stack traces & secrets are NOT exposed in public response
     const rawResponseText = JSON.stringify(responseData);
-    if (rawResponseText.includes('stack') || rawResponseText.includes('password') || rawResponseText.includes('postgresql://')) {
-      throw new Error('Verification failed: Internal details or secrets leaked in public error response!');
+    if (
+      rawResponseText.includes('stack') ||
+      rawResponseText.includes('password') ||
+      rawResponseText.includes('postgresql://')
+    ) {
+      throw new Error(
+        'Verification failed: Internal details or secrets leaked in public error response!',
+      );
     }
-    console.log('✅ Safe Public Error Response verified (Clean JSON, x-request-id header, zero internal stack leaks).');
+    console.log(
+      '✅ Safe Public Error Response verified (Clean JSON, x-request-id header, zero internal stack leaks).',
+    );
 
     console.log('\n🎉 ALL SHARED ENGINEERING INFRASTRUCTURE CHECKS PASSED!\n');
     return true;

@@ -18,7 +18,17 @@ import {
   ArrowRight,
   Send,
 } from 'lucide-react';
-import { Button, Input, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Badge } from '@coaching-os/ui';
+import {
+  Button,
+  Input,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  Badge,
+} from '@coaching-os/ui';
 import { useUIStore } from '../stores/use-ui-store';
 
 const demoFormSchema = z.object({
@@ -119,7 +129,10 @@ export default function ShowcasePage() {
               One Codebase, Many Coaching Identities
             </h2>
             <p className="text-base text-[hsl(var(--muted-foreground))]">
-              This showcase demonstrates the token-driven design system baseline for CoachingOS. Components consume CSS variable tokens (`var(--color-primary)`, `var(--radius-card)`), allowing any coaching institute to present its custom brand without separate code paths.
+              This showcase demonstrates the token-driven design system baseline for CoachingOS.
+              Components consume CSS variable tokens (`var(--color-primary)`, `var(--radius-card)`),
+              allowing any coaching institute to present its custom brand without separate code
+              paths.
             </p>
           </div>
         </motion.section>
@@ -128,7 +141,9 @@ export default function ShowcasePage() {
         <section className="space-y-6">
           <div className="border-b border-[hsl(var(--border))] pb-3">
             <h3 className="text-xl font-bold tracking-tight">1. Typography & Badges</h3>
-            <p className="text-xs text-[hsl(var(--muted-foreground))]">Curated fonts and badge status indicators</p>
+            <p className="text-xs text-[hsl(var(--muted-foreground))]">
+              Curated fonts and badge status indicators
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -142,7 +157,8 @@ export default function ShowcasePage() {
                 <h2 className="text-xl font-semibold">H2 Section Header</h2>
                 <h3 className="text-lg font-medium">H3 Subsection Title</h3>
                 <p className="text-sm text-[hsl(var(--muted-foreground))] leading-relaxed">
-                  Body Text: CoachingOS simplifies daily operations for founder-led institutes while providing transparent insights to parents across multiple coaching centers.
+                  Body Text: CoachingOS simplifies daily operations for founder-led institutes while
+                  providing transparent insights to parents across multiple coaching centers.
                 </p>
               </CardContent>
             </Card>
@@ -168,7 +184,9 @@ export default function ShowcasePage() {
         <section className="space-y-6">
           <div className="border-b border-[hsl(var(--border))] pb-3">
             <h3 className="text-xl font-bold tracking-tight">2. Interactive Buttons</h3>
-            <p className="text-xs text-[hsl(var(--muted-foreground))]">Accessible button variants with focus rings and keyboard navigation</p>
+            <p className="text-xs text-[hsl(var(--muted-foreground))]">
+              Accessible button variants with focus rings and keyboard navigation
+            </p>
           </div>
 
           <Card>
@@ -199,7 +217,9 @@ export default function ShowcasePage() {
         <section className="space-y-6">
           <div className="border-b border-[hsl(var(--border))] pb-3">
             <h3 className="text-xl font-bold tracking-tight">3. Form Architecture & Validation</h3>
-            <p className="text-xs text-[hsl(var(--muted-foreground))]">React Hook Form + Zod validation with accessible error messaging</p>
+            <p className="text-xs text-[hsl(var(--muted-foreground))]">
+              React Hook Form + Zod validation with accessible error messaging
+            </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
@@ -237,7 +257,14 @@ export default function ShowcasePage() {
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-end gap-3 border-t border-[hsl(var(--border))] pt-4">
-                  <Button type="button" variant="outline" onClick={() => { reset(); setFormSubmitted(null); }}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      reset();
+                      setFormSubmitted(null);
+                    }}
+                  >
                     Reset
                   </Button>
                   <Button type="submit" variant="default">
@@ -265,7 +292,9 @@ export default function ShowcasePage() {
                 ) : (
                   <div className="text-center space-y-2 py-8 text-[hsl(var(--muted-foreground))]">
                     <ShieldCheck className="mx-auto h-12 w-12 text-[hsl(var(--muted-foreground))]/40" />
-                    <p className="text-sm">Submit the inquiry form to preview client-side validation output.</p>
+                    <p className="text-sm">
+                      Submit the inquiry form to preview client-side validation output.
+                    </p>
                   </div>
                 )}
               </CardContent>
@@ -276,8 +305,12 @@ export default function ShowcasePage() {
         {/* Section 4: Iconography & Card Primitives */}
         <section className="space-y-6">
           <div className="border-b border-[hsl(var(--border))] pb-3">
-            <h3 className="text-xl font-bold tracking-tight">4. Lucide Iconography & Card Layout Primitives</h3>
-            <p className="text-xs text-[hsl(var(--muted-foreground))]">Consistent Lucide React icon system across cards</p>
+            <h3 className="text-xl font-bold tracking-tight">
+              4. Lucide Iconography & Card Layout Primitives
+            </h3>
+            <p className="text-xs text-[hsl(var(--muted-foreground))]">
+              Consistent Lucide React icon system across cards
+            </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -287,7 +320,9 @@ export default function ShowcasePage() {
                 <CardTitle className="text-base mt-2">Identity Context</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-xs text-[hsl(var(--muted-foreground))]">Multi-tenant identity boundaries & parent linking</p>
+                <p className="text-xs text-[hsl(var(--muted-foreground))]">
+                  Multi-tenant identity boundaries & parent linking
+                </p>
               </CardContent>
             </Card>
 
@@ -297,7 +332,9 @@ export default function ShowcasePage() {
                 <CardTitle className="text-base mt-2">Academics Context</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-xs text-[hsl(var(--muted-foreground))]">Schedules, sessions, attendance & test evaluation</p>
+                <p className="text-xs text-[hsl(var(--muted-foreground))]">
+                  Schedules, sessions, attendance & test evaluation
+                </p>
               </CardContent>
             </Card>
 
@@ -307,7 +344,9 @@ export default function ShowcasePage() {
                 <CardTitle className="text-base mt-2">Billing Context</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-xs text-[hsl(var(--muted-foreground))]">Billing plans, invoicing, payments & printable receipts</p>
+                <p className="text-xs text-[hsl(var(--muted-foreground))]">
+                  Billing plans, invoicing, payments & printable receipts
+                </p>
               </CardContent>
             </Card>
 
@@ -317,7 +356,9 @@ export default function ShowcasePage() {
                 <CardTitle className="text-base mt-2">Communication</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-xs text-[hsl(var(--muted-foreground))]">Announcements & event-driven notifications</p>
+                <p className="text-xs text-[hsl(var(--muted-foreground))]">
+                  Announcements & event-driven notifications
+                </p>
               </CardContent>
             </Card>
           </div>

@@ -50,14 +50,14 @@
 
 ## 1. Document Control
 
-| Item      | Value                                  |
-|-----------|----------------------------------------|
-| Product   | CoachingOS (Working Name)              |
-| Document  | Software Requirements Specification   |
-| Version   | 1.0                                    |
-| Status    | Draft                                  |
-| Audience  | Founders, Product, Engineering         |
-| Scope     | MVP + Product Roadmap                  |
+| Item     | Value                               |
+| -------- | ----------------------------------- |
+| Product  | CoachingOS (Working Name)           |
+| Document | Software Requirements Specification |
+| Version  | 1.0                                 |
+| Status   | Draft                               |
+| Audience | Founders, Product, Engineering      |
+| Scope    | MVP + Product Roadmap               |
 
 ---
 
@@ -83,11 +83,11 @@ Instead, it focuses on **operational excellence for coaching institutes**.
 
 ### Target Customer
 
-| Attribute      | Value                                                                                          |
-|----------------|-----------------------------------------------------------------------------------------------|
-| Customer Type  | Founder-led coaching institutes                                                                |
-| Typical Size   | 50–500 students                                                                                |
-| Examples       | Maths Classes, NEET Academy, JEE Coaching, Language Institutes, Competitive Exam Coaching     |
+| Attribute     | Value                                                                                     |
+| ------------- | ----------------------------------------------------------------------------------------- |
+| Customer Type | Founder-led coaching institutes                                                           |
+| Typical Size  | 50–500 students                                                                           |
+| Examples      | Maths Classes, NEET Academy, JEE Coaching, Language Institutes, Competitive Exam Coaching |
 
 ---
 
@@ -118,6 +118,7 @@ Teacher → Register → Manual Attendance → Parent Calls → Teacher Checks R
 ```
 
 **Problems:**
+
 - Time consuming
 - Error prone
 - Parents lack visibility
@@ -133,6 +134,7 @@ Cash / UPI → Notebook → Excel → Receipt
 ```
 
 **Problems:**
+
 - Difficult reconciliation
 - Pending fee tracking is unreliable
 - Manual reminders required
@@ -144,6 +146,7 @@ Cash / UPI → Notebook → Excel → Receipt
 **Current Methods:** WhatsApp Groups, Individual Messages, SMS
 
 **Problems:**
+
 - Mixed communication channels
 - No history
 - High manual effort
@@ -153,6 +156,7 @@ Cash / UPI → Notebook → Excel → Receipt
 ### Problem 4 — Academic Transparency
 
 Parents repeatedly ask:
+
 - Was my child present?
 - What homework is pending?
 - What marks did they get?
@@ -172,29 +176,29 @@ Small coaching institutes cannot justify the cost of custom mobile applications,
 
 ### Included
 
-| Domain           |
-|------------------|
-| Identity         |
-| Academics        |
-| Billing          |
-| Communication    |
-| Administration   |
-| Parent Portal    |
+| Domain         |
+| -------------- |
+| Identity       |
+| Academics      |
+| Billing        |
+| Communication  |
+| Administration |
+| Parent Portal  |
 
 ### Excluded
 
-| Domain              |
-|---------------------|
-| Online Classes      |
-| Library             |
-| Hostel              |
-| Payroll             |
-| Accounting          |
-| Transport           |
-| Marketing           |
-| CRM                 |
-| Website Builder     |
-| Payment Gateway     |
+| Domain          |
+| --------------- |
+| Online Classes  |
+| Library         |
+| Hostel          |
+| Payroll         |
+| Accounting      |
+| Transport       |
+| Marketing       |
+| CRM             |
+| Website Builder |
+| Payment Gateway |
 
 ---
 
@@ -210,13 +214,13 @@ Small coaching institutes cannot justify the cost of custom mobile applications,
 
 ### Product Goals
 
-| Action                  | Target         |
-|-------------------------|----------------|
-| Attendance completion   | < 2 minutes    |
-| Homework publishing     | < 30 seconds   |
-| Announcement publishing | < 30 seconds   |
-| Student search          | < 5 seconds    |
-| Fee recording           | < 30 seconds   |
+| Action                  | Target       |
+| ----------------------- | ------------ |
+| Attendance completion   | < 2 minutes  |
+| Homework publishing     | < 30 seconds |
+| Announcement publishing | < 30 seconds |
+| Student search          | < 5 seconds  |
+| Fee recording           | < 30 seconds |
 
 ### Engineering Goals
 
@@ -233,13 +237,13 @@ Small coaching institutes cannot justify the cost of custom mobile applications,
 
 ### Product Metrics
 
-| Metric                             | Target    |
-|------------------------------------|-----------|
-| Average attendance completion time | < 2 min   |
-| Homework publishing time           | < 30 sec  |
-| Announcement publishing time       | < 30 sec  |
-| Parent login success rate          | ≥ 95%     |
-| Search response time               | < 500 ms  |
+| Metric                             | Target   |
+| ---------------------------------- | -------- |
+| Average attendance completion time | < 2 min  |
+| Homework publishing time           | < 30 sec |
+| Announcement publishing time       | < 30 sec |
+| Parent login success rate          | ≥ 95%    |
+| Search response time               | < 500 ms |
 
 ### Business Metrics
 
@@ -257,16 +261,17 @@ Small coaching institutes cannot justify the cost of custom mobile applications,
 
 #### Large Enterprise Players
 
-| Player     | Strengths           | Weaknesses                                    |
-|------------|---------------------|-----------------------------------------------|
-| Classplus  | Large ecosystems    | Expensive, complex, overbuilt for small institutes |
-| Proctur    | Large ecosystems    | Expensive, complex, overbuilt for small institutes |
+| Player    | Strengths        | Weaknesses                                         |
+| --------- | ---------------- | -------------------------------------------------- |
+| Classplus | Large ecosystems | Expensive, complex, overbuilt for small institutes |
+| Proctur   | Large ecosystems | Expensive, complex, overbuilt for small institutes |
 
 #### Manual Operations
 
 Current tools: Registers, Excel, WhatsApp, SMS
 
 Problems:
+
 - Time consuming
 - No transparency
 - No centralized records
@@ -284,6 +289,7 @@ CoachingOS targets the gap between **manual operations** and **enterprise ERP** 
 **Founder-led coaching institutes**
 
 Characteristics:
+
 - 50–500 students
 - Teaches offline
 - Uses WhatsApp for communication today
@@ -307,14 +313,14 @@ Growing academies with 1000+ students, multiple teachers and assistants, still f
 
 ### Primary Stakeholders
 
-| Role     | Description       |
-|----------|-------------------|
-| Founder  | Business Owner    |
+| Role    | Description    |
+| ------- | -------------- |
+| Founder | Business Owner |
 
 ### Secondary Stakeholders
 
 | Role      |
-|-----------|
+| --------- |
 | Assistant |
 | Teacher   |
 | Parent    |
@@ -323,7 +329,7 @@ Growing academies with 1000+ students, multiple teachers and assistants, still f
 ### Internal Stakeholders (Future)
 
 | Role        |
-|-------------|
+| ----------- |
 | Engineering |
 | Support     |
 | Sales       |
@@ -334,33 +340,33 @@ Growing academies with 1000+ students, multiple teachers and assistants, still f
 
 ### Founder
 
-| Attribute   | Detail                                                    |
-|-------------|-----------------------------------------------------------|
+| Attribute   | Detail                                                                             |
+| ----------- | ---------------------------------------------------------------------------------- |
 | Goals       | Run coaching efficiently, track fees, track attendance, communicate professionally |
-| Pain Points | Manual work, repeated parent calls, messy fee records     |
+| Pain Points | Manual work, repeated parent calls, messy fee records                              |
 
 ### Assistant
 
-| Attribute | Detail                                        |
-|-----------|-----------------------------------------------|
+| Attribute | Detail                                         |
+| --------- | ---------------------------------------------- |
 | Goals     | Admissions, attendance, fees, daily operations |
 
 ### Teacher
 
-| Attribute   | Detail                                          |
-|-------------|-------------------------------------------------|
-| Goals       | Teach, upload homework, enter marks, avoid paperwork |
+| Attribute | Detail                                               |
+| --------- | ---------------------------------------------------- |
+| Goals     | Teach, upload homework, enter marks, avoid paperwork |
 
 ### Parent
 
-| Attribute | Detail                                                       |
-|-----------|--------------------------------------------------------------|
+| Attribute | Detail                                                                     |
+| --------- | -------------------------------------------------------------------------- |
 | Goals     | Know whether child attended, view marks, receive announcements, track fees |
 
 ### Student
 
-| Attribute | Detail                        |
-|-----------|-------------------------------|
+| Attribute | Detail                         |
+| --------- | ------------------------------ |
 | Goals     | Homework, marks, announcements |
 
 ---
@@ -369,18 +375,18 @@ Growing academies with 1000+ students, multiple teachers and assistants, still f
 
 These principles are immutable and govern all product decisions.
 
-| ID     | Principle                                                              |
-|--------|------------------------------------------------------------------------|
-| PP-001 | Software must save time.                                               |
-| PP-002 | Teachers teach. Software should stay invisible.                        |
-| PP-003 | Everything revolves around batches.                                    |
-| PP-004 | Enrollment is the operational entity — not Student.                    |
-| PP-005 | Configuration over customization.                                      |
-| PP-006 | Every action updates every dependent workflow.                         |
-| PP-007 | Communication should justify its cost.                                 |
-| PP-008 | Desktop and Mobile provide equivalent capabilities.                    |
-| PP-009 | Every institute is isolated. Always.                                   |
-| PP-010 | Workflow first. Screens second.                                        |
+| ID     | Principle                                           |
+| ------ | --------------------------------------------------- |
+| PP-001 | Software must save time.                            |
+| PP-002 | Teachers teach. Software should stay invisible.     |
+| PP-003 | Everything revolves around batches.                 |
+| PP-004 | Enrollment is the operational entity — not Student. |
+| PP-005 | Configuration over customization.                   |
+| PP-006 | Every action updates every dependent workflow.      |
+| PP-007 | Communication should justify its cost.              |
+| PP-008 | Desktop and Mobile provide equivalent capabilities. |
+| PP-009 | Every institute is isolated. Always.                |
+| PP-010 | Workflow first. Screens second.                     |
 
 ---
 
@@ -416,36 +422,36 @@ These are deferred to future roadmap phases.
 
 ### Technical Constraints
 
-| Constraint               | Detail                                    |
-|--------------------------|-------------------------------------------|
-| Team size                | Single engineering team (initially solo)  |
-| Infrastructure           | Budget-conscious                          |
-| Codebase                 | Single codebase                           |
-| Multi-tenancy model      | Shared database                           |
+| Constraint          | Detail                                   |
+| ------------------- | ---------------------------------------- |
+| Team size           | Single engineering team (initially solo) |
+| Infrastructure      | Budget-conscious                         |
+| Codebase            | Single codebase                          |
+| Multi-tenancy model | Shared database                          |
 
 ### Business Constraints
 
-| Constraint             | Detail                                         |
-|------------------------|------------------------------------------------|
-| Domain                 | Coaching only                                  |
-| Customer type          | Founder-led institutes only                    |
-| Operation model        | Offline-first with digital management          |
+| Constraint      | Detail                                |
+| --------------- | ------------------------------------- |
+| Domain          | Coaching only                         |
+| Customer type   | Founder-led institutes only           |
+| Operation model | Offline-first with digital management |
 
 ---
 
 ## 16. Risks
 
-| Risk                         | Mitigation                                                      |
-|------------------------------|-----------------------------------------------------------------|
-| Feature creep                | Strict MVP scope                                                |
-| High messaging costs         | Priority-based notifications and configurable channels          |
-| Complex permissions          | Permission templates + fine-grained authorization               |
-| Domain expansion too early   | Focus exclusively on coaching until PMF                         |
-| Over-engineering             | Modular monolith, not microservices                             |
+| Risk                       | Mitigation                                             |
+| -------------------------- | ------------------------------------------------------ |
+| Feature creep              | Strict MVP scope                                       |
+| High messaging costs       | Priority-based notifications and configurable channels |
+| Complex permissions        | Permission templates + fine-grained authorization      |
+| Domain expansion too early | Focus exclusively on coaching until PMF                |
+| Over-engineering           | Modular monolith, not microservices                    |
 
 ---
 
-*End of Chapter 1*
+_End of Chapter 1_
 
 ---
 
@@ -471,13 +477,13 @@ The platform digitizes operational workflows while intentionally avoiding areas 
 
 The platform consists of five core business capabilities:
 
-| Capability      |
-|-----------------|
-| Identity        |
-| Academics       |
-| Billing         |
-| Communication   |
-| Administration  |
+| Capability     |
+| -------------- |
+| Identity       |
+| Academics      |
+| Billing        |
+| Communication  |
+| Administration |
 
 ---
 
@@ -495,7 +501,7 @@ Every business entity belongs to exactly one institute.
 
 ---
 
-### Program *(Optional)*
+### Program _(Optional)_
 
 An optional grouping mechanism.
 
@@ -518,6 +524,7 @@ A subject may exist without belonging to a Program.
 ### Batch
 
 A scheduled learning group for a subject. A batch represents:
+
 - One subject
 - One schedule
 - One group of students
@@ -534,11 +541,12 @@ A learner enrolled in one or more batches. A student is a person. The student it
 
 ---
 
-### ParentIdentity *(Global — Platform Layer)*
+### ParentIdentity _(Global — Platform Layer)_
 
 A globally unique parent record anchored to a phone number. Exists at the platform level, not within any single institute.
 
 Stores:
+
 - Phone (globally unique)
 - Authentication state
 - Push notification tokens
@@ -549,28 +557,30 @@ One `ParentIdentity` spans all coaching institutes the parent is connected to.
 
 ---
 
-### InstituteParent *(Tenant — Institute Layer)*
+### InstituteParent _(Tenant — Institute Layer)_
 
 The institute-scoped parent record. Belongs to exactly one institute.
 
 Stores:
+
 - Primary Phone
-- Secondary Phone *(optional)*
+- Secondary Phone _(optional)_
 - Name
 
 `InstituteParent` is what the coaching institute creates and manages. It is linked to a `ParentIdentity` through an `InstituteMembership` record, resolved at login time.
 
 ---
 
-### ChildProfile *(Global — Platform Layer, Personal)*
+### ChildProfile _(Global — Platform Layer, Personal)_
 
 A parent-created label for organizing their children across institutes. Invisible to institutes.
 
 **Examples:** "Rahul", "Priya"
 
 Stores:
+
 - Name
-- Avatar *(optional)*
+- Avatar _(optional)_
 
 `ChildProfile` is personal organization — not identity matching. The parent creates these, not the platform. Institute data is never modified by a `ChildProfile`.
 
@@ -589,12 +599,14 @@ A parent links institute enrollments to their child profiles manually. The platf
 Represents a student's participation in a batch. Enrollment is the **operational entity**.
 
 Contains:
+
 - Join Date
 - Status
 - Discount
 - BillingPlan
 
 Enrollment answers:
+
 - Which batch?
 - Since when?
 - Is the student active?
@@ -619,21 +631,24 @@ Attendance recorded for a student's participation in a batch session.
 > **Updated per domain review.** Attendance now references a `BatchSession` rather than a raw date. This enables session cancellations, extra classes, and richer analytics without schema changes.
 
 Supported sources:
+
 - Manual
 - RFID
 
 Future:
+
 - QR Code
 
 ---
 
-### Schedule *(replaces Timetable)*
+### Schedule _(replaces Timetable)_
 
 The recurring weekly rule defining when a batch meets.
 
-> **Renamed from Timetable per domain review.** A Schedule is the *plan* — what should happen every week.
+> **Renamed from Timetable per domain review.** A Schedule is the _plan_ — what should happen every week.
 
 Stores:
+
 - Days of week
 - Start Time
 - End Time
@@ -647,9 +662,10 @@ Does not include rooms or advanced scheduling in MVP.
 
 A generated occurrence of a batch class on a specific date.
 
-> **New entity per domain review.** A Session is the *reality* — what actually happened (or was cancelled) on a specific date. Attendance is recorded against a Session, not a raw date.
+> **New entity per domain review.** A Session is the _reality_ — what actually happened (or was cancelled) on a specific date. Attendance is recorded against a Session, not a raw date.
 
 Stores:
+
 - Batch reference
 - Date
 - Start / End Time
@@ -683,23 +699,25 @@ Score obtained by a student in a test.
 
 ---
 
-### BillingPlan *(replaces Fee Plan)*
+### BillingPlan _(replaces Fee Plan)_
 
 The billing agreement for an enrollment. Stores how invoices are generated — the schedule, the rules, the contract.
 
-> **Renamed from Fee Plan per domain review.** BillingPlan is the *contract*. It never changes because of payments. Invoices are generated from it.
+> **Renamed from Fee Plan per domain review.** BillingPlan is the _contract_. It never changes because of payments. Invoices are generated from it.
 
 Supported types:
+
 - Monthly
 - One-time
 - Installments
 
 Stores:
+
 - Amount
 - Billing type
 - Discount type + value
-- Billing start date *(may differ from join date — handles late joins)*
-- First invoice amount override *(optional — for pro-rata cases)*
+- Billing start date _(may differ from join date — handles late joins)_
+- First invoice amount override _(optional — for pro-rata cases)_
 
 ---
 
@@ -720,6 +738,7 @@ One Payment → One Receipt. Receipt contains: Receipt Number, Institute Brandin
 A record of money received. This is **not** an online payment transaction.
 
 Payment may be received through:
+
 - Cash
 - UPI
 - Bank Transfer
@@ -729,6 +748,7 @@ Payment may be received through:
 ### Announcement
 
 Communication targeted to:
+
 - Entire Institute
 - Specific Batch
 
@@ -739,6 +759,7 @@ Communication targeted to:
 A delivery generated from a business event.
 
 Channels:
+
 - In-App
 - WhatsApp
 - SMS
@@ -829,6 +850,7 @@ Student Active
 ```
 
 **Output:**
+
 - Student exists
 - Parent linked
 - Enrollment active
@@ -966,78 +988,78 @@ Draft → Scheduled → Marks Entered → Published
 
 ### Identity
 
-| ID     | Requirement                                                                          |
-|--------|--------------------------------------------------------------------------------------|
-| FR-001 | The system shall allow an institute to manage students.                              |
-| FR-002 | The system shall allow linking one parent with multiple students.                    |
-| FR-003 | The system shall support two parent contact numbers.                                 |
-| FR-004 | The system shall support optional Programs.                                          |
-| FR-005 | The system shall allow creation of multiple subjects.                                |
-| FR-006 | The system shall support multiple batches per subject.                               |
-| FR-007 | The system shall allow a student to have multiple enrollments over time.             |
+| ID     | Requirement                                                              |
+| ------ | ------------------------------------------------------------------------ |
+| FR-001 | The system shall allow an institute to manage students.                  |
+| FR-002 | The system shall allow linking one parent with multiple students.        |
+| FR-003 | The system shall support two parent contact numbers.                     |
+| FR-004 | The system shall support optional Programs.                              |
+| FR-005 | The system shall allow creation of multiple subjects.                    |
+| FR-006 | The system shall support multiple batches per subject.                   |
+| FR-007 | The system shall allow a student to have multiple enrollments over time. |
 
 ---
 
 ### Attendance & Sessions
 
-| ID     | Requirement                                                                                        |
-|--------|----------------------------------------------------------------------------------------------------|
-| FR-020 | The system shall support manual attendance recording.                                              |
-| FR-021 | The system shall support RFID attendance recording.                                                |
-| FR-022 | The system shall create BatchSessions to represent individual class occurrences.                   |
-| FR-023 | Attendance shall be recorded against a BatchSession, not a raw date.                              |
-| FR-024 | Only one attendance record shall exist per enrollment per session.                                 |
-| FR-025 | A BatchSession may be marked as cancelled (holiday, teacher absent, etc.).                         |
-| FR-026 | Attendance shall automatically update attendance statistics.                                       |
+| ID     | Requirement                                                                      |
+| ------ | -------------------------------------------------------------------------------- |
+| FR-020 | The system shall support manual attendance recording.                            |
+| FR-021 | The system shall support RFID attendance recording.                              |
+| FR-022 | The system shall create BatchSessions to represent individual class occurrences. |
+| FR-023 | Attendance shall be recorded against a BatchSession, not a raw date.             |
+| FR-024 | Only one attendance record shall exist per enrollment per session.               |
+| FR-025 | A BatchSession may be marked as cancelled (holiday, teacher absent, etc.).       |
+| FR-026 | Attendance shall automatically update attendance statistics.                     |
 
 ---
 
 ### Homework
 
-| ID     | Requirement                                                                          |
-|--------|--------------------------------------------------------------------------------------|
-| FR-030 | Teachers shall create homework for an entire batch.                                  |
-| FR-031 | Homework may include text and file attachments.                                      |
+| ID     | Requirement                                         |
+| ------ | --------------------------------------------------- |
+| FR-030 | Teachers shall create homework for an entire batch. |
+| FR-031 | Homework may include text and file attachments.     |
 
 ---
 
 ### Tests & Marks
 
-| ID     | Requirement                                                                          |
-|--------|--------------------------------------------------------------------------------------|
-| FR-040 | Teachers shall create tests.                                                         |
-| FR-041 | Teachers shall record marks.                                                         |
-| FR-042 | Teachers shall publish results.                                                      |
+| ID     | Requirement                     |
+| ------ | ------------------------------- |
+| FR-040 | Teachers shall create tests.    |
+| FR-041 | Teachers shall record marks.    |
+| FR-042 | Teachers shall publish results. |
 
 ---
 
-### Billing *(formerly Finance)*
+### Billing _(formerly Finance)_
 
 > **Module renamed per domain review.** The module is called Billing internally. UI may say "Fees".
 
-| ID     | Requirement                                                                                     |
-|--------|-------------------------------------------------------------------------------------------------|
-| FR-050 | The system shall support monthly billing plans.                                                 |
-| FR-051 | The system shall support one-time billing plans.                                                |
-| FR-052 | The system shall support installment billing plans.                                             |
-| FR-053 | The system shall support discounts on billing plans (percentage and fixed).                     |
-| FR-054 | The system shall support a billing start date independent of the enrollment join date.          |
-| FR-055 | The system shall support a first invoice amount override for late-join and pro-rata cases.      |
-| FR-056 | The system shall generate invoices from billing plans.                                          |
-| FR-057 | The system shall record manual payments (cash, UPI, bank transfer).                             |
-| FR-058 | The system shall support partial payments against an invoice.                                   |
-| FR-059 | The system shall generate a receipt per payment.                                                |
-| FR-060 | Receipts shall be printable and include institute branding.                                     |
+| ID     | Requirement                                                                                |
+| ------ | ------------------------------------------------------------------------------------------ |
+| FR-050 | The system shall support monthly billing plans.                                            |
+| FR-051 | The system shall support one-time billing plans.                                           |
+| FR-052 | The system shall support installment billing plans.                                        |
+| FR-053 | The system shall support discounts on billing plans (percentage and fixed).                |
+| FR-054 | The system shall support a billing start date independent of the enrollment join date.     |
+| FR-055 | The system shall support a first invoice amount override for late-join and pro-rata cases. |
+| FR-056 | The system shall generate invoices from billing plans.                                     |
+| FR-057 | The system shall record manual payments (cash, UPI, bank transfer).                        |
+| FR-058 | The system shall support partial payments against an invoice.                              |
+| FR-059 | The system shall generate a receipt per payment.                                           |
+| FR-060 | Receipts shall be printable and include institute branding.                                |
 
 ---
 
 ### Communication
 
-| ID     | Requirement                                                                          |
-|--------|--------------------------------------------------------------------------------------|
-| FR-070 | Institutes shall publish announcements.                                              |
-| FR-071 | Announcements may target the entire institute or a specific batch.                   |
-| FR-072 | Critical events shall generate notifications.                                        |
+| ID     | Requirement                                                        |
+| ------ | ------------------------------------------------------------------ |
+| FR-070 | Institutes shall publish announcements.                            |
+| FR-071 | Announcements may target the entire institute or a specific batch. |
+| FR-072 | Critical events shall generate notifications.                      |
 
 ---
 
@@ -1047,25 +1069,25 @@ Draft → Scheduled → Marks Entered → Published
 
 #### Parent Hub (Platform Layer — Global)
 
-| ID     | Requirement                                                                                   |
-|--------|-----------------------------------------------------------------------------------------------|
-| FR-080 | Parents shall authenticate using OTP tied to their phone number (ParentIdentity).             |
-| FR-081 | Parents shall see all coaching institutes they are connected to in a single hub.              |
-| FR-082 | Parents shall create ChildProfiles to organize their children (e.g. "Rahul", "Priya").        |
-| FR-083 | Parents shall link institute enrollments to a ChildProfile manually.                          |
+| ID     | Requirement                                                                                         |
+| ------ | --------------------------------------------------------------------------------------------------- |
+| FR-080 | Parents shall authenticate using OTP tied to their phone number (ParentIdentity).                   |
+| FR-081 | Parents shall see all coaching institutes they are connected to in a single hub.                    |
+| FR-082 | Parents shall create ChildProfiles to organize their children (e.g. "Rahul", "Priya").              |
+| FR-083 | Parents shall link institute enrollments to a ChildProfile manually.                                |
 | FR-084 | The platform may suggest possible ChildProfile matches based on name similarity — never auto-merge. |
-| FR-085 | Parents shall switch between ChildProfiles to view each child's cross-institute summary.      |
+| FR-085 | Parents shall switch between ChildProfiles to view each child's cross-institute summary.            |
 
 #### Coaching Workspace (Institute Layer — Tenant)
 
-| ID     | Requirement                                                                                   |
-|--------|-----------------------------------------------------------------------------------------------|
-| FR-086 | Parents shall view attendance for their child within a specific institute.                    |
-| FR-087 | Parents shall view homework published to their child's batch.                                 |
-| FR-088 | Parents shall view published marks for their child.                                           |
-| FR-089 | Parents shall view fee status and invoice history.                                            |
-| FR-090 | Parents shall download receipts.                                                              |
-| FR-091 | Parents shall view announcements targeted to their child's batch or the institute.            |
+| ID     | Requirement                                                                        |
+| ------ | ---------------------------------------------------------------------------------- |
+| FR-086 | Parents shall view attendance for their child within a specific institute.         |
+| FR-087 | Parents shall view homework published to their child's batch.                      |
+| FR-088 | Parents shall view published marks for their child.                                |
+| FR-089 | Parents shall view fee status and invoice history.                                 |
+| FR-090 | Parents shall download receipts.                                                   |
+| FR-091 | Parents shall view announcements targeted to their child's batch or the institute. |
 
 ---
 
@@ -1073,11 +1095,11 @@ Draft → Scheduled → Marks Entered → Published
 
 ### Performance
 
-| Requirement                   | Target                                                                         |
-|-------------------------------|--------------------------------------------------------------------------------|
-| Student search                | Instantaneous for normal institute sizes                                       |
-| Attendance recording          | Completes quickly even for large batches                                       |
-| Parent dashboard load time    | Within a few seconds on average mobile networks                                |
+| Requirement                | Target                                          |
+| -------------------------- | ----------------------------------------------- |
+| Student search             | Instantaneous for normal institute sizes        |
+| Attendance recording       | Completes quickly even for large batches        |
+| Parent dashboard load time | Within a few seconds on average mobile networks |
 
 ### Security
 
@@ -1104,17 +1126,17 @@ Business logic shall remain modular and independently testable.
 
 The following are first-class domain events. Each event triggers downstream actions such as notifications, reporting, and audit logging.
 
-| Event                  | Description                              |
-|------------------------|------------------------------------------|
-| StudentEnrolled        | A student is enrolled in a batch         |
-| AttendanceRecorded     | Attendance is saved for a batch session  |
-| HomeworkPublished      | Homework is published to a batch         |
-| TestCreated            | A new test is created for a batch        |
-| MarksPublished         | Test results are published               |
-| InvoiceGenerated       | An invoice is created for an enrollment  |
-| PaymentRecorded        | A payment is recorded against an invoice |
-| AnnouncementPublished  | An announcement is published             |
-| UserInvited            | A new user is invited to the institute   |
+| Event                 | Description                              |
+| --------------------- | ---------------------------------------- |
+| StudentEnrolled       | A student is enrolled in a batch         |
+| AttendanceRecorded    | Attendance is saved for a batch session  |
+| HomeworkPublished     | Homework is published to a batch         |
+| TestCreated           | A new test is created for a batch        |
+| MarksPublished        | Test results are published               |
+| InvoiceGenerated      | An invoice is created for an enrollment  |
+| PaymentRecorded       | A payment is recorded against an invoice |
+| AnnouncementPublished | An announcement is published             |
+| UserInvited           | A new user is invited to the institute   |
 
 ---
 
@@ -1137,9 +1159,9 @@ The MVP is considered complete when all of the following are verifiable:
 
 ---
 
-*Chapter 2 Status: Draft Complete*
+_Chapter 2 Status: Draft Complete_
 
-*This chapter freezes the business domain and functional behaviour. Future engineering work — ERD, database schema, APIs, and UI — must conform to these definitions.*
+_This chapter freezes the business domain and functional behaviour. Future engineering work — ERD, database schema, APIs, and UI — must conform to these definitions._
 
 ---
 
@@ -1236,17 +1258,17 @@ If this cycle works end-to-end, the institute can operate daily using CoachingOS
 
 #### Staff Login
 
-| Attribute | Detail                                          |
-|-----------|-------------------------------------------------|
-| Purpose   | Authenticate institute staff                    |
+| Attribute | Detail                                           |
+| --------- | ------------------------------------------------ |
+| Purpose   | Authenticate institute staff                     |
 | Features  | Login, Forgot Password / OTP, Session Management |
 
 #### Parent Login
 
-| Attribute | Detail                                    |
-|-----------|-------------------------------------------|
-| Purpose   | Parent Hub access — global layer          |
-| Features  | Mobile Number, OTP Verification, Persistent Session |
+| Attribute | Detail                                                |
+| --------- | ----------------------------------------------------- |
+| Purpose   | Parent Hub access — global layer                      |
+| Features  | Mobile Number, OTP Verification, Persistent Session   |
 | Resolves  | ParentIdentity → InstituteMemberships → ChildProfiles |
 
 > Parents log in once and see all connected coaching institutes. No separate login per institute.
@@ -1258,6 +1280,7 @@ If this cycle works end-to-end, the institute can operate daily using CoachingOS
 #### Founder Dashboard
 
 **Displays:**
+
 - Today's Attendance
 - Pending Fees
 - Today's Classes
@@ -1266,6 +1289,7 @@ If this cycle works end-to-end, the institute can operate daily using CoachingOS
 - Quick Actions
 
 **Quick Actions:**
+
 - Attendance
 - Add Student
 - Record Fee
@@ -1276,6 +1300,7 @@ If this cycle works end-to-end, the institute can operate daily using CoachingOS
 #### Teacher Dashboard
 
 **Displays:**
+
 - Today's Batches
 - Pending Homework
 - Upcoming Tests
@@ -1283,18 +1308,21 @@ If this cycle works end-to-end, the institute can operate daily using CoachingOS
 #### Parent Hub (Global Dashboard)
 
 **Displays:**
+
 - Child Profiles (Rahul, Priya)
 - All connected coaching institutes per child
 - Cross-institute attendance summary per child
 - Unified notifications
 
 **Supports:**
+
 - Multiple ChildProfiles
 - Multiple Coaching Institutes per child
 
 #### Coaching Workspace (Per-Institute View)
 
 **Displays:**
+
 - Attendance
 - Homework
 - Latest Marks
@@ -1309,16 +1337,16 @@ If this cycle works end-to-end, the institute can operate daily using CoachingOS
 
 ### Institute
 
-| Function        |
-|-----------------|
+| Function         |
+| ---------------- |
 | Create Institute |
-| Branding        |
-| Settings        |
+| Branding         |
+| Settings         |
 
 ### Student
 
 | Function |
-|----------|
+| -------- |
 | Create   |
 | Edit     |
 | Archive  |
@@ -1327,7 +1355,7 @@ If this cycle works end-to-end, the institute can operate daily using CoachingOS
 ### Parent
 
 | Function       |
-|----------------|
+| -------------- |
 | Create         |
 | Link Student   |
 | Update Contact |
@@ -1335,29 +1363,29 @@ If this cycle works end-to-end, the institute can operate daily using CoachingOS
 ### Subject
 
 | Function |
-|----------|
+| -------- |
 | Create   |
 | Edit     |
 | Archive  |
 
 ### Batch
 
-| Function        |
-|-----------------|
-| Create          |
-| Assign Subject  |
-| Assign Teacher  |
-| Timetable       |
-| Active Status   |
+| Function       |
+| -------------- |
+| Create         |
+| Assign Subject |
+| Assign Teacher |
+| Timetable      |
+| Active Status  |
 
 ### Enrollment
 
-| Function         |
-|------------------|
-| Enroll Student   |
-| Change Status    |
-| Assign Fee Plan  |
-| Apply Discount   |
+| Function        |
+| --------------- |
+| Enroll Student  |
+| Change Status   |
+| Assign Fee Plan |
+| Apply Discount  |
 
 ---
 
@@ -1368,7 +1396,7 @@ If this cycle works end-to-end, the institute can operate daily using CoachingOS
 **Supported Sources:** Manual, RFID
 
 | Feature               |
-|-----------------------|
+| --------------------- |
 | Mark Present          |
 | Mark Absent           |
 | Mark Late             |
@@ -1378,7 +1406,7 @@ If this cycle works end-to-end, the institute can operate daily using CoachingOS
 **Reports:**
 
 | Report  |
-|---------|
+| ------- |
 | Daily   |
 | Batch   |
 | Student |
@@ -1386,7 +1414,7 @@ If this cycle works end-to-end, the institute can operate daily using CoachingOS
 ### Homework
 
 | Feature         |
-|-----------------|
+| --------------- |
 | Create          |
 | Edit            |
 | Publish         |
@@ -1396,7 +1424,7 @@ If this cycle works end-to-end, the institute can operate daily using CoachingOS
 ### Tests
 
 | Feature       |
-|---------------|
+| ------------- |
 | Create Test   |
 | Edit          |
 | Maximum Marks |
@@ -1404,62 +1432,62 @@ If this cycle works end-to-end, the institute can operate daily using CoachingOS
 
 ### Marks
 
-| Feature              |
-|----------------------|
-| Bulk Entry           |
-| Edit Before Publish  |
-| Publish              |
-| Parent Visibility    |
+| Feature             |
+| ------------------- |
+| Bulk Entry          |
+| Edit Before Publish |
+| Publish             |
+| Parent Visibility   |
 
-### Schedule *(recurring rule — replaces Timetable)*
+### Schedule _(recurring rule — replaces Timetable)_
 
-| Stores      |
-|-------------|
+| Stores       |
+| ------------ |
 | Days of week |
-| Start Time  |
-| End Time    |
-| Teacher     |
+| Start Time   |
+| End Time     |
+| Teacher      |
 
 > No room scheduling in MVP.
 
-### BatchSession *(generated occurrence)*
+### BatchSession _(generated occurrence)_
 
-| Stores                  |
-|-------------------------|
-| Date                    |
-| Start / End Time        |
+| Stores                                     |
+| ------------------------------------------ |
+| Date                                       |
+| Start / End Time                           |
 | Status (scheduled / completed / cancelled) |
-| Attendance taken flag   |
-| Source (manual / rfid)  |
+| Attendance taken flag                      |
+| Source (manual / rfid)                     |
 
 > Attendance is recorded against a BatchSession, not a raw date.
 
 ---
 
-## 7. Billing Module *(formerly Finance)*
+## 7. Billing Module _(formerly Finance)_
 
 > **Module renamed per domain review.** UI shows "Fees". Codebase uses `billing`.
 
-### BillingPlan *(replaces Fee Plan)*
+### BillingPlan _(replaces Fee Plan)_
 
-| Supported Type | Notes                                |
-|----------------|--------------------------------------|
-| Monthly        | Invoice generated each month         |
-| One-Time       | Single invoice on creation           |
-| Installments   | N invoices based on schedule         |
+| Supported Type | Notes                        |
+| -------------- | ---------------------------- |
+| Monthly        | Invoice generated each month |
+| One-Time       | Single invoice on creation   |
+| Installments   | N invoices based on schedule |
 
 **Additional fields:**
 
-| Field                           | Purpose                                    |
-|---------------------------------|--------------------------------------------|
-| Discount type + value           | Inherited by all invoices from this plan   |
-| Billing start date              | May differ from enrollment join date       |
-| First invoice amount override   | For late-join / pro-rata cases             |
+| Field                         | Purpose                                  |
+| ----------------------------- | ---------------------------------------- |
+| Discount type + value         | Inherited by all invoices from this plan |
+| Billing start date            | May differ from enrollment join date     |
+| First invoice amount override | For late-join / pro-rata cases           |
 
 ### Invoice
 
 | Function       |
-|----------------|
+| -------------- |
 | Generate       |
 | View           |
 | Pending Status |
@@ -1471,7 +1499,7 @@ If this cycle works end-to-end, the institute can operate daily using CoachingOS
 **Supported Methods:** Cash, UPI, Bank Transfer
 
 | Feature         |
-|-----------------|
+| --------------- |
 | Partial Payment |
 | Remarks         |
 | Collected By    |
@@ -1483,13 +1511,13 @@ If this cycle works end-to-end, the institute can operate daily using CoachingOS
 Generated receipt contains:
 
 | Field              |
-|--------------------|
+| ------------------ |
 | Institute Branding |
 | Receipt Number     |
 | Student            |
 | Amount             |
 | Payment Mode       |
-| Date              |
+| Date               |
 
 ---
 
@@ -1498,7 +1526,7 @@ Generated receipt contains:
 ### Announcements
 
 | Target           |
-|------------------|
+| ---------------- |
 | Entire Institute |
 | Specific Batch   |
 
@@ -1506,19 +1534,19 @@ Generated receipt contains:
 
 **Priority Levels:**
 
-| Level         | Events                                                  |
-|---------------|---------------------------------------------------------|
-| Critical      | Absent, Fee Due, Fee Received, Test Result, Emergency   |
-| Important     | Homework, Timetable Change                              |
-| Informational | General Updates                                         |
+| Level         | Events                                                |
+| ------------- | ----------------------------------------------------- |
+| Critical      | Absent, Fee Due, Fee Received, Test Result, Emergency |
+| Important     | Homework, Timetable Change                            |
+| Informational | General Updates                                       |
 
 **Delivery Channels:**
 
-| Channel              | Status         |
-|----------------------|----------------|
-| In-App               | MVP            |
-| WhatsApp             | Future rollout |
-| SMS                  | Optional       |
+| Channel  | Status         |
+| -------- | -------------- |
+| In-App   | MVP            |
+| WhatsApp | Future rollout |
+| SMS      | Optional       |
 
 ---
 
@@ -1527,7 +1555,7 @@ Generated receipt contains:
 ### Branding
 
 | Field               |
-|---------------------|
+| ------------------- |
 | Institute Logo      |
 | Primary Color       |
 | Institute Name      |
@@ -1536,22 +1564,22 @@ Generated receipt contains:
 
 ### Settings
 
-| Setting               |
-|-----------------------|
-| Attendance Method     |
+| Setting                  |
+| ------------------------ |
+| Attendance Method        |
 | Notification Preferences |
-| Academic Year         |
-| Institute Details     |
+| Academic Year            |
+| Institute Details        |
 
 ### Reports
 
-| Report           |
-|------------------|
-| Attendance       |
-| Fee Collection   |
-| Pending Fees     |
-| Student Summary  |
-| Batch Summary    |
+| Report          |
+| --------------- |
+| Attendance      |
+| Fee Collection  |
+| Pending Fees    |
+| Student Summary |
+| Batch Summary   |
 
 ### Users
 
@@ -1563,11 +1591,11 @@ Permissions determine capabilities.
 
 ## 10. User Stories
 
-| Persona   | Story |
-|-----------|-------|
-| Founder   | "As a founder, I want to manage attendance, fees, homework, tests and announcements from one system." |
-| Teacher   | "As a teacher, I want to complete my academic work quickly so I can focus on teaching." |
-| Assistant | "As an assistant, I want to manage admissions and fees without accessing sensitive institute settings." |
+| Persona   | Story                                                                                                                 |
+| --------- | --------------------------------------------------------------------------------------------------------------------- |
+| Founder   | "As a founder, I want to manage attendance, fees, homework, tests and announcements from one system."                 |
+| Teacher   | "As a teacher, I want to complete my academic work quickly so I can focus on teaching."                               |
+| Assistant | "As an assistant, I want to manage admissions and fees without accessing sensitive institute settings."               |
 | Parent    | "As a parent, I want to know my child's attendance, homework, marks and fee status without contacting the institute." |
 
 ---
@@ -1626,7 +1654,7 @@ Permissions determine capabilities.
 The following features are intentionally excluded from MVP:
 
 | Feature                |
-|------------------------|
+| ---------------------- |
 | Online Classes         |
 | Video Streaming        |
 | LMS                    |
@@ -1650,39 +1678,39 @@ The following features are intentionally excluded from MVP:
 
 ### MVP
 
-| Capability      |
-|-----------------|
-| Identity        |
-| Academics       |
-| Finance         |
-| Communication   |
-| Administration  |
-| Parent Portal   |
+| Capability     |
+| -------------- |
+| Identity       |
+| Academics      |
+| Finance        |
+| Communication  |
+| Administration |
+| Parent Portal  |
 
 ### Version 1
 
-| Feature                        |
-|--------------------------------|
-| Admissions Pipeline            |
-| Study Material                 |
-| Attendance Analytics           |
-| Batch Transfer                 |
-| Export (PDF / Excel)           |
-| Improved WhatsApp Integration  |
+| Feature                       |
+| ----------------------------- |
+| Admissions Pipeline           |
+| Study Material                |
+| Attendance Analytics          |
+| Batch Transfer                |
+| Export (PDF / Excel)          |
+| Improved WhatsApp Integration |
 
 ### Version 2
 
-| Feature                   |
-|---------------------------|
-| Payment Gateway           |
-| AI Reports                |
-| CRM                       |
-| Multi Branch              |
-| Website Builder           |
-| Marketing Tools           |
-| Face Recognition          |
-| QR Attendance             |
-| Accounting Integrations   |
+| Feature                 |
+| ----------------------- |
+| Payment Gateway         |
+| AI Reports              |
+| CRM                     |
+| Multi Branch            |
+| Website Builder         |
+| Marketing Tools         |
+| Face Recognition        |
+| QR Attendance           |
+| Accounting Integrations |
 
 ---
 
@@ -1690,31 +1718,31 @@ The following features are intentionally excluded from MVP:
 
 The following decisions are intentionally postponed until implementation:
 
-| Decision                         |
-|----------------------------------|
+| Decision                                                |
+| ------------------------------------------------------- |
 | Staff authentication method (password vs OTP vs hybrid) |
-| Background job implementation    |
-| Queue technology                 |
-| WhatsApp provider                |
-| SMS provider                     |
-| Receipt numbering strategy       |
-| Academic year handling           |
-| Data archival policy             |
+| Background job implementation                           |
+| Queue technology                                        |
+| WhatsApp provider                                       |
+| SMS provider                                            |
+| Receipt numbering strategy                              |
+| Academic year handling                                  |
+| Data archival policy                                    |
 
 ---
 
 ## 15. Traceability Matrix
 
-| Business Goal                    | MVP Feature                        |
-|----------------------------------|------------------------------------|
-| Reduce manual attendance         | Attendance Module                  |
-| Improve parent trust             | Parent Portal                      |
-| Reduce fee disputes              | Finance Module                     |
-| Professional institute image     | Branding                           |
-| Faster communication             | Announcements + Notifications      |
-| Better operational visibility    | Reports                            |
-| Lower onboarding friction        | OTP Login                          |
-| Flexible institute structure     | Subjects + Batches + Enrollment    |
+| Business Goal                 | MVP Feature                     |
+| ----------------------------- | ------------------------------- |
+| Reduce manual attendance      | Attendance Module               |
+| Improve parent trust          | Parent Portal                   |
+| Reduce fee disputes           | Finance Module                  |
+| Professional institute image  | Branding                        |
+| Faster communication          | Announcements + Notifications   |
+| Better operational visibility | Reports                         |
+| Lower onboarding friction     | OTP Login                       |
+| Flexible institute structure  | Subjects + Batches + Enrollment |
 
 ---
 
@@ -1722,21 +1750,21 @@ The following decisions are intentionally postponed until implementation:
 
 The following decisions are frozen for Version 1. Changes require explicit architectural review.
 
-| Decision                          |
-|-----------------------------------|
-| Coaching institutes only          |
-| Founder-led institutes            |
-| Modular Monolith Architecture     |
-| Multi-tenant SaaS                 |
-| Shared PostgreSQL Database        |
-| Batch-centric Domain Model        |
-| Enrollment-centric Operations     |
-| Responsive Web Application        |
-| PWA-first Strategy                |
-| Manual + RFID Attendance          |
-| Manual Payment Recording          |
-| Permission-based Authorization    |
-| Event-driven Business Logic       |
+| Decision                       |
+| ------------------------------ |
+| Coaching institutes only       |
+| Founder-led institutes         |
+| Modular Monolith Architecture  |
+| Multi-tenant SaaS              |
+| Shared PostgreSQL Database     |
+| Batch-centric Domain Model     |
+| Enrollment-centric Operations  |
+| Responsive Web Application     |
+| PWA-first Strategy             |
+| Manual + RFID Attendance       |
+| Manual Payment Recording       |
+| Permission-based Authorization |
+| Event-driven Business Logic    |
 
 ---
 
@@ -1747,7 +1775,7 @@ With Chapters 1–3 complete, the Software Requirements Specification is conside
 This document now defines:
 
 | Area                        |
-|-----------------------------|
+| --------------------------- |
 | Product Vision              |
 | Business Domain             |
 | Business Rules              |
@@ -1768,4 +1796,4 @@ This document now defines:
 
 ---
 
-*End of Chapter 3 — SRS v1.0 Complete*
+_End of Chapter 3 — SRS v1.0 Complete_

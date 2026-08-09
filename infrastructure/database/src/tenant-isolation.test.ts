@@ -33,8 +33,16 @@ describe('Multi-Tenant Data Isolation Suite', () => {
     expect(userA.instituteId).toBe(instA.id);
     expect(userB.instituteId).toBe(instB.id);
 
-    const studentA = await createTestStudent(instA.id, { firstName: 'Rahul', lastName: 'Sharma', admissionNumber: 'ADM-A1' });
-    const studentB = await createTestStudent(instB.id, { firstName: 'Priya', lastName: 'Verma', admissionNumber: 'ADM-B1' });
+    const studentA = await createTestStudent(instA.id, {
+      firstName: 'Rahul',
+      lastName: 'Sharma',
+      admissionNumber: 'ADM-A1',
+    });
+    const studentB = await createTestStudent(instB.id, {
+      firstName: 'Priya',
+      lastName: 'Verma',
+      admissionNumber: 'ADM-B1',
+    });
 
     // Query scoped to Institute A
     const instAStudent = await db.student.findFirst({

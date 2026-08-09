@@ -24,9 +24,7 @@ const serverSchema = z.object({
       (val) => !val || val.startsWith('postgres://') || val.startsWith('postgresql://'),
       'TEST_DATABASE_URL must be a valid PostgreSQL connection string starting with postgresql://',
     ),
-  NODE_ENV: z
-    .enum(['development', 'test', 'production'])
-    .default('development'),
+  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z
     .string()
     .default('3000')
@@ -60,9 +58,7 @@ function validateServerConfig(): ServerConfig {
     console.error(issueMessages);
     console.error('Please check your root .env file against .env.example.\n');
 
-    throw new Error(
-      `Server Environment Validation Failed:\n${issueMessages}`,
-    );
+    throw new Error(`Server Environment Validation Failed:\n${issueMessages}`);
   }
 
   return result.data;

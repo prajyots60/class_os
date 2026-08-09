@@ -7,7 +7,7 @@
 **Audience:** Backend Engineers, Frontend Engineers, Architects
 
 > This document defines the persistence layer and API contracts for CoachingOS.  
-> The SRS defines *what* to build. The SDD defines *how* to architect it. This document defines *how to store and expose data*.
+> The SRS defines _what_ to build. The SDD defines _how_ to architect it. This document defines _how to store and expose data_.
 
 ---
 
@@ -79,14 +79,14 @@
 
 This document defines the persistence layer and API contracts for CoachingOS.
 
-| Objective                                                    |
-|--------------------------------------------------------------|
-| Design a normalized relational database                      |
-| Preserve business rules defined in the SRS                   |
-| Provide a scalable multi-tenant model                        |
-| Define API standards                                         |
-| Minimize future schema migrations                            |
-| Keep implementation independent from UI                      |
+| Objective                                  |
+| ------------------------------------------ |
+| Design a normalized relational database    |
+| Preserve business rules defined in the SRS |
+| Provide a scalable multi-tenant model      |
+| Define API standards                       |
+| Minimize future schema migrations          |
+| Keep implementation independent from UI    |
 
 This document is the primary reference for implementing PostgreSQL, Prisma, REST APIs, and future integrations.
 
@@ -98,11 +98,11 @@ This document is the primary reference for implementing PostgreSQL, Prisma, REST
 
 Every business-owned table contains `institute_id`.
 
-| Rule                                                                  |
-|-----------------------------------------------------------------------|
-| Tenant scoping is mandatory on every query                            |
-| Repositories must automatically filter by `institute_id`             |
-| Application code must **never** manually append tenant filters        |
+| Rule                                                           |
+| -------------------------------------------------------------- |
+| Tenant scoping is mandatory on every query                     |
+| Repositories must automatically filter by `institute_id`       |
+| Application code must **never** manually append tenant filters |
 
 ### DB-002 — Normalization
 
@@ -110,19 +110,19 @@ Target: **Third Normal Form (3NF)**
 
 Avoid duplicated business data across tables.
 
-| Wrong                                         | Correct                              |
-|-----------------------------------------------|--------------------------------------|
-| Student table contains fee amount             | Fee amount belongs to Enrollment     |
-| Batch table contains student count            | Count derived from Enrollments query |
+| Wrong                              | Correct                              |
+| ---------------------------------- | ------------------------------------ |
+| Student table contains fee amount  | Fee amount belongs to Enrollment     |
+| Batch table contains student count | Count derived from Enrollments query |
 
 ### DB-003 — Soft Deletes
 
 Business entities are archived rather than physically removed.
 
-| Column       | Purpose                            |
-|--------------|------------------------------------|
-| `deleted_at` | Timestamp of archival              |
-| `deleted_by` | User ID who performed the action   |
+| Column       | Purpose                          |
+| ------------ | -------------------------------- |
+| `deleted_at` | Timestamp of archival            |
+| `deleted_by` | User ID who performed the action |
 
 Historical records remain available for auditing and reporting.
 
@@ -130,22 +130,22 @@ Historical records remain available for auditing and reporting.
 
 Every externally exposed entity uses UUID as its primary key.
 
-| Reason                             |
-|------------------------------------|
-| Non-sequential — harder to enumerate |
-| Safer API surface                  |
+| Reason                                  |
+| --------------------------------------- |
+| Non-sequential — harder to enumerate    |
+| Safer API surface                       |
 | Easier data merging across environments |
-| No information leakage through IDs |
+| No information leakage through IDs      |
 
 ### DB-005 — Auditability
 
 Every important record includes standard audit columns.
 
-| Column       | Required When              |
-|--------------|----------------------------|
-| `created_at` | All tables                 |
-| `updated_at` | All tables                 |
-| `created_by` | Business entity tables     |
+| Column       | Required When               |
+| ------------ | --------------------------- |
+| `created_at` | All tables                  |
+| `updated_at` | All tables                  |
+| `created_by` | Business entity tables      |
 | `updated_by` | Where mutations are audited |
 
 ---
@@ -206,19 +206,19 @@ Enrollment
 
 Represents a coaching institute tenant.
 
-| Column          | Type      | Notes                            |
-|-----------------|-----------|----------------------------------|
-| `id`            | UUID      | Primary key                      |
-| `name`          | String    | Institute display name           |
-| `slug`          | String    | Unique URL-safe identifier       |
-| `phone`         | String    | Contact number                   |
-| `email`         | String    | Contact email                    |
-| `logo_url`      | String    | Object storage reference         |
-| `primary_color` | String    | Hex color for branding           |
-| `timezone`      | String    | e.g. `Asia/Kolkata`              |
+| Column          | Type      | Notes                             |
+| --------------- | --------- | --------------------------------- |
+| `id`            | UUID      | Primary key                       |
+| `name`          | String    | Institute display name            |
+| `slug`          | String    | Unique URL-safe identifier        |
+| `phone`         | String    | Contact number                    |
+| `email`         | String    | Contact email                     |
+| `logo_url`      | String    | Object storage reference          |
+| `primary_color` | String    | Hex color for branding            |
+| `timezone`      | String    | e.g. `Asia/Kolkata`               |
 | `status`        | Enum      | `active`, `suspended`, `archived` |
-| `created_at`    | Timestamp |                                  |
-| `updated_at`    | Timestamp |                                  |
+| `created_at`    | Timestamp |                                   |
+| `updated_at`    | Timestamp |                                   |
 
 **Relationships:**
 
@@ -236,111 +236,111 @@ Institute → Many Batches
 
 Represents internal staff members (Founder, Teacher, Assistant, Reception).
 
-| Column          | Type      | Notes                                  |
-|-----------------|-----------|----------------------------------------|
-| `id`            | UUID      | Primary key                            |
-| `institute_id`  | UUID      | FK → institutes                        |
-| `name`          | String    |                                        |
-| `phone`         | String    |                                        |
-| `email`         | String    | Used for login                         |
-| `password_hash` | String    | Nullable — if password auth is used    |
-| `status`        | Enum      | `active`, `invited`, `suspended`       |
-| `created_at`    | Timestamp |                                        |
-| `updated_at`    | Timestamp |                                        |
-| `deleted_at`    | Timestamp | Soft delete                            |
+| Column          | Type      | Notes                               |
+| --------------- | --------- | ----------------------------------- |
+| `id`            | UUID      | Primary key                         |
+| `institute_id`  | UUID      | FK → institutes                     |
+| `name`          | String    |                                     |
+| `phone`         | String    |                                     |
+| `email`         | String    | Used for login                      |
+| `password_hash` | String    | Nullable — if password auth is used |
+| `status`        | Enum      | `active`, `invited`, `suspended`    |
+| `created_at`    | Timestamp |                                     |
+| `updated_at`    | Timestamp |                                     |
+| `deleted_at`    | Timestamp | Soft delete                         |
 
 > Users do not contain permissions directly. Permissions are assigned through role templates and individual overrides.
 
 ---
 
-### `parent_identities` *(Platform Layer — Global)*
+### `parent_identities` _(Platform Layer — Global)_
 
 > **New table per ADR-001.** Global parent record anchored to a phone number. Exists once per phone across all institutes.
 
-| Column       | Type      | Notes                                  |
-|--------------|-----------|----------------------------------------|
-| `id`         | UUID      | Primary key                            |
-| `phone`      | String    | Globally unique — the identity anchor  |
-| `created_at` | Timestamp |                                        |
-| `updated_at` | Timestamp |                                        |
+| Column       | Type      | Notes                                 |
+| ------------ | --------- | ------------------------------------- |
+| `id`         | UUID      | Primary key                           |
+| `phone`      | String    | Globally unique — the identity anchor |
+| `created_at` | Timestamp |                                       |
+| `updated_at` | Timestamp |                                       |
 
 **No `institute_id`** — this record is platform-scoped, not tenant-scoped.
 
 ---
 
-### `institute_memberships` *(Platform Layer — Global)*
+### `institute_memberships` _(Platform Layer — Global)_
 
 > **New table per ADR-001.** Links a `ParentIdentity` to a specific institute and its tenant-scoped parent record.
 
-| Column                  | Type | Notes                                        |
-|-------------------------|------|----------------------------------------------|
-| `id`                    | UUID | Primary key                                  |
-| `parent_identity_id`    | UUID | FK → parent_identities                       |
-| `institute_id`          | UUID | FK → institutes                              |
-| `institute_parent_id`   | UUID | FK → institute_parents (the tenant record)   |
+| Column                | Type | Notes                                      |
+| --------------------- | ---- | ------------------------------------------ |
+| `id`                  | UUID | Primary key                                |
+| `parent_identity_id`  | UUID | FK → parent_identities                     |
+| `institute_id`        | UUID | FK → institutes                            |
+| `institute_parent_id` | UUID | FK → institute_parents (the tenant record) |
 
 **Unique constraint:** `(parent_identity_id, institute_id)` — one membership per parent per institute.
 
 ---
 
-### `institute_parents` *(Institute Layer — Tenant, formerly `parents`)*
+### `institute_parents` _(Institute Layer — Tenant, formerly `parents`)_
 
 > **Renamed per ADR-001.** This is the tenant-scoped parent record — what the coaching institute creates and manages. Previously named `parents`.
 
-| Column            | Type      | Notes                                |
-|-------------------|-----------|--------------------------------------|
-| `id`              | UUID      | Primary key                          |
-| `institute_id`    | UUID      | FK → institutes                      |
-| `name`            | String    |                                      |
-| `primary_phone`   | String    | Contact number for this institute    |
-| `secondary_phone` | String    | Optional                             |
-| `created_at`      | Timestamp |                                      |
-| `updated_at`      | Timestamp |                                      |
-| `deleted_at`      | Timestamp | Soft delete                          |
+| Column            | Type      | Notes                             |
+| ----------------- | --------- | --------------------------------- |
+| `id`              | UUID      | Primary key                       |
+| `institute_id`    | UUID      | FK → institutes                   |
+| `name`            | String    |                                   |
+| `primary_phone`   | String    | Contact number for this institute |
+| `secondary_phone` | String    | Optional                          |
+| `created_at`      | Timestamp |                                   |
+| `updated_at`      | Timestamp |                                   |
+| `deleted_at`      | Timestamp | Soft delete                       |
 
 **Relationship:** One `InstituteParent` → Many Students (via `institute_parent_students`)
 
 ---
 
-### `institute_parent_students` *(Institute Layer — Tenant, formerly `parent_students`)*
+### `institute_parent_students` _(Institute Layer — Tenant, formerly `parent_students`)_
 
 > **Renamed per ADR-001.** Tenant-scoped join table linking institute parents to students within the same institute.
 
-| Column                   | Type | Notes                                   |
-|--------------------------|------|-----------------------------------------|
-| `institute_parent_id`    | UUID | FK → institute_parents                  |
-| `student_id`             | UUID | FK → students                           |
-| `relation`               | Enum | `mother`, `father`, `guardian`, `other` |
+| Column                | Type | Notes                                   |
+| --------------------- | ---- | --------------------------------------- |
+| `institute_parent_id` | UUID | FK → institute_parents                  |
+| `student_id`          | UUID | FK → students                           |
+| `relation`            | Enum | `mother`, `father`, `guardian`, `other` |
 
 ---
 
-### `child_profiles` *(Platform Layer — Personal)*
+### `child_profiles` _(Platform Layer — Personal)_
 
 > **New table per ADR-001.** Parent-created labels for organizing children across institutes. Invisible to institutes.
 
-| Column                | Type      | Notes                                    |
-|-----------------------|-----------|------------------------------------------|
-| `id`                  | UUID      | Primary key                              |
-| `parent_identity_id`  | UUID      | FK → parent_identities                   |
-| `name`                | String    | Parent-chosen label e.g. "Rahul", "Priya" |
-| `avatar`              | String    | Optional emoji or image reference        |
-| `created_at`          | Timestamp |                                          |
-| `updated_at`          | Timestamp |                                          |
+| Column               | Type      | Notes                                     |
+| -------------------- | --------- | ----------------------------------------- |
+| `id`                 | UUID      | Primary key                               |
+| `parent_identity_id` | UUID      | FK → parent_identities                    |
+| `name`               | String    | Parent-chosen label e.g. "Rahul", "Priya" |
+| `avatar`             | String    | Optional emoji or image reference         |
+| `created_at`         | Timestamp |                                           |
+| `updated_at`         | Timestamp |                                           |
 
 **No `institute_id`** — personal, not tenant-scoped. Institutes never read this table.
 
 ---
 
-### `student_links` *(Platform Layer — Personal)*
+### `student_links` _(Platform Layer — Personal)_
 
 > **New table per ADR-001.** Maps a `ChildProfile` to a specific `Student` record within an institute.
 
-| Column              | Type | Notes                                        |
-|---------------------|------|----------------------------------------------|
-| `id`                | UUID | Primary key                                  |
-| `child_profile_id`  | UUID | FK → child_profiles                          |
-| `student_id`        | UUID | FK → students (institute-scoped)             |
-| `institute_id`      | UUID | FK → institutes (denormalized for query ease) |
+| Column             | Type | Notes                                         |
+| ------------------ | ---- | --------------------------------------------- |
+| `id`               | UUID | Primary key                                   |
+| `child_profile_id` | UUID | FK → child_profiles                           |
+| `student_id`       | UUID | FK → students (institute-scoped)              |
+| `institute_id`     | UUID | FK → institutes (denormalized for query ease) |
 
 **Unique constraint:** `(child_profile_id, student_id)` — a student can only be linked to one ChildProfile once.
 
@@ -348,18 +348,18 @@ Represents internal staff members (Founder, Teacher, Assistant, Reception).
 
 Learner identity record. Contains no operational data.
 
-| Column             | Type      | Notes                         |
-|--------------------|-----------|-------------------------------|
-| `id`               | UUID      | Primary key                   |
-| `institute_id`     | UUID      | FK → institutes               |
-| `admission_number` | String    | Optional, institute-defined   |
-| `first_name`       | String    |                               |
-| `last_name`        | String    |                               |
-| `date_of_birth`    | Date      | Optional                      |
-| `status`           | Enum      | `active`, `archived`          |
-| `created_at`       | Timestamp |                               |
-| `updated_at`       | Timestamp |                               |
-| `deleted_at`       | Timestamp | Soft delete                   |
+| Column             | Type      | Notes                       |
+| ------------------ | --------- | --------------------------- |
+| `id`               | UUID      | Primary key                 |
+| `institute_id`     | UUID      | FK → institutes             |
+| `admission_number` | String    | Optional, institute-defined |
+| `first_name`       | String    |                             |
+| `last_name`        | String    |                             |
+| `date_of_birth`    | Date      | Optional                    |
+| `status`           | Enum      | `active`, `archived`        |
+| `created_at`       | Timestamp |                             |
+| `updated_at`       | Timestamp |                             |
+| `deleted_at`       | Timestamp | Soft delete                 |
 
 > Student contains identity only. No fee information. No attendance. Those belong to Enrollment.
 
@@ -369,15 +369,16 @@ Learner identity record. Contains no operational data.
 
 Join table supporting many-to-many parent–student relationships.
 
-| Column       | Type | Notes                                      |
-|--------------|------|--------------------------------------------|
-| `parent_id`  | UUID | FK → institute_parents                     |
-| `student_id` | UUID | FK → students                              |
-| `relation`   | Enum | `mother`, `father`, `guardian`, `other`    |
+| Column       | Type | Notes                                   |
+| ------------ | ---- | --------------------------------------- |
+| `parent_id`  | UUID | FK → institute_parents                  |
+| `student_id` | UUID | FK → students                           |
+| `relation`   | Enum | `mother`, `father`, `guardian`, `other` |
 
 > **Note:** This table is now named `institute_parent_students` in the updated schema (see ADR-001). The columns above reflect the renamed version.
 
 **Supports:**
+
 - One parent linked to multiple children
 - One child linked to multiple guardians (mother + father)
 
@@ -388,7 +389,7 @@ Join table supporting many-to-many parent–student relationships.
 Optional grouping mechanism. Not required for MVP.
 
 | Column         | Type      | Notes               |
-|----------------|-----------|---------------------|
+| -------------- | --------- | ------------------- |
 | `id`           | UUID      | Primary key         |
 | `institute_id` | UUID      | FK → institutes     |
 | `name`         | String    | e.g. `11th Science` |
@@ -400,15 +401,15 @@ Optional grouping mechanism. Not required for MVP.
 
 Academic subjects taught by an institute.
 
-| Column         | Type      | Notes                      |
-|----------------|-----------|----------------------------|
-| `id`           | UUID      | Primary key                |
-| `institute_id` | UUID      | FK → institutes            |
-| `program_id`   | UUID      | FK → programs — nullable   |
-| `name`         | String    | e.g. `Physics`, `Maths`    |
-| `created_at`   | Timestamp |                            |
-| `updated_at`   | Timestamp |                            |
-| `deleted_at`   | Timestamp | Soft delete                |
+| Column         | Type      | Notes                    |
+| -------------- | --------- | ------------------------ |
+| `id`           | UUID      | Primary key              |
+| `institute_id` | UUID      | FK → institutes          |
+| `program_id`   | UUID      | FK → programs — nullable |
+| `name`         | String    | e.g. `Physics`, `Maths`  |
+| `created_at`   | Timestamp |                          |
+| `updated_at`   | Timestamp |                          |
+| `deleted_at`   | Timestamp | Soft delete              |
 
 **Relationship:** One Subject → Many Batches
 
@@ -418,18 +419,18 @@ Academic subjects taught by an institute.
 
 The operational heart of the system. All academic activity is batch-scoped.
 
-| Column         | Type      | Notes                                            |
-|----------------|-----------|--------------------------------------------------|
-| `id`           | UUID      | Primary key                                      |
-| `institute_id` | UUID      | FK → institutes                                  |
-| `subject_id`   | UUID      | FK → subjects                                    |
-| `teacher_id`   | UUID      | FK → users — nullable                            |
-| `name`         | String    | e.g. `Physics Morning Batch`                     |
-| `capacity`     | Integer   | Optional max enrollment                          |
+| Column         | Type      | Notes                                               |
+| -------------- | --------- | --------------------------------------------------- |
+| `id`           | UUID      | Primary key                                         |
+| `institute_id` | UUID      | FK → institutes                                     |
+| `subject_id`   | UUID      | FK → subjects                                       |
+| `teacher_id`   | UUID      | FK → users — nullable                               |
+| `name`         | String    | e.g. `Physics Morning Batch`                        |
+| `capacity`     | Integer   | Optional max enrollment                             |
 | `status`       | Enum      | `draft`, `open`, `running`, `completed`, `archived` |
-| `created_at`   | Timestamp |                                                  |
-| `updated_at`   | Timestamp |                                                  |
-| `deleted_at`   | Timestamp | Soft delete                                      |
+| `created_at`   | Timestamp |                                                     |
+| `updated_at`   | Timestamp |                                                     |
+| `deleted_at`   | Timestamp | Soft delete                                         |
 
 **Relationships:**
 
@@ -449,18 +450,18 @@ Batch → BatchSessions
 
 The operational entity. Represents a student's active participation in a batch.
 
-| Column           | Type      | Notes                                          |
-|------------------|-----------|------------------------------------------------|
-| `id`             | UUID      | Primary key                                    |
-| `institute_id`   | UUID      | FK → institutes                                |
-| `student_id`     | UUID      | FK → students                                  |
-| `batch_id`       | UUID      | FK → batches                                   |
-| `joined_on`      | Date      | Enrollment start date                          |
-| `status`         | Enum      | `pending`, `active`, `completed`, `cancelled`  |
-| `discount_type`  | Enum      | `none`, `percentage`, `fixed` — nullable       |
-| `discount_value` | Decimal   | Nullable                                       |
-| `created_at`     | Timestamp |                                                |
-| `updated_at`     | Timestamp |                                                |
+| Column           | Type      | Notes                                         |
+| ---------------- | --------- | --------------------------------------------- |
+| `id`             | UUID      | Primary key                                   |
+| `institute_id`   | UUID      | FK → institutes                               |
+| `student_id`     | UUID      | FK → students                                 |
+| `batch_id`       | UUID      | FK → batches                                  |
+| `joined_on`      | Date      | Enrollment start date                         |
+| `status`         | Enum      | `pending`, `active`, `completed`, `cancelled` |
+| `discount_type`  | Enum      | `none`, `percentage`, `fixed` — nullable      |
+| `discount_value` | Decimal   | Nullable                                      |
+| `created_at`     | Timestamp |                                               |
+| `updated_at`     | Timestamp |                                               |
 
 **Relationships:**
 
@@ -478,15 +479,15 @@ Attendance record per enrollment per batch session.
 
 > **Updated per domain review.** Attendance now references a `BatchSession` instead of a raw date. This enables session cancellations, extra classes, and richer analytics.
 
-| Column          | Type      | Notes                                         |
-|-----------------|-----------|-----------------------------------------------|
-| `id`            | UUID      | Primary key                                   |
-| `institute_id`  | UUID      | FK → institutes                               |
-| `session_id`    | UUID      | FK → batch_sessions                           |
-| `enrollment_id` | UUID      | FK → enrollments                              |
-| `status`        | Enum      | `present`, `absent`, `late`                   |
-| `created_at`    | Timestamp |                                               |
-| `updated_at`    | Timestamp |                                               |
+| Column          | Type      | Notes                       |
+| --------------- | --------- | --------------------------- |
+| `id`            | UUID      | Primary key                 |
+| `institute_id`  | UUID      | FK → institutes             |
+| `session_id`    | UUID      | FK → batch_sessions         |
+| `enrollment_id` | UUID      | FK → enrollments            |
+| `status`        | Enum      | `present`, `absent`, `late` |
+| `created_at`    | Timestamp |                             |
+| `updated_at`    | Timestamp |                             |
 
 **Unique constraint:** `(session_id, enrollment_id)` — one attendance record per student per session.
 
@@ -496,17 +497,17 @@ Attendance record per enrollment per batch session.
 
 Academic work assigned to an entire batch.
 
-| Column           | Type      | Notes                          |
-|------------------|-----------|--------------------------------|
-| `id`             | UUID      | Primary key                    |
-| `institute_id`   | UUID      | FK → institutes                |
-| `batch_id`       | UUID      | FK → batches                   |
-| `title`          | String    |                                |
-| `description`    | Text      | Nullable                       |
-| `attachment_url` | String    | Object storage ref — nullable  |
-| `published_at`   | Timestamp | Null = draft                   |
-| `created_at`     | Timestamp |                                |
-| `updated_at`     | Timestamp |                                |
+| Column           | Type      | Notes                         |
+| ---------------- | --------- | ----------------------------- |
+| `id`             | UUID      | Primary key                   |
+| `institute_id`   | UUID      | FK → institutes               |
+| `batch_id`       | UUID      | FK → batches                  |
+| `title`          | String    |                               |
+| `description`    | Text      | Nullable                      |
+| `attachment_url` | String    | Object storage ref — nullable |
+| `published_at`   | Timestamp | Null = draft                  |
+| `created_at`     | Timestamp |                               |
+| `updated_at`     | Timestamp |                               |
 
 ---
 
@@ -514,17 +515,17 @@ Academic work assigned to an entire batch.
 
 Any assessment conducted for a batch.
 
-| Column           | Type      | Notes                                   |
-|------------------|-----------|-----------------------------------------|
-| `id`             | UUID      | Primary key                             |
-| `institute_id`   | UUID      | FK → institutes                         |
-| `batch_id`       | UUID      | FK → batches                            |
-| `title`          | String    | e.g. `Unit Test 1`, `Mock Test`         |
-| `maximum_marks`  | Integer   |                                         |
-| `scheduled_date` | Date      | Nullable                                |
+| Column           | Type      | Notes                                              |
+| ---------------- | --------- | -------------------------------------------------- |
+| `id`             | UUID      | Primary key                                        |
+| `institute_id`   | UUID      | FK → institutes                                    |
+| `batch_id`       | UUID      | FK → batches                                       |
+| `title`          | String    | e.g. `Unit Test 1`, `Mock Test`                    |
+| `maximum_marks`  | Integer   |                                                    |
+| `scheduled_date` | Date      | Nullable                                           |
 | `status`         | Enum      | `draft`, `scheduled`, `marks_entered`, `published` |
-| `created_at`     | Timestamp |                                         |
-| `updated_at`     | Timestamp |                                         |
+| `created_at`     | Timestamp |                                                    |
+| `updated_at`     | Timestamp |                                                    |
 
 ---
 
@@ -532,15 +533,15 @@ Any assessment conducted for a batch.
 
 Score obtained by a student in a test.
 
-| Column           | Type      | Notes                    |
-|------------------|-----------|--------------------------|
-| `id`             | UUID      | Primary key              |
-| `institute_id`   | UUID      | FK → institutes          |
-| `test_id`        | UUID      | FK → tests               |
-| `enrollment_id`  | UUID      | FK → enrollments         |
-| `marks_obtained` | Decimal   |                          |
-| `created_at`     | Timestamp |                          |
-| `updated_at`     | Timestamp |                          |
+| Column           | Type      | Notes            |
+| ---------------- | --------- | ---------------- |
+| `id`             | UUID      | Primary key      |
+| `institute_id`   | UUID      | FK → institutes  |
+| `test_id`        | UUID      | FK → tests       |
+| `enrollment_id`  | UUID      | FK → enrollments |
+| `marks_obtained` | Decimal   |                  |
+| `created_at`     | Timestamp |                  |
+| `updated_at`     | Timestamp |                  |
 
 **Unique constraint:** `(test_id, enrollment_id)` — one mark entry per student per test.
 
@@ -550,17 +551,17 @@ Score obtained by a student in a test.
 
 Recurring weekly rule defining when a batch meets.
 
-> **Renamed from `timetables` per domain review.** A Schedule is the *plan* — what should happen every week. BatchSession (below) is the *reality* — what actually happened on a specific date.
+> **Renamed from `timetables` per domain review.** A Schedule is the _plan_ — what should happen every week. BatchSession (below) is the _reality_ — what actually happened on a specific date.
 
-| Column         | Type    | Notes                                              |
-|----------------|---------|----------------------------------------------------|
-| `id`           | UUID    | Primary key                                        |
-| `batch_id`     | UUID    | FK → batches                                       |
-| `day_of_week`  | Enum    | `monday`, `tuesday`, … `sunday`                    |
-| `start_time`   | Time    |                                                    |
-| `end_time`     | Time    |                                                    |
-| `teacher_id`   | UUID    | FK → users — nullable                              |
-| `created_at`   | Timestamp |                                                  |
+| Column        | Type      | Notes                           |
+| ------------- | --------- | ------------------------------- |
+| `id`          | UUID      | Primary key                     |
+| `batch_id`    | UUID      | FK → batches                    |
+| `day_of_week` | Enum      | `monday`, `tuesday`, … `sunday` |
+| `start_time`  | Time      |                                 |
+| `end_time`    | Time      |                                 |
+| `teacher_id`  | UUID      | FK → users — nullable           |
+| `created_at`  | Timestamp |                                 |
 
 No room scheduling in MVP.
 
@@ -572,31 +573,31 @@ A generated occurrence of a batch class on a specific date.
 
 > **New table per domain review.** Represents a single real or planned class occurrence. Attendance is recorded against a session, not a raw date. Enables cancellations, extra classes, holiday handling, and richer analytics without schema changes.
 
-| Column                 | Type      | Notes                                                        |
-|------------------------|-----------|--------------------------------------------------------------|
-| `id`                   | UUID      | Primary key                                                  |
-| `institute_id`         | UUID      | FK → institutes                                              |
-| `batch_id`             | UUID      | FK → batches                                                 |
-| `date`                 | Date      | Date of this session                                         |
-| `start_time`           | Time      | Nullable — inherits from Schedule if not overridden          |
-| `end_time`             | Time      | Nullable — inherits from Schedule if not overridden          |
-| `status`               | Enum      | `scheduled`, `completed`, `cancelled`                        |
-| `attendance_taken`     | Boolean   | Default false                                                |
-| `source`               | Enum      | `manual`, `rfid` — nullable until attendance is taken        |
-| `substitute_teacher_id`| UUID      | FK → users — nullable                                        |
-| `created_at`           | Timestamp |                                                              |
-| `updated_at`           | Timestamp |                                                              |
+| Column                  | Type      | Notes                                                 |
+| ----------------------- | --------- | ----------------------------------------------------- |
+| `id`                    | UUID      | Primary key                                           |
+| `institute_id`          | UUID      | FK → institutes                                       |
+| `batch_id`              | UUID      | FK → batches                                          |
+| `date`                  | Date      | Date of this session                                  |
+| `start_time`            | Time      | Nullable — inherits from Schedule if not overridden   |
+| `end_time`              | Time      | Nullable — inherits from Schedule if not overridden   |
+| `status`                | Enum      | `scheduled`, `completed`, `cancelled`                 |
+| `attendance_taken`      | Boolean   | Default false                                         |
+| `source`                | Enum      | `manual`, `rfid` — nullable until attendance is taken |
+| `substitute_teacher_id` | UUID      | FK → users — nullable                                 |
+| `created_at`            | Timestamp |                                                       |
+| `updated_at`            | Timestamp |                                                       |
 
 **Future scenarios enabled without schema changes:**
 
-| Scenario              | How it works                                      |
-|-----------------------|---------------------------------------------------|
-| Cancelled class       | `status = cancelled`                              |
-| Extra class           | Create new session outside normal schedule        |
-| Holiday               | `status = cancelled`                              |
-| Attendance reopen     | Reopen by session ID                              |
-| Substitute teacher    | `substitute_teacher_id` set                       |
-| QR / RFID attendance  | `source` field already present                    |
+| Scenario             | How it works                               |
+| -------------------- | ------------------------------------------ |
+| Cancelled class      | `status = cancelled`                       |
+| Extra class          | Create new session outside normal schedule |
+| Holiday              | `status = cancelled`                       |
+| Attendance reopen    | Reopen by session ID                       |
+| Substitute teacher   | `substitute_teacher_id` set                |
+| QR / RFID attendance | `source` field already present             |
 
 ---
 
@@ -604,16 +605,16 @@ A generated occurrence of a batch class on a specific date.
 
 Communication targeted to an institute or a specific batch.
 
-| Column         | Type      | Notes                                    |
-|----------------|-----------|------------------------------------------|
-| `id`           | UUID      | Primary key                              |
-| `institute_id` | UUID      | FK → institutes                          |
-| `batch_id`     | UUID      | FK → batches — **nullable**              |
-| `title`        | String    |                                          |
-| `body`         | Text      |                                          |
-| `published_at` | Timestamp | Null = draft                             |
-| `created_at`   | Timestamp |                                          |
-| `updated_at`   | Timestamp |                                          |
+| Column         | Type      | Notes                       |
+| -------------- | --------- | --------------------------- |
+| `id`           | UUID      | Primary key                 |
+| `institute_id` | UUID      | FK → institutes             |
+| `batch_id`     | UUID      | FK → batches — **nullable** |
+| `title`        | String    |                             |
+| `body`         | Text      |                             |
+| `published_at` | Timestamp | Null = draft                |
+| `created_at`   | Timestamp |                             |
+| `updated_at`   | Timestamp |                             |
 
 > `batch_id` nullable = institute-wide announcement. `batch_id` set = batch-specific announcement.
 
@@ -623,20 +624,20 @@ Communication targeted to an institute or a specific batch.
 
 Defines the billing agreement for an enrollment. Stores rules — not invoices.
 
-> **Renamed from `fee_plans` per domain review.** "Billing Plan" makes explicit that this entity defines *how invoices are generated* — the schedule, rules, and agreement. It is the contract. It never changes because of payments.
+> **Renamed from `fee_plans` per domain review.** "Billing Plan" makes explicit that this entity defines _how invoices are generated_ — the schedule, rules, and agreement. It is the contract. It never changes because of payments.
 
-| Column                          | Type      | Notes                                              |
-|---------------------------------|-----------|----------------------------------------------------|
-| `id`                            | UUID      | Primary key                                        |
-| `enrollment_id`                 | UUID      | FK → enrollments                                   |
-| `type`                          | Enum      | `monthly`, `one_time`, `installment`               |
-| `amount`                        | Decimal   | Base billing amount                                |
-| `discount_type`                 | Enum      | `none`, `percentage`, `fixed` — nullable           |
-| `discount_value`                | Decimal   | Nullable                                           |
-| `billing_start_date`            | Date      | When billing begins — may differ from join date    |
-| `first_invoice_amount_override` | Decimal   | Optional override for late-join or pro-rata cases  |
-| `created_at`                    | Timestamp |                                                    |
-| `updated_at`                    | Timestamp |                                                    |
+| Column                          | Type      | Notes                                             |
+| ------------------------------- | --------- | ------------------------------------------------- |
+| `id`                            | UUID      | Primary key                                       |
+| `enrollment_id`                 | UUID      | FK → enrollments                                  |
+| `type`                          | Enum      | `monthly`, `one_time`, `installment`              |
+| `amount`                        | Decimal   | Base billing amount                               |
+| `discount_type`                 | Enum      | `none`, `percentage`, `fixed` — nullable          |
+| `discount_value`                | Decimal   | Nullable                                          |
+| `billing_start_date`            | Date      | When billing begins — may differ from join date   |
+| `first_invoice_amount_override` | Decimal   | Optional override for late-join or pro-rata cases |
+| `created_at`                    | Timestamp |                                                   |
+| `updated_at`                    | Timestamp |                                                   |
 
 > Discounts live on BillingPlan and are inherited by all generated invoices.  
 > Outstanding amount is computed (`invoice.amount - SUM(payments.amount)`), never stored.
@@ -647,15 +648,15 @@ Defines the billing agreement for an enrollment. Stores rules — not invoices.
 
 A payment request generated from a fee plan.
 
-| Column        | Type      | Notes                                      |
-|---------------|-----------|--------------------------------------------|
-| `id`          | UUID      | Primary key                                |
-| `fee_plan_id` | UUID      | FK → billing_plans                         |
-| `amount`      | Decimal   | Amount due for this invoice                |
-| `due_date`    | Date      |                                            |
-| `status`      | Enum      | `pending`, `partial`, `paid`               |
-| `created_at`  | Timestamp |                                            |
-| `updated_at`  | Timestamp |                                            |
+| Column        | Type      | Notes                        |
+| ------------- | --------- | ---------------------------- |
+| `id`          | UUID      | Primary key                  |
+| `fee_plan_id` | UUID      | FK → billing_plans           |
+| `amount`      | Decimal   | Amount due for this invoice  |
+| `due_date`    | Date      |                              |
+| `status`      | Enum      | `pending`, `partial`, `paid` |
+| `created_at`  | Timestamp |                              |
+| `updated_at`  | Timestamp |                              |
 
 ---
 
@@ -663,16 +664,16 @@ A payment request generated from a fee plan.
 
 A record of money received against an invoice.
 
-| Column          | Type      | Notes                                        |
-|-----------------|-----------|----------------------------------------------|
-| `id`            | UUID      | Primary key                                  |
-| `invoice_id`    | UUID      | FK → invoices                                |
-| `amount`        | Decimal   | Amount received in this payment              |
-| `payment_mode`  | Enum      | `cash`, `upi`, `bank_transfer`               |
-| `received_on`   | Date      |                                              |
-| `collected_by`  | UUID      | FK → users — who recorded the payment        |
-| `remarks`       | Text      | Nullable                                     |
-| `created_at`    | Timestamp |                                              |
+| Column         | Type      | Notes                                 |
+| -------------- | --------- | ------------------------------------- |
+| `id`           | UUID      | Primary key                           |
+| `invoice_id`   | UUID      | FK → invoices                         |
+| `amount`       | Decimal   | Amount received in this payment       |
+| `payment_mode` | Enum      | `cash`, `upi`, `bank_transfer`        |
+| `received_on`  | Date      |                                       |
+| `collected_by` | UUID      | FK → users — who recorded the payment |
+| `remarks`      | Text      | Nullable                              |
+| `created_at`   | Timestamp |                                       |
 
 > Multiple payments may exist per invoice — supports partial payments.
 
@@ -684,13 +685,13 @@ A record of proof of payment. Generated from a Payment — not from an Invoice.
 
 > One Payment → One Receipt. Even if an invoice has multiple payments, each payment gets its own receipt.
 
-| Column           | Type      | Notes                                        |
-|------------------|-----------|----------------------------------------------|
-| `id`             | UUID      | Primary key                                  |
-| `institute_id`   | UUID      | FK → institutes                              |
-| `payment_id`     | UUID      | FK → payments — unique                       |
-| `receipt_number` | String    | Institute-scoped sequential number           |
-| `generated_at`   | Timestamp |                                              |
+| Column           | Type      | Notes                              |
+| ---------------- | --------- | ---------------------------------- |
+| `id`             | UUID      | Primary key                        |
+| `institute_id`   | UUID      | FK → institutes                    |
+| `payment_id`     | UUID      | FK → payments — unique             |
+| `receipt_number` | String    | Institute-scoped sequential number |
+| `generated_at`   | Timestamp |                                    |
 
 **Unique constraint:** `payment_id` — one receipt per payment.
 
@@ -700,15 +701,15 @@ A record of proof of payment. Generated from a Payment — not from an Invoice.
 
 Per-institute configuration store.
 
-| Column             | Type      | Notes                              |
-|--------------------|-----------|------------------------------------|
-| `id`               | UUID      | Primary key                        |
-| `institute_id`     | UUID      | FK → institutes — unique           |
-| `attendance_mode`  | Enum      | `manual`, `rfid`                   |
-| `academic_year`    | String    | e.g. `2025-26`                     |
-| `notify_absent`    | Boolean   |                                    |
-| `notify_fee_due`   | Boolean   |                                    |
-| `updated_at`       | Timestamp |                                    |
+| Column            | Type      | Notes                    |
+| ----------------- | --------- | ------------------------ |
+| `id`              | UUID      | Primary key              |
+| `institute_id`    | UUID      | FK → institutes — unique |
+| `attendance_mode` | Enum      | `manual`, `rfid`         |
+| `academic_year`   | String    | e.g. `2025-26`           |
+| `notify_absent`   | Boolean   |                          |
+| `notify_fee_due`  | Boolean   |                          |
+| `updated_at`      | Timestamp |                          |
 
 ---
 
@@ -718,37 +719,37 @@ Per-institute configuration store.
 
 Apply to all tenant-scoped queries.
 
-| Column           | Applies To                           |
-|------------------|--------------------------------------|
-| `institute_id`   | All tenant-owned tables              |
-| `student_id`     | `enrollments`, `attendance`, `marks` |
-| `enrollment_id`  | `attendance`, `marks`, `fee_plans`   |
-| `batch_id`       | `enrollments`, `homework`, `tests`   |
-| `attendance_date`| `attendance`                         |
-| `due_date`       | `invoices`                           |
-| `status`         | `enrollments`, `batches`, `invoices` |
+| Column            | Applies To                           |
+| ----------------- | ------------------------------------ |
+| `institute_id`    | All tenant-owned tables              |
+| `student_id`      | `enrollments`, `attendance`, `marks` |
+| `enrollment_id`   | `attendance`, `marks`, `fee_plans`   |
+| `batch_id`        | `enrollments`, `homework`, `tests`   |
+| `attendance_date` | `attendance`                         |
+| `due_date`        | `invoices`                           |
+| `status`          | `enrollments`, `batches`, `invoices` |
 
 ### Composite Indexes
 
 For common multi-column query patterns.
 
-| Index                              | Query It Supports                         |
-|------------------------------------|-------------------------------------------|
-| `(institute_id, status)`           | Filter active students / batches          |
-| `(institute_id, batch_id)`         | All enrollments in a batch                |
-| `(institute_id, created_at)`       | Time-ordered institute data               |
-| `(session_id, enrollment_id)`      | Unique constraint + attendance lookup     |
-| `(batch_id, date)`                 | Sessions for a batch on a given date      |
-| `(test_id, enrollment_id)`         | Unique constraint on marks                |
+| Index                         | Query It Supports                     |
+| ----------------------------- | ------------------------------------- |
+| `(institute_id, status)`      | Filter active students / batches      |
+| `(institute_id, batch_id)`    | All enrollments in a batch            |
+| `(institute_id, created_at)`  | Time-ordered institute data           |
+| `(session_id, enrollment_id)` | Unique constraint + attendance lookup |
+| `(batch_id, date)`            | Sessions for a batch on a given date  |
+| `(test_id, enrollment_id)`    | Unique constraint on marks            |
 
 ### Search Indexes
 
-| Column         | Table      | Purpose                    |
-|----------------|------------|----------------------------|
-| `first_name`   | `students` | Student name search        |
-| `last_name`    | `students` | Student name search        |
-| `primary_phone`| `parents`  | Parent phone lookup        |
-| `name`         | `batches`  | Batch name search          |
+| Column          | Table      | Purpose             |
+| --------------- | ---------- | ------------------- |
+| `first_name`    | `students` | Student name search |
+| `last_name`     | `students` | Student name search |
+| `primary_phone` | `parents`  | Parent phone lookup |
+| `name`          | `batches`  | Batch name search   |
 
 ---
 
@@ -756,16 +757,16 @@ For common multi-column query patterns.
 
 ### Unique Constraints
 
-| Constraint                       | Table          | Purpose                                     |
-|----------------------------------|----------------|---------------------------------------------|
-| `(institute_id, slug)`           | `institutes`   | Unique institute slug                       |
-| `(institute_id, name)`           | `subjects`     | No duplicate subject names per institute    |
-| `(institute_id, name)`           | `batches`      | No duplicate batch names per institute      |
-| `(primary_phone, institute_id)`  | `institute_parents` | One parent record per phone per institute   |
-| `(session_id, enrollment_id)`    | `attendance`   | One attendance record per student per session |
-| `(test_id, enrollment_id)`       | `marks`        | One mark entry per student per test         |
-| `institute_id`                   | `settings`     | One settings record per institute           |
-| `payment_id`                     | `receipts`     | One receipt per payment                     |
+| Constraint                      | Table               | Purpose                                       |
+| ------------------------------- | ------------------- | --------------------------------------------- |
+| `(institute_id, slug)`          | `institutes`        | Unique institute slug                         |
+| `(institute_id, name)`          | `subjects`          | No duplicate subject names per institute      |
+| `(institute_id, name)`          | `batches`           | No duplicate batch names per institute        |
+| `(primary_phone, institute_id)` | `institute_parents` | One parent record per phone per institute     |
+| `(session_id, enrollment_id)`   | `attendance`        | One attendance record per student per session |
+| `(test_id, enrollment_id)`      | `marks`             | One mark entry per student per test           |
+| `institute_id`                  | `settings`          | One settings record per institute             |
+| `payment_id`                    | `receipts`          | One receipt per payment                       |
 
 ### Foreign Key Constraints
 
@@ -775,15 +776,15 @@ Every relationship is enforced at the database level. Application logic alone is
 
 ## 7. Naming Standards
 
-| Element        | Convention           | Example                        |
-|----------------|----------------------|--------------------------------|
-| Tables         | Plural `snake_case`  | `billing_plans`, `batch_sessions` |
-| Columns        | `snake_case`         | `first_name`, `created_at`     |
-| Primary Key    | `id`                 | All tables                     |
-| Foreign Keys   | `entity_id`          | `institute_id`, `batch_id`     |
-| Timestamps     | `_at` suffix         | `created_at`, `deleted_at`     |
-| Booleans       | `is_` or verb prefix | `is_active`, `notify_absent`   |
-| Enum values    | `lowercase_snake`    | `marks_entered`, `bank_transfer` |
+| Element      | Convention           | Example                           |
+| ------------ | -------------------- | --------------------------------- |
+| Tables       | Plural `snake_case`  | `billing_plans`, `batch_sessions` |
+| Columns      | `snake_case`         | `first_name`, `created_at`        |
+| Primary Key  | `id`                 | All tables                        |
+| Foreign Keys | `entity_id`          | `institute_id`, `batch_id`        |
+| Timestamps   | `_at` suffix         | `created_at`, `deleted_at`        |
+| Booleans     | `is_` or verb prefix | `is_active`, `notify_absent`      |
+| Enum values  | `lowercase_snake`    | `marks_entered`, `bank_transfer`  |
 
 ---
 
@@ -793,24 +794,24 @@ Resource-oriented REST APIs. HTTP verbs communicate intent.
 
 ### URL Conventions
 
-| Method   | URL                            | Action                          |
-|----------|--------------------------------|---------------------------------|
-| `GET`    | `/students`                    | List students                   |
-| `POST`   | `/students`                    | Create student                  |
-| `GET`    | `/students/{id}`               | Get student detail              |
-| `PATCH`  | `/students/{id}`               | Update student                  |
-| `GET`    | `/batches`                     | List batches                    |
-| `POST`   | `/batches/{id}/attendance`     | Record attendance for a batch   |
-| `GET`    | `/batches/{id}/homework`       | List homework for a batch       |
-| `PATCH`  | `/payments/{id}`               | Update payment record           |
+| Method  | URL                        | Action                        |
+| ------- | -------------------------- | ----------------------------- |
+| `GET`   | `/students`                | List students                 |
+| `POST`  | `/students`                | Create student                |
+| `GET`   | `/students/{id}`           | Get student detail            |
+| `PATCH` | `/students/{id}`           | Update student                |
+| `GET`   | `/batches`                 | List batches                  |
+| `POST`  | `/batches/{id}/attendance` | Record attendance for a batch |
+| `GET`   | `/batches/{id}/homework`   | List homework for a batch     |
+| `PATCH` | `/payments/{id}`           | Update payment record         |
 
 ### Avoid Action-Based URLs
 
-| Wrong                          | Correct                        |
-|--------------------------------|--------------------------------|
-| `POST /createStudent`          | `POST /students`               |
-| `POST /updateAttendance`       | `PATCH /attendance/{id}`       |
-| `POST /publishMarks`           | `PATCH /tests/{id}/marks/publish` |
+| Wrong                    | Correct                           |
+| ------------------------ | --------------------------------- |
+| `POST /createStudent`    | `POST /students`                  |
+| `POST /updateAttendance` | `PATCH /attendance/{id}`          |
+| `POST /publishMarks`     | `PATCH /tests/{id}/marks/publish` |
 
 ### Delete Behaviour
 
@@ -854,14 +855,14 @@ All responses follow a consistent structure.
 
 ### Standard Error Codes
 
-| Code                        | HTTP Status | Scenario                               |
-|-----------------------------|-------------|----------------------------------------|
-| `UNAUTHORIZED`              | 401         | No valid session                       |
-| `PERMISSION_DENIED`         | 403         | Authenticated but lacks permission     |
-| `NOT_FOUND`                 | 404         | Resource does not exist                |
-| `VALIDATION_ERROR`          | 422         | Request schema or business rule failed |
-| `CONFLICT`                  | 409         | Duplicate resource (e.g. attendance)   |
-| `INTERNAL_ERROR`            | 500         | Unexpected server error                |
+| Code                | HTTP Status | Scenario                               |
+| ------------------- | ----------- | -------------------------------------- |
+| `UNAUTHORIZED`      | 401         | No valid session                       |
+| `PERMISSION_DENIED` | 403         | Authenticated but lacks permission     |
+| `NOT_FOUND`         | 404         | Resource does not exist                |
+| `VALIDATION_ERROR`  | 422         | Request schema or business rule failed |
+| `CONFLICT`          | 409         | Duplicate resource (e.g. attendance)   |
+| `INTERNAL_ERROR`    | 500         | Unexpected server error                |
 
 ---
 
@@ -869,13 +870,13 @@ All responses follow a consistent structure.
 
 All collection endpoints support consistent pagination parameters.
 
-| Parameter | Type    | Default | Description                            |
-|-----------|---------|---------|----------------------------------------|
-| `page`    | Integer | 1       | Page number                            |
-| `limit`   | Integer | 20      | Records per page (max 100)             |
-| `sort`    | String  | varies  | Field to sort by e.g. `created_at`     |
-| `order`   | String  | `desc`  | `asc` or `desc`                        |
-| `search`  | String  | —       | Full-text search where supported       |
+| Parameter | Type    | Default | Description                        |
+| --------- | ------- | ------- | ---------------------------------- |
+| `page`    | Integer | 1       | Page number                        |
+| `limit`   | Integer | 20      | Records per page (max 100)         |
+| `sort`    | String  | varies  | Field to sort by e.g. `created_at` |
+| `order`   | String  | `desc`  | `asc` or `desc`                    |
+| `search`  | String  | —       | Full-text search where supported   |
 
 Future: cursor-based pagination may be introduced for large datasets (e.g. attendance history).
 
@@ -887,26 +888,26 @@ Filtering is additive and composable. All filter parameters are optional.
 
 ### Example — `GET /students`
 
-| Filter          | Type    | Description                              |
-|-----------------|---------|------------------------------------------|
-| `batch_id`      | UUID    | Students enrolled in a specific batch    |
-| `status`        | Enum    | `active`, `archived`                     |
-| `search`        | String  | Match on name or admission number        |
-| `enrolled_after`| Date    | Students enrolled after a given date     |
+| Filter           | Type   | Description                           |
+| ---------------- | ------ | ------------------------------------- |
+| `batch_id`       | UUID   | Students enrolled in a specific batch |
+| `status`         | Enum   | `active`, `archived`                  |
+| `search`         | String | Match on name or admission number     |
+| `enrolled_after` | Date   | Students enrolled after a given date  |
 
 ### Example — `GET /invoices`
 
-| Filter       | Type   | Description                     |
-|--------------|--------|---------------------------------|
-| `status`     | Enum   | `pending`, `partial`, `paid`    |
-| `due_before` | Date   | Invoices due before a date      |
-| `batch_id`   | UUID   | Invoices for a specific batch   |
+| Filter       | Type | Description                   |
+| ------------ | ---- | ----------------------------- |
+| `status`     | Enum | `pending`, `partial`, `paid`  |
+| `due_before` | Date | Invoices due before a date    |
+| `batch_id`   | UUID | Invoices for a specific batch |
 
 ---
 
-*Chapter 1 Status: Complete*
+_Chapter 1 Status: Complete_
 
-*This chapter freezes the relational model and database design principles. Implementation — Prisma schema, migrations, repositories — must conform to these definitions.*
+_This chapter freezes the relational model and database design principles. Implementation — Prisma schema, migrations, repositories — must conform to these definitions._
 
 ---
 
@@ -918,14 +919,14 @@ Filtering is additive and composable. All filter parameters are optional.
 
 This chapter converts the logical domain model into a physical relational design.
 
-| Goal                              |
-|-----------------------------------|
-| Define table structure            |
-| Define relationships              |
-| Define constraints                |
-| Define lifecycle rules            |
-| Define migration strategy         |
-| Define persistence conventions    |
+| Goal                           |
+| ------------------------------ |
+| Define table structure         |
+| Define relationships           |
+| Define constraints             |
+| Define lifecycle rules         |
+| Define migration strategy      |
+| Define persistence conventions |
 
 This chapter is intentionally ORM-agnostic, but is designed to map cleanly to **PostgreSQL + Prisma**.
 
@@ -941,20 +942,20 @@ Every business entity uses UUID.
 id UUID PRIMARY KEY DEFAULT gen_random_uuid()
 ```
 
-| Reason                              |
-|-------------------------------------|
-| Prevents identifier enumeration     |
-| Simplifies future integrations      |
-| Safe for public-facing APIs         |
+| Reason                          |
+| ------------------------------- |
+| Prevents identifier enumeration |
+| Simplifies future integrations  |
+| Safe for public-facing APIs     |
 
 ### Timestamp Convention
 
-| Column        | Required        | Generated By           |
-|---------------|-----------------|------------------------|
-| `created_at`  | All tables      | Database / application |
-| `updated_at`  | All tables      | Database / application |
-| `deleted_at`  | Where soft delete applies | Application   |
-| `archived_at` | Where archival applies    | Application   |
+| Column        | Required                  | Generated By           |
+| ------------- | ------------------------- | ---------------------- |
+| `created_at`  | All tables                | Database / application |
+| `updated_at`  | All tables                | Database / application |
+| `deleted_at`  | Where soft delete applies | Application            |
+| `archived_at` | Where archival applies    | Application            |
 
 > Timestamps must **never** be supplied by the client.
 
@@ -968,11 +969,11 @@ This column is mandatory except for purely system-level tables (e.g. migrations,
 
 Prefer an explicit `status` column over multiple boolean flags.
 
-| Preferred                     | Avoid                                         |
-|-------------------------------|-----------------------------------------------|
-| `status = 'active'`           | `is_active = true`                            |
-| `status = 'cancelled'`        | `is_cancelled = true`                         |
-| `status = 'completed'`        | `is_completed = true`                         |
+| Preferred              | Avoid                 |
+| ---------------------- | --------------------- |
+| `status = 'active'`    | `is_active = true`    |
+| `status = 'cancelled'` | `is_cancelled = true` |
+| `status = 'completed'` | `is_completed = true` |
 
 A single `status` column makes lifecycle transitions explicit and queryable.
 
@@ -986,63 +987,63 @@ The database is organized into two layers and five bounded contexts matching the
 
 ### Platform Layer (Global — owned by CoachingOS)
 
-| Table                       | Purpose                                      |
-|-----------------------------|----------------------------------------------|
-| `parent_identities`         | Global phone-anchored parent records         |
-| `institute_memberships`     | Links ParentIdentity → Institute             |
-| `child_profiles`            | Parent-created child labels (personal)       |
-| `student_links`             | Maps ChildProfile → institute Student        |
+| Table                   | Purpose                                |
+| ----------------------- | -------------------------------------- |
+| `parent_identities`     | Global phone-anchored parent records   |
+| `institute_memberships` | Links ParentIdentity → Institute       |
+| `child_profiles`        | Parent-created child labels (personal) |
+| `student_links`         | Maps ChildProfile → institute Student  |
 
 ### Identity (Institute Layer — Tenant)
 
-| Table                        |
-|------------------------------|
-| `institutes`                 |
-| `users`                      |
-| `institute_parents`          |
-| `institute_parent_students`  |
-| `students`                   |
-| `programs`                   |
-| `subjects`                   |
-| `batches`                    |
-| `enrollments`                |
+| Table                       |
+| --------------------------- |
+| `institutes`                |
+| `users`                     |
+| `institute_parents`         |
+| `institute_parent_students` |
+| `students`                  |
+| `programs`                  |
+| `subjects`                  |
+| `batches`                   |
+| `enrollments`               |
 
 ### Academics
 
-| Table            | Notes                                 |
-|------------------|---------------------------------------|
+| Table            | Notes                                      |
+| ---------------- | ------------------------------------------ |
 | `schedules`      | Renamed from `timetables` — recurring rule |
-| `batch_sessions` | New — generated class occurrence      |
-| `attendance`     | Updated — references session, not date |
-| `homework`       |                                       |
-| `tests`          |                                       |
-| `marks`          |                                       |
+| `batch_sessions` | New — generated class occurrence           |
+| `attendance`     | Updated — references session, not date     |
+| `homework`       |                                            |
+| `tests`          |                                            |
+| `marks`          |                                            |
 
-### Billing *(formerly Finance)*
+### Billing _(formerly Finance)_
 
-| Table            | Notes                                    |
-|------------------|------------------------------------------|
-| `billing_plans`  | Renamed from `fee_plans`                 |
-| `invoices`       | FK updated to `billing_plan_id`          |
-| `payments`       |                                          |
-| `receipts`       | New — one per payment                    |
+| Table           | Notes                           |
+| --------------- | ------------------------------- |
+| `billing_plans` | Renamed from `fee_plans`        |
+| `invoices`      | FK updated to `billing_plan_id` |
+| `payments`      |                                 |
+| `receipts`      | New — one per payment           |
 
 ### Communication
 
-| Table                | Status  |
-|----------------------|---------|
-| `announcements`      | MVP     |
-| `notifications`      | Future  |
-| `notification_logs`  | Future  |
+| Table               | Status |
+| ------------------- | ------ |
+| `announcements`     | MVP    |
+| `notifications`     | Future |
+| `notification_logs` | Future |
 
 ### Administration
 
-| Table           | Status  |
-|-----------------|---------|
-| `settings`      | MVP     |
-| `branding`      | MVP     |
-| `audit_logs`    | MVP     |
-| `feature_flags` | Future  |
+| Table           | Status |
+| --------------- | ------ |
+| `settings`      | MVP    |
+| `branding`      | MVP    |
+| `audit_logs`    | MVP    |
+| `feature_flags` | Future |
 
 ---
 
@@ -1097,33 +1098,33 @@ Test       1 → N  Marks
 
 The following records must **never** be hard-deleted:
 
-| Entity       | Reason                                        |
-|--------------|-----------------------------------------------|
-| `students`   | Historical enrollment and attendance records  |
-| `parents`    | Linked to active student records              |
-| `enrollments`| Fee and attendance history depends on them    |
-| `payments`   | Financial audit trail                         |
-| `invoices`   | Financial audit trail                         |
-| `attendance` | Academic history                              |
-| `marks`      | Academic history                              |
+| Entity        | Reason                                       |
+| ------------- | -------------------------------------------- |
+| `students`    | Historical enrollment and attendance records |
+| `parents`     | Linked to active student records             |
+| `enrollments` | Fee and attendance history depends on them   |
+| `payments`    | Financial audit trail                        |
+| `invoices`    | Financial audit trail                        |
+| `attendance`  | Academic history                             |
+| `marks`       | Academic history                             |
 
 ### Archive Instead of Delete
 
-| Entity       | Terminal State    |
-|--------------|-------------------|
-| Student      | `archived`        |
-| Enrollment   | `completed`       |
-| Batch        | `completed`       |
-| Institute    | `inactive`        |
+| Entity     | Terminal State |
+| ---------- | -------------- |
+| Student    | `archived`     |
+| Enrollment | `completed`    |
+| Batch      | `completed`    |
+| Institute  | `inactive`     |
 
 ### Safe to Physically Delete
 
 Temporary objects with no historical value may be hard-deleted:
 
-| Object                   | Condition                  |
-|--------------------------|----------------------------|
-| Draft announcements      | Never published            |
-| Unpublished homework     | Never published            |
+| Object               | Condition       |
+| -------------------- | --------------- |
+| Draft announcements  | Never published |
+| Unpublished homework | Never published |
 
 ---
 
@@ -1131,13 +1132,13 @@ Temporary objects with no historical value may be hard-deleted:
 
 Avoid aggressive cascade deletes. Use explicit archival workflows instead.
 
-| Action                  | Preferred Behaviour                              |
-|-------------------------|--------------------------------------------------|
-| Institute deactivated   | Background archival policy — not `DELETE CASCADE` |
-| Parent removed          | Archive — never delete                           |
-| Student removed         | Archive — never delete                           |
-| Enrollment cancelled    | Set `status = cancelled` — never delete          |
-| Invoice disputed        | Flag status — never delete                       |
+| Action                | Preferred Behaviour                               |
+| --------------------- | ------------------------------------------------- |
+| Institute deactivated | Background archival policy — not `DELETE CASCADE` |
+| Parent removed        | Archive — never delete                            |
+| Student removed       | Archive — never delete                            |
+| Enrollment cancelled  | Set `status = cancelled` — never delete           |
+| Invoice disputed      | Flag status — never delete                        |
 
 Relationship integrity is maintained through FK constraints and archival policies, not cascading destructive operations.
 
@@ -1148,7 +1149,7 @@ Relationship integrity is maintained through FK constraints and archival policie
 ### User Status
 
 | Value       |
-|-------------|
+| ----------- |
 | `active`    |
 | `invited`   |
 | `suspended` |
@@ -1156,7 +1157,7 @@ Relationship integrity is maintained through FK constraints and archival policie
 ### Batch Status
 
 | Value       |
-|-------------|
+| ----------- |
 | `draft`     |
 | `open`      |
 | `running`   |
@@ -1166,7 +1167,7 @@ Relationship integrity is maintained through FK constraints and archival policie
 ### Enrollment Status
 
 | Value       |
-|-------------|
+| ----------- |
 | `pending`   |
 | `active`    |
 | `completed` |
@@ -1175,7 +1176,7 @@ Relationship integrity is maintained through FK constraints and archival policie
 ### Attendance Status
 
 | Value     |
-|-----------|
+| --------- |
 | `present` |
 | `absent`  |
 | `late`    |
@@ -1183,23 +1184,23 @@ Relationship integrity is maintained through FK constraints and archival policie
 ### Attendance Source
 
 | Value    |
-|----------|
+| -------- |
 | `manual` |
 | `rfid`   |
 
 ### Test Status
 
-| Value       |
-|-------------|
-| `draft`     |
-| `scheduled` |
+| Value           |
+| --------------- |
+| `draft`         |
+| `scheduled`     |
 | `marks_entered` |
-| `published` |
+| `published`     |
 
 ### Invoice Status
 
 | Value     |
-|-----------|
+| --------- |
 | `pending` |
 | `partial` |
 | `paid`    |
@@ -1208,7 +1209,7 @@ Relationship integrity is maintained through FK constraints and archival policie
 ### Payment Mode
 
 | Value           |
-|-----------------|
+| --------------- |
 | `cash`          |
 | `upi`           |
 | `bank_transfer` |
@@ -1265,30 +1266,30 @@ WHERE status = 'active';
 
 ### Primary Indexes
 
-| Column         | Tables                              |
-|----------------|-------------------------------------|
-| `institute_id` | All tenant-owned tables             |
+| Column         | Tables                               |
+| -------------- | ------------------------------------ |
+| `institute_id` | All tenant-owned tables              |
 | `status`       | `enrollments`, `batches`, `invoices` |
-| `created_at`   | All business tables                 |
+| `created_at`   | All business tables                  |
 
 ### Composite Indexes
 
-| Index                             | Purpose                                    |
-|-----------------------------------|--------------------------------------------|
-| `(institute_id, status)`          | Filter active records per institute        |
-| `(batch_id, status)`              | Active enrollments in a batch              |
-| `(student_id, status)`            | Active enrollments for a student           |
-| `(attendance_date, batch_id)`     | Daily attendance view for a batch          |
-| `(enrollment_id, attendance_date)`| Unique constraint + date range queries     |
-| `(test_id, enrollment_id)`        | Unique constraint + marks lookup           |
+| Index                              | Purpose                                |
+| ---------------------------------- | -------------------------------------- |
+| `(institute_id, status)`           | Filter active records per institute    |
+| `(batch_id, status)`               | Active enrollments in a batch          |
+| `(student_id, status)`             | Active enrollments for a student       |
+| `(attendance_date, batch_id)`      | Daily attendance view for a batch      |
+| `(enrollment_id, attendance_date)` | Unique constraint + date range queries |
+| `(test_id, enrollment_id)`         | Unique constraint + marks lookup       |
 
 ### Search Indexes
 
-| Column                    | Table      | Purpose                  |
-|---------------------------|------------|--------------------------|
-| `first_name`, `last_name` | `students` | Student name search      |
-| `primary_phone`           | `parents`  | Parent phone lookup      |
-| `due_date`                | `invoices` | Overdue invoice queries  |
+| Column                    | Table      | Purpose                 |
+| ------------------------- | ---------- | ----------------------- |
+| `first_name`, `last_name` | `students` | Student name search     |
+| `primary_phone`           | `parents`  | Parent phone lookup     |
+| `due_date`                | `invoices` | Overdue invoice queries |
 
 ---
 
@@ -1296,25 +1297,25 @@ WHERE status = 'active';
 
 One repository per aggregate root.
 
-| Repository              | Aggregate         |
-|-------------------------|-------------------|
-| `StudentRepository`     | Student           |
-| `EnrollmentRepository`  | Enrollment        |
-| `AttendanceRepository`  | Attendance        |
-| `InvoiceRepository`     | Invoice           |
-| `HomeworkRepository`    | Homework          |
-| `TestRepository`        | Test              |
+| Repository             | Aggregate  |
+| ---------------------- | ---------- |
+| `StudentRepository`    | Student    |
+| `EnrollmentRepository` | Enrollment |
+| `AttendanceRepository` | Attendance |
+| `InvoiceRepository`    | Invoice    |
+| `HomeworkRepository`   | Homework   |
+| `TestRepository`       | Test       |
 
 ### Method Conventions
 
 Repositories should expose **business-oriented methods**, not generic CRUD.
 
-| Preferred                        | Avoid                            |
-|----------------------------------|----------------------------------|
-| `findActiveEnrollment()`         | `findById()`                     |
-| `recordAttendance()`             | `create()`                       |
-| `findOverdueInvoices()`          | `findWhere({ status: 'overdue' })`|
-| `getAttendanceSummary()`         | `findMany()`                     |
+| Preferred                | Avoid                              |
+| ------------------------ | ---------------------------------- |
+| `findActiveEnrollment()` | `findById()`                       |
+| `recordAttendance()`     | `create()`                         |
+| `findOverdueInvoices()`  | `findWhere({ status: 'overdue' })` |
+| `getAttendanceSummary()` | `findMany()`                       |
 
 Repositories must never expose internal persistence details (Prisma client, raw SQL) to the application layer.
 
@@ -1374,12 +1375,12 @@ COMMIT
 
 ### Rules
 
-| Rule                                                                          |
-|-------------------------------------------------------------------------------|
-| Never modify production schema manually                                       |
-| Every schema change uses a versioned migration file                           |
-| Forward-only migrations preferred — avoid destructive rollbacks               |
-| Data migrations are separated from schema migrations where possible           |
+| Rule                                                                                  |
+| ------------------------------------------------------------------------------------- |
+| Never modify production schema manually                                               |
+| Every schema change uses a versioned migration file                                   |
+| Forward-only migrations preferred — avoid destructive rollbacks                       |
+| Data migrations are separated from schema migrations where possible                   |
 | Each migration is atomic — partial migrations must not leave the DB in a broken state |
 
 ### Naming Convention
@@ -1398,28 +1399,28 @@ Examples:
 
 ## 13. Seed Strategy
 
-| Environment | Strategy                                                                   |
-|-------------|----------------------------------------------------------------------------|
-| Development | Full demo dataset — institute, founder, teachers, students, batches, fees  |
-| Testing     | Minimal deterministic dataset — predictable IDs and states for assertions  |
-| Production  | No automatic seed beyond initial system setup configuration                |
+| Environment | Strategy                                                                  |
+| ----------- | ------------------------------------------------------------------------- |
+| Development | Full demo dataset — institute, founder, teachers, students, batches, fees |
+| Testing     | Minimal deterministic dataset — predictable IDs and states for assertions |
+| Production  | No automatic seed beyond initial system setup configuration               |
 
 ### Development Seed Includes
 
-| Entity        |
-|---------------|
-| Demo Institute |
-| Founder User  |
-| Teacher User  |
-| Assistant User |
-| Sample Parents |
-| Sample Students |
-| Subjects       |
-| Batches        |
-| Enrollments    |
-| Attendance records |
-| Homework       |
-| Tests + Marks  |
+| Entity              |
+| ------------------- |
+| Demo Institute      |
+| Founder User        |
+| Teacher User        |
+| Assistant User      |
+| Sample Parents      |
+| Sample Students     |
+| Subjects            |
+| Batches             |
+| Enrollments         |
+| Attendance records  |
+| Homework            |
+| Tests + Marks       |
 | Invoices + Payments |
 
 ---
@@ -1430,23 +1431,23 @@ The database layer enforces structural integrity. The application layer enforces
 
 ### Database Enforces
 
-| Rule                      |
-|---------------------------|
-| Foreign key relationships |
-| Unique constraints        |
+| Rule                        |
+| --------------------------- |
+| Foreign key relationships   |
+| Unique constraints          |
 | Required (NOT NULL) columns |
-| Valid enum values         |
+| Valid enum values           |
 
 ### Application Layer Computes
 
 Business calculations must **not** be stored unless optimization is justified by measurement.
 
-| Calculation              | Computed By             |
-|--------------------------|-------------------------|
-| Attendance percentage    | Application on read     |
-| Outstanding fee balance  | Application on read     |
-| Student rank in batch    | Application on read     |
-| Invoice overdue status   | Application / scheduled job |
+| Calculation             | Computed By                 |
+| ----------------------- | --------------------------- |
+| Attendance percentage   | Application on read         |
+| Outstanding fee balance | Application on read         |
+| Student rank in batch   | Application on read         |
+| Invoice overdue status  | Application / scheduled job |
 
 ---
 
@@ -1454,15 +1455,15 @@ Business calculations must **not** be stored unless optimization is justified by
 
 The schema is designed to accommodate future features without requiring redesign of core tables.
 
-| Future Feature          | Extension Strategy                                    |
-|-------------------------|-------------------------------------------------------|
-| Multi-branch            | Add `branch_id` to institutes — nullable in MVP       |
-| Payment gateway         | Add `gateway_reference` to payments — nullable        |
-| Study material          | New `study_materials` table linked to batches         |
-| AI insights             | New analytics tables — no changes to core schema      |
-| QR attendance           | Add `qr` to attendance `source` enum                  |
-| Webhooks                | New `webhook_subscriptions` table                     |
-| Public APIs             | Add API key table — no core schema changes            |
+| Future Feature  | Extension Strategy                               |
+| --------------- | ------------------------------------------------ |
+| Multi-branch    | Add `branch_id` to institutes — nullable in MVP  |
+| Payment gateway | Add `gateway_reference` to payments — nullable   |
+| Study material  | New `study_materials` table linked to batches    |
+| AI insights     | New analytics tables — no changes to core schema |
+| QR attendance   | Add `qr` to attendance `source` enum             |
+| Webhooks        | New `webhook_subscriptions` table                |
+| Public APIs     | Add API key table — no core schema changes       |
 
 > Future features should **extend** existing entities rather than replace them.
 
@@ -1472,22 +1473,22 @@ The schema is designed to accommodate future features without requiring redesign
 
 Before implementing any table or migration:
 
-| Check                                         | Verified |
-|-----------------------------------------------|----------|
-| Owning module identified                      | ☐        |
-| Business rules verified against SRS           | ☐        |
-| Tenant scope (`institute_id`) included        | ☐        |
-| Status lifecycle defined                      | ☐        |
-| Constraints reviewed (unique, FK, not null)   | ☐        |
-| Indexes reviewed for query patterns           | ☐        |
-| Audit implications considered                 | ☐        |
-| Migration file planned and named              | ☐        |
+| Check                                       | Verified |
+| ------------------------------------------- | -------- |
+| Owning module identified                    | ☐        |
+| Business rules verified against SRS         | ☐        |
+| Tenant scope (`institute_id`) included      | ☐        |
+| Status lifecycle defined                    | ☐        |
+| Constraints reviewed (unique, FK, not null) | ☐        |
+| Indexes reviewed for query patterns         | ☐        |
+| Audit implications considered               | ☐        |
+| Migration file planned and named            | ☐        |
 
 ---
 
-*Chapter 2 Status: Complete*
+_Chapter 2 Status: Complete_
 
-*The persistence model is now frozen. Prisma models, migrations, and repositories must directly implement this design without introducing additional business concepts.*
+_The persistence model is now frozen. Prisma models, migrations, and repositories must directly implement this design without introducing additional business concepts._
 
 ---
 
@@ -1501,14 +1502,14 @@ This chapter defines the REST API contract between the frontend and backend.
 
 Every endpoint follows the same principles:
 
-| Principle                       |
-|---------------------------------|
-| RESTful resource design         |
-| Multi-tenant isolation          |
-| Permission-based authorization  |
-| Consistent response format      |
-| Stable error codes              |
-| Predictable validation          |
+| Principle                      |
+| ------------------------------ |
+| RESTful resource design        |
+| Multi-tenant isolation         |
+| Permission-based authorization |
+| Consistent response format     |
+| Stable error codes             |
+| Predictable validation         |
 
 ---
 
@@ -1532,8 +1533,8 @@ File uploads use `multipart/form-data`.
 
 ### Authentication
 
-| Surface     | Mechanism       |
-|-------------|-----------------|
+| Surface     | Mechanism        |
+| ----------- | ---------------- |
 | Staff APIs  | Cookie / Session |
 | Parent APIs | Cookie / Session |
 
@@ -1565,9 +1566,7 @@ File uploads use `multipart/form-data`.
   "error": {
     "code": "VALIDATION_ERROR",
     "message": "Invalid request.",
-    "details": [
-      { "field": "name", "message": "Name is required." }
-    ]
+    "details": [{ "field": "name", "message": "Name is required." }]
   }
 }
 ```
@@ -1590,19 +1589,19 @@ File uploads use `multipart/form-data`.
 
 ## 4. HTTP Status Codes
 
-| Status | Meaning                  |
-|--------|--------------------------|
-| 200    | Success                  |
-| 201    | Created                  |
-| 204    | No Content               |
-| 400    | Validation Error         |
-| 401    | Unauthenticated          |
-| 403    | Forbidden                |
-| 404    | Not Found                |
-| 409    | Conflict                 |
-| 422    | Business Rule Failed     |
-| 429    | Rate Limited             |
-| 500    | Unexpected Server Error  |
+| Status | Meaning                 |
+| ------ | ----------------------- |
+| 200    | Success                 |
+| 201    | Created                 |
+| 204    | No Content              |
+| 400    | Validation Error        |
+| 401    | Unauthenticated         |
+| 403    | Forbidden               |
+| 404    | Not Found               |
+| 409    | Conflict                |
+| 422    | Business Rule Failed    |
+| 429    | Rate Limited            |
+| 500    | Unexpected Server Error |
 
 ---
 
@@ -1614,8 +1613,8 @@ File uploads use `multipart/form-data`.
 
 Returns the current authenticated institute's profile.
 
-| Property   | Value              |
-|------------|--------------------|
+| Property   | Value               |
+| ---------- | ------------------- |
 | Permission | Authenticated staff |
 
 #### `PATCH /api/v1/institute`
@@ -1623,7 +1622,7 @@ Returns the current authenticated institute's profile.
 Updates institute profile and branding.
 
 | Property   | Value             |
-|------------|-------------------|
+| ---------- | ----------------- |
 | Permission | `branding.update` |
 
 ---
@@ -1634,29 +1633,29 @@ Updates institute profile and branding.
 
 Returns paginated student list.
 
-| Feature      | Supported |
-|--------------|-----------|
-| Pagination   | Yes       |
-| Search       | By name, admission number |
-| Status filter | `active`, `archived` |
-| Batch filter | By `batch_id` |
+| Feature       | Supported                 |
+| ------------- | ------------------------- |
+| Pagination    | Yes                       |
+| Search        | By name, admission number |
+| Status filter | `active`, `archived`      |
+| Batch filter  | By `batch_id`             |
 
 | Property   | Value          |
-|------------|----------------|
+| ---------- | -------------- |
 | Permission | `student.view` |
 
 #### `POST /api/v1/students`
 
 Creates a new student.
 
-| Validation Rule              |
-|------------------------------|
-| `name` is required           |
-| Parent must be linked        |
+| Validation Rule                      |
+| ------------------------------------ |
+| `name` is required                   |
+| Parent must be linked                |
 | `institute_id` inferred from session |
 
 | Property   | Value            |
-|------------|------------------|
+| ---------- | ---------------- |
 | Permission | `student.create` |
 
 #### `GET /api/v1/students/{id}`
@@ -1664,6 +1663,7 @@ Creates a new student.
 Returns complete student profile.
 
 **Includes:**
+
 - Parent details
 - Enrollments
 - Fee summary
@@ -1674,7 +1674,7 @@ Returns complete student profile.
 Updates editable student information.
 
 | Property   | Value            |
-|------------|------------------|
+| ---------- | ---------------- |
 | Permission | `student.update` |
 
 #### `DELETE /api/v1/students/{id}`
@@ -1682,29 +1682,29 @@ Updates editable student information.
 Archives the student. **Never a physical delete.**
 
 | Property   | Value             |
-|------------|-------------------|
+| ---------- | ----------------- |
 | Permission | `student.archive` |
 
 ---
 
 ### Parents
 
-| Method  | Endpoint             | Action                  |
-|---------|----------------------|-------------------------|
-| `GET`   | `/parents`           | List parents            |
-| `POST`  | `/parents`           | Create parent           |
-| `GET`   | `/parents/{id}`      | Get parent detail       |
-| `PATCH` | `/parents/{id}`      | Update contact info     |
+| Method  | Endpoint        | Action              |
+| ------- | --------------- | ------------------- |
+| `GET`   | `/parents`      | List parents        |
+| `POST`  | `/parents`      | Create parent       |
+| `GET`   | `/parents/{id}` | Get parent detail   |
+| `PATCH` | `/parents/{id}` | Update contact info |
 
 ---
 
 ### Subjects
 
-| Method  | Endpoint              | Action           |
-|---------|-----------------------|------------------|
-| `GET`   | `/subjects`           | List subjects    |
-| `POST`  | `/subjects`           | Create subject   |
-| `PATCH` | `/subjects/{id}`      | Update subject   |
+| Method  | Endpoint         | Action         |
+| ------- | ---------------- | -------------- |
+| `GET`   | `/subjects`      | List subjects  |
+| `POST`  | `/subjects`      | Create subject |
+| `PATCH` | `/subjects/{id}` | Update subject |
 
 ---
 
@@ -1714,19 +1714,19 @@ Archives the student. **Never a physical delete.**
 
 Returns batch list.
 
-| Filter    | Description              |
-|-----------|--------------------------|
-| `subject` | Filter by subject ID     |
-| `teacher` | Filter by teacher ID     |
-| `status`  | Filter by batch status   |
+| Filter    | Description            |
+| --------- | ---------------------- |
+| `subject` | Filter by subject ID   |
+| `teacher` | Filter by teacher ID   |
+| `status`  | Filter by batch status |
 
 #### `POST /api/v1/batches`
 
 Creates a new batch.
 
-| Validation Rule              |
-|------------------------------|
-| Subject must exist           |
+| Validation Rule                    |
+| ---------------------------------- |
+| Subject must exist                 |
 | Name must be unique within subject |
 
 #### `PATCH /api/v1/batches/{id}`
@@ -1738,6 +1738,7 @@ Updates batch details.
 Returns batch detail.
 
 **Includes:**
+
 - Enrolled students
 - Timetable
 - Assigned teacher
@@ -1751,10 +1752,10 @@ Returns batch detail.
 
 Creates an enrollment with a fee plan in a single transaction.
 
-| Business Rule                              |
-|--------------------------------------------|
-| Student must be `active`                   |
-| Batch must be `open` or `running`          |
+| Business Rule                                  |
+| ---------------------------------------------- |
+| Student must be `active`                       |
+| Batch must be `open` or `running`              |
 | No duplicate `active` enrollment in same batch |
 
 #### `PATCH /api/v1/enrollments/{id}`
@@ -1762,7 +1763,7 @@ Creates an enrollment with a fee plan in a single transaction.
 Updates enrollment.
 
 | Editable Fields  |
-|------------------|
+| ---------------- |
 | `status`         |
 | `discount_type`  |
 | `discount_value` |
@@ -1777,54 +1778,54 @@ Updates enrollment.
 
 Records attendance for a batch session.
 
-| Property        | Value                          |
-|-----------------|--------------------------------|
-| Supports        | `manual`, `rfid`               |
+| Property        | Value                              |
+| --------------- | ---------------------------------- |
+| Supports        | `manual`, `rfid`                   |
 | Validation      | One record per enrollment per date |
-| Publishes event | `AttendanceRecorded`           |
-| Permission      | `attendance.create`            |
+| Publishes event | `AttendanceRecorded`               |
+| Permission      | `attendance.create`                |
 
 #### `GET /api/v1/attendance`
 
 Returns attendance records.
 
-| Filter    | Description              |
-|-----------|--------------------------|
-| `date`    | Specific date            |
-| `batch_id`| All students in a batch  |
-| `student_id` | One student's history |
+| Filter       | Description             |
+| ------------ | ----------------------- |
+| `date`       | Specific date           |
+| `batch_id`   | All students in a batch |
+| `student_id` | One student's history   |
 
 #### `PATCH /api/v1/attendance/{id}`
 
 Edits an existing attendance record.
 
-| Property        | Value                     |
-|-----------------|---------------------------|
+| Property        | Value                                  |
+| --------------- | -------------------------------------- |
 | Restriction     | Only before configured cutoff (future) |
-| Publishes event | `AttendanceUpdated`        |
-| Permission      | `attendance.update`        |
+| Publishes event | `AttendanceUpdated`                    |
+| Permission      | `attendance.update`                    |
 
 ---
 
 ### Homework
 
-| Method   | Endpoint              | Notes                          |
-|----------|-----------------------|--------------------------------|
-| `GET`    | `/homework`           | List with batch filter         |
-| `POST`   | `/homework`           | Create homework                |
-| `PATCH`  | `/homework/{id}`      | Edit before publication        |
-| `DELETE` | `/homework/{id}`      | Only permitted before publication |
+| Method   | Endpoint         | Notes                             |
+| -------- | ---------------- | --------------------------------- |
+| `GET`    | `/homework`      | List with batch filter            |
+| `POST`   | `/homework`      | Create homework                   |
+| `PATCH`  | `/homework/{id}` | Edit before publication           |
+| `DELETE` | `/homework/{id}` | Only permitted before publication |
 
 ---
 
 ### Tests
 
-| Method | Endpoint                    | Action                        |
-|--------|-----------------------------|-------------------------------|
-| `POST` | `/tests`                    | Create assessment             |
-| `GET`  | `/tests`                    | List tests for a batch        |
-| `PATCH`| `/tests/{id}`               | Update test details           |
-| `POST` | `/tests/{id}/publish`       | Publish test (marks entry open) |
+| Method  | Endpoint              | Action                          |
+| ------- | --------------------- | ------------------------------- |
+| `POST`  | `/tests`              | Create assessment               |
+| `GET`   | `/tests`              | List tests for a batch          |
+| `PATCH` | `/tests/{id}`         | Update test details             |
+| `POST`  | `/tests/{id}/publish` | Publish test (marks entry open) |
 
 ---
 
@@ -1834,37 +1835,37 @@ Edits an existing attendance record.
 
 Bulk marks entry for all enrolled students.
 
-| Property   | Value             |
-|------------|-------------------|
-| Permission | `marks.create`    |
+| Property   | Value          |
+| ---------- | -------------- |
+| Permission | `marks.create` |
 
 #### `PATCH /api/v1/marks/{id}`
 
 Edit an individual mark.
 
-| Property    | Value                          |
-|-------------|--------------------------------|
+| Property    | Value                             |
+| ----------- | --------------------------------- |
 | Restriction | Only permitted before publication |
-| Permission  | `marks.update`                 |
+| Permission  | `marks.update`                    |
 
 #### `POST /api/v1/tests/{id}/publish-results`
 
 Publishes marks to students and parents.
 
-| Property        | Value             |
-|-----------------|-------------------|
-| Publishes event | `MarksPublished`  |
-| Permission      | `marks.publish`   |
+| Property        | Value            |
+| --------------- | ---------------- |
+| Publishes event | `MarksPublished` |
+| Permission      | `marks.publish`  |
 
 ---
 
 ### Timetable
 
-| Method  | Endpoint           | Action                    |
-|---------|--------------------|---------------------------|
-| `GET`   | `/timetable`       | List timetable entries    |
-| `POST`  | `/timetable`       | Create timetable entry    |
-| `PATCH` | `/timetable/{id}`  | Update timetable entry    |
+| Method  | Endpoint          | Action                 |
+| ------- | ----------------- | ---------------------- |
+| `GET`   | `/timetable`      | List timetable entries |
+| `POST`  | `/timetable`      | Create timetable entry |
+| `PATCH` | `/timetable/{id}` | Update timetable entry |
 
 ---
 
@@ -1872,21 +1873,21 @@ Publishes marks to students and parents.
 
 ### Fee Plans
 
-| Method  | Endpoint           | Action                 |
-|---------|--------------------|------------------------|
-| `GET`   | `/fee-plans`       | List fee plans         |
-| `POST`  | `/fee-plans`       | Create fee plan        |
-| `PATCH` | `/fee-plans/{id}`  | Update fee plan        |
+| Method  | Endpoint          | Action          |
+| ------- | ----------------- | --------------- |
+| `GET`   | `/fee-plans`      | List fee plans  |
+| `POST`  | `/fee-plans`      | Create fee plan |
+| `PATCH` | `/fee-plans/{id}` | Update fee plan |
 
 ---
 
 ### Invoices
 
-| Method | Endpoint          | Action                   |
-|--------|-------------------|--------------------------|
-| `GET`  | `/invoices`       | List invoices with filters |
-| `POST` | `/invoices`       | Generate invoice manually |
-| `GET`  | `/invoices/{id}`  | Get invoice detail       |
+| Method | Endpoint         | Action                     |
+| ------ | ---------------- | -------------------------- |
+| `GET`  | `/invoices`      | List invoices with filters |
+| `POST` | `/invoices`      | Generate invoice manually  |
+| `GET`  | `/invoices/{id}` | Get invoice detail         |
 
 ---
 
@@ -1896,25 +1897,25 @@ Publishes marks to students and parents.
 
 Records a payment against an invoice.
 
-| Validation Rule    |
-|--------------------|
-| Invoice must exist |
+| Validation Rule      |
+| -------------------- |
+| Invoice must exist   |
 | `amount` must be > 0 |
 
-| Property        | Value              |
-|-----------------|--------------------|
-| Publishes event | `PaymentRecorded`  |
-| Permission      | `payment.record`   |
+| Property        | Value             |
+| --------------- | ----------------- |
+| Publishes event | `PaymentRecorded` |
+| Permission      | `payment.record`  |
 
 #### `GET /api/v1/payments`
 
 Returns payment records.
 
-| Filter       | Description               |
-|--------------|---------------------------|
-| `date`       | Payment date              |
-| `batch_id`   | Payments for a batch      |
-| `student_id` | Payments for a student    |
+| Filter       | Description            |
+| ------------ | ---------------------- |
+| `date`       | Payment date           |
+| `batch_id`   | Payments for a batch   |
+| `student_id` | Payments for a student |
 
 ---
 
@@ -1924,9 +1925,9 @@ Returns payment records.
 
 Returns receipt metadata. Download handled via signed URL.
 
-| Property   | Value                              |
-|------------|------------------------------------|
-| Response   | Receipt metadata + signed download URL |
+| Property | Value                                  |
+| -------- | -------------------------------------- |
+| Response | Receipt metadata + signed download URL |
 
 ---
 
@@ -1934,19 +1935,19 @@ Returns receipt metadata. Download handled via signed URL.
 
 ### Announcements
 
-| Method   | Endpoint                | Notes                                  |
-|----------|-------------------------|----------------------------------------|
-| `GET`    | `/announcements`        | List — filter by institute or batch    |
-| `POST`   | `/announcements`        | Create announcement                    |
-| `PATCH`  | `/announcements/{id}`   | Edit before publication                |
-| `DELETE` | `/announcements/{id}`   | Only draft announcements               |
+| Method   | Endpoint              | Notes                               |
+| -------- | --------------------- | ----------------------------------- |
+| `GET`    | `/announcements`      | List — filter by institute or batch |
+| `POST`   | `/announcements`      | Create announcement                 |
+| `PATCH`  | `/announcements/{id}` | Edit before publication             |
+| `DELETE` | `/announcements/{id}` | Only draft announcements            |
 
 **Targeting:**
 
-| `batch_id` value | Audience              |
-|------------------|-----------------------|
-| `null`           | Entire institute      |
-| Set to batch UUID | Specific batch only  |
+| `batch_id` value  | Audience            |
+| ----------------- | ------------------- |
+| `null`            | Entire institute    |
+| Set to batch UUID | Specific batch only |
 
 ---
 
@@ -1958,11 +1959,11 @@ Returns in-app notifications for the authenticated user.
 
 **Supports:** Read / Unread state management.
 
-| Method  | Endpoint                      | Action                     |
-|---------|-------------------------------|----------------------------|
-| `GET`   | `/notifications`              | List notifications         |
-| `PATCH` | `/notifications/{id}/read`    | Mark as read               |
-| `PATCH` | `/notifications/read-all`     | Mark all as read           |
+| Method  | Endpoint                   | Action             |
+| ------- | -------------------------- | ------------------ |
+| `GET`   | `/notifications`           | List notifications |
+| `PATCH` | `/notifications/{id}/read` | Mark as read       |
+| `PATCH` | `/notifications/read-all`  | Mark all as read   |
 
 ---
 
@@ -1972,13 +1973,14 @@ Returns in-app notifications for the authenticated user.
 
 Parent endpoints expose **only data linked to the authenticated parent's children**. No staff data is ever accessible. Tenant isolation is preserved at all times.
 
-### Parent Hub APIs *(Platform Layer)*
+### Parent Hub APIs _(Platform Layer)_
 
 #### `GET /api/v1/parent/hub`
 
 Returns the global parent view — all connected institutes and child profiles.
 
 **Includes:**
+
 - ChildProfiles (Rahul, Priya)
 - All connected coaching institutes per child
 - Unread notification count per institute
@@ -1993,7 +1995,7 @@ Returns the parent's ChildProfiles.
 Creates a new ChildProfile.
 
 | Field    | Notes                   |
-|----------|-------------------------|
+| -------- | ----------------------- |
 | `name`   | Required — e.g. "Rahul" |
 | `avatar` | Optional                |
 
@@ -2001,28 +2003,29 @@ Creates a new ChildProfile.
 
 Links a ChildProfile to a student in an institute.
 
-| Field         | Notes                                |
-|---------------|--------------------------------------|
-| `student_id`  | Must be a student linked to this parent via `institute_parent_students` |
+| Field        | Notes                                                                   |
+| ------------ | ----------------------------------------------------------------------- |
+| `student_id` | Must be a student linked to this parent via `institute_parent_students` |
 
 #### `GET /api/v1/parent/suggestions`
 
 Returns possible ChildProfile merge suggestions (name + age similarity).
 
-| Rule                                                          |
-|---------------------------------------------------------------|
-| Suggestions are informational only — never auto-applied       |
-| Parent must explicitly confirm any link                       |
+| Rule                                                    |
+| ------------------------------------------------------- |
+| Suggestions are informational only — never auto-applied |
+| Parent must explicitly confirm any link                 |
 
 ---
 
-### Coaching Workspace APIs *(Institute Layer — Tenant)*
+### Coaching Workspace APIs _(Institute Layer — Tenant)_
 
 #### `GET /api/v1/parent/institutes/{institute_id}/dashboard`
 
 Returns a consolidated view for a specific coaching institute.
 
 **Includes:**
+
 - Child's attendance
 - Pending homework
 - Latest marks
@@ -2037,21 +2040,21 @@ Returns a consolidated view for a specific coaching institute.
 
 Returns the profile of a specific linked child within an institute.
 
-| Rule                                      |
-|-------------------------------------------|
+| Rule                                                                  |
+| --------------------------------------------------------------------- |
 | Parent must be linked to this student via `institute_parent_students` |
-| Returns `403` if not linked               |
+| Returns `403` if not linked                                           |
 
 ---
 
 ### Child-Scoped Endpoints
 
-| Method | Endpoint                              | Returns                     |
-|--------|---------------------------------------|-----------------------------|
-| `GET`  | `/parent/students/{id}/attendance`    | Attendance history          |
-| `GET`  | `/parent/students/{id}/homework`      | Homework list with status   |
-| `GET`  | `/parent/students/{id}/marks`         | Published marks by test     |
-| `GET`  | `/parent/students/{id}/fees`          | Invoice and payment history |
+| Method | Endpoint                           | Returns                     |
+| ------ | ---------------------------------- | --------------------------- |
+| `GET`  | `/parent/students/{id}/attendance` | Attendance history          |
+| `GET`  | `/parent/students/{id}/homework`   | Homework list with status   |
+| `GET`  | `/parent/students/{id}/marks`      | Published marks by test     |
+| `GET`  | `/parent/students/{id}/fees`       | Invoice and payment history |
 
 All child-scoped endpoints verify parent–student linkage via `institute_parent_students` before returning any data.
 
@@ -2061,13 +2064,13 @@ All child-scoped endpoints verify parent–student linkage via `institute_parent
 
 All administration endpoints require elevated permissions.
 
-| Resource             | Endpoints              | Permission Required         |
-|----------------------|------------------------|-----------------------------|
-| Branding             | `GET`, `PATCH`         | `branding.update`           |
-| Settings             | `GET`, `PATCH`         | `settings.update`           |
-| Reports              | `GET`                  | `reports.view`              |
-| Users                | `GET`, `POST`, `PATCH` | `users.manage`              |
-| Permission Templates | `GET`, `POST`, `PATCH` | `permissions.manage`        |
+| Resource             | Endpoints              | Permission Required  |
+| -------------------- | ---------------------- | -------------------- |
+| Branding             | `GET`, `PATCH`         | `branding.update`    |
+| Settings             | `GET`, `PATCH`         | `settings.update`    |
+| Reports              | `GET`                  | `reports.view`       |
+| Users                | `GET`, `POST`, `PATCH` | `users.manage`       |
+| Permission Templates | `GET`, `POST`, `PATCH` | `permissions.manage` |
 
 ---
 
@@ -2133,11 +2136,11 @@ Step 5  Client confirms upload completion to server
 Step 6  Server records file metadata in database
 ```
 
-| Rule                                                     |
-|----------------------------------------------------------|
-| No binary data passes through the application server     |
-| Signed URLs are short-lived (e.g. 15 minutes)           |
-| File size and MIME type validated before URL is issued   |
+| Rule                                                   |
+| ------------------------------------------------------ |
+| No binary data passes through the application server   |
+| Signed URLs are short-lived (e.g. 15 minutes)          |
+| File size and MIME type validated before URL is issued |
 
 ---
 
@@ -2145,13 +2148,13 @@ Step 6  Server records file metadata in database
 
 All list endpoints support consistent pagination parameters.
 
-| Parameter | Type    | Default | Max  | Description          |
-|-----------|---------|---------|------|----------------------|
-| `page`    | Integer | 1       | —    | Page number          |
-| `limit`   | Integer | 20      | 100  | Records per page     |
-| `sort`    | String  | varies  | —    | Sort field           |
-| `order`   | String  | `desc`  | —    | `asc` or `desc`      |
-| `search`  | String  | —       | —    | Full-text search     |
+| Parameter | Type    | Default | Max | Description      |
+| --------- | ------- | ------- | --- | ---------------- |
+| `page`    | Integer | 1       | —   | Page number      |
+| `limit`   | Integer | 20      | 100 | Records per page |
+| `sort`    | String  | varies  | —   | Sort field       |
+| `order`   | String  | `desc`  | —   | `asc` or `desc`  |
+| `search`  | String  | —       | —   | Full-text search |
 
 Future: cursor-based pagination for large datasets (e.g. attendance history).
 
@@ -2163,28 +2166,28 @@ All list endpoints support composable, additive filters. All filter parameters a
 
 ### Students
 
-| Filter           | Type   | Description                        |
-|------------------|--------|------------------------------------|
-| `batch_id`       | UUID   | Students enrolled in a batch       |
-| `status`         | Enum   | `active`, `archived`               |
-| `search`         | String | Name or admission number           |
-| `enrolled_after` | Date   | Enrolled after a given date        |
+| Filter           | Type   | Description                  |
+| ---------------- | ------ | ---------------------------- |
+| `batch_id`       | UUID   | Students enrolled in a batch |
+| `status`         | Enum   | `active`, `archived`         |
+| `search`         | String | Name or admission number     |
+| `enrolled_after` | Date   | Enrolled after a given date  |
 
 ### Attendance
 
-| Filter       | Type   | Description                  |
-|--------------|--------|------------------------------|
-| `batch_id`   | UUID   | All attendance for a batch   |
-| `date`       | Date   | Specific session date        |
-| `student_id` | UUID   | One student's history        |
+| Filter       | Type | Description                |
+| ------------ | ---- | -------------------------- |
+| `batch_id`   | UUID | All attendance for a batch |
+| `date`       | Date | Specific session date      |
+| `student_id` | UUID | One student's history      |
 
 ### Invoices
 
-| Filter       | Type   | Description                  |
-|--------------|--------|------------------------------|
-| `status`     | Enum   | `pending`, `partial`, `paid`, `overdue` |
-| `due_before` | Date   | Invoices due before a date   |
-| `batch_id`   | UUID   | Invoices for a batch         |
+| Filter       | Type | Description                             |
+| ------------ | ---- | --------------------------------------- |
+| `status`     | Enum | `pending`, `partial`, `paid`, `overdue` |
+| `due_before` | Date | Invoices due before a date              |
+| `batch_id`   | UUID | Invoices for a batch                    |
 
 ---
 
@@ -2192,11 +2195,11 @@ All list endpoints support composable, additive filters. All filter parameters a
 
 The following operations require idempotency guarantees:
 
-| Operation          | Rule                                                      |
-|--------------------|-----------------------------------------------------------|
-| Payment recording  | Same payment reference must not create duplicate payment  |
+| Operation          | Rule                                                       |
+| ------------------ | ---------------------------------------------------------- |
+| Payment recording  | Same payment reference must not create duplicate payment   |
 | RFID events        | Same card + same date must not create duplicate attendance |
-| External callbacks | Repeated delivery must produce the same outcome           |
+| External callbacks | Repeated delivery must produce the same outcome            |
 
 Clients may optionally send an `Idempotency-Key` header for payment endpoints.
 
@@ -2206,34 +2209,34 @@ Clients may optionally send an `Idempotency-Key` header for payment endpoints.
 
 Error codes are stable across API versions. Messages may change or be localized — clients must use `code`.
 
-| Code                      | HTTP  | Scenario                                  |
-|---------------------------|-------|-------------------------------------------|
-| `AUTHENTICATION_REQUIRED` | 401   | No valid session                          |
-| `PERMISSION_DENIED`       | 403   | Authenticated but lacks required permission |
-| `STUDENT_NOT_FOUND`       | 404   | Student does not exist in this institute  |
-| `BATCH_NOT_FOUND`         | 404   | Batch does not exist in this institute    |
-| `INVALID_ENROLLMENT`      | 422   | Enrollment business rule violated         |
-| `DUPLICATE_ATTENDANCE`    | 409   | Attendance already recorded for this date |
-| `INVOICE_ALREADY_PAID`    | 409   | Payment attempted on a fully paid invoice |
-| `INVALID_PAYMENT`         | 422   | Payment amount or reference invalid       |
-| `TEST_ALREADY_PUBLISHED`  | 409   | Test already in published state           |
-| `MARKS_ALREADY_PUBLISHED` | 409   | Marks already published                   |
-| `FEATURE_DISABLED`        | 403   | Feature flag is off for this institute    |
-| `TENANT_MISMATCH`         | 403   | Resource belongs to a different institute |
-| `VALIDATION_ERROR`        | 400   | Request schema validation failed          |
-| `INTERNAL_ERROR`          | 500   | Unexpected server error                   |
+| Code                      | HTTP | Scenario                                    |
+| ------------------------- | ---- | ------------------------------------------- |
+| `AUTHENTICATION_REQUIRED` | 401  | No valid session                            |
+| `PERMISSION_DENIED`       | 403  | Authenticated but lacks required permission |
+| `STUDENT_NOT_FOUND`       | 404  | Student does not exist in this institute    |
+| `BATCH_NOT_FOUND`         | 404  | Batch does not exist in this institute      |
+| `INVALID_ENROLLMENT`      | 422  | Enrollment business rule violated           |
+| `DUPLICATE_ATTENDANCE`    | 409  | Attendance already recorded for this date   |
+| `INVOICE_ALREADY_PAID`    | 409  | Payment attempted on a fully paid invoice   |
+| `INVALID_PAYMENT`         | 422  | Payment amount or reference invalid         |
+| `TEST_ALREADY_PUBLISHED`  | 409  | Test already in published state             |
+| `MARKS_ALREADY_PUBLISHED` | 409  | Marks already published                     |
+| `FEATURE_DISABLED`        | 403  | Feature flag is off for this institute      |
+| `TENANT_MISMATCH`         | 403  | Resource belongs to a different institute   |
+| `VALIDATION_ERROR`        | 400  | Request schema validation failed            |
+| `INTERNAL_ERROR`          | 500  | Unexpected server error                     |
 
 ---
 
 ## 17. Rate Limits
 
-| Endpoint Category  | Limit Profile                                |
-|--------------------|----------------------------------------------|
-| Authentication     | Strict — brute force protection              |
-| Attendance APIs    | Moderate                                     |
-| Parent APIs        | Moderate                                     |
-| File uploads       | Strict — per user per minute                 |
-| RFID events        | High throughput — API key authenticated      |
+| Endpoint Category | Limit Profile                           |
+| ----------------- | --------------------------------------- |
+| Authentication    | Strict — brute force protection         |
+| Attendance APIs   | Moderate                                |
+| Parent APIs       | Moderate                                |
+| File uploads      | Strict — per user per minute            |
+| RFID events       | High throughput — API key authenticated |
 
 Rate limit responses return HTTP `429` with a `Retry-After` header.
 
@@ -2241,12 +2244,13 @@ Rate limit responses return HTTP `429` with a `Retry-After` header.
 
 ## 18. API Versioning
 
-| Version | Status  | Notes                                      |
-|---------|---------|--------------------------------------------|
-| `v1`    | Current | All endpoints under `/api/v1`              |
-| `v2`    | Future  | Required only for breaking changes         |
+| Version | Status  | Notes                              |
+| ------- | ------- | ---------------------------------- |
+| `v1`    | Current | All endpoints under `/api/v1`      |
+| `v2`    | Future  | Required only for breaking changes |
 
 **Rules:**
+
 - Minor additions (new optional fields, new endpoints) are backward compatible within `v1`.
 - Endpoints must not change semantics within the same major version.
 - Deprecated endpoints will be announced before removal.
@@ -2276,23 +2280,23 @@ Every endpoint must complete the full security pipeline before executing:
 
 Before marking any endpoint as complete:
 
-| Check                                        | Verified |
-|----------------------------------------------|----------|
-| Resource ownership defined                   | ☐        |
-| Permission identified and enforced           | ☐        |
-| Validation rules documented and implemented  | ☐        |
-| Business rules enforced                      | ☐        |
-| Tenant isolation guaranteed                  | ☐        |
-| Domain events published where required       | ☐        |
-| Audit logging reviewed                       | ☐        |
-| Error codes documented                       | ☐        |
-| Tests implemented                            | ☐        |
+| Check                                       | Verified |
+| ------------------------------------------- | -------- |
+| Resource ownership defined                  | ☐        |
+| Permission identified and enforced          | ☐        |
+| Validation rules documented and implemented | ☐        |
+| Business rules enforced                     | ☐        |
+| Tenant isolation guaranteed                 | ☐        |
+| Domain events published where required      | ☐        |
+| Audit logging reviewed                      | ☐        |
+| Error codes documented                      | ☐        |
+| Tests implemented                           | ☐        |
 
 ---
 
-*Chapter 3 Status: Complete*
+_Chapter 3 Status: Complete_
 
-*DADD v1.0 — All chapters complete.*
+_DADD v1.0 — All chapters complete._
 
 ---
 
@@ -2300,17 +2304,17 @@ Before marking any endpoint as complete:
 
 Combined with Chapters 1 and 2, the Database & API Design Document now defines:
 
-| Area                      |
-|---------------------------|
-| Database architecture     |
-| Persistence model         |
-| Entity relationships      |
-| Constraints               |
-| API conventions           |
-| REST resources            |
-| Validation rules          |
-| Security requirements     |
-| Integration contracts     |
-| Versioning strategy       |
+| Area                  |
+| --------------------- |
+| Database architecture |
+| Persistence model     |
+| Entity relationships  |
+| Constraints           |
+| API conventions       |
+| REST resources        |
+| Validation rules      |
+| Security requirements |
+| Integration contracts |
+| Versioning strategy   |
 
 > This document is the implementation reference for backend development and must remain synchronized with the SRS and SDD throughout the product lifecycle.

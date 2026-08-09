@@ -2,7 +2,13 @@ import { db } from '../index';
 import crypto from 'node:crypto';
 
 export async function createTestInstitute(
-  overrides: Partial<{ name: string; slug: string; phone: string; email: string; timezone: string }> = {},
+  overrides: Partial<{
+    name: string;
+    slug: string;
+    phone: string;
+    email: string;
+    timezone: string;
+  }> = {},
 ) {
   const uniqueId = crypto.randomUUID().substring(0, 8);
   return db.institute.create({
@@ -17,11 +23,18 @@ export async function createTestInstitute(
 }
 
 export async function createTestUser(
-  overrides: Partial<{ name: string; email: string; emailVerified: boolean; instituteId?: string }> = {},
+  overrides: Partial<{
+    name: string;
+    email: string;
+    emailVerified: boolean;
+    instituteId?: string;
+  }> = {},
 ) {
   const uniqueId = crypto.randomUUID().substring(0, 8);
   const email = overrides.email
-    ? (overrides.email.includes('@') ? overrides.email.replace('@', `_${uniqueId}@`) : `${overrides.email}_${uniqueId}`)
+    ? overrides.email.includes('@')
+      ? overrides.email.replace('@', `_${uniqueId}@`)
+      : `${overrides.email}_${uniqueId}`
     : `user_${uniqueId}@example.com`;
 
   return db.user.create({
@@ -43,14 +56,13 @@ export async function createTestInstituteParent(
     data: {
       instituteId,
       name: overrides.name || `Parent ${uniqueId}`,
-      primaryPhone: overrides.primaryPhone || `+9198${Math.floor(10000000 + Math.random() * 90000000)}`,
+      primaryPhone:
+        overrides.primaryPhone || `+9198${Math.floor(10000000 + Math.random() * 90000000)}`,
     },
   });
 }
 
-export async function createTestParentIdentity(
-  overrides: Partial<{ phone: string }> = {},
-) {
+export async function createTestParentIdentity(overrides: Partial<{ phone: string }> = {}) {
   return db.parentIdentity.create({
     data: {
       phone: overrides.phone || `+9198${Math.floor(10000000 + Math.random() * 90000000)}`,
@@ -73,11 +85,19 @@ export async function createTestChildProfile(
 
 export async function createTestStudent(
   instituteId: string,
-  overrides: Partial<{ firstName: string; lastName: string; fullName?: string; admissionNumber?: string }> = {},
+  overrides: Partial<{
+    firstName: string;
+    lastName: string;
+    fullName?: string;
+    admissionNumber?: string;
+  }> = {},
 ) {
   const uniqueId = crypto.randomUUID().substring(0, 8);
-  const firstName = overrides.firstName || (overrides.fullName ? overrides.fullName.split(' ')[0] : `Student`);
-  const lastName = overrides.lastName || (overrides.fullName ? overrides.fullName.split(' ')[1] || 'Test' : uniqueId);
+  const firstName =
+    overrides.firstName || (overrides.fullName ? overrides.fullName.split(' ')[0] : `Student`);
+  const lastName =
+    overrides.lastName ||
+    (overrides.fullName ? overrides.fullName.split(' ')[1] || 'Test' : uniqueId);
 
   return db.student.create({
     data: {
@@ -129,7 +149,10 @@ export async function createTestBatch(
 export async function createTestEnrollment(
   studentId: string,
   batchId: string,
-  overrides: Partial<{ instituteId?: string; status?: 'pending' | 'active' | 'completed' | 'cancelled' }> = {},
+  overrides: Partial<{
+    instituteId?: string;
+    status?: 'pending' | 'active' | 'completed' | 'cancelled';
+  }> = {},
 ) {
   let instId = overrides.instituteId;
   if (!instId) {
