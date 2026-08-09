@@ -38,19 +38,21 @@ CoachingOS is a multi-tenant SaaS operating system built for founder-led coachin
 ## 2. Phase Execution Tracker
 
 ```text
-Phase 0.1 — Repository Initialization          ✅ COMPLETED
-Phase 0.2 — Monorepo Architecture              ✅ COMPLETED
-Phase 0.3 — Web Application Foundation         ✅ COMPLETED
-Phase 0.4 — Database + Prisma Foundation        ✅ COMPLETED
-Phase 0.5 — Environment & Configuration         ✅ COMPLETED
-Phase 0.6 — Authentication Foundation          ✅ COMPLETED
-Phase 0.7 — Shared Engineering Infrastructure  ✅ COMPLETED
-Phase 0.8 — Testing Infrastructure              ✅ COMPLETED
-Phase 0.9 — Git & CI Pipelines                 ✅ COMPLETED
-Phase 0.10 — Observability Setup                ✅ COMPLETED
-Phase 0.11 — Production Deployment             ✅ COMPLETED
-                                                ↓
-                                          PHASE 0 GATE (READY FOR REVIEW)
+PHASE 0  Engineering Foundation       ✅ COMPLETED
+    ↓
+PHASE 1  Identity Module              ← 🚧 NOW ACTIVE
+    ↓
+PHASE 2  Academics Module             ⏳ UPCOMING
+    ↓
+PHASE 3  Billing Module               ⏳ UPCOMING
+    ↓
+PHASE 4  Communication Module         ⏳ UPCOMING
+    ↓
+PHASE 5  Parent PWA                   ⏳ UPCOMING
+    ↓
+PHASE 6  Staff Dashboard & UX         ⏳ UPCOMING
+    ↓
+PHASE 7  Production & Beta Readiness  ⏳ UPCOMING
 ```
 
 ---
@@ -126,10 +128,14 @@ Phase 0.11 — Production Deployment             ✅ COMPLETED
 - Documented `ADR-0007` (Production Deployment Strategy) and updated `ENGINEERING_PLAYBOOK.md` Section 17.
 - Prepared Phase 0 Gate Verification Report.
 
----
-
 ## 4. Next Milestone Roadmap
 
-### 🚧 Phase 0 Gate Acceptance & Phase 1 — Product Execution
+### 🚧 PHASE 1 — IDENTITY MODULE (ACTIVE)
 
-- Perform final Phase 0 Gate audit and commence Phase 1 Core Domain Implementation (Tenant Onboarding & Multi-Tenant Domain Core).
+- **Objective:** Establish the tenant onboarding, user role/permissions management, student admission & profile management, and two-layer parent identity foundation.
+- **Key Deliverables:**
+  1. Institute Tenant Onboarding API & UI
+  2. Staff User Creation & Role Assignment (Owner, Teacher, Assistant)
+  3. Student Admission & Profile Management (admission number, DOB, status)
+  4. ParentIdentity & ChildProfile link management
+  5. Multi-Tenant Scoping enforcement (`institute_id`) at repository boundary
