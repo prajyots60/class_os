@@ -5,3 +5,6 @@
  */
 
 export const SHARED_BOUNDARY_NAME = 'shared';
+
+export * from './errors';
+export * from './events';

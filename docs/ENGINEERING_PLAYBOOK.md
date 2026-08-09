@@ -277,47 +277,59 @@ Never depend only on database constraints.
 
 ## 9. Error Handling
 
-Never:
+## 9. Error Handling Standards & Taxonomy
+
+Never throw raw untyped strings or generic exceptions in application code:
 ```ts
+// Bad
 throw new Error("Something went wrong");
 ```
 
-Use domain errors:
-- `StudentAlreadyExists`
-- `BatchClosed`
-- `PermissionDenied`
-- `InvoiceAlreadyPaid`
+Use the framework-independent Application Error Taxonomy from `@coaching-os/shared`:
+- `ValidationError` (400)
+- `AuthenticationError` (401)
+- `AuthorizationError` (403)
+- `NotFoundError` (404)
+- `ConflictError` (409)
+- `RateLimitError` (429)
+- `InternalError` (500)
 
-API layer converts these into HTTP responses.
-
----
-
-## 10. Logging Standards
-
-Never use `console.log()`. Use Pino.
-
-Every important action logs structured data.
-
-Example:
-- `Attendance Recorded`
-- `studentId`
-- `batchId`
-- `sessionId`
-- `userId`
-- `timestamp`
-
-**Never log:**
-- Passwords
-- OTPs
-- Tokens
-- Payment secrets
+### API Response Error Boundaries (`toErrorResponse`)
+- The API layer maps application errors and normalized database errors into safe public JSON payloads via `toErrorResponse(err, requestId)`.
+- Public error responses contain `{ error: { code, message, requestId } }` and set the `x-request-id` HTTP header.
+- **Never expose internal details:** Stack traces, SQL queries, Prisma internal codes, file paths, or secrets are redacted from public client responses and logged strictly server-side.
 
 ---
 
-## 11. Observability
+## 10. Logging & Tracing Standards
 
-- Logging answers: *"What happened?"*
-- Monitoring answers: *"Why?"*
+Never use `console.log()` in production application code. Use the structured Pino logger abstraction from `@coaching-os/observability`:
+
+```ts
+import { logger } from '@coaching-os/observability';
+
+logger.info(
+  { requestId, instituteId, userId, operation: 'attendance.mark' },
+  'Attendance recorded successfully',
+);
+```
+
+### Logging Rules
+1. **Machine-Readable Metadata:** Always pass structured JSON objects as context rather than concatenating strings.
+2. **Correlation / Request IDs:** Every HTTP request receives or generates a unique `x-request-id` (`crypto.randomUUID()`) attached to request logs.
+3. **Automated Redaction:** Pino automatically censors 24 sensitive paths (`password`, `token`, `cookie`, `authorization`, `DATABASE_URL`, `BETTER_AUTH_SECRET`, `otp`, `secret`, `apiKey`).
+4. **No Raw Domain Entities:** Never log complete student/parent domain objects, full payment credentials, phone numbers, or passwords.
+
+---
+
+## 11. Observability & Asynchronous Infrastructure Policy
+
+### Async Workflow Engine Policy (ADR-0003)
+- **No Premature Workflow Infrastructure:** No background workflow engine (Inngest, Trigger.dev, BullMQ, Redis) is installed during Phase 0.
+- **Event Contracts:** Domain code emits typed `ApplicationEvent` payloads defined in `@coaching-os/shared`.
+- **Infrastructure Selection:** When asynchronous business workloads arrive (e.g. Phase 4 Notifications):
+  - **Inngest:** Evaluated for event-driven workflow chains.
+  - **Trigger.dev:** Evaluated for compute-heavy / long-running tasks (PDF rendering, AI summaries, bulk imports).
 
 Sentry captures:
 - Exceptions
