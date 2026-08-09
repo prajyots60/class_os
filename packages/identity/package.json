@@ -17,6 +17,10 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@coaching-os/database": "workspace:*"
+    "@coaching-os/config": "workspace:*",
+    "@coaching-os/database": "workspace:*",
+    "@coaching-os/observability": "workspace:*",
+    "@coaching-os/shared": "workspace:*",
+    "zod": "^3.24.2"
   }
 }
