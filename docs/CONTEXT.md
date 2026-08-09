@@ -25,6 +25,7 @@ CoachingOS is a multi-tenant SaaS operating system built for founder-led coachin
 - **[Engineering Playbook](file:///home/supra/Desktop/class_os/docs/ENGINEERING_PLAYBOOK.md)**
 - **[Milestone Roadmap](file:///home/supra/Desktop/class_os/docs/ROADMAP.md)**
 - **[ADR-0001: Monorepo Architecture Strategy](file:///home/supra/Desktop/class_os/docs/adr/0001-monorepo-architecture.md)**
+- **[ADR-0002: Physical Database Schema Reconciliation](file:///home/supra/Desktop/class_os/docs/adr/0002-database-schema-reconciliation.md)**
 - **[Engineering Backlog](file:///home/supra/Desktop/class_os/docs/BACKLOG.md)**
 
 ---
@@ -35,8 +36,8 @@ CoachingOS is a multi-tenant SaaS operating system built for founder-led coachin
 Phase 0.1 — Repository Initialization          ✅ COMPLETED
 Phase 0.2 — Monorepo Architecture              ✅ COMPLETED
 Phase 0.3 — Web Application Foundation         ✅ COMPLETED
-Phase 0.4 — Database + Prisma Foundation        🚧 NEXT
-Phase 0.5 — Environment & Configuration         ⏳ PENDING
+Phase 0.4 — Database + Prisma Foundation        ✅ COMPLETED
+Phase 0.5 — Environment & Configuration         🚧 NEXT
 Phase 0.6 — Authentication Foundation          ⏳ PENDING
 Phase 0.7 — Shared Engineering Infrastructure  ⏳ PENDING
 Phase 0.8 — Testing Infrastructure              ⏳ PENDING
@@ -53,47 +54,34 @@ Phase 0.11 — Production Deployment             ⏳ PENDING
 
 ### ✅ Phase 0.1 — Repository Initialization
 - **Goal:** Establish a runnable pnpm + Turborepo monorepo skeleton.
-- **What Was Built:**
-  - Initialized monorepo workspace (`pnpm-workspace.yaml`, `turbo.json`, `package.json`, `tsconfig.json`).
-  - Scaffolding Next.js 16 App Router application (`apps/web`) with TypeScript, Tailwind CSS v4, and ESLint.
-  - Created package boundaries (`packages/*`) and infrastructure directories (`infrastructure/*`).
-  - Standardized code style with `.editorconfig`, `.prettierrc`, and `.gitignore`.
-  - Created initial Conventional Commit: `chore(repo): initialize coachingos monorepo`.
-
----
+- **What Was Built:** Initialized workspace (`pnpm-workspace.yaml`, `turbo.json`, `package.json`, `tsconfig.json`), Next.js 16 App Router app (`apps/web`), TypeScript strict config, Tailwind CSS v4, ESLint, Prettier, `.editorconfig`, `.gitignore`.
 
 ### ✅ Phase 0.2 — Monorepo Architecture
-- **Goal:** Turn directory skeleton into a strictly governed workspace package graph.
-- **What Was Built:**
-  - Renamed Next.js web application package to `@coaching-os/web` for 100% scoped workspace consistency.
-  - Configured explicit `"exports"` manifests (`src/index.ts`) in all 8 packages (`packages/*`).
-  - Verified framework independence of domain packages (`identity`, `academics`, `billing`, `communication`, `administration`, `audit`).
-  - Authored `ADR-0001: Monorepo Architecture Strategy` in `docs/adr/0001-monorepo-architecture.md`.
-  - Committed changes: `chore(repo): establish monorepo architecture`.
-
----
+- **Goal:** Establish strictly governed workspace package graph.
+- **What Was Built:** Renamed Next.js app to `@coaching-os/web`, explicit `"exports"` manifests (`src/index.ts`) in 8 packages, framework-independent domain boundaries (`identity`, `academics`, `billing`, `communication`, `administration`, `audit`), `ADR-0001`.
 
 ### ✅ Phase 0.3 — Web Application Foundation
-- **Goal:** Build the token-driven white-label design system, UI component library, and frontend infrastructure.
+- **Goal:** Build white-label design system, UI component library, and frontend infrastructure.
+- **What Was Built:** Token-driven theme system (`ThemeConfig`, `THEME_PRESETS`), `@coaching-os/ui` primitives (`Button`, `Input`, `Card`, `Badge`), Google fonts (`Inter`, `Manrope`, `Poppins`, `Nunito`), Provider tree (`QueryProvider` + `ThemeProvider`), Zustand UI store (`useUIStore`), system routes (`loading`, `error`, `not-found`), Design Showcase Page (`apps/web/src/app/page.tsx`).
+
+### ✅ Phase 0.4 — Database + Prisma Foundation
+- **Goal:** Establish production-quality PostgreSQL and Prisma ORM 7 foundation.
 - **What Was Built:**
-  - Created token-driven theme architecture (`ThemeConfig`, `THEME_PRESETS`) supporting white-label institute branding:
-    - **Theme A ("Sharma Classes"):** Blue primary (`#2563eb`), Poppins font, rounded cards (`1rem`).
-    - **Theme B ("Apex Academy"):** Orange primary (`#ea580c`), Manrope font, sharper cards (`0.25rem`).
-  - Built source-owned UI component primitives in `@coaching-os/ui` (`Button`, `Input`, `Card`, `Badge`, `cn` helper).
-  - Implemented curated Google typography system (`Inter`, `Manrope`, `Poppins`, `Nunito`) in `RootLayout`.
-  - Configured shallow Provider tree (`QueryProvider` with TanStack Query + `ThemeProvider`).
-  - Implemented Zustand UI state store (`useUIStore`) for dynamic theme toggling and sidebar UI state.
-  - Created App Router infrastructure routes: `loading.tsx` (skeleton spinner), `error.tsx` (error boundary), and `not-found.tsx` (404 page).
-  - Built interactive Design Showcase Page (`apps/web/src/app/page.tsx`) featuring real-time theme toggling, typography, buttons, badges, cards, Lucide icons, and React Hook Form + Zod demo lead form with validation.
-  - **Refactoring (UI-001):** Moved `ThemeConfig` and `THEME_PRESETS` into `@coaching-os/ui` (`packages/ui/src/theme/`) so `@coaching-os/shared` remains 100% reserved for cross-cutting non-UI primitives.
-  - Committed changes: `feat(web): establish frontend foundation`.
+  - Prisma ORM 7.9.1 with `@prisma/adapter-pg` driver adapter and `pg.Pool`.
+  - Modern `prisma.config.ts` CLI configuration (datasource URL, schema path, migrations path).
+  - Modern generator (`provider = "prisma-client"`) exporting client to `infrastructure/database/src/generated/client`.
+  - Centralized single Prisma Client export via `infrastructure/database/src/index.ts`.
+  - Canonical Prisma schema (`schema.prisma`) mapping all 27 domain models with UUID primary keys, Decimal money types, soft-delete support, and tenant isolation (`institute_id`).
+  - Source Reconciliation Rules enforced: `BatchSession` attendance, `BillingPlan` for invoices, `(institute_id, subject_id, name)` batch uniqueness, optional `Program`, NO room model, NO `attendance_date`.
+  - Deterministic development seed script (`prisma/seed.ts`).
+  - CLI database health check script (`src/health.ts`).
+  - Baseline `.env.example` file.
+  - `ADR-0002: Physical Database Schema Reconciliation` in `docs/adr/0002-database-schema-reconciliation.md`.
 
 ---
 
 ## 4. Next Milestone Roadmap
 
-### 🚧 Phase 0.4 — Database + Prisma Foundation
-- Configure PostgreSQL database connection and pooling in `infrastructure/database`.
-- Initialize Prisma ORM 7 setup and schema definitions (`schema.prisma`).
-- Map base tables per DADD specification (`institutes`, `users`, `parent_identities`, `institute_memberships`, `institute_parents`, `students`, `child_profiles`, `student_links`, etc.).
-- Generate initial migration and seed scripts.
+### 🚧 Phase 0.5 — Environment & Configuration
+- Build strongly typed environment configuration package in `packages/shared` or `infrastructure/config` using Zod schema validation.
+- Validate `DATABASE_URL`, server runtime variables, and environment modes (`development`, `test`, `production`).
