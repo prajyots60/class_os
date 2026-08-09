@@ -8,13 +8,15 @@ import {
 } from '@coaching-os/shared';
 import { logger } from './logger';
 
-export function getOrCreateRequestId(headers?: Headers): string {
-  const incomingRequestId = headers?.get('x-request-id');
-  if (incomingRequestId && incomingRequestId.trim().length > 0) {
-    return incomingRequestId.trim();
-  }
+/**
+ * Generates an authoritative server-side request correlation ID.
+ * Client-supplied headers are intentionally ignored to prevent log correlation spoofing.
+ */
+export function generateRequestId(_headers?: Headers): string {
   return crypto.randomUUID();
 }
+
+export const getOrCreateRequestId = generateRequestId;
 
 /**
  * Normalizes Prisma & database errors into safe ApplicationErrors.

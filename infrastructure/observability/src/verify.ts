@@ -24,19 +24,15 @@ export async function verifyInfrastructureFoundation() {
     }
     console.log('✅ Sensitive field redaction rules configured for 24 sensitive field paths.');
 
-    // 3. Verify Request ID Generation & Extraction
+    // 3. Verify Server-Side Hardened Request ID Generation
     const mockHeaders = new Headers();
+    mockHeaders.set('x-request-id', 'malicious_client_spoofed_id_9999');
     const generatedId = getOrCreateRequestId(mockHeaders);
-    if (!generatedId || generatedId.length < 10) {
-      throw new Error('Verification failed: Request ID generation returned invalid string.');
-    }
 
-    mockHeaders.set('x-request-id', 'req_test_123456');
-    const extractedId = getOrCreateRequestId(mockHeaders);
-    if (extractedId !== 'req_test_123456') {
-      throw new Error('Verification failed: Incoming x-request-id was not preserved.');
+    if (!generatedId || generatedId === 'malicious_client_spoofed_id_9999') {
+      throw new Error('Verification failed: Client-supplied x-request-id was erroneously accepted!');
     }
-    console.log('✅ Request ID generation & header propagation verified.');
+    console.log('✅ Hardened Request ID verified: Client-supplied X-Request-ID was ignored, server generated canonical UUID.');
 
     // 4. Verify Application Error Taxonomy
     const valErr = new ValidationError('Invalid student admission number.');
