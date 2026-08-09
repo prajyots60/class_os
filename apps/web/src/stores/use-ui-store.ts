@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { THEME_PRESETS, type ThemeConfig } from '@coaching-os/shared';
+import { THEME_PRESETS, type ThemeConfig } from '@coaching-os/ui';
 
 interface UIState {
   currentTheme: ThemeConfig;

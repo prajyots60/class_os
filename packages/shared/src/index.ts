@@ -1,68 +1,7 @@
 /**
  * @coaching-os/shared
- * Cross-cutting types, constants, and utilities for CoachingOS
+ * Cross-cutting primitives and shared domain utilities for CoachingOS.
+ * (UI/Presentation constructs like ThemeConfig belong in @coaching-os/ui)
  */
 
 export const SHARED_BOUNDARY_NAME = 'shared';
-
-export interface ThemeConfig {
-  id: string;
-  name: string;
-  tagline: string;
-  logoUrl?: string;
-  primaryHsl: string;
-  primaryForegroundHsl: string;
-  secondaryHsl: string;
-  secondaryForegroundHsl: string;
-  accentHsl: string;
-  accentForegroundHsl: string;
-  backgroundHsl: string;
-  foregroundHsl: string;
-  mutedHsl: string;
-  mutedForegroundHsl: string;
-  borderHsl: string;
-  fontFamily: 'poppins' | 'manrope' | 'inter' | 'nunito';
-  radiusCard: string;
-  radiusMd: string;
-}
-
-export const THEME_PRESETS: Record<string, ThemeConfig> = {
-  sharma_classes: {
-    id: 'sharma_classes',
-    name: 'Sharma Physics Classes',
-    tagline: 'Excellence in Physics Coaching',
-    primaryHsl: '221.2 83.2% 53.3%',
-    primaryForegroundHsl: '210 40% 98%',
-    secondaryHsl: '214.3 31.8% 91.4%',
-    secondaryForegroundHsl: '222.2 47.4% 11.2%',
-    accentHsl: '199 89% 48%',
-    accentForegroundHsl: '210 40% 98%',
-    backgroundHsl: '210 40% 98%',
-    foregroundHsl: '222.2 47.4% 11.2%',
-    mutedHsl: '210 40% 93.1%',
-    mutedForegroundHsl: '215.4 16.3% 46.9%',
-    borderHsl: '214.3 31.8% 88%',
-    fontFamily: 'poppins',
-    radiusCard: '1rem',
-    radiusMd: '0.6rem',
-  },
-  apex_academy: {
-    id: 'apex_academy',
-    name: 'Apex NEET & JEE Academy',
-    tagline: 'Empowering Future Engineers & Doctors',
-    primaryHsl: '20.5 90.2% 48.2%',
-    primaryForegroundHsl: '60 9.1% 97.8%',
-    secondaryHsl: '30 20% 94%',
-    secondaryForegroundHsl: '24 9.8% 10%',
-    accentHsl: '43 96% 56%',
-    accentForegroundHsl: '24 9.8% 10%',
-    backgroundHsl: '0 0% 98%',
-    foregroundHsl: '20 14.3% 4.1%',
-    mutedHsl: '30 10% 92%',
-    mutedForegroundHsl: '25 5.3% 44.7%',
-    borderHsl: '20 5.9% 88%',
-    fontFamily: 'manrope',
-    radiusCard: '0.25rem',
-    radiusMd: '0.2rem',
-  },
-};
