@@ -8,6 +8,7 @@ import { MobileNav } from './mobile-nav';
 const NAV_LINKS = [
   { label: 'Features', href: '/#features' },
   { label: 'Workflow', href: '/#workflow' },
+  { label: 'Roles', href: '/#roles' },
   { label: 'Security', href: '/#security' },
 ];
 
