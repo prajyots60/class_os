@@ -8,151 +8,179 @@
 
 ## 1. Architectural Philosophy & Principles
 
-1. **Capability-Based Internally, Role-Based Initially**:
-   - Application use cases test for explicit capabilities (`hasCapability('student:create')` or `requireCapability('staff:invite')`).
-   - Capabilities are derived dynamically from the authenticated user's `MembershipRole` inside the current `TenantContext`.
-   - **NEVER** write `if (role === 'owner')` in application use cases, domain entities, or presentation controllers.
-2. **Deny-by-Default Security Model**:
+1. **Role is Organizational Identity, Capability is Authorization**:
+   - Application use cases test for explicit capabilities (`authorize(context, 'homework.create')` or `requireCapability('staff.invite')`).
+   - Capabilities are derived dynamically from the authenticated user's `MembershipRole` (`owner`, `teacher`, `assistant`, `parent`) inside the current `TenantContext`.
+   - **NEVER** write `if (role === 'teacher')` or `if (role === 'owner')` in use cases, domain entities, or presentation controllers.
+2. **RBAC Externally + Capability-Based Internally**:
+   - Predefined institute membership roles map to static capability sets in code today (`ROLE_CAPABILITIES`).
+   - The engine is designed so future database-backed custom roles can be plugged in without changing any application authorization checks.
+3. **CoachingOS Platform Administration ≠ Institute Staff Authorization**:
+   - Platform superadmins operate outside institute membership roles. Institute RBAC governs only institute staff (`owner`, `teacher`, `assistant`) and guardians (`parent`). No `admin` or `super_admin` role inside institute RBAC.
+4. **Deny-by-Default Security Model**:
    - Unless a capability is explicitly granted to a role by the Capability Engine, access is rejected with `AuthorizationError("Permission denied: Missing required capability '[capability]'")`.
-3. **Tenant-Scoped Authorization**:
-   - Authorization evaluation is strictly tenant-scoped (`TenantContext` + `Capability`).
-   - Possessing a capability in Institute A does NOT grant authorization in Institute B.
-4. **Framework-Independent & Extensible Engine**:
-   - In Phase 1.3, capability sets per role are statically defined, strongly-typed, and versioned in code (`@coaching-os/identity`).
-   - The engine interface is designed so that future database-driven custom roles can be plugged in without refactoring application use cases.
+   - Unknown capabilities, missing policies, or unassigned roles MUST result in `DENY`.
+5. **Capability ≠ Unrestricted Resource Access**:
+   - A capability grants the actor permission to *attempt* an operation.
+   - Resource-level policies (e.g. parent linked child boundary, teacher assigned batch boundary) and domain invariants (e.g. owner cannot self-remove) operate as secondary policy checks.
+6. **No Database Permission Tables (In Phase 1.3)**:
+   - Capability mappings are defined in code (`ROLE_CAPABILITIES`). Zero DB joins, zero migration overhead, 100% type-safe, version-controlled, and deterministic.
 
 ---
 
-## 2. Capability Taxonomy (`resource:action`)
+## 2. Standardized Capability Taxonomy (`resource.action`)
 
-Capabilities are strongly-typed string literals defined using the `resource:action` taxonomy:
+Capabilities are strongly-typed string literals defined using the `<resource>.<action>` taxonomy:
 
-### A. Institute & Tenant Management (`institute:*`)
-- `institute:read`: View institute profile details, settings, and status.
-- `institute:update`: Update institute details, contact information, timezone, branding.
-- `institute:delete`: Archive or deactivate institute (restricted to platform/owner).
+### A. Institute Management (`institute.*`, `settings.*`, `branding.*`)
+- `institute.read`: View institute profile details and status.
+- `institute.update`: Update core institute details (name, contact, timezone).
+- `institute.archive`: Archive or deactivate institute (restricted to owner).
+- `settings.read`: View institute operational settings.
+- `settings.update`: Modify institute operational settings.
+- `branding.read`: View custom white-label branding configurations.
+- `branding.update`: Modify institute fonts, colors, logos, PWA assets.
 
-### B. Staff & Member Management (`staff:*`)
-- `staff:read`: View staff directory, roles, and membership statuses.
-- `staff:invite`: Create new staff memberships and send invitations.
-- `staff:update_role`: Change membership roles of existing staff.
-- `staff:update_status`: Suspend, activate, or remove staff memberships.
+### B. Staff & Membership Management (`staff.*`)
+- `staff.read`: View staff directory and membership roles.
+- `staff.invite`: Create staff memberships and send invitations.
+- `staff.update`: Modify staff member profile details.
+- `staff.remove`: Remove or deactivate staff memberships.
+- `staff.role.change`: Change membership role of staff members.
 
-### C. Student & Guardian Management (`student:*`)
-- `student:read`: View student profiles, admission numbers, contact details.
-- `student:create`: Create/admit new student profiles into the institute.
-- `student:update`: Modify student profile information and batch assignments.
-- `student:archive`: Archive or withdraw a student from the institute.
+### C. Student & Guardian Management (`student.*`)
+- `student.read`: View student profiles and details. *(Parent/Teacher resource-scoped)*
+- `student.create`: Admit new students into the institute.
+- `student.update`: Modify student profiles and batch assignments.
+- `student.archive`: Withdraw or archive a student profile.
 
-### D. Academic Hierarchy & Attendance (`academic:*`, `attendance:*`)
-- `academic:read`: View programs, subjects, batches, and class schedules.
-- `academic:write`: Create and modify programs, subjects, batches, schedules.
-- `attendance:read`: View student attendance records and reports.
-- `attendance:write`: Take or modify attendance sessions.
+### D. Academic Hierarchy & Attendance (`academic.*`, `attendance.*`)
+- `academic.read`: View programs, subjects, batches, and schedules.
+- `academic.write`: Create and modify programs, subjects, batches, schedules.
+- `attendance.read`: View attendance records. *(Parent/Teacher resource-scoped)*
+- `attendance.mark`: Take initial attendance for a session.
+- `attendance.update`: Edit existing attendance session records.
+- `attendance.correct`: Make official attendance corrections.
 
-### E. Homework & Examinations (`homework:*`, `exam:*`)
-- `homework:read`: View homework assignments and student submissions.
-- `homework:write`: Create, edit, publish, or grade homework assignments.
-- `exam:read`: View test schedules, marks, and gradebooks.
-- `exam:write`: Create tests, enter marks, and generate report cards.
+### E. Homework & Examinations (`homework.*`, `test.*`, `marks.*`)
+- `homework.read`: View homework assignments and submissions. *(Parent resource-scoped)*
+- `homework.create`: Create new homework assignments.
+- `homework.update`: Edit existing homework assignments.
+- `homework.delete`: Remove homework assignments.
+- `test.read`: View test schedules and gradebooks. *(Parent resource-scoped)*
+- `test.create`: Create new test schedules.
+- `test.update`: Modify test schedules.
+- `test.delete`: Remove test schedules.
+- `marks.read`: View test marks and grade cards. *(Parent resource-scoped)*
+- `marks.create`: Enter initial test marks.
+- `marks.update`: Edit entered test marks.
+- `marks.delete`: Delete test marks.
+- `marks.publish`: Formally publish test marks to parents/students.
 
-### F. Billing, Invoices & Financials (`billing:*`)
-- `billing:read`: View fee structures, invoices, payment history, receipts.
-- `billing:write`: Create fee structures, generate invoices, record payments.
+### F. Billing, Invoices & Financials (`billing.*`, `payment.*`, `receipt.*`)
+- `billing.read`: View fee structures and invoice summaries. *(Parent resource-scoped)*
+- `billing.create`: Create fee structures and assign invoices.
+- `billing.update`: Modify fee structures and invoice terms.
+- `billing.cancel`: Void or cancel invoices.
+- `payment.read`: View payment transaction history. *(Parent resource-scoped)*
+- `payment.record`: Record offline fee payment transactions.
+- `receipt.read`: View payment receipts. *(Parent resource-scoped)*
+- `receipt.issue`: Generate and issue official payment receipts.
 
-### G. Communication & Announcements (`communication:*`)
-- `communication:read`: View institute announcements and notification logs.
-- `communication:write`: Publish announcements and send multi-channel notifications.
+### G. Communication & Audit (`announcement.*`, `audit.*`)
+- `announcement.read`: View institute announcements.
+- `announcement.create`: Draft announcements.
+- `announcement.update`: Modify draft announcements.
+- `announcement.delete`: Delete announcements.
+- `announcement.publish`: Broadcast announcements to parents/students.
+- `audit.read`: View institute audit logs and security trails.
 
 ---
 
-## 3. Canonical Role → Capability Matrix
+## 3. Authoritative Role → Capability Matrix (Phase 1.3)
 
 | Capability | `owner` | `teacher` | `assistant` | `parent` |
 | :--- | :---: | :---: | :---: | :---: |
-| `institute:read` | ✅ | ✅ | ✅ | ✅ |
-| `institute:update` | ✅ | ❌ | ❌ | ❌ |
-| `institute:delete` | ✅ | ❌ | ❌ | ❌ |
-| `staff:read` | ✅ | ✅ | ✅ | ❌ |
-| `staff:invite` | ✅ | ❌ | ❌ | ❌ |
-| `staff:update_role` | ✅ | ❌ | ❌ | ❌ |
-| `staff:update_status` | ✅ | ❌ | ❌ | ❌ |
-| `student:read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
-| `student:create` | ✅ | ❌ | ✅ | ❌ |
-| `student:update` | ✅ | ❌ | ✅ | ❌ |
-| `student:archive` | ✅ | ❌ | ❌ | ❌ |
-| `academic:read` | ✅ | ✅ | ✅ | ✅ |
-| `academic:write` | ✅ | ✅ | ✅ | ❌ |
-| `attendance:read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
-| `attendance:write` | ✅ | ✅ | ✅ | ❌ |
-| `homework:read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
-| `homework:write` | ✅ | ✅ | ❌ | ❌ |
-| `exam:read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
-| `exam:write` | ✅ | ✅ | ❌ | ❌ |
-| `billing:read` | ✅ | ❌ | ❌ | ✅ *(Scoped)* |
-| `billing:write` | ✅ | ❌ | ❌ | ❌ |
-| `communication:read` | ✅ | ✅ | ✅ | ✅ |
-| `communication:write` | ✅ | ✅ | ✅ | ❌ |
+| `institute.read` | ✅ | ✅ | ✅ | — |
+| `institute.update` | ✅ | — | — | — |
+| `institute.archive` | ✅ | — | — | — |
+| `staff.read` | ✅ | — | ✅ | — |
+| `staff.invite` | ✅ | — | — | — |
+| `staff.update` | ✅ | — | — | — |
+| `staff.remove` | ✅ | — | — | — |
+| `staff.role.change` | ✅ | — | — | — |
+| `student.read` | ✅ | ✅ *(Scoped)* | ✅ | ✅ *(Scoped)* |
+| `student.create` | ✅ | — | ✅ | — |
+| `student.update` | ✅ | ✅ *(Scoped)* | ✅ | — |
+| `student.archive` | ✅ | — | — | — |
+| `academic.read` | ✅ | ✅ | ✅ | ✅ |
+| `academic.write` | ✅ | ✅ | ✅ | — |
+| `attendance.read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
+| `attendance.mark` | ✅ | ✅ | ✅ | — |
+| `attendance.update` | ✅ | ✅ | — | — |
+| `attendance.correct` | ✅ | ✅ | — | — |
+| `homework.read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
+| `homework.create` | ✅ | ✅ | — | — |
+| `homework.update` | ✅ | ✅ | — | — |
+| `homework.delete` | ✅ | ✅ | — | — |
+| `test.read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
+| `test.create` | ✅ | ✅ | — | — |
+| `test.update` | ✅ | ✅ | — | — |
+| `test.delete` | ✅ | ✅ | — | — |
+| `marks.read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
+| `marks.create` | ✅ | ✅ | — | — |
+| `marks.update` | ✅ | ✅ | — | — |
+| `marks.delete` | ✅ | ✅ | — | — |
+| `marks.publish` | ✅ | ✅ | — | — |
+| `billing.read` | ✅ | — | ✅ | ✅ *(Scoped)* |
+| `billing.create` | ✅ | — | — | — |
+| `billing.update` | ✅ | — | ✅ | — |
+| `billing.cancel` | ✅ | — | — | — |
+| `payment.read` | ✅ | — | ✅ | ✅ *(Scoped)* |
+| `payment.record` | ✅ | — | ✅ | — |
+| `receipt.read` | ✅ | — | ✅ | ✅ *(Scoped)* |
+| `receipt.issue` | ✅ | — | ✅ | — |
+| `announcement.read` | ✅ | ✅ | ✅ | ✅ |
+| `announcement.create` | ✅ | ✅ | — | — |
+| `announcement.update` | ✅ | ✅ | — | — |
+| `announcement.delete` | ✅ | ✅ | — | — |
+| `announcement.publish` | ✅ | ✅ | — | — |
+| `settings.read` | ✅ | — | — | — |
+| `settings.update` | ✅ | — | — | — |
+| `branding.read` | ✅ | — | — | — |
+| `branding.update` | ✅ | — | — | — |
+| `audit.read` | ✅ | — | — | — |
 
-*(Note: Parent capabilities are automatically resource-scoped to their linked child profiles.)*
+*(Note: `Scoped` indicates that possessing the capability alone is insufficient; a secondary resource policy check is executed.)*
 
 ---
 
-## 4. Evaluation Engine Architecture
+## 4. The 6-Step Authorization Decision Pipeline
 
 ```text
-                  TenantContext (userId, instituteId, membershipId, role, status)
+Authorization Request (actor: TenantContext, capability: Capability, resource?: ResourceContext)
                                        │
-                                       ▼
-                       CapabilityResolver.getCapabilities(role)
-                                       │
-                                       ▼
-                          Set<Capability> (Read-only)
-                                       │
-                                       ▼
-            AuthorizationEngine.evaluate(tenantContext, requiredCapability)
-                                       │
-                         ┌─────────────┴─────────────┐
-                         ▼                           ▼
-                     ALLOWED                      DENIED
-             (Proceed to Use Case)       (Throw AuthorizationError)
-```
-
-### Core Authorization Engine API Contract
-
-```ts
-export type Capability =
-  | 'institute:read'
-  | 'institute:update'
-  | 'institute:delete'
-  | 'staff:read'
-  | 'staff:invite'
-  | 'staff:update_role'
-  | 'staff:update_status'
-  | 'student:read'
-  | 'student:create'
-  | 'student:update'
-  | 'student:archive'
-  | 'academic:read'
-  | 'academic:write'
-  | 'attendance:read'
-  | 'attendance:write'
-  | 'homework:read'
-  | 'homework:write'
-  | 'exam:read'
-  | 'exam:write'
-  | 'billing:read'
-  | 'billing:write'
-  | 'communication:read'
-  | 'communication:write';
-
-export class AuthorizationEngine {
-  public static getCapabilitiesForRole(role: MembershipRole): Set<Capability>;
-  public static hasCapability(context: TenantContext, capability: Capability): boolean;
-  public static hasAllCapabilities(context: TenantContext, capabilities: Capability[]): boolean;
-  public static hasAnyCapability(context: TenantContext, capabilities: Capability[]): boolean;
-  public static requireCapability(context: TenantContext, capability: Capability): void;
-}
+  ┌────────────────────────────────────┴────────────────────────────────────┐
+  ▼                                                                         ▼
+[Check 1: Authentication]  Is session valid & active?               (No → UnauthorizedError)
+  │
+  ▼
+[Check 2: Membership]      Is membership active (not suspended/removed)? (No → AuthorizationError)
+  │
+  ▼
+[Check 3: Tenant Isolation] Does resource match current instituteId? (No → AuthorizationError)
+  │
+  ▼
+[Check 4: Capability]      Does role possess required capability?   (No → AuthorizationError)
+  │
+  ▼
+[Check 5: Resource Policy] Is specific resource accessible?        (No → AuthorizationError)
+  │
+  ▼
+[Check 6: State Policy]    Is operation valid for current state?    (No → ValidationError)
+  │
+  ▼
+ALLOW EXECUTION
 ```
 
 ---
@@ -161,12 +189,12 @@ export class AuthorizationEngine {
 
 ```text
 Phase 1.3.0 — Architecture Freeze & Capability Matrix Contract  ✅ COMPLETED
-Phase 1.3.1 — Capability Taxonomy & Strongly-Typed Enums
+Phase 1.3.1 — Capability Taxonomy & Strongly-Typed Enums       🚧 NEXT TASK
 Phase 1.3.2 — Role → Capability Resolver Engine
 Phase 1.3.3 — Authorization Engine & Assertion Guards
 Phase 1.3.4 — Tenant-Scoped Capability Evaluation
-Phase 1.3.5 — Resource-Scoped Filtering Helpers (Parent / Teacher boundaries)
-Phase 1.3.6 — Identity Use Case Integration (Institute, Membership, Staff)
-Phase 1.3.7 — Security & RBAC Test Matrix (Unit, PostgreSQL, Security)
+Phase 1.3.5 — Resource-Scoped Filtering Helpers (Parent/Teacher)
+Phase 1.3.6 — Identity Use Case Integration
+Phase 1.3.7 — Security & RBAC Test Matrix
 Phase 1.3.8 — Phase 1.3 Acceptance Gate
 ```
