@@ -207,7 +207,7 @@ CoachingOS visual design must convey **Professionalism, Speed, Operational Densi
 ```text
 Phase 0.12.0  Architecture & UX Contract Freeze ✅
 Phase 0.12.1  UI Foundation & Design System Audit ✅ (COMPLETED)
-Phase 0.12.2  Public Landing Page 🚧 (IN PROGRESS)
+Phase 0.12.2  Public Landing Page ✅ (COMPLETED & FROZEN)
       ├── Phase 0.12.2.0 — Landing Page UX & Content Contract 🟢 (FROZEN)
       ├── Phase 0.12.2.1 — Marketing Layout Shell ✅ (COMPLETED)
       ├── Phase 0.12.2.2 — Hero Section Component ✅ (COMPLETED)
@@ -217,8 +217,8 @@ Phase 0.12.2  Public Landing Page 🚧 (IN PROGRESS)
       ├── Phase 0.12.2.6 — Trust & Security Section Component ✅ (COMPLETED)
       ├── Phase 0.12.2.7 — Final CTA Section Component ✅ (COMPLETED)
       ├── Phase 0.12.2.8 — Responsive, SEO & Accessibility Audit ✅ (COMPLETED)
-      └── Phase 0.12.2.9 — Phase 0.12.2 Acceptance Gate (Next)
-Phase 0.12.3  Authentication Layout & Shared Components
+      └── Phase 0.12.2.9 — Phase 0.12.2 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
+Phase 0.12.3  Authentication Layout & Shared Components (Next)
 Phase 0.12.4  Sign Up UI
 Phase 0.12.5  Sign In UI
 Phase 0.12.6  Password Recovery UI (Deferred until Email Provider Ready)
@@ -429,8 +429,22 @@ Phase 0.12.11 Phase 0.12 Acceptance Gate
 2. **Accessibility Audit (WCAG 2.1 AA)**: Exactly 1 primary `<h1>` on the landing page (Hero headline). All sub-sections use semantic `<h2>` tags. Verified keyboard navigation, `:focus-visible:ring-2` focus rings, and screen-reader safe presentation.
 3. **SEO & Metadata Audit**: Configured Open Graph (`og:title`, `og:description`), Twitter card metadata, and semantic description in `apps/web/src/app/(marketing)/layout.tsx`.
 4. **Security Claim Verification**: Verified 100% factual accuracy of security messaging against codebase invariants (Row-Level Tenant Isolation, Capability-Based RBAC, Server Sessions via Better Auth, Pino Logging & Redaction). Zero fake compliance seals.
-5. **Testing Suite**:
-   - Created `apps/web/src/app/(marketing)/landing-page.test.ts` verifying composition and layout.
+---
+
+## 20. Phase 0.12.2.9 — Landing Page Acceptance Gate Completion
+
+**Status:** 🟢 **ACCEPTED & FROZEN**  
+**Code Commit:** `5697449` (`fix(web): finalize landing page acceptance`)  
+**Decision:** **ACCEPTED** — All acceptance criteria pass cleanly.
+
+### Formal Acceptance Summary:
+1. **Route & Composition**: `/` resolves cleanly via `app/(marketing)` route group with thin composition boundary `page.tsx` (< 25 lines). No route collisions.
+2. **Section Hierarchy**: All 6 required sections present in frozen sequence (`Hero`, `Workflow`, `Capabilities`, `Roles`, `Trust`, `CTA`) with valid section IDs (`#hero`, `#workflow`, `#features`, `#roles`, `#security`, `#get-started`).
+3. **Navigation Integrity**: Desktop & mobile header navigation links (`/#features`, `/#workflow`, `/#roles`, `/#security`, `/sign-in`, `/sign-up`) and footer links resolve cleanly. Mobile drawer toggle with ESC key listener and `aria-expanded` attributes verified.
+4. **Responsive & Accessibility Invariants**: 5 responsive viewports verified (`320px` to `1280px+`), zero horizontal overflow, `scroll-mt-16` anchor offset, single `<h1>` page heading hierarchy, keyboard `:focus-visible:ring-2` focus indicators.
+5. **SEO & Security Boundaries**: SEO metadata configured in `layout.tsx`. Zero database, ORM, Better Auth server, or TenantContext presentation boundary leaks.
+6. **Explicit Deferrals**: Sign In UI, Sign Up UI, Onboarding UI redesign, and Dashboard UI redesign are **NOT** implemented in Phase 0.12.2 and remain explicitly deferred to Phase 0.12.3+.
+7. **Acceptance Decision**: **ACCEPTED & FROZEN**. Phase 0.12.2 public landing page is formally frozen. Next active milestone is **Phase 0.12.3 — Authentication Layout & Shared Components**.
 
 
 
