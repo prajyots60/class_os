@@ -195,8 +195,8 @@ Phase 1.3.3 — Authorization Engine & Assertion Guards           ✅ COMPLETED
 Phase 1.3.4 — Tenant-Scoped Capability Evaluation               ✅ COMPLETED
 Phase 1.3.5 — Resource-Scoped Filtering Helpers (Parent/Teacher) ✅ COMPLETED
 Phase 1.3.6 — Identity Use Case Integration                     ✅ COMPLETED
-Phase 1.3.7 — Security & RBAC Test Matrix                       🚧 NEXT TASK
-Phase 1.3.8 — Phase 1.3 Acceptance Gate
+Phase 1.3.7 — Security & RBAC Test Matrix                       ✅ COMPLETED
+Phase 1.3.8 — Phase 1.3 Acceptance Gate                         🚧 NEXT TASK
 ```
 
 ---
