@@ -472,3 +472,127 @@ Construct OnboardInstituteCommand { authenticatedUserId: session.user.id }
 - **API Integration Suite (`route.test.ts`)**: Tests 14 presentation scenarios including 401 unauthenticated, 400 malformed JSON/schema validation, 201 successful onboarding DTO serialization, client payload override protection, 409 duplicate onboarding rejection, 409 slug collision, 405 unsupported method handling, and `x-request-id` correlation.
 - **Playwright E2E Suite (`onboarding.spec.ts`)**: Verifies 401 unauthenticated POST access, successful user sign-up ──► 201 onboarding workflow, and 409 conflict on subsequent duplicate onboarding requests.
 
+---
+
+### 19.5 Phase 1.4.5 — Onboarding UI Flow (`/onboarding`, `/dashboard`)
+
+**Objective**: Implement the production-quality `/onboarding` page for first-time institute founders as a thin client presentation layer over `POST /api/onboarding/institute`.
+
+#### Routes Implemented:
+
+```text
+apps/web/src/app/onboarding/page.tsx     ← Institute setup form (Client Component)
+apps/web/src/app/dashboard/page.tsx      ← Post-onboarding institute dashboard (Client Component)
+```
+
+#### Architecture Boundary Invariants:
+
+```text
+UI Layer (/onboarding)
+  - form validation (UX only, client-side)
+  - submit button disable / loading state
+  - useSession() for authenticated user guard
+  - fetch('POST /api/onboarding/institute', payload)
+
+API Layer (POST /api/onboarding/institute)
+  - session authentication  (server-controlled)
+  - Zod schema validation   (server-authoritative)
+  - OnboardInstituteUseCase (domain orchestration)
+  - TenantContext resolution
+  - 201 Created / error responses
+
+Identity Layer
+  - atomic PostgreSQL $transaction
+  - slug uniqueness enforcement
+  - conflict detection
+
+SECURITY INVARIANT:
+  Client payload sends ONLY:
+    { name, phone, email, slug?, timezone?, logoUrl?, primaryColor? }
+  Server determines:
+    authenticatedUserId = session.user.id
+    role = 'owner'
+    status = 'active'
+    instituteId (from transaction)
+    membershipId (from transaction)
+```
+
+#### Form Fields:
+- **Institute Name** (Required, min 2 chars)
+- **Primary Phone** (Required, format validated)
+- **Contact Email** (Required, format validated)
+- **Custom URL Slug** (Optional, with real-time preview from name)
+- **Timezone** (Optional, default `Asia/Kolkata`)
+- **Logo URL** (Optional)
+- **Primary Color** (Optional, default `#6366F1`)
+
+#### Authentication Behavior:
+- `useSession()` hook (via `@coaching-os/auth/client`) guards the page client-side.
+- If `isPending`: renders loading spinner.
+- If `!session`: renders "Authentication Required" card with sign-in redirect.
+- If `session`: renders the institute setup form.
+
+#### Submission Flow:
+```text
+User fills form
+        ↓
+Client-side UX validation (required fields, phone/email format)
+        ↓
+Submit button disabled → loading spinner shown
+        ↓
+fetch POST /api/onboarding/institute
+  body: { name, phone, email, slug?, timezone?, logoUrl?, primaryColor? }
+        ↓
+API Response:
+  201 Created  → router.push('/dashboard')
+  400          → Field-level validation errors displayed
+  401          → "Session expired" + redirect to /sign-in after 1.5s
+  409 same-user → "You already belong to an active institute tenant."
+  409 slug      → Slug field error + global conflict message
+  500          → "Something went wrong while creating your institute. Please try again."
+  network err  → "Network error. Please check your connection and try again."
+```
+
+#### Security Payload Verification:
+Confirmed the following fields are **never included** in the request body:
+- `userId`
+- `instituteId`
+- `membershipId`
+- `role`
+- `status`
+
+#### Double-Submission Protection:
+- Submit button `disabled={isSubmitting}` + `aria-busy={isSubmitting}` during pending fetch.
+- Single-inflight request at UI layer.
+- Server-side PostgreSQL atomic `updateMany(where: { instituteId: null })` remains authoritative.
+
+#### Slug Live Preview:
+- `formatSlugPreview(text)` normalises institute name → URL-safe slug in real time.
+- Shown as a preview hint below the slug input field.
+- No server-side dependency imported into the Client Component.
+
+#### Accessibility:
+- `useId()` stable IDs for all `<label htmlFor>` ↔ `<input id>` pairs.
+- `role="alert"` on global error banner.
+- `aria-busy={isSubmitting}` on submit button.
+- `disabled` attributes propagated to all inputs during submission.
+- Keyboard-navigable form; semantic `<form>`, `<label>`, `<input>` structure.
+
+#### Test Evidence:
+- **Playwright E2E Suite (`onboarding.spec.ts`, Test 3)**: Covers full authenticated user flow:
+  - User sign-up via Better Auth API.
+  - Navigate to `/onboarding`.
+  - Client-side validation (empty submit attempt shows field errors).
+  - Fill institute form (`Vanguard Physics Classes`, `+919876543210`, `contact@vanguardphysics.test`).
+  - Verify live slug preview (`vanguard-physics-classes` visible).
+  - Submit form → 201 Created → `router.push('/dashboard')`.
+  - Dashboard renders with "CoachingOS Dashboard", "Institute Onboarding Completed", "Institute Owner" context.
+  - Subsequent `/onboarding` attempt by already-onboarded user returns friendly `409` conflict message.
+
+#### Verification Results:
+- `pnpm --filter @coaching-os/web test`: 9/9 PASSED (API route test suite)
+- `pnpm test:e2e`: 5/5 PASSED (UI flow, API boundary, smoke tests)
+- `pnpm typecheck`: 13 packages PASSED
+- `pnpm lint`: 13 packages PASSED (zero errors, 0 warnings after useRouter migration)
+- `pnpm build`: Next.js production build PASSED (`/onboarding` and `/dashboard` compiled cleanly)
+
