@@ -1,7 +1,7 @@
 # Phase 1.3 — Capability-Based RBAC Architecture Contract
 
-**Status:** Architecture Freeze  
-**Milestone:** Phase 1.3.0 — RBAC Architecture & Capability Matrix  
+**Status:** Accepted 🟢  
+**Milestone:** Phase 1.3 — Capability-Based RBAC (Subphases 1.3.0 – 1.3.8 ACCEPTED)  
 **Target:** Establish a secure, extensible, capability-based authorization engine for CoachingOS without scattering `if (role === '...')` checks across business logic.
 
 ---
@@ -196,7 +196,7 @@ Phase 1.3.4 — Tenant-Scoped Capability Evaluation               ✅ COMPLETED
 Phase 1.3.5 — Resource-Scoped Filtering Helpers (Parent/Teacher) ✅ COMPLETED
 Phase 1.3.6 — Identity Use Case Integration                     ✅ COMPLETED
 Phase 1.3.7 — Security & RBAC Test Matrix                       ✅ COMPLETED
-Phase 1.3.8 — Phase 1.3 Acceptance Gate                         🚧 NEXT TASK
+Phase 1.3.8 — Phase 1.3 Acceptance Gate                         ✅ ACCEPTED 🟢
 ```
 
 ---

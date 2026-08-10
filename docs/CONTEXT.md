@@ -163,7 +163,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - Integrated structured observability events (`identity.membership.create.success`, `identity.membership.status_changed`, `identity.membership.resolve.success`, `security.membership.authorization_denied`).
 - Created unit tests and real PostgreSQL integration suite verifying persistence, duplicate membership protection (`ConflictError`), status transitions, and mandatory multi-tenant security isolation. Zero Prisma schema changes or migrations.
 
-### ✅ Phase 1.3 — Capability-Based RBAC (Subphases 1.3.0 – 1.3.7 Completed)
+### ✅ Phase 1.3 — Capability-Based RBAC (Subphases 1.3.0 – 1.3.8 ACCEPTED 🟢)
 
 - **Phase 1.3.0 (RBAC Architecture & Capability Matrix Freeze)**: Established and froze the authoritative RBAC architecture contract in `docs/phases/phase1.3-rbac.md`, defining capability-based authorization internally (`resource:action`), role identity externally (`owner`, `teacher`, `assistant`, `parent`), and the 6-step decision pipeline.
 - **Phase 1.3.1 (Capability Taxonomy & Strongly-Typed Enums)**: Implemented canonical 49-capability registry (`CAPABILITIES`), strongly-typed `Capability`, `CapabilityResource`, and `CapabilityAction` types, and `isCapability` runtime validation guards in `@coaching-os/identity`.
@@ -173,6 +173,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Phase 1.3.5 (Resource-Scoped Filtering Helpers)**: Implemented pure Layer 2 resource scope policy helpers (`canParentAccessStudent`, `filterStudentsForParent`, `canTeacherAccessBatch`, `canTeacherAccessStudent`, `canAccessStudent`, `requireStudentAccess`) linking capability authorization with parent child links and teacher batch assignments. Verified zero database queries, zero external dependencies, and zero Prisma schema changes.
 - **Phase 1.3.6 (Identity Use Case Integration)**: Integrated `requireCapability` authorization into all identity domain application use cases (`GetInstituteUseCase`, `UpdateInstituteUseCase`, `ChangeInstituteStatusUseCase`, `GetInstituteMembersUseCase`, `GetInstituteMembershipUseCase`, `CreateInstituteMembershipUseCase`, `UpdateMembershipRoleUseCase`, `ChangeMembershipStatusUseCase`). Enforced authorization checks BEFORE repository persistence operations and built owner escalation protection.
 - **Phase 1.3.7 (Security & RBAC Test Matrix)**: Built adversarial security matrix test suite in `packages/identity/src/authorization/rbac-security-matrix.test.ts` executing 28 comprehensive security scenarios verifying contract consistency, parameterized role capability resolution across 196 combinations, context substitution attacks, cross-tenant resource attacks, tenant context forgery, membership status lifecycle defense, role escalation prevention, layer bypass isolation, and repository mutation prevention.
+- **Phase 1.3.8 (Phase 1.3 Acceptance Gate)**: Completed final architectural audit, capability/role matrix verification, tenant isolation review, full pipeline verification suite execution, and formal Phase 1.3 acceptance gate approval.
 
 ## 4. Next Milestone Roadmap
 
@@ -184,7 +185,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 1.0:** Domain & Architecture Contract Freeze ✅
   - **Phase 1.1:** Institute Tenant Core ✅
   - **Phase 1.2:** Users & Memberships ✅
-  - **Phase 1.3:** Capability-Based RBAC 🚧 (NOW ACTIVE)
+  - **Phase 1.3:** Capability-Based RBAC ✅ (ACCEPTED 🟢)
     - **Phase 1.3.0:** RBAC Architecture & Capability Matrix ✅ (Freeze)
     - **Phase 1.3.1:** Capability Taxonomy & Strongly-Typed Enums ✅
     - **Phase 1.3.2:** Role → Capability Resolver Engine ✅
@@ -193,8 +194,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.3.5:** Resource-Scoped Filtering Helpers (Parent/Teacher) ✅
     - **Phase 1.3.6:** Identity Use Case Integration ✅
     - **Phase 1.3.7:** Security & RBAC Test Matrix ✅
-    - **Phase 1.3.8:** Phase 1.3 Acceptance Gate (Next)
-  - **Phase 1.4:** Institute Onboarding Workflow
+    - **Phase 1.3.8:** Phase 1.3 Acceptance Gate ✅ (ACCEPTED 🟢)
+  - **Phase 1.4:** Institute Onboarding Workflow (Next)
   - **Phase 1.5:** Institute Settings & White-Label Branding
   - **Phase 1.6:** Global ParentIdentity Platform Layer
   - **Phase 1.7:** Tenant InstituteParent CRM Layer
