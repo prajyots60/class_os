@@ -180,7 +180,8 @@ test.describe('Institute Onboarding UI & End-to-End Flow Suite', () => {
     const signUpResponse = await page.request.post('/api/auth/sign-up/email', {
       data: { email: testEmail, password, name: 'Scenario D User' },
     });
-    const cookie = signUpResponse.headers()['set-cookie'];
+    const rawCookie = signUpResponse.headers()['set-cookie'] ?? '';
+    const cookie = rawCookie.split(';')[0];
 
     // 2. Attempt to manipulate tenant context via query param
     const response = await page.request.get(
@@ -204,7 +205,8 @@ test.describe('Institute Onboarding UI & End-to-End Flow Suite', () => {
     const signUpResponse = await page.request.post('/api/auth/sign-up/email', {
       data: { email: testEmail, password, name: 'Scenario E User' },
     });
-    const cookie = signUpResponse.headers()['set-cookie'];
+    const rawCookie = signUpResponse.headers()['set-cookie'] ?? '';
+    const cookie = rawCookie.split(';')[0];
 
     const response = await page.request.get('/api/dashboard/context', {
       headers: {
@@ -229,7 +231,8 @@ test.describe('Institute Onboarding UI & End-to-End Flow Suite', () => {
     const signUpResponse = await page.request.post('/api/auth/sign-up/email', {
       data: { email: testEmail, password, name: 'Scenario F User' },
     });
-    const cookie = signUpResponse.headers()['set-cookie'];
+    const rawCookie = signUpResponse.headers()['set-cookie'] ?? '';
+    const cookie = rawCookie.split(';')[0];
 
     const response = await page.request.post('/api/onboarding/institute', {
       headers: { cookie },
@@ -261,7 +264,8 @@ test.describe('Institute Onboarding UI & End-to-End Flow Suite', () => {
     const signUpResponse = await page.request.post('/api/auth/sign-up/email', {
       data: { email: testEmail, password, name: 'Scenario G User' },
     });
-    const cookie = signUpResponse.headers()['set-cookie'];
+    const rawCookie = signUpResponse.headers()['set-cookie'] ?? '';
+    const cookie = rawCookie.split(';')[0];
 
     // First onboarding
     const res1 = await page.request.post('/api/onboarding/institute', {
@@ -289,5 +293,6 @@ test.describe('Institute Onboarding UI & End-to-End Flow Suite', () => {
     expect(body2.error.code).toBe('CONFLICT');
   });
 });
+
 
 
