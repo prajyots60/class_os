@@ -28,7 +28,7 @@ describe('PrismaOnboardInstituteRepository Real PostgreSQL Integration & Atomic 
   });
 
   describe('Atomic Transaction Persistence & Hydration', () => {
-    it('1-4. Persists Institute AND InstituteMembership row atomically in PostgreSQL database tables', async () => {
+    it('1-4. Persists Institute and Owner User staff link atomically in PostgreSQL database', async () => {
       const user = await createTestUser({
         name: 'Vanguard Owner',
         email: 'vanguard_owner@test.com',
@@ -58,7 +58,6 @@ describe('PrismaOnboardInstituteRepository Real PostgreSQL Integration & Atomic 
       expect(result.institute.name).toBe('Vanguard Learning Institute');
       expect(result.institute.slug).toBe('vanguard-learning');
 
-      expect(result.membership.id).toBe(membershipEntity.id);
       expect(result.membership.userId).toBe(user.id);
       expect(result.membership.instituteId).toBe(instituteEntity.id);
       expect(result.membership.role).toBe('owner');
@@ -71,14 +70,7 @@ describe('PrismaOnboardInstituteRepository Real PostgreSQL Integration & Atomic 
       expect(dbInstitute).not.toBeNull();
       expect(dbInstitute?.name).toBe('Vanguard Learning Institute');
 
-      // 3. Direct PostgreSQL Table Verification: Actual InstituteMembership database row
-      const dbMembership = await db.instituteMembership.findUnique({
-        where: { id: membershipEntity.id },
-      });
-      expect(dbMembership).not.toBeNull();
-      expect(dbMembership?.instituteId).toBe(instituteEntity.id);
-
-      // 4. Direct PostgreSQL Table Verification: User institute link
+      // 3. Direct PostgreSQL Table Verification: User staff institute link
       const dbUser = await db.user.findUnique({
         where: { id: user.id },
       });
@@ -88,7 +80,7 @@ describe('PrismaOnboardInstituteRepository Real PostgreSQL Integration & Atomic 
   });
 
   describe('Real PostgreSQL Atomic Rollback Guarantees', () => {
-    it('5 & 8. Failure during membership linking MUST roll back Institute creation (Zero Orphaned Institutes & Memberships)', async () => {
+    it('5 & 8. Failure during user linking MUST roll back Institute creation (Zero Orphaned Institutes)', async () => {
       const nonExistentUserId = '00000000-0000-4000-a000-000000000099';
 
       const instituteEntity = InstituteEntity.create({
@@ -105,22 +97,16 @@ describe('PrismaOnboardInstituteRepository Real PostgreSQL Integration & Atomic 
         status: 'active',
       });
 
-      // Attempt onboarding with invalid user ID -> update fails with NotFoundError
+      // Attempt onboarding with invalid user ID -> user lookup/update fails with NotFoundError
       await expect(repository.onboard(instituteEntity, membershipEntity)).rejects.toThrow(
         NotFoundError,
       );
 
-      // CRITICAL VERIFICATION 1: Institute MUST NOT exist in PostgreSQL!
+      // CRITICAL VERIFICATION: Institute MUST NOT exist in PostgreSQL!
       const dbInstitute = await db.institute.findUnique({
         where: { id: instituteEntity.id },
       });
       expect(dbInstitute).toBeNull();
-
-      // CRITICAL VERIFICATION 2: InstituteMembership MUST NOT exist in PostgreSQL!
-      const dbMembership = await db.instituteMembership.findUnique({
-        where: { id: membershipEntity.id },
-      });
-      expect(dbMembership).toBeNull();
     });
 
     it('6. Database slug constraint failure leaves zero partial records in PostgreSQL', async () => {
@@ -157,12 +143,6 @@ describe('PrismaOnboardInstituteRepository Real PostgreSQL Integration & Atomic 
         ConflictError,
       );
 
-      // InstituteMembership row must not be persisted
-      const dbMembership = await db.instituteMembership.findUnique({
-        where: { id: membershipEntity.id },
-      });
-      expect(dbMembership).toBeNull();
-
       // User must not be updated to the failed institute
       const dbUser = await db.user.findUnique({
         where: { id: user.id },
@@ -172,7 +152,7 @@ describe('PrismaOnboardInstituteRepository Real PostgreSQL Integration & Atomic 
   });
 
   describe('Concurrency & Uniqueness Invariants', () => {
-    it('11-12. Handles concurrent onboarding attempts with identical slug cleanly (1 Institute & 1 Membership row committed)', async () => {
+    it('11-12. Handles concurrent onboarding attempts with identical slug cleanly (Exactly 1 Institute committed)', async () => {
       const userA = await createTestUser({ name: 'User A', email: 'user_a@test.com' });
       const userB = await createTestUser({ name: 'User B', email: 'user_b@test.com' });
 
@@ -223,12 +203,6 @@ describe('PrismaOnboardInstituteRepository Real PostgreSQL Integration & Atomic 
         where: { slug: 'concurrent-slug' },
       });
       expect(institutesInDb).toHaveLength(1);
-
-      // Direct DB verification: Exactly ONE InstituteMembership row exists for that institute
-      const membershipsInDb = await db.instituteMembership.findMany({
-        where: { instituteId: institutesInDb[0].id },
-      });
-      expect(membershipsInDb).toHaveLength(1);
     });
   });
 });

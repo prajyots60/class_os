@@ -30,7 +30,7 @@ export class PrismaOnboardInstituteRepository implements InstituteOnboardingRepo
   ): Promise<OnboardInstituteResult> {
     try {
       return await db.$transaction(async (tx) => {
-        // 1. Fetch user to verify existence and get phone/name details
+        // 1. Fetch user to verify existence
         const user = await tx.user.findUnique({
           where: { id: membership.userId },
         });
@@ -56,7 +56,7 @@ export class PrismaOnboardInstituteRepository implements InstituteOnboardingRepo
           },
         });
 
-        // 3. Atomically update User to link active institute staff status
+        // 3. Atomically update User.instituteId to establish staff owner tenant link
         const updatedUser = await tx.user.update({
           where: { id: user.id },
           data: {
@@ -65,41 +65,14 @@ export class PrismaOnboardInstituteRepository implements InstituteOnboardingRepo
           },
         });
 
-        // 4. Upsert ParentIdentity for user phone (ensures tenant membership relation link)
-        const phone = user.phone || `+9198${Math.floor(10000000 + Math.random() * 90000000)}`;
-        const parentIdentity = await tx.parentIdentity.upsert({
-          where: { phone },
-          create: { phone },
-          update: {},
-        });
-
-        // 5. Create InstituteParent record for tenant identity link
-        const instituteParent = await tx.instituteParent.create({
-          data: {
-            instituteId: createdInstitute.id,
-            name: user.name,
-            primaryPhone: phone,
-          },
-        });
-
-        // 6. PERSIST ACTUAL InstituteMembership DATABASE ROW in institute_memberships table
-        const createdMembershipRow = await tx.instituteMembership.create({
-          data: {
-            id: membership.id,
-            parentIdentityId: parentIdentity.id,
-            instituteId: createdInstitute.id,
-            instituteParentId: instituteParent.id,
-          },
-        });
-
         const createdMembership = InstituteMembershipEntity.from({
-          id: createdMembershipRow.id,
+          id: `mem:${updatedUser.id}:${createdInstitute.id}`,
           userId: updatedUser.id,
           instituteId: createdInstitute.id,
           role: 'owner',
           status: membership.status,
-          createdAt: createdInstitute.createdAt,
-          updatedAt: createdInstitute.updatedAt,
+          createdAt: updatedUser.updatedAt,
+          updatedAt: updatedUser.updatedAt,
         });
 
         return {
@@ -110,7 +83,7 @@ export class PrismaOnboardInstituteRepository implements InstituteOnboardingRepo
     } catch (error: any) {
       if (error?.code === 'P2002') {
         throw new ConflictError(
-          `An institute with slug '${institute.slug}' or duplicate membership already exists.`,
+          `An institute with slug '${institute.slug}' already exists.`,
         );
       }
       if (error?.code === 'P2025') {
