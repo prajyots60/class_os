@@ -163,6 +163,15 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - Integrated structured observability events (`identity.membership.create.success`, `identity.membership.status_changed`, `identity.membership.resolve.success`, `security.membership.authorization_denied`).
 - Created unit tests and real PostgreSQL integration suite verifying persistence, duplicate membership protection (`ConflictError`), status transitions, and mandatory multi-tenant security isolation. Zero Prisma schema changes or migrations.
 
+### ✅ Phase 1.3 — Capability-Based RBAC (Subphases 1.3.0 – 1.3.5 Completed)
+
+- **Phase 1.3.0 (RBAC Architecture & Capability Matrix Freeze)**: Established and froze the authoritative RBAC architecture contract in `docs/phases/phase1.3-rbac.md`, defining capability-based authorization internally (`resource:action`), role identity externally (`owner`, `teacher`, `assistant`, `parent`), and the 6-step decision pipeline.
+- **Phase 1.3.1 (Capability Taxonomy & Strongly-Typed Enums)**: Implemented canonical 49-capability registry (`CAPABILITIES`), strongly-typed `Capability`, `CapabilityResource`, and `CapabilityAction` types, and `isCapability` runtime validation guards in `@coaching-os/identity`.
+- **Phase 1.3.2 (Role → Capability Resolver Engine)**: Implemented pure, framework-independent `ROLE_CAPABILITIES` mapping for all 4 canonical roles (`owner: 49`, `teacher: 27`, `assistant: 19`, `parent: 10`) returning immutable `ReadonlySet<Capability>` and deny-by-default behavior for unknown roles.
+- **Phase 1.3.3 (Authorization Engine & Assertion Guards)**: Built central `AuthorizationEngine` (`hasCapability`, `hasAllCapabilities`, `hasAnyCapability`, `requireCapability`, `requireAllCapabilities`, `requireAnyCapability`) and assertion guards throwing `AuthorizationError` (`403`) with safe `security.authorization.denied` event logging.
+- **Phase 1.3.4 (Tenant-Scoped Capability Evaluation)**: Hardened tenant-scoped evaluation requiring server-resolved trusted `TenantContext` (`userId`, `instituteId`, `membershipId`, `role`, `status`), proving zero cross-tenant capability leakage across multi-tenant user memberships and defending against context substitution attacks.
+- **Phase 1.3.5 (Resource-Scoped Filtering Helpers)**: Implemented pure Layer 2 resource scope policy helpers (`canParentAccessStudent`, `filterStudentsForParent`, `canTeacherAccessBatch`, `canTeacherAccessStudent`, `canAccessStudent`, `requireStudentAccess`) linking capability authorization with parent child links and teacher batch assignments. Verified zero database queries, zero external dependencies, and zero Prisma schema changes.
+
 ## 4. Next Milestone Roadmap
 
 ### 🚧 PHASE 1 — IDENTITY MODULE (NOW ACTIVE)
