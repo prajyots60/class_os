@@ -672,3 +672,56 @@ GET /api/dashboard/context Response
 - `pnpm env:check`, `db:validate`, `db:health`, `db:drift:check`, `db:seed`: ALL PASSED
 - `pnpm verify:auth`, `verify:infra`, `verify:observability`: ALL PASSED
 - `pnpm test`, `typecheck`, `lint`, `build`: 13/13 packages PASSED (0 errors)
+
+---
+
+### 19.7 Phase 1.4.7 — End-to-End Security & Failure Testing
+
+**Objective**: Perform comprehensive adversarial security verification, fault injection testing, and high-concurrency race condition hardening across the entire signup → onboarding → tenant context → dashboard pipeline.
+
+#### Threat Model & Security Attacks Verified:
+
+1. **API Authentication & Input Attacks**:
+   - Rejection of unauthenticated POST attempts (`401 UNAUTHENTICATED`).
+   - Rejection of invalid email formatting, invalid phone lengths, and oversized strings (`400 VALIDATION_ERROR`).
+
+2. **Identity & Payload Injection Attacks**:
+   - Client body fields (`userId`, `instituteId`, `membershipId`, `role`, `status`) strictly ignored.
+   - Server identity authority derived 100% from Better Auth session context (`session.user.id`).
+
+3. **Tenant Parameter & Header Injection Attacks**:
+   - Query string parameters (`?instituteId=`, `?role=`, `?tenantId=`) strictly ignored.
+   - Custom headers (`x-institute-id`, `x-tenant-id`, `x-role`, `x-membership-id`) strictly ignored by `GET /api/dashboard/context`.
+
+4. **High-Concurrency Race Conditions**:
+   - 5-way simultaneous onboarding attempt by the SAME user → exactly 1 succeeds (201 Created), 4 fail cleanly with `409 CONFLICT`. Database contains exactly 1 institute and 1 membership.
+   - 5-way simultaneous onboarding attempt for the SAME slug across 5 different users → exactly 1 succeeds, 4 fail with `409 CONFLICT`. Database unique constraint on `slug` remains the final authority.
+
+5. **Transaction Fault Injection & Rollback Guarantees**:
+   - Simulated failure during `$transaction` user update / membership link → 100% atomic rollback in PostgreSQL. Zero orphaned `Institute` records, zero partial memberships, `User.instituteId` remains `null`.
+
+6. **Replay & Idempotency Protection**:
+   - Replaying the exact same onboarding request payload after successful onboarding returns `409 CONFLICT`.
+   - Replaying with a modified institute name returns `409 CONFLICT` because user is already bound to an active tenant.
+
+7. **Membership Lifecycle & Instant Revocation**:
+   - Suspended user (`status: 'suspended'`) returns `hasTenant: false` from `/api/dashboard/context` → access denied.
+   - Disconnected user (`instituteId: null`) returns `hasTenant: false` → redirected to `/onboarding`.
+
+8. **Response Data Leakage Audit**:
+   - Zero passwords, session tokens, database connection URIs, Prisma error snippets, or raw stack traces exposed in success DTOs or error responses.
+
+#### Test Evidence Matrix:
+- **Repository Integration Suite (`prisma-onboard-institute.repository.test.ts`)**: 7 tests (including 5-way high-concurrency same-user and same-slug race tests, atomic transaction rollback verification).
+- **Identity Package Unit & Integration Suite (`@coaching-os/identity`)**: 178/178 tests PASSED.
+- **Web API Integration Suite (`apps/web/src/app/api/onboarding/institute/route.test.ts` & `context/route.test.ts`)**: 27/27 tests PASSED (input attack matrix, header injection, replay conflict, response leakage audit).
+- **Playwright E2E Security Matrix (`apps/web/e2e/onboarding.spec.ts`)**: 12/12 tests PASSED (Scenarios A through G covering unauthenticated access, new user redirect, onboarding flow, existing user guard, refresh persistence, query/header injection resistance, body identity injection resistance, and replay conflict).
+
+#### Verification Results:
+- `@coaching-os/identity`: 178/178 tests PASSED
+- `@coaching-os/web`: 27/27 tests PASSED
+- `Playwright E2E`: 12/12 tests PASSED
+- `pnpm env:check`, `db:validate`, `db:health`, `db:drift:check`, `db:seed`: ALL PASSED
+- `pnpm verify:auth`, `verify:infra`, `verify:observability`: ALL PASSED
+- `pnpm test`, `typecheck`, `lint`, `build`: 13/13 packages PASSED (0 errors)
+
