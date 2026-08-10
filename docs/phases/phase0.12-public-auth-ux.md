@@ -207,7 +207,16 @@ CoachingOS visual design must convey **Professionalism, Speed, Operational Densi
 ```text
 Phase 0.12.0  Architecture & UX Contract Freeze ✅
 Phase 0.12.1  UI Foundation & Design System Audit ✅ (COMPLETED)
-Phase 0.12.2  Public Landing Page (Next)
+Phase 0.12.2  Public Landing Page 🚧 (IN PROGRESS)
+      ├── Phase 0.12.2.0 — Landing Page UX & Content Contract 🟢 (FROZEN)
+      ├── Phase 0.12.2.1 — Marketing Layout Shell (Next)
+      ├── Phase 0.12.2.2 — Hero Section Component
+      ├── Phase 0.12.2.3 — Product Workflow Section Component
+      ├── Phase 0.12.2.4 — Core Capabilities & Roles Section Components
+      ├── Phase 0.12.2.5 — Trust & Security Section Component
+      ├── Phase 0.12.2.6 — Final CTA Section Component
+      ├── Phase 0.12.2.7 — Responsive, SEO & Accessibility Audit
+      └── Phase 0.12.2.8 — Phase 0.12.2 Acceptance Gate
 Phase 0.12.3  Authentication Layout & Shared Components
 Phase 0.12.4  Sign Up UI
 Phase 0.12.5  Sign In UI
@@ -249,4 +258,29 @@ Phase 0.12.11 Phase 0.12 Acceptance Gate
    - `Container` & `Section` (`apps/web/src/components/layout/container.tsx`): Reusable responsive layout wrappers.
 3. **Unit Test Suite**:
    - Added `@coaching-os/ui` Vitest test suite (`packages/ui/src/components/ui-primitives.test.ts`) verifying `buttonVariants`, `badgeVariants`, `alertVariants`, `cn`, and `THEME_PRESETS`.
+
+---
+
+## 11. Phase 0.12.2.0 — Public Landing Page UX & Content Contract Completion
+
+**Status:** 🟢 **FROZEN & VERIFIED**  
+**Contract Document:** `docs/phases/phase0.12.2-landing-page.md`  
+
+### Key Architectural & Content Freeze Decisions:
+1. **Target Audience**: Coaching institute owners, founders, and administrators.
+2. **Core Positioning Statement**: *"Run your coaching institute from one place."*
+3. **Primary CTAs**: `"Get Started"` (`/sign-up`) as primary conversion action, `"Sign In"` (`/sign-in`) as secondary action.
+4. **Information Architecture**:
+   - 1. Header (`MarketingHeader`)
+   - 2. Hero (`HeroSection`)
+   - 3. Workflow (`WorkflowSection`)
+   - 4. Core Capabilities (`CapabilitiesSection`)
+   - 5. Stakeholder Roles (`RolesSection`)
+   - 6. Trust & Security (`TrustSection`)
+   - 7. Final CTA (`CTASection`)
+   - 8. Footer (`MarketingFooter`)
+5. **Security Messaging Boundary**: Restricted to factual architectural invariants (tenant isolation by `institute_id`, capability RBAC, server-side session authorization, audit logging). No fake SOC2 or ISO claims.
+6. **Component Layout**: Componentized under `apps/web/src/components/marketing/` to enforce thin `page.tsx` (< 30 lines).
+7. **Public Boundary**: Zero database queries, ORM imports, or tenant context logic in public marketing pages.
+
 
