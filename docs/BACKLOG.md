@@ -100,3 +100,16 @@
 
 - **Status:** ⏳ Scheduled (Phase 7)
 - **Description:** Audit PostgreSQL composite indexes for frequent tenant queries (`(institute_id, status)`, `(session_id, enrollment_id)`) and eliminate N+1 query patterns before beta release.
+
+---
+
+## 🔑 Identity & API Idempotency Backlog
+
+### ID-001 — Business Duplicate Protection vs. Stripe-Style HTTP Idempotency
+
+- **Status:** ℹ️ Architectural Design Note (Phase 1.4.3 / Phase 1.4.4)
+- **Description:** Phase 1.4.3 enforces **business-level duplicate protection** and **transactional database atomicity** via `$transaction` and atomic row locks. If an already onboarded user submits a second onboarding request, the server rejects it cleanly with `ConflictError`.
+- **API Network Retry Distinction:** If an HTTP request succeeds and commits in PostgreSQL, but the network connection drops before the HTTP response reaches the browser:
+  - A standard HTTP retry will hit the business duplicate check and receive `409 ConflictError` (`User is already associated with an institute`).
+  - If Stripe-style HTTP idempotency is desired in the future (where repeating a request with an `Idempotency-Key` header returns the original cached `201 Created` JSON payload without error), that behavior MUST be implemented deliberately at the presentation/API layer (e.g., API gateway / middleware caching), NOT hidden inside the domain repository layer.
+
