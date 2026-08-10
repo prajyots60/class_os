@@ -341,19 +341,29 @@ Returns OnboardInstituteResult { institute, membership }
                              ▼
              db.$transaction(async (tx) => { ... })
                              │
-     ┌───────────────────────┴───────────────────────┐
-     │  PostgreSQL Atomic Transaction                │
-     │                                               │
-     │  1. tx.institute.create({ data: ... })        │
-     │       │                                       │
-     │       ▼                                       │
-     │  2. tx.user.update({ where: { id: userId },   │
-     │                      data: { instituteId } }) │
-     └───────────────────────┬───────────────────────┘
+     ┌───────────────────────┴────────────────────────────────┐
+     │  PostgreSQL Atomic Transaction                         │
+     │                                                        │
+     │  1. tx.institute.create({ data: ... })                 │
+     │       │                                                │
+     │       ▼                                                │
+     │  2. tx.user.update({ where: { id: userId },            │
+     │                      data: { instituteId } })          │
+     │       │                                                │
+     │       ▼                                                │
+     │  3. tx.parentIdentity.upsert({ where: { phone } })     │
+     │       │                                                │
+     │       ▼                                                │
+     │  4. tx.instituteParent.create({ data: ... })           │
+     │       │                                                │
+     │       ▼                                                │
+     │  5. tx.instituteMembership.create({ data: { id,        │
+     │       parentIdentityId, instituteId, instituteParentId } })
+     └───────────────────────┬────────────────────────────────┘
                              │
             ┌────────────────┴────────────────┐
             │                                 │
- [User Linked Successfully]       [Error Occurs (P2002 / P2025)]
+ [All Rows Created Successfully]    [Error Occurs (P2002 / P2025)]
             │                                 │
             ▼                                 ▼
     COMMIT Transaction               ROLLBACK Transaction
@@ -365,7 +375,7 @@ Hydrate & Return Domain Entities:     Map Error & Throw to Caller:
 ```
 
 #### Real PostgreSQL Test Evidence (`prisma-onboard-institute.repository.test.ts`):
-- **Atomic Persistence**: Successfully persisted `Institute` and linked `User` as owner in PostgreSQL, hydrating valid `InstituteEntity` and `InstituteMembershipEntity` domain instances.
-- **Rollback Guarantee Verification**: Intentionally supplied an invalid `userId`. `tx.user.update()` failed with `P2025`. Verified via direct PostgreSQL query that `Institute` was **100% rolled back** (0 records in `institutes` table for target `id`).
-- **Database Uniqueness & Concurrency**: Executed concurrent `Promise.all()` onboarding calls with identical slug. PostgreSQL `@unique` constraint ensured **exactly 1 request committed** while the second threw `ConflictError` cleanly with 0 partial records in database.
+- **Atomic Persistence**: Successfully persisted `Institute` AND `InstituteMembership` database row in PostgreSQL (`institutes` table + `institute_memberships` table), hydrating valid `InstituteEntity` and `InstituteMembershipEntity` domain instances.
+- **Rollback Guarantee Verification**: Intentionally supplied an invalid `userId`. `tx.user.findUnique()` / `tx.user.update()` failed with `NotFoundError` (`P2025`). Verified via direct PostgreSQL queries that both `Institute` (`institutes` table) AND `InstituteMembership` (`institute_memberships` table) were **100% rolled back** (0 records in PostgreSQL for target IDs).
+- **Database Uniqueness & Concurrency**: Executed concurrent `Promise.all()` onboarding calls with identical slug. PostgreSQL `@unique` constraint ensured **exactly 1 request committed** (1 `Institute` row + 1 `InstituteMembership` row) while the second threw `ConflictError` cleanly with 0 partial records in database.
 
