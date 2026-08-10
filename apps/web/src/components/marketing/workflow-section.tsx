@@ -36,7 +36,7 @@ const WORKFLOW_STEPS = [
 
 export function WorkflowSection() {
   return (
-    <Section padding="lg" id="workflow" className="border-t border-[hsl(var(--border))] bg-[hsl(var(--muted))]/20">
+    <Section padding="lg" id="workflow" className="scroll-mt-16 border-t border-[hsl(var(--border))] bg-[hsl(var(--muted))]/20">
       <Container size="lg">
         {/* Section Header */}
         <div className="mx-auto max-w-3xl text-center">

@@ -64,7 +64,7 @@ const ROLES = [
 
 export function RolesSection() {
   return (
-    <Section padding="lg" id="roles" className="border-t border-[hsl(var(--border))] bg-[hsl(var(--muted))]/20">
+    <Section padding="lg" id="roles" className="scroll-mt-16 border-t border-[hsl(var(--border))] bg-[hsl(var(--muted))]/20">
       <Container size="lg">
         {/* Section Header */}
         <div className="mx-auto max-w-3xl text-center">

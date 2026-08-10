@@ -4,6 +4,7 @@ import { WorkflowSection } from '../../components/marketing/workflow-section';
 import { CapabilitiesSection } from '../../components/marketing/capabilities-section';
 import { RolesSection } from '../../components/marketing/roles-section';
 import { TrustSection } from '../../components/marketing/trust-section';
+import { CTASection } from '../../components/marketing/cta-section';
 
 export default function MarketingHomePage() {
   return (
@@ -13,6 +14,7 @@ export default function MarketingHomePage() {
       <CapabilitiesSection />
       <RolesSection />
       <TrustSection />
+      <CTASection />
     </>
   );
 }

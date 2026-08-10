@@ -36,7 +36,7 @@ const TRUST_CONCEPTS = [
 
 export function TrustSection() {
   return (
-    <Section padding="lg" id="security" className="border-t border-[hsl(var(--border))] bg-[hsl(var(--background))]">
+    <Section padding="lg" id="security" className="scroll-mt-16 border-t border-[hsl(var(--border))] bg-[hsl(var(--background))]">
       <Container size="lg">
         {/* Section Header */}
         <div className="mx-auto max-w-3xl text-center">

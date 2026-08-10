@@ -73,7 +73,7 @@ const CAPABILITIES = [
 
 export function CapabilitiesSection() {
   return (
-    <Section padding="lg" id="features" className="border-t border-[hsl(var(--border))] bg-[hsl(var(--background))]">
+    <Section padding="lg" id="features" className="scroll-mt-16 border-t border-[hsl(var(--border))] bg-[hsl(var(--background))]">
       <Container size="lg">
         {/* Section Header */}
         <div className="mx-auto max-w-3xl text-center">
