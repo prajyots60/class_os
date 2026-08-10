@@ -23,3 +23,4 @@ export * from './presentation/validators/onboarding.validator';
 // Infrastructure Repositories
 export * from './infrastructure/repositories/prisma-institute.repository';
 export * from './infrastructure/repositories/prisma-institute-membership.repository';
+export * from './infrastructure/repositories/prisma-onboard-institute.repository';
