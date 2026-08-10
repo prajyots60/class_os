@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useId } from 'react';
+import React, { useState, useId, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@coaching-os/auth/client';
 import {
@@ -28,6 +28,49 @@ function formatSlugPreview(text: string): string {
 export default function OnboardingPage() {
   const router = useRouter();
   const { data: session, isPending } = useSession();
+
+  // Guard: if user already has an active tenant, redirect to dashboard before showing the form
+  const [tenantCheckDone, setTenantCheckDone] = useState(false);
+
+  useEffect(() => {
+    if (isPending || !session) {
+      // Not ready to check — wait for session to resolve
+      return;
+    }
+
+    let cancelled = false;
+
+    async function checkExistingTenant() {
+      try {
+        const res = await fetch('/api/dashboard/context', {
+          method: 'GET',
+          cache: 'no-store',
+        });
+        if (cancelled) return;
+
+        if (res.ok) {
+          const body = await res.json();
+          if (body.hasTenant) {
+            // User already has an active institute — redirect to dashboard
+            router.push('/dashboard');
+            return;
+          }
+        }
+      } catch {
+        // Network failure — allow form to render; server will enforce via 409 on submit
+      }
+
+      if (!cancelled) {
+        setTenantCheckDone(true);
+      }
+    }
+
+    checkExistingTenant();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isPending, session, router]);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -175,7 +218,10 @@ export default function OnboardingPage() {
     }
   };
 
-  if (isPending) {
+  // Show loading until both session and tenant guard have resolved
+  const isReady = !isPending && (tenantCheckDone || !session);
+
+  if (!isReady) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[hsl(var(--background))] p-4">
         <div className="flex items-center space-x-3 text-sm font-medium text-[hsl(var(--muted-foreground))]">
@@ -189,7 +235,7 @@ export default function OnboardingPage() {
     );
   }
 
-  if (!session) {
+  if (!isReady || !session) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[hsl(var(--background))] p-4">
         <Card className="w-full max-w-md text-center">

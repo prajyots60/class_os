@@ -386,5 +386,103 @@ describe('Institute Membership Use Cases — Security Unit Suite', () => {
         }),
       ).rejects.toThrow(AuthorizationError);
     });
+
+    // Phase 1.4.6 — Lifecycle & Isolation Extension
+
+    it('rejects access when membership is removed', async () => {
+      const createUseCase = new CreateInstituteMembershipUseCase(repository);
+      const membership = await createUseCase.execute({
+        userId: 'usr-lifecycle',
+        instituteId: 'inst-lifecycle',
+        role: 'teacher',
+      });
+
+      const changeStatus = new ChangeMembershipStatusUseCase(repository);
+      await changeStatus.execute({ id: membership.id, status: 'removed' });
+
+      const resolver = new ResolveInstituteMembershipUseCase(repository);
+
+      await expect(
+        resolver.execute({
+          userId: 'usr-lifecycle',
+          requestedInstituteId: 'inst-lifecycle',
+        }),
+      ).rejects.toThrow(AuthorizationError);
+    });
+
+    it('rejects access when userId is empty', async () => {
+      const resolver = new ResolveInstituteMembershipUseCase(repository);
+
+      await expect(
+        resolver.execute({ userId: '', requestedInstituteId: 'inst-1' }),
+      ).rejects.toThrow(AuthorizationError);
+    });
+
+    it('rejects access when requestedInstituteId is empty', async () => {
+      const resolver = new ResolveInstituteMembershipUseCase(repository);
+
+      await expect(
+        resolver.execute({ userId: 'usr-1', requestedInstituteId: '' }),
+      ).rejects.toThrow(AuthorizationError);
+    });
+
+    it('resolves teacher role membership correctly', async () => {
+      const createUseCase = new CreateInstituteMembershipUseCase(repository);
+      await createUseCase.execute({ userId: 'usr-teacher', instituteId: 'inst-teacher', role: 'teacher' });
+
+      const resolver = new ResolveInstituteMembershipUseCase(repository);
+      const context = await resolver.execute({
+        userId: 'usr-teacher',
+        requestedInstituteId: 'inst-teacher',
+      });
+
+      expect(context.role).toBe('teacher');
+      expect(context.status).toBe('active');
+      expect(context.userId).toBe('usr-teacher');
+      expect(context.instituteId).toBe('inst-teacher');
+    });
+
+    it('tenant isolation: User A cannot access Institute B via resolved TenantContext', async () => {
+      const createUseCase = new CreateInstituteMembershipUseCase(repository);
+      await createUseCase.execute({ userId: 'usr-tenant-a', instituteId: 'inst-a', role: 'owner' });
+      await createUseCase.execute({ userId: 'usr-tenant-b', instituteId: 'inst-b', role: 'owner' });
+
+      const resolver = new ResolveInstituteMembershipUseCase(repository);
+
+      // User A requesting Institute B — must be denied
+      await expect(
+        resolver.execute({ userId: 'usr-tenant-a', requestedInstituteId: 'inst-b' }),
+      ).rejects.toThrow(AuthorizationError);
+
+      // User B requesting Institute A — must be denied
+      await expect(
+        resolver.execute({ userId: 'usr-tenant-b', requestedInstituteId: 'inst-a' }),
+      ).rejects.toThrow(AuthorizationError);
+
+      // Each user can only access their own institute
+      const contextA = await resolver.execute({ userId: 'usr-tenant-a', requestedInstituteId: 'inst-a' });
+      expect(contextA.instituteId).toBe('inst-a');
+
+      const contextB = await resolver.execute({ userId: 'usr-tenant-b', requestedInstituteId: 'inst-b' });
+      expect(contextB.instituteId).toBe('inst-b');
+    });
+
+    it('resolved TenantContext contains all required fields (userId, instituteId, membershipId, role, status)', async () => {
+      const createUseCase = new CreateInstituteMembershipUseCase(repository);
+      await createUseCase.execute({ userId: 'usr-fields', instituteId: 'inst-fields', role: 'owner' });
+
+      const resolver = new ResolveInstituteMembershipUseCase(repository);
+      const context = await resolver.execute({
+        userId: 'usr-fields',
+        requestedInstituteId: 'inst-fields',
+      });
+
+      expect(context.userId).toBe('usr-fields');
+      expect(context.instituteId).toBe('inst-fields');
+      expect(context.membershipId).toBeDefined();
+      expect(typeof context.membershipId).toBe('string');
+      expect(context.role).toBeDefined();
+      expect(context.status).toBe('active');
+    });
   });
 });

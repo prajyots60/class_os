@@ -34,7 +34,6 @@ test.describe('Institute Onboarding UI & End-to-End Flow Suite', () => {
 
     // 2. Navigate to /onboarding UI route
     await page.goto('/onboarding');
-    await page.waitForLoadState('networkidle');
 
     // Verify Onboarding UI Header & Form elements render
     await expect(page.getByRole('heading', { name: /Setup Your Coaching Institute/i })).toBeVisible();
@@ -66,20 +65,130 @@ test.describe('Institute Onboarding UI & End-to-End Flow Suite', () => {
     await page.waitForURL('**/dashboard', { timeout: 10000 });
     await expect(page.getByRole('heading', { name: /CoachingOS Dashboard/i })).toBeVisible();
     await expect(page.getByText(/Institute Onboarding Completed/i)).toBeVisible();
-    await expect(page.getByText(/Institute Owner/i)).toBeVisible();
 
-    // 7. Verify subsequent onboarding attempt for already onboarded user shows friendly conflict message
+    // 7. Verify subsequent onboarding attempt for already onboarded user redirects to /dashboard via tenant guard
     await page.goto('/onboarding');
-    await page.waitForLoadState('networkidle');
+    await page.waitForURL('**/dashboard', { timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /CoachingOS Dashboard/i })).toBeVisible();
+  });
 
-    await page.getByLabel(/Institute Name \*/i).fill('Second Inst Attempt');
-    await page.getByLabel(/Primary Phone \*/i).fill('+919876543211');
-    await page.getByLabel(/Contact Email \*/i).fill('second@test.com');
+  // ── Scenario A — New User → /dashboard → redirect to /onboarding → complete → /dashboard shows institute ──
 
+  test('Scenario A: New user visiting /dashboard is redirected to /onboarding, completes onboarding, /dashboard shows institute name', async ({ page }) => {
+    const testEmail = `scenario_a_${Date.now()}@test.com`;
+    const password = 'SecureTestPassword123!';
+
+    // 1. Sign up new user
+    const signUpResponse = await page.request.post('/api/auth/sign-up/email', {
+      data: { email: testEmail, password, name: 'Scenario A User' },
+    });
+    expect(signUpResponse.status()).toBe(200);
+
+    // 2. Navigate to /dashboard without having onboarded
+    await page.goto('/dashboard');
+
+    // 3. Server detects no active tenant — client redirects to /onboarding
+    await page.waitForURL('**/onboarding', { timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /Setup Your Coaching Institute/i })).toBeVisible();
+
+    // 4. Complete onboarding
+    await page.getByLabel(/Institute Name \*/i).fill('Scenario Academy');
+    await page.getByLabel(/Primary Phone \*/i).fill('+919111111111');
+    await page.getByLabel(/Contact Email \*/i).fill('scenario@academy.test');
     await page.getByRole('button', { name: /Complete Onboarding/i }).click();
 
-    await expect(
-      page.getByText(/You already belong to an active institute tenant/i),
-    ).toBeVisible();
+    // 5. Redirect to /dashboard
+    await page.waitForURL('**/dashboard', { timeout: 10000 });
+
+    // 6. Dashboard shows real institute name (server-resolved)
+    await expect(page.getByRole('heading', { name: /CoachingOS Dashboard/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Scenario Academy' })).toBeVisible();
+    await expect(page.getByText('owner', { exact: true })).toBeVisible();
+  });
+
+  // ── Scenario B — Existing user visiting /onboarding is redirected to /dashboard ──
+
+  test('Scenario B: Already-onboarded user visiting /onboarding is redirected to /dashboard', async ({ page }) => {
+    const testEmail = `scenario_b_${Date.now()}@test.com`;
+    const password = 'SecureTestPassword123!';
+
+    // 1. Sign up and onboard
+    await page.request.post('/api/auth/sign-up/email', {
+      data: { email: testEmail, password, name: 'Scenario B User' },
+    });
+
+    await page.goto('/onboarding');
+    await expect(page.getByRole('heading', { name: /Setup Your Coaching Institute/i })).toBeVisible();
+
+    await page.getByLabel(/Institute Name \*/i).fill('Existing Institute B');
+    await page.getByLabel(/Primary Phone \*/i).fill('+919222222222');
+    await page.getByLabel(/Contact Email \*/i).fill('scenariob@inst.test');
+    await page.getByRole('button', { name: /Complete Onboarding/i }).click();
+
+    await page.waitForURL('**/dashboard', { timeout: 10000 });
+
+    // 2. Now try to navigate back to /onboarding
+    await page.goto('/onboarding');
+
+    // 3. Should be redirected to /dashboard immediately (tenant guard fires)
+    await page.waitForURL('**/dashboard', { timeout: 10000 });
+    await expect(page.getByRole('heading', { name: /CoachingOS Dashboard/i })).toBeVisible();
+  });
+
+  // ── Scenario C — Browser refresh retains correct tenant resolution ──
+
+  test('Scenario C: Browser refresh after onboarding retains correct TenantContext on /dashboard', async ({ page }) => {
+    const testEmail = `scenario_c_${Date.now()}@test.com`;
+    const password = 'SecureTestPassword123!';
+
+    // 1. Sign up and complete onboarding
+    await page.request.post('/api/auth/sign-up/email', {
+      data: { email: testEmail, password, name: 'Scenario C User' },
+    });
+
+    await page.goto('/onboarding');
+    await expect(page.getByRole('heading', { name: /Setup Your Coaching Institute/i })).toBeVisible();
+
+    await page.getByLabel(/Institute Name \*/i).fill('Refresh Persistence Institute');
+    await page.getByLabel(/Primary Phone \*/i).fill('+919333333333');
+    await page.getByLabel(/Contact Email \*/i).fill('scenarioc@refresh.test');
+    await page.getByRole('button', { name: /Complete Onboarding/i }).click();
+
+    await page.waitForURL('**/dashboard', { timeout: 10000 });
+    await expect(page.getByRole('heading', { name: 'Refresh Persistence Institute' })).toBeVisible();
+
+    // 2. Reload the page (simulates browser refresh)
+    await page.reload();
+
+    // 3. Dashboard still resolves the correct tenant — session cookie persists
+    await expect(page.getByRole('heading', { name: /CoachingOS Dashboard/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Refresh Persistence Institute' })).toBeVisible();
+    await expect(page.getByText('owner', { exact: true })).toBeVisible();
+
+    // Stays on /dashboard (not redirected to /onboarding)
+    expect(page.url()).toContain('/dashboard');
+  });
+
+  // ── Scenario D — Tenant manipulation via query param is ignored ──
+
+  test('Scenario D: Client-supplied instituteId in query param is ignored; server resolves from session', async ({ page }) => {
+    const testEmail = `scenario_d_${Date.now()}@test.com`;
+    const password = 'SecureTestPassword123!';
+    const fakeInstituteId = '00000000-0000-4000-a000-000000000099';
+
+    // 1. Sign up (no institute)
+    await page.request.post('/api/auth/sign-up/email', {
+      data: { email: testEmail, password, name: 'Scenario D User' },
+    });
+
+    // 2. Attempt to manipulate tenant context via query param
+    const response = await page.request.get(
+      `/api/dashboard/context?instituteId=${fakeInstituteId}`,
+    );
+    expect(response.status()).toBe(200);
+
+    const body = await response.json();
+    // User has no institute — server ignores the injected query param and returns hasTenant: false
+    expect(body.hasTenant).toBe(false);
   });
 });
