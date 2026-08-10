@@ -62,12 +62,13 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
         │     ├── 0.12.2.0 — UX & Content Contract 🟢 (Freeze)
         │     ├── 0.12.2.1 — Marketing Layout Shell ✅
         │     ├── 0.12.2.2 — Hero Section ✅
-        │     ├── 0.12.2.3 — Product Workflow Section (Next)
-        │     ├── 0.12.2.4 — Core Capabilities & Roles Sections
-        │     ├── 0.12.2.5 — Trust & Security Section
-        │     ├── 0.12.2.6 — Final CTA Section
-        │     ├── 0.12.2.7 — Responsive, SEO & Accessibility Audit
-        │     └── 0.12.2.8 — Landing Page Acceptance Gate
+        │     ├── 0.12.2.3 — Product Workflow Section ✅
+        │     ├── 0.12.2.4 — Core Capabilities Section ✅
+        │     ├── 0.12.2.5 — Roles & Value Section (Next)
+        │     ├── 0.12.2.6 — Trust & Security Section
+        │     ├── 0.12.2.7 — Final CTA Section
+        │     ├── 0.12.2.8 — Responsive, SEO & Accessibility Audit
+        │     └── 0.12.2.9 — Landing Page Acceptance Gate
         ├── Phase 0.12.3 — Authentication Layout & Shared Components
         ├── Phase 0.12.4 — Sign Up UI
         ├── Phase 0.12.5 — Sign In UI
@@ -177,6 +178,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Phase 0.12.2.0 (Landing Page UX & Content Contract Freeze)**: Created authoritative landing page UX and content contract in `docs/phases/phase0.12.2-landing-page.md`. Frozen target audience (institute owners/founders), core positioning ("Run your coaching institute from one place"), primary CTA (`"Get Started"` -> `/sign-up`), secondary CTA (`"Sign In"` -> `/sign-in`), 8-section vertical information architecture, component hierarchy under `apps/web/src/components/marketing/`, factual trust/security boundaries (zero fake claims), and non-goals. Zero code modifications introduced during contract freeze.
 - **Phase 0.12.2.1 (Marketing Layout Shell)**: Implemented Next.js route group layout `app/(marketing)/layout.tsx` rendering `MarketingHeader` + `<main>` + `MarketingFooter`, created `(marketing)/page.tsx` composition placeholder serving `/`, built `MarketingHeader` with desktop anchor links and `<MobileNav />` client toggle, built `MarketingFooter` with dynamic copyright and system status badge, removed obsolete flat `app/page.tsx`, and verified zero database/auth/RBAC dependencies in marketing components.
 - **Phase 0.12.2.2 (Hero Section Component)**: Implemented 100% Server Component `<HeroSection />` (`hero-section.tsx`) and `<HeroProductPreview />` (`hero-product-preview.tsx`), strictly adhering to Section 7.2 of frozen UX contract (H1 headline *"Run your coaching institute from one place."*, supporting copy, eyebrow badge, primary CTA `/sign-up`, secondary CTA `/sign-in`, multi-tenant trust micro-copy, and realistic React/CSS institute workspace dashboard preview). Composed in `app/(marketing)/page.tsx` and verified zero DB/auth/RBAC dependencies.
+- **Phase 0.12.2.3 (Product Workflow Section)**: Implemented 100% Server Component `<WorkflowSection />` (`workflow-section.tsx`) rendering a 4-step operational progression (`STEP 01`: Set Up Your Institute, `STEP 02`: Add Team & Students, `STEP 03`: Run Daily Operations, `STEP 04`: Stay in Total Control). Composed in `app/(marketing)/page.tsx` with zero DB/auth dependencies.
+- **Phase 0.12.2.4 (Core Capabilities Section)**: Implemented 100% Server Component `<CapabilitiesSection />` (`capabilities-section.tsx`) rendering an 8-card domain grid (Student Management, Academic Operations, Attendance Tracking, Homework & Tasks, Tests & Marks, Fees & Billing, Staff & Role Control, Institute Announcements). Composed in `app/(marketing)/page.tsx` with zero DB/auth dependencies.
 
 ### ✅ Phase 1.1 — Institute Tenant Core
 

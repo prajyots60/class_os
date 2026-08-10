@@ -211,12 +211,13 @@ Phase 0.12.2  Public Landing Page 🚧 (IN PROGRESS)
       ├── Phase 0.12.2.0 — Landing Page UX & Content Contract 🟢 (FROZEN)
       ├── Phase 0.12.2.1 — Marketing Layout Shell ✅ (COMPLETED)
       ├── Phase 0.12.2.2 — Hero Section Component ✅ (COMPLETED)
-      ├── Phase 0.12.2.3 — Product Workflow Section Component (Next)
-      ├── Phase 0.12.2.4 — Core Capabilities & Roles Section Components
-      ├── Phase 0.12.2.5 — Trust & Security Section Component
-      ├── Phase 0.12.2.6 — Final CTA Section Component
-      ├── Phase 0.12.2.7 — Responsive, SEO & Accessibility Audit
-      └── Phase 0.12.2.8 — Phase 0.12.2 Acceptance Gate
+      ├── Phase 0.12.2.3 — Product Workflow Section Component ✅ (COMPLETED)
+      ├── Phase 0.12.2.4 — Core Capabilities Section Component ✅ (COMPLETED)
+      ├── Phase 0.12.2.5 — Roles & Value Section Component (Next)
+      ├── Phase 0.12.2.6 — Trust & Security Section Component
+      ├── Phase 0.12.2.7 — Final CTA Section Component
+      ├── Phase 0.12.2.8 — Responsive, SEO & Accessibility Audit
+      └── Phase 0.12.2.9 — Phase 0.12.2 Acceptance Gate
 Phase 0.12.3  Authentication Layout & Shared Components
 Phase 0.12.4  Sign Up UI
 Phase 0.12.5  Sign In UI
@@ -330,6 +331,43 @@ Phase 0.12.11 Phase 0.12 Acceptance Gate
    - Composed `<HeroSection />` in `apps/web/src/app/(marketing)/page.tsx` (under 10 lines of code).
 4. **Testing Suite**:
    - Created `apps/web/src/components/marketing/hero-section.test.ts` verifying component export boundaries and zero DB/Auth module dependencies.
+
+---
+
+## 14. Phase 0.12.2.3 — Product Workflow Section Completion
+
+**Status:** 🟢 **COMPLETED & VERIFIED**  
+**Code Commit:** `38a94e5` (`feat(web): implement workflow and capabilities sections`)  
+
+### Implementation Details:
+1. **`WorkflowSection` (`apps/web/src/components/marketing/workflow-section.tsx`)**:
+   - 100% Server Component rendering `<section id="workflow">`.
+   - Eyebrow Badge: `"Operational Workflow"`.
+   - Headline H2: *"How CoachingOS works for your institute."*
+   - 4 Step Grid:
+     - `STEP 01`: Set Up Your Institute
+     - `STEP 02`: Add Team & Students
+     - `STEP 03`: Run Daily Operations
+     - `STEP 04`: Stay in Total Control
+2. **Testing Suite**:
+   - Created `apps/web/src/components/marketing/workflow-section.test.ts`.
+
+---
+
+## 15. Phase 0.12.2.4 — Core Capabilities Section Completion
+
+**Status:** 🟢 **COMPLETED & VERIFIED**  
+**Code Commit:** `38a94e5` (`feat(web): implement workflow and capabilities sections`)  
+
+### Implementation Details:
+1. **`CapabilitiesSection` (`apps/web/src/components/marketing/capabilities-section.tsx`)**:
+   - 100% Server Component rendering `<section id="features">`.
+   - Eyebrow Badge: `"Core Platform Capabilities"`.
+   - Headline H2: *"Everything needed to manage your coaching class."*
+   - 8 Module Domain Cards: Student Management, Academic Operations, Attendance Tracking, Homework & Tasks, Tests & Marks, Fees & Billing, Staff & Role Control, Institute Announcements.
+2. **Testing Suite**:
+   - Created `apps/web/src/components/marketing/capabilities-section.test.ts`.
+
 
 
 
