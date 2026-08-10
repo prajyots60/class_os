@@ -167,13 +167,22 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 
 ### 🚧 PHASE 1 — IDENTITY MODULE (NOW ACTIVE)
 
-- **Domain Contract Specification:** Documented in [docs/phases/phase1.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.md) (Phase 1.0 Architecture Freeze).
+- **Domain Contract Specification:** Documented in [docs/phases/phase1.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.md) (Phase 1.0 Architecture Freeze) and [docs/phases/phase1.3-rbac.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.3-rbac.md) (Phase 1.3.0 RBAC Architecture Freeze).
 - **Subphase Tracking Rule:** Subphases are added to the tracker in `docs/CONTEXT.md` as each subphase is approved and implemented.
 - **Phase 1 Implementation Map:**
   - **Phase 1.0:** Domain & Architecture Contract Freeze ✅
   - **Phase 1.1:** Institute Tenant Core ✅
   - **Phase 1.2:** Users & Memberships ✅
-  - **Phase 1.3:** Capability-Based RBAC (Next)
+  - **Phase 1.3:** Capability-Based RBAC 🚧 (NOW ACTIVE)
+    - **Phase 1.3.0:** RBAC Architecture & Capability Matrix ✅ (Freeze)
+    - **Phase 1.3.1:** Capability Taxonomy & Strongly-Typed Enums
+    - **Phase 1.3.2:** Role → Capability Resolver Engine
+    - **Phase 1.3.3:** Authorization Engine & Assertion Guards
+    - **Phase 1.3.4:** Tenant-Scoped Capability Evaluation
+    - **Phase 1.3.5:** Resource-Scoped Filtering Helpers (Parent/Teacher)
+    - **Phase 1.3.6:** Identity Use Case Integration
+    - **Phase 1.3.7:** Security & RBAC Test Matrix
+    - **Phase 1.3.8:** Phase 1.3 Acceptance Gate
   - **Phase 1.4:** Institute Onboarding Workflow
   - **Phase 1.5:** Institute Settings & White-Label Branding
   - **Phase 1.6:** Global ParentIdentity Platform Layer
