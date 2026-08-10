@@ -146,7 +146,13 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - Enforced 4 isolated environment trust boundaries (Development, Test, Preview, Production).
 - Created production deployment playbook in `docs/DEPLOYMENT.md` detailing pre-deployment, deployment, post-deployment, and rollback checklists.
 - Documented `ADR-0007` (Production Deployment Strategy) and updated `ENGINEERING_PLAYBOOK.md` Section 17.
-- Prepared Phase 0 Gate Verification Report.
+### ✅ Phase 1.1 — Institute Tenant Core
+
+- Established framework-independent `InstituteEntity` in `@coaching-os/identity` with slug normalization, validation, and status lifecycle transition rules (`active`, `suspended`, `archived`).
+- Defined `InstituteRepository` contract and built `PrismaInstituteRepository` mapping Prisma `Institute` models to domain entities and translating constraint failures (`P2002` -> `ConflictError`, `P2025` -> `NotFoundError`).
+- Implemented `CreateInstituteUseCase`, `GetInstituteUseCase`, `UpdateInstituteUseCase`, and `ChangeInstituteStatusUseCase` with Zod presentation validators (`createInstituteSchema`, `updateInstituteSchema`, `changeInstituteStatusSchema`).
+- Integrated structured observability events (`identity.institute.create.success`, `identity.institute.update.success`, `identity.institute.status_changed`).
+- Created unit tests and real PostgreSQL integration suite verifying persistence, duplicate slug conflict mapping, missing record handling, and cross-tenant security isolation. Zero Prisma schema changes or migrations.
 
 ### ✅ Phase 1.2 — Users & Memberships
 
