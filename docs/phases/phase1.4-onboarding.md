@@ -425,3 +425,50 @@ Concurrent Request A (User U)            Concurrent Request B (User U)
 - **D & E. Failed Transaction Rollback**: Transaction failure leaves **0 `Institute` rows** and leaves `User.instituteId` unchanged (`null`).
 - **F. Retry Semantics**: Retry after successful onboarding is rejected cleanly with `ConflictError`. User remains bound exclusively to their initial institute.
 
+---
+
+### 19.4 Phase 1.4.4 — Onboarding API Boundary (`POST /api/onboarding/institute`)
+
+**Objective**: Implemented the production-grade HTTP/API presentation boundary at `POST /api/onboarding/institute` as a thin presentation adapter around `OnboardInstituteUseCase` and `ResolveInstituteMembershipUseCase`.
+
+#### API Route Architecture & Request Flowchart:
+
+```text
+Client HTTP POST /api/onboarding/institute
+                  │
+                  │ (Extract Cookie / Session Headers)
+                  ▼
+   getAuthenticatedSession(headers) ──► [Null?] ──► 401 UNAUTHENTICATED
+                  │
+                  │ (Session Valid: session.user.id)
+                  ▼
+    onboardInstituteSchema.safeParse ──► [Invalid?] ──► 400 VALIDATION_ERROR
+                  │
+                  │ (Input Validated)
+                  ▼
+Construct OnboardInstituteCommand { authenticatedUserId: session.user.id }
+  (Ignores client-supplied userId, instituteId, role, status injection)
+                  │
+                  ▼
+ OnboardInstituteUseCase.execute(command)
+  (Executes atomic PostgreSQL $transaction in PrismaOnboardInstituteRepository)
+                  │
+                  ▼
+ ResolveInstituteMembershipUseCase.execute({ userId, requestedInstituteId })
+  (Resolves trusted post-onboarding TenantContext: role='owner', status='active')
+                  │
+                  ▼
+   HTTP 201 Created { success: true, data: { institute, tenantContext } }
+  (Includes x-request-id header & Pino structured logging)
+```
+
+#### Key Security & Architectural Invariants:
+1. **Server-Controlled Identity Boundary**: `authenticatedUserId` is extracted strictly from the trusted server-side Better Auth session. Any payload fields attempting to inject `userId`, `instituteId`, `role`, or `status` are strictly ignored.
+2. **Thin Presentation Adapter**: Zero Prisma client instantiation or direct database calls in the route handler. Business logic, transactions, and slug uniqueness are completely delegated to `@coaching-os/identity`.
+3. **Canonical Error Response Taxonomy**: Converts domain exceptions via `toErrorResponse(error, requestId)` into safe public API responses (`401 UNAUTHENTICATED`, `400 VALIDATION_ERROR`, `403 FORBIDDEN`, `404 NOT_FOUND`, `409 CONFLICT`, `500 INTERNAL_ERROR`) with `x-request-id` header correlation and zero stack trace/SQL driver leakage.
+4. **HTTP Method Safety**: Only `POST` is supported. `GET`, `PUT`, `PATCH`, and `DELETE` return `405 Method Not Allowed` with `Allow: POST` header.
+
+#### Test Evidence:
+- **API Integration Suite (`route.test.ts`)**: Tests 14 presentation scenarios including 401 unauthenticated, 400 malformed JSON/schema validation, 201 successful onboarding DTO serialization, client payload override protection, 409 duplicate onboarding rejection, 409 slug collision, 405 unsupported method handling, and `x-request-id` correlation.
+- **Playwright E2E Suite (`onboarding.spec.ts`)**: Verifies 401 unauthenticated POST access, successful user sign-up ──► 201 onboarding workflow, and 409 conflict on subsequent duplicate onboarding requests.
+
