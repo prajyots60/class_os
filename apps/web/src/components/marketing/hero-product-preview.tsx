@@ -8,7 +8,7 @@ import {
   Clock,
   ShieldCheck,
 } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent, Badge } from '@coaching-os/ui';
+import { Card, Badge } from '@coaching-os/ui';
 
 export function HeroProductPreview() {
   return (
@@ -86,7 +86,7 @@ export function HeroProductPreview() {
             </div>
             <div className="text-lg font-bold">94.2%</div>
             <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5 block">
-              Today's Average
+              Today&apos;s Average
             </span>
           </Card>
         </div>
@@ -95,7 +95,7 @@ export function HeroProductPreview() {
         <div className="rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--muted))]/10 p-3 space-y-2">
           <div className="flex items-center justify-between text-xs font-semibold text-[hsl(var(--foreground))]">
             <span className="flex items-center gap-1.5">
-              <Calendar className="h-3.5 w-3.5 text-[hsl(var(--primary))]" /> Today's Sessions
+              <Calendar className="h-3.5 w-3.5 text-[hsl(var(--primary))]" /> Today&apos;s Sessions
             </span>
             <span className="text-[10px] text-[hsl(var(--muted-foreground))]">4 Batches Scheduled</span>
           </div>

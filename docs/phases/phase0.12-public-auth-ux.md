@@ -210,8 +210,8 @@ Phase 0.12.1  UI Foundation & Design System Audit ✅ (COMPLETED)
 Phase 0.12.2  Public Landing Page 🚧 (IN PROGRESS)
       ├── Phase 0.12.2.0 — Landing Page UX & Content Contract 🟢 (FROZEN)
       ├── Phase 0.12.2.1 — Marketing Layout Shell ✅ (COMPLETED)
-      ├── Phase 0.12.2.2 — Hero Section Component (Next)
-      ├── Phase 0.12.2.3 — Product Workflow Section Component
+      ├── Phase 0.12.2.2 — Hero Section Component ✅ (COMPLETED)
+      ├── Phase 0.12.2.3 — Product Workflow Section Component (Next)
       ├── Phase 0.12.2.4 — Core Capabilities & Roles Section Components
       ├── Phase 0.12.2.5 — Trust & Security Section Component
       ├── Phase 0.12.2.6 — Final CTA Section Component
@@ -307,6 +307,30 @@ Phase 0.12.11 Phase 0.12 Acceptance Gate
    - Dynamic current year copyright (`© 2026 CoachingOS`).
 4. **Testing Suite**:
    - Created `apps/web/src/components/marketing/marketing-layout.test.ts` verifying export boundaries.
+
+---
+
+## 13. Phase 0.12.2.2 — Hero Section Component Completion
+
+**Status:** 🟢 **COMPLETED & VERIFIED**  
+**Code Commit:** `06f7866` (`feat(web): implement marketing hero section`)  
+
+### Implementation Details:
+1. **`HeroSection` (`apps/web/src/components/marketing/hero-section.tsx`)**:
+   - 100% Server Component adhering to Section 7.2 of frozen UX contract.
+   - Eyebrow Badge: `"Built for Coaching Institutes"` (`Badge` variant `"secondary"` with `Sparkles` icon).
+   - Headline H1: *"Run your coaching institute from one place."*
+   - Supporting Copy: *"Manage students, academics, attendance, tests, fees, staff, and day-to-day institute operations through one connected platform."*
+   - Primary CTA: `"Get Started"` (`/sign-up`) with `ArrowRight` icon.
+   - Secondary CTA: `"Sign In"` (`/sign-in`).
+   - Trust Micro-copy: Multi-tenant Isolation, Role-based Security, Zero credit card required.
+2. **`HeroProductPreview` (`apps/web/src/components/marketing/hero-product-preview.tsx`)**:
+   - Clean, structured CSS/React mockup illustrating CoachingOS institute workspace dashboard (top browser bar, tenant isolation badge, institute header, student/batch/attendance stat cards, today's class schedule preview).
+3. **Composition**:
+   - Composed `<HeroSection />` in `apps/web/src/app/(marketing)/page.tsx` (under 10 lines of code).
+4. **Testing Suite**:
+   - Created `apps/web/src/components/marketing/hero-section.test.ts` verifying component export boundaries and zero DB/Auth module dependencies.
+
 
 
 
