@@ -70,8 +70,8 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
         │     ├── 0.12.2.8 — Responsive, SEO & Accessibility Audit ✅
         │     └── 0.12.2.9 — Landing Page Acceptance Gate 🟢 (ACCEPTED)
         ├── Phase 0.12.3 — Authentication Layout & Shared Components ✅
-        ├── Phase 0.12.4 — Sign Up UI (Next)
-        ├── Phase 0.12.5 — Sign In UI
+        ├── Phase 0.12.4 — Sign Up UI & Registration Flow ✅
+        ├── Phase 0.12.5 — Sign In UI (Next)
         ├── Phase 0.12.6 — Password Recovery UI (Deferred)
         ├── Phase 0.12.7 — Session & Route Guards
         ├── Phase 0.12.8 — Authenticated Application Shell
@@ -227,6 +227,14 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Phase 1.4.6 (Tenant Context Resolution & Post-Onboarding Redirect)**: Implemented `GET /api/dashboard/context` route establishing single authoritative server-side tenant context resolution (session → `GetUserMembershipsUseCase` → `ResolveInstituteMembershipUseCase` → `TenantContext`). Enhanced `/dashboard` page guard to resolve real server tenant context and redirect to `/onboarding` if no active tenant exists. Enhanced `/onboarding` tenant guard to redirect already-onboarded users to `/dashboard`. Verified active, suspended, and removed membership lifecycle handling, tenant parameter injection resistance, browser refresh persistence, and 4 Playwright E2E scenarios.
 - **Phase 1.4.7 (End-to-End Security & Failure Testing)**: Conducted comprehensive adversarial security verification, fault injection testing, and high-concurrency race condition hardening. Extended `PrismaOnboardInstituteRepository` integration suite with 5-way simultaneous same-user and same-slug race tests, verifying atomic PostgreSQL lock & rollback guarantees. Hardened API boundary with input attack matrix (invalid email/phone/oversized inputs), payload identity injection resistance (`userId`, `role`, `status` overrides), header/query injection resistance (`x-institute-id`, `x-role`), replay conflict enforcement, and response data leakage audit (zero secrets/tokens/stack traces leaked). Extended Playwright E2E security matrix (12/12 passed). Verified 100% Phase 1.3 RBAC capability preservation (178/178 unit tests passed).
 - **Phase 1.4.8 (Phase 1.4 Acceptance Gate)**: Conducted formal independent audit and verification of the complete Institute Onboarding Workflow contract. Verified atomic tenant bootstrap, server-controlled identity authority, PostgreSQL lock atomicity, zero synthetic parent records, 100% Phase 1.3 RBAC capability preservation (49 capabilities), full monorepo typecheck/lint/build, and Playwright E2E suite (12/12 passed). Zero unresolved BLOCKER/HIGH defects. Phase 1.4 formally ACCEPTED and FROZEN.
+
+### ✅ Phase 0.12.4 — Sign Up UI & Registration Flow (COMPLETED)
+
+- **Sign Up Domain & UI Implementation**: Created `/sign-up` public registration page and client component `SignUpForm` in `apps/web/src/features/auth/sign-up`.
+- **Form Validation & UX State**: Implemented Zod validation schema `signUpSchema` (name, email, password min 8, password matching) and robust state handling with `@hookform/resolvers/zod`. Added password visibility toggles (`Eye` / `EyeOff`), loading state with `Spinner`, and `AuthError` alerts.
+- **Better Auth Client Integration**: Connected `SignUpForm` directly to `@coaching-os/auth/client` (`signUp.email`), ensuring authentication sessions are established automatically upon successful registration.
+- **Server Identity Boundary Invariants**: Verified that zero identity attributes (`userId`, `instituteId`, `membershipId`, `role`, `status`, `tenantId`) are accepted from client request payloads. Automatically redirects authenticated users away from `/sign-up` to `/onboarding`.
+- **Testing & Verification**: Created unit test suites `sign-up-schema.test.ts` (14/14 passed) and `sign-up-form.test.ts` (7/7 passed), verifying schema validation rules, security invariants, and module boundary checks. Built Playwright E2E test suite `apps/web/e2e/sign-up.spec.ts` (9/9 passed), verifying field validation, password toggle, duplicate registration error handling, session redirects, and payload security. Passed full typecheck, lint, and Next.js build (`pnpm build`).
 
 ## 4. Next Milestone Roadmap
 

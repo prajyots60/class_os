@@ -1,22 +1,30 @@
-import * as React from 'react';
-import { AuthHeader, AuthFooter } from '../../../features/auth';
+import type { Metadata } from 'next';
+import { SignUpForm } from '../../../features/auth/sign-up';
 
-export default function SignUpPlaceholderPage() {
-  return (
-    <>
-      <AuthHeader
-        title="Get started with CoachingOS"
-        description="Create your institute account to set up your operational workspace."
-        eyebrow="New Account"
-      />
-      <div className="py-8 text-center text-xs font-mono text-[hsl(var(--muted-foreground))] rounded-lg border border-dashed border-[hsl(var(--border))] bg-[hsl(var(--muted))]/10">
-        [ Sign Up Form UI Placeholder &mdash; Phase 0.12.4 ]
-      </div>
-      <AuthFooter
-        prompt="Already have an account?"
-        linkLabel="Sign In"
-        href="/sign-in"
-      />
-    </>
-  );
+export const metadata: Metadata = {
+  title: 'Create Account — CoachingOS',
+  description:
+    'Create your CoachingOS account to set up and manage your coaching institute workspace.',
+};
+
+/**
+ * /sign-up — Public registration page.
+ *
+ * ARCHITECTURE:
+ * - This page is a thin Server Component composition boundary.
+ * - All form interaction and auth client logic lives in <SignUpForm />.
+ * - No database, Prisma, or Better Auth server imports belong here.
+ *
+ * ALREADY AUTHENTICATED HANDLING:
+ * The <SignUpForm /> Client Component checks the Better Auth session via
+ * useSession() on mount and redirects to /onboarding if a valid session
+ * is already present. This keeps the page itself a Server Component.
+ *
+ * DEFER TO LATER PHASES:
+ * - Email verification UI (Phase 0.12.6+)
+ * - OAuth / social login (Deferred)
+ * - Password reset (Deferred)
+ */
+export default function SignUpPage() {
+  return <SignUpForm />;
 }
