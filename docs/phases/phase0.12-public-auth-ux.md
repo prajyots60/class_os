@@ -213,9 +213,9 @@ Phase 0.12.2  Public Landing Page 🚧 (IN PROGRESS)
       ├── Phase 0.12.2.2 — Hero Section Component ✅ (COMPLETED)
       ├── Phase 0.12.2.3 — Product Workflow Section Component ✅ (COMPLETED)
       ├── Phase 0.12.2.4 — Core Capabilities Section Component ✅ (COMPLETED)
-      ├── Phase 0.12.2.5 — Roles & Value Section Component (Next)
-      ├── Phase 0.12.2.6 — Trust & Security Section Component
-      ├── Phase 0.12.2.7 — Final CTA Section Component
+      ├── Phase 0.12.2.5 — Roles & Value Section Component ✅ (COMPLETED)
+      ├── Phase 0.12.2.6 — Trust & Security Section Component ✅ (COMPLETED)
+      ├── Phase 0.12.2.7 — Final CTA Section Component (Next)
       ├── Phase 0.12.2.8 — Responsive, SEO & Accessibility Audit
       └── Phase 0.12.2.9 — Phase 0.12.2 Acceptance Gate
 Phase 0.12.3  Authentication Layout & Shared Components
@@ -298,7 +298,7 @@ Phase 0.12.11 Phase 0.12 Acceptance Gate
    - Removed old 375-line `apps/web/src/app/page.tsx` to prevent App Router route collisions.
 2. **`MarketingHeader` (`apps/web/src/components/marketing/marketing-header.tsx`)**:
    - Reuses `CoachingOSLogo` and `Container` primitives.
-   - Desktop anchor navigation (`/#features`, `/#workflow`, `/#security`).
+   - Desktop anchor navigation (`/#features`, `/#workflow`, `/#roles`, `/#security`).
    - Auth action CTAs (`/sign-in`, `/sign-up`).
    - Integrated `<MobileNav />` client toggle component for accessible mobile overlay.
 3. **`MarketingFooter` (`apps/web/src/components/marketing/marketing-footer.tsx`)**:
@@ -367,6 +367,38 @@ Phase 0.12.11 Phase 0.12 Acceptance Gate
    - 8 Module Domain Cards: Student Management, Academic Operations, Attendance Tracking, Homework & Tasks, Tests & Marks, Fees & Billing, Staff & Role Control, Institute Announcements.
 2. **Testing Suite**:
    - Created `apps/web/src/components/marketing/capabilities-section.test.ts`.
+
+---
+
+## 16. Phase 0.12.2.5 — Roles & Value Section Completion
+
+**Status:** 🟢 **COMPLETED & VERIFIED**  
+**Code Commit:** `a4b1a3f` (`feat(web): implement roles and trust sections`)  
+
+### Implementation Details:
+1. **`RolesSection` (`apps/web/src/components/marketing/roles-section.tsx`)**:
+   - 100% Server Component rendering `<section id="roles">`.
+   - Eyebrow Badge: `"Role-Based Value"`.
+   - Headline H2: *"Built for every stakeholder in your institute."*
+   - 4 Canonical Role Cards: Institute Owner, Teacher, Assistant, Parent & Student.
+2. **Testing Suite**:
+   - Created `apps/web/src/components/marketing/roles-section.test.ts`.
+
+---
+
+## 17. Phase 0.12.2.6 — Trust / Security Section Completion
+
+**Status:** 🟢 **COMPLETED & VERIFIED**  
+**Code Commit:** `a4b1a3f` (`feat(web): implement roles and trust sections`)  
+
+### Implementation Details:
+1. **`TrustSection` (`apps/web/src/components/marketing/trust-section.tsx`)**:
+   - 100% Server Component rendering `<section id="security">`.
+   - Eyebrow Badge: `"Architectural Trust & Security"`.
+   - Headline H2: *"Enterprise security designed for coaching data."*
+   - 4 Technical Trust Concepts: Row-Level Tenant Isolation, Capability-Based RBAC, Server-Controlled Sessions, Audit Logging & PII Protection.
+2. **Testing Suite**:
+   - Created `apps/web/src/components/marketing/trust-section.test.ts`.
 
 
 

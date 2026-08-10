@@ -275,9 +275,9 @@ Phase 0.12.2.1  Marketing Layout Shell (Header + Footer Layout) ✅ (COMPLETED)
 Phase 0.12.2.2  Hero Section Component ✅ (COMPLETED)
 Phase 0.12.2.3  Product Workflow Section Component ✅ (COMPLETED)
 Phase 0.12.2.4  Core Capabilities Section Component ✅ (COMPLETED)
-Phase 0.12.2.5  Roles & Value Section Component (NEXT)
-Phase 0.12.2.6  Trust & Security Section Component
-Phase 0.12.2.7  Final CTA Section Component
+Phase 0.12.2.5  Roles & Value Section Component ✅ (COMPLETED)
+Phase 0.12.2.6  Trust & Security Section Component ✅ (COMPLETED)
+Phase 0.12.2.7  Final CTA Section Component (NEXT)
 Phase 0.12.2.8  Responsive, SEO & Accessibility Audit
 Phase 0.12.2.9  Phase 0.12.2 Acceptance Gate
 ```

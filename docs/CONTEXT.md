@@ -64,9 +64,9 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
         │     ├── 0.12.2.2 — Hero Section ✅
         │     ├── 0.12.2.3 — Product Workflow Section ✅
         │     ├── 0.12.2.4 — Core Capabilities Section ✅
-        │     ├── 0.12.2.5 — Roles & Value Section (Next)
-        │     ├── 0.12.2.6 — Trust & Security Section
-        │     ├── 0.12.2.7 — Final CTA Section
+        │     ├── 0.12.2.5 — Roles & Value Section ✅
+        │     ├── 0.12.2.6 — Trust & Security Section ✅
+        │     ├── 0.12.2.7 — Final CTA Section (Next)
         │     ├── 0.12.2.8 — Responsive, SEO & Accessibility Audit
         │     └── 0.12.2.9 — Landing Page Acceptance Gate
         ├── Phase 0.12.3 — Authentication Layout & Shared Components
@@ -180,6 +180,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Phase 0.12.2.2 (Hero Section Component)**: Implemented 100% Server Component `<HeroSection />` (`hero-section.tsx`) and `<HeroProductPreview />` (`hero-product-preview.tsx`), strictly adhering to Section 7.2 of frozen UX contract (H1 headline *"Run your coaching institute from one place."*, supporting copy, eyebrow badge, primary CTA `/sign-up`, secondary CTA `/sign-in`, multi-tenant trust micro-copy, and realistic React/CSS institute workspace dashboard preview). Composed in `app/(marketing)/page.tsx` and verified zero DB/auth/RBAC dependencies.
 - **Phase 0.12.2.3 (Product Workflow Section)**: Implemented 100% Server Component `<WorkflowSection />` (`workflow-section.tsx`) rendering a 4-step operational progression (`STEP 01`: Set Up Your Institute, `STEP 02`: Add Team & Students, `STEP 03`: Run Daily Operations, `STEP 04`: Stay in Total Control). Composed in `app/(marketing)/page.tsx` with zero DB/auth dependencies.
 - **Phase 0.12.2.4 (Core Capabilities Section)**: Implemented 100% Server Component `<CapabilitiesSection />` (`capabilities-section.tsx`) rendering an 8-card domain grid (Student Management, Academic Operations, Attendance Tracking, Homework & Tasks, Tests & Marks, Fees & Billing, Staff & Role Control, Institute Announcements). Composed in `app/(marketing)/page.tsx` with zero DB/auth dependencies.
+- **Phase 0.12.2.5 (Roles & Value Section)**: Implemented 100% Server Component `<RolesSection />` (`roles-section.tsx`) rendering 4 canonical role cards (Institute Owner, Teacher, Assistant, Parent & Student) highlighting role-specific operational value propositions. Composed in `app/(marketing)/page.tsx` with zero DB/auth dependencies.
+- **Phase 0.12.2.6 (Trust / Security Section)**: Implemented 100% Server Component `<TrustSection />` (`trust-section.tsx`) rendering 4 technical security concept cards (Row-Level Tenant Isolation, Capability RBAC, Server Sessions, Audit Logging) strictly grounded in existing codebase architecture. Composed in `app/(marketing)/page.tsx` with zero DB/auth dependencies.
 
 ### ✅ Phase 1.1 — Institute Tenant Core
 
