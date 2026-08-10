@@ -7,10 +7,16 @@ import {
   type UpdateInstituteDetailsProps,
 } from '../../domain/entities/institute.entity';
 import type { InstituteRepository } from '../../domain/repositories/institute.repository';
+import { CAPABILITIES, requireCapability } from '../../authorization';
+import type { TenantContext } from './membership.use-cases';
 
 export class CreateInstituteUseCase {
   constructor(private readonly repository: InstituteRepository) {}
 
+  /**
+   * Onboarding operation: Creates a new Institute entity.
+   * Special pre-tenant flow with no existing TenantContext prior to institute creation.
+   */
   public async execute(props: CreateInstituteProps): Promise<InstituteEntity> {
     const entity = InstituteEntity.create(props);
 
@@ -38,6 +44,7 @@ export class CreateInstituteUseCase {
 export interface GetInstituteQuery {
   id?: string;
   slug?: string;
+  tenantContext?: TenantContext;
   tenantContextId?: string;
 }
 
@@ -59,8 +66,13 @@ export class GetInstituteUseCase {
       );
     }
 
-    // Security invariant: If caller provided tenantContextId, it must match the requested institute ID
-    if (query.tenantContextId && query.tenantContextId !== found.id) {
+    // 1. Capability & Tenant Context Enforcement
+    if (query.tenantContext) {
+      requireCapability(query.tenantContext, CAPABILITIES.INSTITUTE_READ);
+      if (query.tenantContext.instituteId !== found.id) {
+        throw new AuthorizationError('Access denied to requested institute resource.');
+      }
+    } else if (query.tenantContextId && query.tenantContextId !== found.id) {
       throw new AuthorizationError('Access denied to requested institute resource.');
     }
 
@@ -71,6 +83,7 @@ export class GetInstituteUseCase {
 export interface UpdateInstituteCommand {
   id: string;
   details: UpdateInstituteDetailsProps;
+  tenantContext?: TenantContext;
   tenantContextId?: string;
 }
 
@@ -78,7 +91,13 @@ export class UpdateInstituteUseCase {
   constructor(private readonly repository: InstituteRepository) {}
 
   public async execute(command: UpdateInstituteCommand): Promise<InstituteEntity> {
-    if (command.tenantContextId && command.tenantContextId !== command.id) {
+    // 1. Capability & Tenant Context Enforcement BEFORE Database Fetch
+    if (command.tenantContext) {
+      requireCapability(command.tenantContext, CAPABILITIES.INSTITUTE_UPDATE);
+      if (command.tenantContext.instituteId !== command.id) {
+        throw new AuthorizationError('Access denied to update requested institute resource.');
+      }
+    } else if (command.tenantContextId && command.tenantContextId !== command.id) {
       throw new AuthorizationError('Access denied to update requested institute resource.');
     }
 
@@ -105,6 +124,7 @@ export class UpdateInstituteUseCase {
 export interface ChangeInstituteStatusCommand {
   id: string;
   status: InstituteStatus;
+  tenantContext?: TenantContext;
   tenantContextId?: string;
 }
 
@@ -112,7 +132,20 @@ export class ChangeInstituteStatusUseCase {
   constructor(private readonly repository: InstituteRepository) {}
 
   public async execute(command: ChangeInstituteStatusCommand): Promise<InstituteEntity> {
-    if (command.tenantContextId && command.tenantContextId !== command.id) {
+    // 1. Capability & Tenant Context Enforcement BEFORE Database Fetch
+    if (command.tenantContext) {
+      const requiredCap =
+        command.status === 'archived'
+          ? CAPABILITIES.INSTITUTE_ARCHIVE
+          : CAPABILITIES.INSTITUTE_UPDATE;
+      requireCapability(command.tenantContext, requiredCap);
+
+      if (command.tenantContext.instituteId !== command.id) {
+        throw new AuthorizationError(
+          'Access denied to update status of requested institute resource.',
+        );
+      }
+    } else if (command.tenantContextId && command.tenantContextId !== command.id) {
       throw new AuthorizationError(
         'Access denied to update status of requested institute resource.',
       );

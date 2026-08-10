@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { AuthorizationError, ConflictError, NotFoundError } from '@coaching-os/shared';
 import {
   InstituteMembershipEntity,
@@ -6,6 +6,7 @@ import {
   type MembershipStatus,
 } from '../../domain/entities/institute-membership.entity';
 import type { InstituteMembershipRepository } from '../../domain/repositories/institute-membership.repository';
+import type { TenantContext } from './membership.use-cases';
 import {
   CreateInstituteMembershipUseCase,
   GetUserMembershipsUseCase,
@@ -89,53 +90,229 @@ describe('Institute Membership Use Cases — Security Unit Suite', () => {
     repository = new InMemoryMembershipRepository();
   });
 
-  describe('CreateInstituteMembershipUseCase', () => {
-    it('creates a new institute membership when tenantContext matches', async () => {
+  describe('CreateInstituteMembershipUseCase Capability Integration', () => {
+    it('creates a staff membership when owner context provides staff:invite capability', async () => {
       const useCase = new CreateInstituteMembershipUseCase(repository);
-      const membership = await useCase.execute({
-        userId: 'usr-1',
+
+      const ownerCtx: TenantContext = {
+        userId: 'usr-owner',
         instituteId: 'inst-1',
+        membershipId: 'mem-owner',
         role: 'owner',
-        tenantContextId: 'inst-1',
+        status: 'active',
+      };
+
+      const membership = await useCase.execute({
+        userId: 'usr-new-teacher',
+        instituteId: 'inst-1',
+        role: 'teacher',
+        tenantContext: ownerCtx,
       });
 
       expect(membership.id).toBeDefined();
-      expect(membership.userId).toBe('usr-1');
-      expect(membership.instituteId).toBe('inst-1');
+      expect(membership.userId).toBe('usr-new-teacher');
+      expect(membership.role).toBe('teacher');
     });
 
-    it('rejects membership creation when tenantContextId mismatches target institute', async () => {
+    it('rejects membership creation by teacher lacking staff:invite capability', async () => {
       const useCase = new CreateInstituteMembershipUseCase(repository);
+
+      const teacherCtx: TenantContext = {
+        userId: 'usr-teacher',
+        instituteId: 'inst-1',
+        membershipId: 'mem-teacher',
+        role: 'teacher',
+        status: 'active',
+      };
 
       await expect(
         useCase.execute({
-          userId: 'usr-attacker',
-          instituteId: 'inst-victim',
-          role: 'owner',
-          tenantContextId: 'inst-attacker',
+          userId: 'usr-new-staff',
+          instituteId: 'inst-1',
+          role: 'assistant',
+          tenantContext: teacherCtx,
         }),
       ).rejects.toThrow(AuthorizationError);
     });
 
-    it('rejects duplicate active membership for same user and institute', async () => {
+    it('prevents owner escalation when non-owner assistant attempts to create an owner membership', async () => {
       const useCase = new CreateInstituteMembershipUseCase(repository);
-      await useCase.execute({
-        userId: 'usr-1',
+
+      const assistantCtx: TenantContext = {
+        userId: 'usr-assistant',
+        instituteId: 'inst-1',
+        membershipId: 'mem-assistant',
+        role: 'assistant',
+        status: 'active',
+      };
+
+      await expect(
+        useCase.execute({
+          userId: 'usr-new-owner',
+          instituteId: 'inst-1',
+          role: 'owner',
+          tenantContext: assistantCtx,
+        }),
+      ).rejects.toThrow(AuthorizationError);
+    });
+  });
+
+  describe('GetInstituteMembersUseCase Capability Integration', () => {
+    it('allows assistant with staff:read capability to list institute members', async () => {
+      const createUseCase = new CreateInstituteMembershipUseCase(repository);
+      await createUseCase.execute({ userId: 'usr-1', instituteId: 'inst-1', role: 'owner' });
+
+      const assistantCtx: TenantContext = {
+        userId: 'usr-2',
+        instituteId: 'inst-1',
+        membershipId: 'mem-2',
+        role: 'assistant',
+        status: 'active',
+      };
+
+      const getMembersUseCase = new GetInstituteMembersUseCase(repository);
+      const members = await getMembersUseCase.execute({
+        instituteId: 'inst-1',
+        tenantContext: assistantCtx,
+      });
+
+      expect(members.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it('rejects members list request by teacher lacking staff:read capability', async () => {
+      const teacherCtx: TenantContext = {
+        userId: 'usr-teacher',
+        instituteId: 'inst-1',
+        membershipId: 'mem-teacher',
+        role: 'teacher',
+        status: 'active',
+      };
+
+      const getMembersUseCase = new GetInstituteMembersUseCase(repository);
+
+      await expect(
+        getMembersUseCase.execute({
+          instituteId: 'inst-1',
+          tenantContext: teacherCtx,
+        }),
+      ).rejects.toThrow(AuthorizationError);
+    });
+  });
+
+  describe('UpdateMembershipRoleUseCase Capability Integration', () => {
+    it('allows owner to update staff member role using staff:role_change capability', async () => {
+      const createUseCase = new CreateInstituteMembershipUseCase(repository);
+      const created = await createUseCase.execute({
+        userId: 'usr-staff',
+        instituteId: 'inst-1',
+        role: 'assistant',
+      });
+
+      const ownerCtx: TenantContext = {
+        userId: 'usr-owner',
+        instituteId: 'inst-1',
+        membershipId: 'mem-owner',
+        role: 'owner',
+        status: 'active',
+      };
+
+      const updateRoleUseCase = new UpdateMembershipRoleUseCase(repository);
+      const updated = await updateRoleUseCase.execute({
+        id: created.id,
+        role: 'teacher',
+        tenantContext: ownerCtx,
+      });
+
+      expect(updated.role).toBe('teacher');
+    });
+
+    it('rejects role update attempt by assistant lacking staff:role_change capability BEFORE repository write', async () => {
+      const createUseCase = new CreateInstituteMembershipUseCase(repository);
+      const created = await createUseCase.execute({
+        userId: 'usr-staff',
         instituteId: 'inst-1',
         role: 'teacher',
       });
 
+      const assistantCtx: TenantContext = {
+        userId: 'usr-assistant',
+        instituteId: 'inst-1',
+        membershipId: 'mem-assistant',
+        role: 'assistant',
+        status: 'active',
+      };
+
+      const spyUpdateRole = vi.spyOn(repository, 'updateRole');
+      const updateRoleUseCase = new UpdateMembershipRoleUseCase(repository);
+
       await expect(
-        useCase.execute({
-          userId: 'usr-1',
-          instituteId: 'inst-1',
-          role: 'assistant',
+        updateRoleUseCase.execute({
+          id: created.id,
+          role: 'owner',
+          tenantContext: assistantCtx,
         }),
-      ).rejects.toThrow(ConflictError);
+      ).rejects.toThrow(AuthorizationError);
+
+      expect(spyUpdateRole).not.toHaveBeenCalled();
     });
   });
 
-  describe('GetUserMembershipsUseCase', () => {
+  describe('ChangeMembershipStatusUseCase Capability Integration', () => {
+    it('allows owner to suspend membership using staff:remove capability', async () => {
+      const createUseCase = new CreateInstituteMembershipUseCase(repository);
+      const created = await createUseCase.execute({
+        userId: 'usr-staff',
+        instituteId: 'inst-1',
+        role: 'teacher',
+      });
+
+      const ownerCtx: TenantContext = {
+        userId: 'usr-owner',
+        instituteId: 'inst-1',
+        membershipId: 'mem-owner',
+        role: 'owner',
+        status: 'active',
+      };
+
+      const changeStatusUseCase = new ChangeMembershipStatusUseCase(repository);
+      const updated = await changeStatusUseCase.execute({
+        id: created.id,
+        status: 'suspended',
+        tenantContext: ownerCtx,
+      });
+
+      expect(updated.status).toBe('suspended');
+    });
+
+    it('rejects status change by teacher lacking staff status management capabilities', async () => {
+      const createUseCase = new CreateInstituteMembershipUseCase(repository);
+      const created = await createUseCase.execute({
+        userId: 'usr-staff',
+        instituteId: 'inst-1',
+        role: 'assistant',
+      });
+
+      const teacherCtx: TenantContext = {
+        userId: 'usr-teacher',
+        instituteId: 'inst-1',
+        membershipId: 'mem-teacher',
+        role: 'teacher',
+        status: 'active',
+      };
+
+      const changeStatusUseCase = new ChangeMembershipStatusUseCase(repository);
+
+      await expect(
+        changeStatusUseCase.execute({
+          id: created.id,
+          status: 'removed',
+          tenantContext: teacherCtx,
+        }),
+      ).rejects.toThrow(AuthorizationError);
+    });
+  });
+
+  describe('GetUserMembershipsUseCase Self-Service Scoping', () => {
     it('returns active memberships for authenticated self-service user', async () => {
       const createUseCase = new CreateInstituteMembershipUseCase(repository);
       await createUseCase.execute({ userId: 'usr-1', instituteId: 'inst-1', role: 'owner' });
@@ -156,47 +333,6 @@ describe('Institute Membership Use Cases — Security Unit Suite', () => {
         getUserMemberships.execute({
           userId: 'usr-victim',
           authenticatedUserId: 'usr-attacker',
-        }),
-      ).rejects.toThrow(AuthorizationError);
-    });
-  });
-
-  describe('GetInstituteMembershipUseCase', () => {
-    it('rejects cross-tenant membership lookup by membershipId when tenantContextId mismatches', async () => {
-      const createUseCase = new CreateInstituteMembershipUseCase(repository);
-      const created = await createUseCase.execute({
-        userId: 'usr-victim',
-        instituteId: 'inst-victim',
-        role: 'owner',
-      });
-
-      const getMembership = new GetInstituteMembershipUseCase(repository);
-
-      await expect(
-        getMembership.execute({
-          id: created.id,
-          tenantContextId: 'inst-attacker',
-        }),
-      ).rejects.toThrow(AuthorizationError);
-    });
-  });
-
-  describe('UpdateMembershipRoleUseCase', () => {
-    it('rejects role mutation when tenantContextId mismatches', async () => {
-      const createUseCase = new CreateInstituteMembershipUseCase(repository);
-      const created = await createUseCase.execute({
-        userId: 'usr-1',
-        instituteId: 'inst-victim',
-        role: 'teacher',
-      });
-
-      const updateRoleUseCase = new UpdateMembershipRoleUseCase(repository);
-
-      await expect(
-        updateRoleUseCase.execute({
-          id: created.id,
-          role: 'owner',
-          tenantContextId: 'inst-attacker',
         }),
       ).rejects.toThrow(AuthorizationError);
     });

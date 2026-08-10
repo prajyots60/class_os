@@ -1,7 +1,8 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { AuthorizationError, ConflictError, NotFoundError } from '@coaching-os/shared';
 import { InstituteEntity, type InstituteStatus } from '../../domain/entities/institute.entity';
 import type { InstituteRepository } from '../../domain/repositories/institute.repository';
+import type { TenantContext } from './membership.use-cases';
 import {
   CreateInstituteUseCase,
   GetInstituteUseCase,
@@ -111,7 +112,7 @@ describe('Institute Use Cases', () => {
       expect(foundBySlug.id).toBe(created.id);
     });
 
-    it('enforces tenantContext boundary authorization', async () => {
+    it('enforces capability and tenantContext boundary authorization', async () => {
       const createUseCase = new CreateInstituteUseCase(repository);
       const created = await createUseCase.execute({
         name: 'Tenant Institute A',
@@ -121,15 +122,31 @@ describe('Institute Use Cases', () => {
 
       const getUseCase = new GetInstituteUseCase(repository);
 
-      // Caller requesting institute A with tenantContextId = 'other-tenant-id' -> throws AuthorizationError
+      const ownerCtx: TenantContext = {
+        userId: 'usr_1',
+        instituteId: created.id,
+        membershipId: 'mem_1',
+        role: 'owner',
+        status: 'active',
+      };
+
+      const found = await getUseCase.execute({ id: created.id, tenantContext: ownerCtx });
+      expect(found.id).toBe(created.id);
+
+      // Caller requesting institute A with tenantContext for institute B -> throws AuthorizationError
+      const crossTenantCtx: TenantContext = {
+        ...ownerCtx,
+        instituteId: 'other-tenant-id',
+      };
+
       await expect(
-        getUseCase.execute({ id: created.id, tenantContextId: 'other-tenant-id' }),
+        getUseCase.execute({ id: created.id, tenantContext: crossTenantCtx }),
       ).rejects.toThrow(AuthorizationError);
     });
   });
 
-  describe('UpdateInstituteUseCase', () => {
-    it('updates allowed mutable fields', async () => {
+  describe('UpdateInstituteUseCase Security & Capabilities', () => {
+    it('allows owner with institute:update capability to modify details', async () => {
       const createUseCase = new CreateInstituteUseCase(repository);
       const created = await createUseCase.execute({
         name: 'Original Name',
@@ -137,54 +154,137 @@ describe('Institute Use Cases', () => {
         email: 'info@original.com',
       });
 
+      const ownerCtx: TenantContext = {
+        userId: 'usr_1',
+        instituteId: created.id,
+        membershipId: 'mem_1',
+        role: 'owner',
+        status: 'active',
+      };
+
       const updateUseCase = new UpdateInstituteUseCase(repository);
       const updated = await updateUseCase.execute({
         id: created.id,
-        details: {
-          name: 'Updated Name',
-          phone: '+919999999999',
-        },
+        details: { name: 'Updated Name' },
+        tenantContext: ownerCtx,
       });
 
       expect(updated.name).toBe('Updated Name');
-      expect(updated.phone).toBe('+919999999999');
     });
 
-    it('rejects cross-tenant updates', async () => {
+    it('rejects update attempt by teacher lacking institute:update capability BEFORE repository write', async () => {
       const createUseCase = new CreateInstituteUseCase(repository);
       const created = await createUseCase.execute({
-        name: 'Institute A',
+        name: 'Original Name',
         phone: '+919876543210',
-        email: 'a@example.com',
+        email: 'info@original.com',
       });
 
+      const teacherCtx: TenantContext = {
+        userId: 'usr_2',
+        instituteId: created.id,
+        membershipId: 'mem_2',
+        role: 'teacher',
+        status: 'active',
+      };
+
+      const spyUpdate = vi.spyOn(repository, 'update');
       const updateUseCase = new UpdateInstituteUseCase(repository);
+
       await expect(
         updateUseCase.execute({
           id: created.id,
-          tenantContextId: 'wrong-tenant-id',
-          details: { name: 'Hacked Name' },
+          details: { name: 'Forged Name' },
+          tenantContext: teacherCtx,
         }),
       ).rejects.toThrow(AuthorizationError);
+
+      expect(spyUpdate).not.toHaveBeenCalled();
+    });
+
+    it('rejects update attempt from cross-tenant context BEFORE repository fetch', async () => {
+      const createUseCase = new CreateInstituteUseCase(repository);
+      const created = await createUseCase.execute({
+        name: 'Original Name',
+        phone: '+919876543210',
+        email: 'info@original.com',
+      });
+
+      const crossTenantCtx: TenantContext = {
+        userId: 'usr_1',
+        instituteId: 'inst_FOREIGN',
+        membershipId: 'mem_1',
+        role: 'owner',
+        status: 'active',
+      };
+
+      const spyFindById = vi.spyOn(repository, 'findById');
+      const updateUseCase = new UpdateInstituteUseCase(repository);
+
+      await expect(
+        updateUseCase.execute({
+          id: created.id,
+          details: { name: 'Forged Name' },
+          tenantContext: crossTenantCtx,
+        }),
+      ).rejects.toThrow(AuthorizationError);
+
+      expect(spyFindById).not.toHaveBeenCalled();
     });
   });
 
-  describe('ChangeInstituteStatusUseCase', () => {
-    it('updates status and logs event', async () => {
+  describe('ChangeInstituteStatusUseCase Security & Capabilities', () => {
+    it('allows owner to archive institute using institute:archive capability', async () => {
       const createUseCase = new CreateInstituteUseCase(repository);
       const created = await createUseCase.execute({
-        name: 'Status Test Institute',
+        name: 'To Archive',
         phone: '+919876543210',
-        email: 'status@example.com',
+        email: 'archive@example.com',
       });
 
-      const statusUseCase = new ChangeInstituteStatusUseCase(repository);
-      const suspended = await statusUseCase.execute({
+      const ownerCtx: TenantContext = {
+        userId: 'usr_1',
+        instituteId: created.id,
+        membershipId: 'mem_1',
+        role: 'owner',
+        status: 'active',
+      };
+
+      const changeStatusUseCase = new ChangeInstituteStatusUseCase(repository);
+      const updated = await changeStatusUseCase.execute({
         id: created.id,
-        status: 'suspended',
+        status: 'archived',
+        tenantContext: ownerCtx,
       });
 
-      expect(suspended.status).toBe('suspended');
+      expect(updated.status).toBe('archived');
+    });
+
+    it('rejects status change attempt by assistant lacking institute capabilities', async () => {
+      const createUseCase = new CreateInstituteUseCase(repository);
+      const created = await createUseCase.execute({
+        name: 'To Suspend',
+        phone: '+919876543210',
+        email: 'suspend@example.com',
+      });
+
+      const assistantCtx: TenantContext = {
+        userId: 'usr_3',
+        instituteId: created.id,
+        membershipId: 'mem_3',
+        role: 'assistant',
+        status: 'active',
+      };
+
+      const changeStatusUseCase = new ChangeInstituteStatusUseCase(repository);
+
+      await expect(
+        changeStatusUseCase.execute({
+          id: created.id,
+          status: 'suspended',
+          tenantContext: assistantCtx,
+        }),
+      ).rejects.toThrow(AuthorizationError);
     });
   });
 });

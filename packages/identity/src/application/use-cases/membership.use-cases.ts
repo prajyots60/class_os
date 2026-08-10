@@ -7,6 +7,7 @@ import {
   type MembershipStatus,
 } from '../../domain/entities/institute-membership.entity';
 import type { InstituteMembershipRepository } from '../../domain/repositories/institute-membership.repository';
+import { CAPABILITIES, requireCapability } from '../../authorization';
 
 export interface TenantContext {
   userId: string;
@@ -17,6 +18,7 @@ export interface TenantContext {
 }
 
 export interface CreateMembershipCommand extends CreateInstituteMembershipProps {
+  tenantContext?: TenantContext;
   tenantContextId?: string;
 }
 
@@ -24,8 +26,19 @@ export class CreateInstituteMembershipUseCase {
   constructor(private readonly repository: InstituteMembershipRepository) {}
 
   public async execute(props: CreateMembershipCommand): Promise<InstituteMembershipEntity> {
-    // Security invariant 1: Caller's tenant context must match target institute
-    if (props.tenantContextId && props.tenantContextId !== props.instituteId) {
+    // 1. Capability & Tenant Scoping Enforcement
+    if (props.tenantContext) {
+      requireCapability(props.tenantContext, CAPABILITIES.STAFF_INVITE);
+
+      if (props.tenantContext.instituteId !== props.instituteId) {
+        throw new AuthorizationError('Access denied to create membership in target institute.');
+      }
+
+      // Role escalation protection: Creating an owner requires owner/institute:update capability
+      if (props.role === 'owner') {
+        requireCapability(props.tenantContext, CAPABILITIES.INSTITUTE_UPDATE);
+      }
+    } else if (props.tenantContextId && props.tenantContextId !== props.instituteId) {
       throw new AuthorizationError('Access denied to create membership in target institute.');
     }
 
@@ -94,6 +107,7 @@ export class GetUserMembershipsUseCase {
 
 export interface GetInstituteMembersQuery {
   instituteId: string;
+  tenantContext?: TenantContext;
   tenantContextId?: string;
 }
 
@@ -105,8 +119,13 @@ export class GetInstituteMembersUseCase {
       throw new NotFoundError('Institute ID cannot be empty');
     }
 
-    // Security invariant 3: Caller's trusted tenant context must match requested institute
-    if (query.tenantContextId && query.tenantContextId !== query.instituteId) {
+    // Capability & Tenant Context Enforcement
+    if (query.tenantContext) {
+      requireCapability(query.tenantContext, CAPABILITIES.STAFF_READ);
+      if (query.tenantContext.instituteId !== query.instituteId) {
+        throw new AuthorizationError('Access denied to members of requested institute.');
+      }
+    } else if (query.tenantContextId && query.tenantContextId !== query.instituteId) {
       throw new AuthorizationError('Access denied to members of requested institute.');
     }
 
@@ -118,6 +137,7 @@ export interface GetInstituteMembershipQuery {
   id?: string;
   userId?: string;
   instituteId?: string;
+  tenantContext?: TenantContext;
   tenantContextId?: string;
 }
 
@@ -137,8 +157,13 @@ export class GetInstituteMembershipUseCase {
       throw new NotFoundError('Institute membership not found.');
     }
 
-    // Security invariant 4: Membership lookup by membershipId MUST be scoped by trusted tenantContextId
-    if (query.tenantContextId && query.tenantContextId !== found.instituteId) {
+    // Capability & Tenant Context Enforcement
+    if (query.tenantContext) {
+      requireCapability(query.tenantContext, CAPABILITIES.STAFF_READ);
+      if (query.tenantContext.instituteId !== found.instituteId) {
+        throw new AuthorizationError('Access denied to requested membership.');
+      }
+    } else if (query.tenantContextId && query.tenantContextId !== found.instituteId) {
       throw new AuthorizationError('Access denied to requested membership.');
     }
 
@@ -149,6 +174,7 @@ export class GetInstituteMembershipUseCase {
 export interface ChangeMembershipStatusCommand {
   id: string;
   status: MembershipStatus;
+  tenantContext?: TenantContext;
   tenantContextId?: string;
 }
 
@@ -161,8 +187,18 @@ export class ChangeMembershipStatusUseCase {
       throw new NotFoundError(`Membership with ID ${command.id} not found.`);
     }
 
-    // Security invariant 5: Tenant boundary enforcement for status mutation
-    if (command.tenantContextId && command.tenantContextId !== existing.instituteId) {
+    // Capability & Tenant Context Enforcement
+    if (command.tenantContext) {
+      const requiredCap =
+        command.status === 'removed' || command.status === 'suspended'
+          ? CAPABILITIES.STAFF_REMOVE
+          : CAPABILITIES.STAFF_UPDATE;
+      requireCapability(command.tenantContext, requiredCap);
+
+      if (command.tenantContext.instituteId !== existing.instituteId) {
+        throw new AuthorizationError('Access denied to change membership status.');
+      }
+    } else if (command.tenantContextId && command.tenantContextId !== existing.instituteId) {
       throw new AuthorizationError('Access denied to change membership status.');
     }
 
@@ -183,6 +219,7 @@ export class ChangeMembershipStatusUseCase {
 export interface UpdateMembershipRoleCommand {
   id: string;
   role: MembershipRole;
+  tenantContext?: TenantContext;
   tenantContextId?: string;
 }
 
@@ -195,8 +232,19 @@ export class UpdateMembershipRoleUseCase {
       throw new NotFoundError(`Membership with ID ${command.id} not found.`);
     }
 
-    // Security invariant 6: Tenant boundary enforcement for role mutation
-    if (command.tenantContextId && command.tenantContextId !== existing.instituteId) {
+    // Capability & Tenant Context Enforcement
+    if (command.tenantContext) {
+      requireCapability(command.tenantContext, CAPABILITIES.STAFF_ROLE_CHANGE);
+
+      if (command.tenantContext.instituteId !== existing.instituteId) {
+        throw new AuthorizationError('Access denied to update membership role.');
+      }
+
+      // Role escalation protection: Promoting to owner requires institute:update capability
+      if (command.role === 'owner') {
+        requireCapability(command.tenantContext, CAPABILITIES.INSTITUTE_UPDATE);
+      }
+    } else if (command.tenantContextId && command.tenantContextId !== existing.instituteId) {
       throw new AuthorizationError('Access denied to update membership role.');
     }
 
