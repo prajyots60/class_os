@@ -175,8 +175,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 1.2:** Users & Memberships ✅
   - **Phase 1.3:** Capability-Based RBAC 🚧 (NOW ACTIVE)
     - **Phase 1.3.0:** RBAC Architecture & Capability Matrix ✅ (Freeze)
-    - **Phase 1.3.1:** Capability Taxonomy & Strongly-Typed Enums
-    - **Phase 1.3.2:** Role → Capability Resolver Engine
+    - **Phase 1.3.1:** Capability Taxonomy & Strongly-Typed Enums ✅
+    - **Phase 1.3.2:** Role → Capability Resolver Engine (Next)
     - **Phase 1.3.3:** Authorization Engine & Assertion Guards
     - **Phase 1.3.4:** Tenant-Scoped Capability Evaluation
     - **Phase 1.3.5:** Resource-Scoped Filtering Helpers (Parent/Teacher)
