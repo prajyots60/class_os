@@ -268,47 +268,94 @@ Response (201 Created):
 
 ---
 
-## 15. Database Impact Assessment
-
-- **Prisma Schema Changes Needed**: **NONE (`0`)**.
-- Existing `Institute`, `User`, `InstituteMembership`, and `ParentIdentity` models fully support atomic onboarding.
-- **Migrations Required**: **NONE (`0`)**.
+## 19. Completed Subphase Implementation Summaries & Diagrams
 
 ---
 
-## 16. Phase 1.4 Subphase Implementation Plan
+### 19.1 Phase 1.4.1 — Onboarding Domain & Application Orchestration
 
-```text
-Phase 1.4.0 — Architecture & Workflow Contract Freeze         ✅ COMPLETED
-Phase 1.4.1 — Onboarding Domain & Application Orchestration   ✅ COMPLETED
-Phase 1.4.2 — Atomic Institute + Owner Bootstrap Transaction   ✅ COMPLETED
-Phase 1.4.3 — Idempotency & Conflict Handling                 🚧 NEXT TASK
-Phase 1.4.4 — Onboarding API Boundary (POST /api/onboarding/institute)
-Phase 1.4.5 — Onboarding UI Flow (/onboarding)
-Phase 1.4.6 — Tenant Context Resolution & Post-Onboarding Redirect
-Phase 1.4.7 — End-to-End Security & Failure Testing
-Phase 1.4.8 — Phase 1.4 Acceptance Gate
+**Objective**: Established the framework-independent domain and application orchestration boundary for institute onboarding without HTTP, React, Next.js, or Prisma dependencies.
+
+#### Component Structure:
+- `OnboardInstituteUseCase` (`packages/identity/src/application/use-cases/onboarding.use-cases.ts`): Framework-independent application orchestrator.
+- `InstituteOnboardingRepository` (`packages/identity/src/domain/repositories/institute-onboarding.repository.ts`): Interface defining atomic `onboard(institute, membership)` unit of work.
+- `onboardInstituteSchema` (`packages/identity/src/presentation/validators/onboarding.validator.ts`): Zod presentation validator enforcing string lengths, email format, custom slug regex, and reserved slug protection (`admin`, `api`, `app`, `auth`, `dashboard`, `onboarding`, `settings`, `support`, `billing`).
+
+#### Application Orchestration Sequence Diagram:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor ServerSession as Server Boundary (API / Route)
+    participant UseCase as OnboardInstituteUseCase
+    participant InstEntity as InstituteEntity (Domain)
+    participant InstRepo as InstituteRepository
+    participant MemEntity as InstituteMembershipEntity (Domain)
+    participant OnboardRepo as InstituteOnboardingRepository
+
+    ServerSession->>UseCase: execute(command: { authenticatedUserId, name, phone, email, timezone, slug? })
+    Note over UseCase: Validates non-empty authenticatedUserId
+    UseCase->>InstEntity: create({ name, slug, phone, email, timezone })
+    Note over InstEntity: Validates props & normalizes slug via normalizeSlug()
+    UseCase->>InstRepo: findBySlug(normalizedSlug)
+    alt Slug Conflict Exists
+        InstRepo-->>UseCase: existingInstitute
+        UseCase-->>ServerSession: throw ConflictError("An institute with slug '...' already exists.")
+    else Slug Available
+        InstRepo-->>UseCase: null
+    end
+    UseCase->>MemEntity: create({ userId: authenticatedUserId, instituteId, role: 'owner', status: 'active' })
+    Note over MemEntity: Enforces server-controlled role='owner' & status='active'
+    UseCase->>OnboardRepo: onboard(instituteEntity, membershipEntity)
+    Note over OnboardRepo: Atomic Unit of Work Persistence
+    OnboardRepo-->>UseCase: { institute, membership }
+    UseCase-->>ServerSession: OnboardInstituteResult { institute, membership }
 ```
 
----
-
-## 17. Explicit Non-Goals for Phase 1.4
-1. **NO** database migrations or new schema tables (e.g. no `onboarding_steps` table).
-2. **NO** custom domain setup or DNS verification (deferred to infrastructure phase).
-3. **NO** payment gateway / subscription billing during onboarding (deferred to Phase 3 Billing).
-4. **NO** speculative authorization bypasses or alteration of Phase 1.3 RBAC invariants.
+#### Key Implementation Invariants:
+1. `authenticatedUserId` MUST originate from trusted server session boundary. Command throws `ValidationError` if empty.
+2. `role` is hardcoded to `'owner'` and `status` is hardcoded to `'active'` in `InstituteMembershipEntity.create()`. Client attempts to inject role or status are completely ignored.
+3. Slug generation and normalization follow Phase 1.1 immutability rules.
+4. Returns hydrated `InstituteEntity` and `InstituteMembershipEntity` domain models compatible with `ResolveInstituteMembershipUseCase`.
 
 ---
 
-## 18. Acceptance Criteria for Phase 1.4
+### 19.2 Phase 1.4.2 — Atomic Institute + Owner Bootstrap Transaction
 
-- [ ] `OnboardInstituteUseCase` atomically creates Institute and Owner Membership in a single transaction.
-- [ ] Partial failure causes full transaction rollback (zero orphaned institutes).
-- [ ] Slug generation follows Phase 1.1 immutability invariants.
-- [ ] Initial onboarding requires authenticated `userId` but does NOT require a pre-existing `TenantContext`.
-- [ ] Post-onboarding `ResolveInstituteMembershipUseCase` immediately produces valid `TenantContext`.
-- [ ] Double-submission and slug collisions fail cleanly with `ConflictError`.
-- [ ] REST API route `POST /api/onboarding/institute` handles request validation and error responses safely.
-- [ ] `/onboarding` UI page provides form submission, validation, loading states, and redirect to `/dashboard`.
-- [ ] E2E Playwright tests verify full onboarding flow from sign-up to dashboard redirect.
-- [ ] Full workspace verification pipeline passes cleanly.
+**Objective**: Implemented the real PostgreSQL persistence boundary for institute onboarding using Prisma 7 `$transaction`.
+
+#### Infrastructure Adapter:
+- `PrismaOnboardInstituteRepository` (`packages/identity/src/infrastructure/repositories/prisma-onboard-institute.repository.ts`): Implements `InstituteOnboardingRepository`.
+
+#### Transaction Flow & Rollback Guarantee Diagram:
+
+```mermaid
+flowchart TD
+    A[OnboardInstituteUseCase] -->|Passes Institute & Owner Membership Entities| B[PrismaOnboardInstituteRepository.onboard]
+    B --> C["db.$transaction(async (tx) => { ... })"]
+
+    subgraph PostgreSQL Atomic Transaction
+        C --> D["1. tx.institute.create({ data: { id, name, slug, phone, email, timezone, status } })"]
+        D -->|Institute Row Created| E["2. tx.user.update({ where: { id: userId }, data: { instituteId, status: 'active' } })"]
+    end
+
+    E -->|User Linked Successfully| F[COMMIT Transaction]
+    F --> G[Hydrate & Return Domain Entities: InstituteEntity + InstituteMembershipEntity]
+
+    D -- "Slug Collision (P2002)" --> H[ROLLBACK Transaction]
+    E -- "User Not Found (P2025)" --> H[ROLLBACK Transaction]
+
+    H --> I[Map Error & Throw to Caller]
+    I -->|P2002| J["throw ConflictError('An institute with slug ... already exists')"]
+    I -->|P2025| K["throw NotFoundError('User with ID ... not found')"]
+
+    style F fill:#d4edda,stroke:#28a745,stroke-width:2px;
+    style H fill:#f8d7da,stroke:#dc3545,stroke-width:2px;
+    style G fill:#d1ecf1,stroke:#17a2b8,stroke-width:2px;
+```
+
+#### Real PostgreSQL Test Evidence (`prisma-onboard-institute.repository.test.ts`):
+- **Atomic Persistence**: Successfully persisted `Institute` and linked `User` as owner in PostgreSQL, hydrating valid `InstituteEntity` and `InstituteMembershipEntity` domain instances.
+- **Rollback Guarantee Verification**: Intentionally supplied an invalid `userId`. `tx.user.update()` failed with `P2025`. Verified via direct PostgreSQL query that `Institute` was **100% rolled back** (0 records in `institutes` table for target `id`).
+- **Database Uniqueness & Concurrency**: Executed concurrent `Promise.all()` onboarding calls with identical slug. PostgreSQL `@unique` constraint ensured **exactly 1 request committed** while the second threw `ConflictError` cleanly with 0 partial records in database.
+
