@@ -179,6 +179,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 
 - **Phase 1.4.0 (Architecture & Workflow Contract Freeze)**: Defined authoritative onboarding architecture contract in `docs/phases/phase1.4-onboarding.md`, establishing atomic tenant bootstrap (`Institute` + `Owner Membership`), derived onboarding state, server trust boundaries, and bootstrap authorization exemption.
 - **Phase 1.4.1 (Onboarding Domain & Application Orchestration)**: Implemented framework-independent `OnboardInstituteUseCase`, `InstituteOnboardingRepository` contract interface, `onboardInstituteSchema` Zod presentation validator, and unit test suite verifying server-controlled owner invariants (`role === 'owner'`, `status === 'active'`), input validation, fail-fast slug collision handling, and `ResolveInstituteMembershipUseCase` compatibility. Zero Prisma/HTTP/React imports in domain layer.
+- **Phase 1.4.2 (Atomic Institute + Owner Bootstrap Transaction)**: Implemented `PrismaOnboardInstituteRepository` executing atomic PostgreSQL `$transaction` creating `Institute` and linking `User` as owner. Created real PostgreSQL integration test suite verifying atomic transaction persistence, zero orphaned institutes on membership/user failure, database `@unique` slug constraint enforcement, and concurrent onboarding handling with zero duplicate tenants.
 
 ## 4. Next Milestone Roadmap
 
@@ -203,8 +204,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 1.4:** Institute Onboarding Workflow 🚧 (NOW ACTIVE)
     - **Phase 1.4.0:** Architecture & Workflow Contract Freeze 🟢 (Freeze)
     - **Phase 1.4.1:** Onboarding Domain & Application Orchestration ✅
-    - **Phase 1.4.2:** Atomic Institute + Owner Bootstrap Transaction (Next)
-    - **Phase 1.4.3:** Idempotency & Conflict Handling
+    - **Phase 1.4.2:** Atomic Institute + Owner Bootstrap Transaction ✅
+    - **Phase 1.4.3:** Idempotency & Conflict Handling (Next)
     - **Phase 1.4.4:** Onboarding API Boundary
     - **Phase 1.4.5:** Onboarding UI Flow
     - **Phase 1.4.6:** Tenant Context Resolution & Post-Onboarding Redirect
