@@ -69,8 +69,8 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
         │     ├── 0.12.2.7 — Final CTA Section ✅
         │     ├── 0.12.2.8 — Responsive, SEO & Accessibility Audit ✅
         │     └── 0.12.2.9 — Landing Page Acceptance Gate 🟢 (ACCEPTED)
-        ├── Phase 0.12.3 — Authentication Layout & Shared Components (Next)
-        ├── Phase 0.12.4 — Sign Up UI
+        ├── Phase 0.12.3 — Authentication Layout & Shared Components ✅
+        ├── Phase 0.12.4 — Sign Up UI (Next)
         ├── Phase 0.12.5 — Sign In UI
         ├── Phase 0.12.6 — Password Recovery UI (Deferred)
         ├── Phase 0.12.7 — Session & Route Guards
@@ -185,6 +185,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Phase 0.12.2.7 (Final CTA Section)**: Implemented 100% Server Component `<CTASection />` (`cta-section.tsx`) rendering a conversion panel (`id="get-started"`) with primary CTA `/sign-up`, secondary CTA `/sign-in`, and trust micro-copy. Composed in `app/(marketing)/page.tsx` with zero DB/auth dependencies.
 - **Phase 0.12.2.8 (Responsive, SEO & Accessibility Audit)**: Completed audit pass across all marketing components. Verified 5 responsive viewports (`320px` to `1280px+`), applied `scroll-mt-16` across all landmarks, enforced 1 H1 page hierarchy, added Open Graph & Twitter metadata in `app/(marketing)/layout.tsx`, and verified zero presentation boundary leaks.
 - **Phase 0.12.2.9 (Phase 0.12.2 Acceptance Gate)**: Completed formal acceptance audit of Phase 0.12.2 landing page. Verified route resolution (`/`), 6 section sequence, navigation anchor targets (`#features`, `#workflow`, `#roles`, `#security`, `#get-started`), 40 unit tests passing, zero backend/database/auth dependencies in marketing components, and explicit deferrals of Auth UI. **Phase 0.12.2 ACCEPTED & FROZEN.**
+- **Phase 0.12.3 (Authentication Layout & Shared Components)**: Established the authentication UI foundation. Created route group layout `app/(auth)/layout.tsx` serving `/sign-in` and `/sign-up` without URL prefixes, built reusable auth components under `apps/web/src/features/auth/` (`AuthLayoutShell`, `AuthBranding`, `AuthCard`, `AuthHeader`, `AuthField`, `AuthError`, `AuthFooter`), created minimal placeholder routes, and verified presentation boundary isolation with zero prohibited server/DB/auth dependencies.
 
 ### ✅ Phase 1.1 — Institute Tenant Core
 

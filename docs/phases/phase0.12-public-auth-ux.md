@@ -218,8 +218,8 @@ Phase 0.12.2  Public Landing Page ✅ (COMPLETED & FROZEN)
       ├── Phase 0.12.2.7 — Final CTA Section Component ✅ (COMPLETED)
       ├── Phase 0.12.2.8 — Responsive, SEO & Accessibility Audit ✅ (COMPLETED)
       └── Phase 0.12.2.9 — Phase 0.12.2 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
-Phase 0.12.3  Authentication Layout & Shared Components (Next)
-Phase 0.12.4  Sign Up UI
+Phase 0.12.3  Authentication Layout & Shared Components ✅ (COMPLETED)
+Phase 0.12.4  Sign Up UI (Next)
 Phase 0.12.5  Sign In UI
 Phase 0.12.6  Password Recovery UI (Deferred until Email Provider Ready)
 Phase 0.12.7  Session & Route Guards
@@ -442,9 +442,33 @@ Phase 0.12.11 Phase 0.12 Acceptance Gate
 2. **Section Hierarchy**: All 6 required sections present in frozen sequence (`Hero`, `Workflow`, `Capabilities`, `Roles`, `Trust`, `CTA`) with valid section IDs (`#hero`, `#workflow`, `#features`, `#roles`, `#security`, `#get-started`).
 3. **Navigation Integrity**: Desktop & mobile header navigation links (`/#features`, `/#workflow`, `/#roles`, `/#security`, `/sign-in`, `/sign-up`) and footer links resolve cleanly. Mobile drawer toggle with ESC key listener and `aria-expanded` attributes verified.
 4. **Responsive & Accessibility Invariants**: 5 responsive viewports verified (`320px` to `1280px+`), zero horizontal overflow, `scroll-mt-16` anchor offset, single `<h1>` page heading hierarchy, keyboard `:focus-visible:ring-2` focus indicators.
-5. **SEO & Security Boundaries**: SEO metadata configured in `layout.tsx`. Zero database, ORM, Better Auth server, or TenantContext presentation boundary leaks.
-6. **Explicit Deferrals**: Sign In UI, Sign Up UI, Onboarding UI redesign, and Dashboard UI redesign are **NOT** implemented in Phase 0.12.2 and remain explicitly deferred to Phase 0.12.3+.
-7. **Acceptance Decision**: **ACCEPTED & FROZEN**. Phase 0.12.2 public landing page is formally frozen. Next active milestone is **Phase 0.12.3 — Authentication Layout & Shared Components**.
+---
+
+## 21. Phase 0.12.3 — Authentication Layout & Shared Components Completion
+
+**Status:** 🟢 **COMPLETED & VERIFIED**  
+**Code Commit:** `30c747b` (`feat(web): establish authentication UI foundation`)  
+
+### Implementation Details:
+1. **Route Group Layout (`apps/web/src/app/(auth)/layout.tsx`)**:
+   - Established `app/(auth)/layout.tsx` rendering `<AuthLayoutShell>{children}</AuthLayoutShell>` without adding `/auth` URL prefixes. Target contracts `/sign-in` and `/sign-up` preserved.
+2. **Feature Components Structure (`apps/web/src/features/auth/`)**:
+   - `auth-layout-shell.tsx`: Shared centered layout wrapper rendering branding, container card, and legal micro-copy.
+   - `auth-branding.tsx`: Shared branding header with `CoachingOSLogo`, product tagline, and tenant security badge.
+   - `auth-card.tsx`: Responsive card container (`max-w-md w-full`) with subtle border and shadow.
+   - `auth-header.tsx`: Reusable header component accepting dynamic `title`, `description`, and `eyebrow`.
+   - `auth-field.tsx`: Composition wrapper connecting `@coaching-os/ui` `Label`, `Input`, description, and field validation error.
+   - `auth-error.tsx`: Safe public error alert primitive utilizing `@coaching-os/ui` `Alert`.
+   - `auth-footer.tsx`: Contextual navigation footer accepting dynamic `prompt`, `linkLabel`, and `href`.
+   - `index.ts`: Barrel export file.
+3. **Temporary Routing Placeholders**:
+   - Created minimal placeholder routes `app/(auth)/sign-in/page.tsx` and `app/(auth)/sign-up/page.tsx` to verify layout rendering and navigation contracts without auth form logic.
+4. **Testing Suite**:
+   - Created `apps/web/src/features/auth/components/auth-foundation.test.ts` (6 unit tests). Verified export boundaries and zero prohibited server/database/auth dependencies in presentation components.
+5. **Explicit Deferrals**:
+   - Sign Up form logic & submit handler (Deferred to Phase 0.12.4).
+   - Sign In form logic & submit handler (Deferred to Phase 0.12.5).
+   - Password reset, email verification, OAuth UI (Deferred).
 
 
 
