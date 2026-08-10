@@ -281,35 +281,37 @@ Response (201 Created):
 - `InstituteOnboardingRepository` (`packages/identity/src/domain/repositories/institute-onboarding.repository.ts`): Interface defining atomic `onboard(institute, membership)` unit of work.
 - `onboardInstituteSchema` (`packages/identity/src/presentation/validators/onboarding.validator.ts`): Zod presentation validator enforcing string lengths, email format, custom slug regex, and reserved slug protection (`admin`, `api`, `app`, `auth`, `dashboard`, `onboarding`, `settings`, `support`, `billing`).
 
-#### Application Orchestration Sequence Diagram:
+#### Application Orchestration Sequence Flow Diagram:
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor ServerSession as Server Boundary (API / Route)
-    participant UseCase as OnboardInstituteUseCase
-    participant InstEntity as InstituteEntity (Domain)
-    participant InstRepo as InstituteRepository
-    participant MemEntity as InstituteMembershipEntity (Domain)
-    participant OnboardRepo as InstituteOnboardingRepository
-
-    ServerSession->>UseCase: execute(command: { authenticatedUserId, name, phone, email, timezone, slug? })
-    Note over UseCase: Validates non-empty authenticatedUserId
-    UseCase->>InstEntity: create({ name, slug, phone, email, timezone })
-    Note over InstEntity: Validates props & normalizes slug via normalizeSlug()
-    UseCase->>InstRepo: findBySlug(normalizedSlug)
-    alt Slug Conflict Exists
-        InstRepo-->>UseCase: existingInstitute
-        UseCase-->>ServerSession: throw ConflictError("An institute with slug '...' already exists.")
-    else Slug Available
-        InstRepo-->>UseCase: null
-    end
-    UseCase->>MemEntity: create({ userId: authenticatedUserId, instituteId, role: 'owner', status: 'active' })
-    Note over MemEntity: Enforces server-controlled role='owner' & status='active'
-    UseCase->>OnboardRepo: onboard(instituteEntity, membershipEntity)
-    Note over OnboardRepo: Atomic Unit of Work Persistence
-    OnboardRepo-->>UseCase: { institute, membership }
-    UseCase-->>ServerSession: OnboardInstituteResult { institute, membership }
+```text
+Server Session (API / Route)
+       │
+       │  1. execute(command: { authenticatedUserId, name, phone, email, timezone, slug? })
+       ▼
+OnboardInstituteUseCase
+       │
+       │  2. InstituteEntity.create({ name, slug, phone, email, timezone })
+       ▼
+InstituteEntity [Domain] ──► (Validates props & normalizes slug via normalizeSlug())
+       │
+       │  3. instituteRepository.findBySlug(normalizedSlug)
+       ▼
+InstituteRepository
+       │
+       ├── [If Slug Conflict Exists] ──► throw ConflictError("An institute with slug '...' already exists.")
+       │
+       └── [If Slug Available (null)]
+               │
+               │  4. InstituteMembershipEntity.create({ userId: authenticatedUserId, instituteId, role: 'owner', status: 'active' })
+               ▼
+InstituteMembershipEntity [Domain] ──► (Enforces server-controlled role='owner' & status='active')
+               │
+               │  5. onboardingRepository.onboard(instituteEntity, membershipEntity)
+               ▼
+InstituteOnboardingRepository ──► (Executes Atomic Unit of Work Persistence)
+               │
+               ▼
+Returns OnboardInstituteResult { institute, membership }
 ```
 
 #### Key Implementation Invariants:
@@ -329,29 +331,37 @@ sequenceDiagram
 
 #### Transaction Flow & Rollback Guarantee Diagram:
 
-```mermaid
-flowchart TD
-    A[OnboardInstituteUseCase] -->|Passes Institute & Owner Membership Entities| B[PrismaOnboardInstituteRepository.onboard]
-    B --> C["db.$transaction(async (tx) => { ... })"]
-
-    subgraph PostgreSQL Atomic Transaction
-        C --> D["1. tx.institute.create({ data: { id, name, slug, phone, email, timezone, status } })"]
-        D -->|Institute Row Created| E["2. tx.user.update({ where: { id: userId }, data: { instituteId, status: 'active' } })"]
-    end
-
-    E -->|User Linked Successfully| F[COMMIT Transaction]
-    F --> G[Hydrate & Return Domain Entities: InstituteEntity + InstituteMembershipEntity]
-
-    D -- "Slug Collision (P2002)" --> H[ROLLBACK Transaction]
-    E -- "User Not Found (P2025)" --> H[ROLLBACK Transaction]
-
-    H --> I[Map Error & Throw to Caller]
-    I -->|P2002| J["throw ConflictError('An institute with slug ... already exists')"]
-    I -->|P2025| K["throw NotFoundError('User with ID ... not found')"]
-
-    style F fill:#d4edda,stroke:#28a745,stroke-width:2px;
-    style H fill:#f8d7da,stroke:#dc3545,stroke-width:2px;
-    style G fill:#d1ecf1,stroke:#17a2b8,stroke-width:2px;
+```text
+                  OnboardInstituteUseCase
+                             │
+                             │ (Passes Institute & Owner Membership Entities)
+                             ▼
+              PrismaOnboardInstituteRepository.onboard
+                             │
+                             ▼
+             db.$transaction(async (tx) => { ... })
+                             │
+     ┌───────────────────────┴───────────────────────┐
+     │  PostgreSQL Atomic Transaction                │
+     │                                               │
+     │  1. tx.institute.create({ data: ... })        │
+     │       │                                       │
+     │       ▼                                       │
+     │  2. tx.user.update({ where: { id: userId },   │
+     │                      data: { instituteId } }) │
+     └───────────────────────┬───────────────────────┘
+                             │
+            ┌────────────────┴────────────────┐
+            │                                 │
+ [User Linked Successfully]       [Error Occurs (P2002 / P2025)]
+            │                                 │
+            ▼                                 ▼
+    COMMIT Transaction               ROLLBACK Transaction
+            │                                 │
+            ▼                                 ▼
+Hydrate & Return Domain Entities:     Map Error & Throw to Caller:
+ - InstituteEntity                    - P2002 ──► throw ConflictError(...)
+ - InstituteMembershipEntity          - P2025 ──► throw NotFoundError(...)
 ```
 
 #### Real PostgreSQL Test Evidence (`prisma-onboard-institute.repository.test.ts`):
