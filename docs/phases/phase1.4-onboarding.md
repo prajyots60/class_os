@@ -369,3 +369,59 @@ Hydrate & Return Domain Entities:     Map Error & Throw to Caller:
 - **Rollback Guarantee Verification**: Intentionally supplied an invalid `userId`. `tx.user.findUnique()` / `tx.user.update()` failed with `NotFoundError` (`P2025`). Verified via direct PostgreSQL queries that `Institute` (`institutes` table) was **100% rolled back** (0 records in PostgreSQL for target ID).
 - **Database Uniqueness & Concurrency**: Executed concurrent `Promise.all()` onboarding calls with identical slug. PostgreSQL `@unique` constraint ensured **exactly 1 request committed** (1 `Institute` row + 1 `User.instituteId` link) while the second threw `ConflictError` cleanly with 0 partial records in database.
 
+---
+
+### 19.3 Phase 1.4.3 — Idempotency & Conflict Handling
+
+**Objective**: Hardened institute onboarding against browser double-submission, user page refresh/retry, concurrent same-user onboarding attempts, same-slug collisions, and TOCTOU race conditions.
+
+#### Concurrency & Same-User Double Onboarding Protection Flowchart:
+
+```text
+Concurrent Request A (User U)            Concurrent Request B (User U)
+            │                                       │
+            ▼                                       ▼
+  db.$transaction (Tx A)                 db.$transaction (Tx B)
+            │                                       │
+  1. Check U.instituteId                        1. Check U.instituteId
+            │ (both read null)                      │ (both read null)
+            ▼                                       ▼
+  2. tx.institute.create(Inst A)         2. tx.institute.create(Inst B)
+            │                                       │
+  3. tx.user.updateMany({                   3. tx.user.updateMany({
+       where: { id: U,                         where: { id: U,
+                instituteId: null },                    instituteId: null },
+       data: { instituteId: Inst A }          data: { instituteId: Inst B }
+     })                                      })
+            │                                       │
+            ▼ (Row Lock Acquired by Tx A)           ▼ (Waits on Row Lock)
+  Tx A updates U (count = 1)                ...
+  Tx A COMMITS!                             ...
+            │                               │ (Tx A Commits)
+            │                               ▼ (Tx B executes updateMany)
+            │                               U.instituteId is now Inst A
+            │                               where: { instituteId: null } -> FALSE
+            │                               Tx B updates 0 rows (count = 0)
+            │                                       │
+            │                                       ▼
+            │                               if (count === 0) throw ConflictError!
+            │                                       │
+            │                                       ▼
+            │                               Tx B ROLLS BACK Inst B!
+            ▼                                       ▼
+[User U -> Inst A committed]             [Inst B deleted, ConflictError thrown]
+```
+
+#### Key Implementation Invariants & Safeguards:
+1. **Same-User Protection**: Rejects repeat onboarding attempts for an authenticated user who already has an active staff institute association (`User.instituteId !== null`) with `ConflictError("User ... is already associated with an active institute tenant.")`.
+2. **Concurrent Same-User Atomicity**: Uses atomic row-level update `tx.user.updateMany({ where: { id: user.id, instituteId: null }, data: { instituteId: createdInstitute.id } })`. If two requests run concurrently for the same user, the losing request receives `count === 0`, throws `ConflictError`, and PostgreSQL **rolls back the uncommitted institute completely** (0 orphaned institutes).
+3. **Database Slug Protection**: Enforces `@unique` on `Institute.slug` as the final database authority against TOCTOU race conditions. P2002 errors map cleanly to `ConflictError`.
+4. **Clean Staff Identity Isolation**: Preserved 100% staff/parent identity separation. Zero `ParentIdentity` creation, zero `InstituteParent` creation, and zero synthetic `+9198XXXXXXXX` phone generation.
+
+#### Real PostgreSQL Race Condition Test Evidence (`prisma-onboard-institute.repository.test.ts`):
+- **A. Existing User Protection**: User with pre-existing `User.instituteId` attempting onboarding fails cleanly with `ConflictError`. PostgreSQL query confirms zero second institute created.
+- **B. Concurrent Same-User Onboarding**: Parallel `Promise.all()` onboarding requests for the exact same user result in **exactly 1 successful Institute**, **1 `ConflictError`**, and `User` linked to exactly 1 institute in PostgreSQL.
+- **C & G. Concurrent Same-Slug Onboarding**: Parallel `Promise.all()` requests using identical slug for different users result in **exactly 1 successful Institute**, **1 `ConflictError`**, and zero tenancy mutation on the losing user.
+- **D & E. Failed Transaction Rollback**: Transaction failure leaves **0 `Institute` rows** and leaves `User.instituteId` unchanged (`null`).
+- **F. Retry Semantics**: Retry after successful onboarding is rejected cleanly with `ConflictError`. User remains bound exclusively to their initial institute.
+
