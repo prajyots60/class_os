@@ -6,7 +6,7 @@ import type { MembershipRole } from '../domain/entities/institute-membership.ent
 import type { TenantContext } from '../application/use-cases/membership.use-cases';
 
 /**
- * Defensive check ensuring a TenantContext is well-formed and active.
+ * Defensive check ensuring a TenantContext is well-formed, active, and strictly tenant-scoped.
  */
 function isValidTenantContext(context: unknown): context is TenantContext {
   if (!context || typeof context !== 'object') {
@@ -35,7 +35,9 @@ function isValidTenantContext(context: unknown): context is TenantContext {
 /**
  * Centralized Capability-Based Authorization Engine for CoachingOS
  *
- * Implements deny-by-default policy evaluations against trusted TenantContext.
+ * Implements tenant-scoped, deny-by-default policy evaluations against trusted TenantContext.
+ * Invariant: Authorization is ALWAYS evaluated per TenantContext (userId + instituteId + role + membershipId).
+ * Zero database queries are performed by this engine.
  */
 export class AuthorizationEngine {
   /**
@@ -120,6 +122,7 @@ export class AuthorizationEngine {
         {
           userId: context?.userId,
           instituteId: context?.instituteId,
+          membershipId: context?.membershipId,
           role: context?.role,
           capability,
           event: 'security.authorization.denied',
@@ -147,6 +150,7 @@ export class AuthorizationEngine {
         {
           userId: context?.userId,
           instituteId: context?.instituteId,
+          membershipId: context?.membershipId,
           role: context?.role,
           missingCapabilities: missing,
           event: 'security.authorization.denied',
@@ -173,6 +177,7 @@ export class AuthorizationEngine {
         {
           userId: context?.userId,
           instituteId: context?.instituteId,
+          membershipId: context?.membershipId,
           role: context?.role,
           requiredCapabilities: capabilities,
           event: 'security.authorization.denied',

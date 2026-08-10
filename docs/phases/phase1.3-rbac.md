@@ -189,11 +189,11 @@ ALLOW EXECUTION
 
 ```text
 Phase 1.3.0 — Architecture Freeze & Capability Matrix Contract  ✅ COMPLETED
-Phase 1.3.1 — Capability Taxonomy & Strongly-Typed Enums       🚧 NEXT TASK
-Phase 1.3.2 — Role → Capability Resolver Engine
-Phase 1.3.3 — Authorization Engine & Assertion Guards
-Phase 1.3.4 — Tenant-Scoped Capability Evaluation
-Phase 1.3.5 — Resource-Scoped Filtering Helpers (Parent/Teacher)
+Phase 1.3.1 — Capability Taxonomy & Strongly-Typed Enums       ✅ COMPLETED
+Phase 1.3.2 — Role → Capability Resolver Engine                 ✅ COMPLETED
+Phase 1.3.3 — Authorization Engine & Assertion Guards           ✅ COMPLETED
+Phase 1.3.4 — Tenant-Scoped Capability Evaluation               ✅ COMPLETED
+Phase 1.3.5 — Resource-Scoped Filtering Helpers (Parent/Teacher) 🚧 NEXT TASK
 Phase 1.3.6 — Identity Use Case Integration
 Phase 1.3.7 — Security & RBAC Test Matrix
 Phase 1.3.8 — Phase 1.3 Acceptance Gate
