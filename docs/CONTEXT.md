@@ -183,6 +183,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Phase 1.4.3 (Idempotency & Conflict Handling)**: Hardened onboarding transaction with atomic same-user double onboarding protection (`tx.user.updateMany({ where: { id: user.id, instituteId: null } })`), pre-existing tenant association checks, and database slug `@unique` race-condition protection. Real PostgreSQL race-condition test suite verifies 100% atomic rollbacks, zero orphaned institutes on concurrent same-user and same-slug onboarding, and clean rejection of retry attempts.
 - **Phase 1.4.4 (Onboarding API Boundary)**: Implemented `POST /api/onboarding/institute` presentation route adapter with Better Auth session authentication, `onboardInstituteSchema` Zod input validation, server-controlled identity authority (`authenticatedUserId = session.user.id`), `OnboardInstituteUseCase` & `ResolveInstituteMembershipUseCase` orchestration, standard 201 DTO responses, canonical error response taxonomy, Pino logging, `x-request-id` correlation tracking, and Playwright E2E test coverage.
 - **Phase 1.4.5 (Onboarding UI Flow)**: Implemented `/onboarding` Client Component page (institute setup form with required name/phone/email, optional slug/timezone/logoUrl/primaryColor, real-time slug preview, `useSession()` auth guard, double-submission protection, 400/401/409/500 error state mapping) and `/dashboard` post-onboarding landing page. Built with `@coaching-os/ui` primitives, `@coaching-os/auth/client` session hook, and `useRouter()` for navigation. Presentation boundary strictly maintained: client payload sends zero identity/role/status fields. Full E2E flow (sign-up ──► /onboarding ──► submit ──► /dashboard) verified with Playwright.
+- **Phase 1.4.6 (Tenant Context Resolution & Post-Onboarding Redirect)**: Implemented `GET /api/dashboard/context` route establishing single authoritative server-side tenant context resolution (session → `GetUserMembershipsUseCase` → `ResolveInstituteMembershipUseCase` → `TenantContext`). Enhanced `/dashboard` page guard to resolve real server tenant context and redirect to `/onboarding` if no active tenant exists. Enhanced `/onboarding` tenant guard to redirect already-onboarded users to `/dashboard`. Verified active, suspended, and removed membership lifecycle handling, tenant parameter injection resistance, browser refresh persistence, and 4 Playwright E2E scenarios.
 
 ## 4. Next Milestone Roadmap
 
@@ -211,8 +212,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.4.3:** Idempotency & Conflict Handling ✅
     - **Phase 1.4.4:** Onboarding API Boundary ✅
     - **Phase 1.4.5:** Onboarding UI Flow ✅
-    - **Phase 1.4.6:** Tenant Context Resolution & Post-Onboarding Redirect (Next)
-    - **Phase 1.4.7:** End-to-End Security & Failure Testing
+    - **Phase 1.4.6:** Tenant Context Resolution & Post-Onboarding Redirect ✅
+    - **Phase 1.4.7:** End-to-End Security & Failure Testing (Next)
     - **Phase 1.4.8:** Phase 1.4 Acceptance Gate
   - **Phase 1.5:** Institute Settings & White-Label Branding
   - **Phase 1.6:** Global ParentIdentity Platform Layer

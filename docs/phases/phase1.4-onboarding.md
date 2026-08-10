@@ -596,3 +596,79 @@ Confirmed the following fields are **never included** in the request body:
 - `pnpm lint`: 13 packages PASSED (zero errors, 0 warnings after useRouter migration)
 - `pnpm build`: Next.js production build PASSED (`/onboarding` and `/dashboard` compiled cleanly)
 
+---
+
+### 19.6 Phase 1.4.6 — Tenant Context Resolution & Post-Onboarding Redirect
+
+**Objective**: Establish a single authoritative post-onboarding tenant-context resolution path connecting the server-side session to `ResolveInstituteMembershipUseCase` and `TenantContext`, ensuring both `/dashboard` and `/onboarding` strictly enforce tenant context without relying on client-supplied state.
+
+#### Architectural Resolution Chain (Canonical Invariant):
+
+```text
+Better Auth Session Cookie
+      ↓
+getAuthenticatedSession(headers)
+      ↓
+Authenticated User (Database lookup: User.id, User.instituteId)
+      ↓
+GetUserMembershipsUseCase (activeOnly: true)
+      ↓
+ResolveInstituteMembershipUseCase
+      ↓
+Trusted TenantContext {
+  userId: string;
+  instituteId: string;
+  membershipId: string;
+  role: "owner" | "teacher" | "assistant" | "parent";
+  status: "active" | "suspended" | "removed";
+}
+      ↓
+GET /api/dashboard/context Response
+  { hasTenant: true, tenantContext, institute: { name, slug, status } }
+```
+
+#### Routes & API Boundary Implemented:
+
+1. **`GET /api/dashboard/context` (`apps/web/src/app/api/dashboard/context/route.ts`)**:
+   - Server-side endpoint resolving authenticated tenant context.
+   - Strictly ignores any client-supplied `instituteId`, `membershipId`, `role`, or `status` in headers/query params.
+   - If user has no active institute association, returns `200 OK { hasTenant: false }` with `Cache-Control: no-store, max-age=0`.
+   - If user has an active institute, resolves canonical `TenantContext` and returns `200 OK { hasTenant: true, tenantContext, institute }`.
+   - Methods `POST`, `PUT`, `PATCH`, `DELETE` return `405 Method Not Allowed`.
+
+2. **`/dashboard` Page Guard (`apps/web/src/app/dashboard/page.tsx`)**:
+   - On load, fetches `GET /api/dashboard/context`.
+   - Displays a clean loading state while resolving.
+   - If unauthenticated, displays "Authentication Required" card.
+   - If `hasTenant: false`, redirects to `/onboarding` before protected dashboard content is rendered.
+   - If `hasTenant: true`, renders verified institute name, slug, owner role, and status from server context.
+
+3. **`/onboarding` Tenant Guard (`apps/web/src/app/onboarding/page.tsx`)**:
+   - On load, fetches `GET /api/dashboard/context`.
+   - If `hasTenant: true`, immediately redirects the user to `/dashboard` to prevent duplicate onboarding attempts.
+   - If `hasTenant: false`, renders institute setup form normally.
+
+#### Membership Lifecycle & Isolation Enforcement:
+- **Active Membership**: Resolves valid `TenantContext` (`status: "active"`).
+- **Suspended Membership**: User account/membership with `status: "suspended"` is filtered out by `GetUserMembershipsUseCase(activeOnly: true)` → returns `hasTenant: false`.
+- **Removed Membership**: `User.instituteId = null` → returns `hasTenant: false`.
+- **Cross-Tenant Isolation**: User A session requesting `/api/dashboard/context` resolves strictly to User A's institute, even if query parameters attempt to inject User B's `instituteId`.
+
+#### Test Evidence:
+- **Unit & Integration Suite (`packages/identity/src/application/use-cases/membership.use-cases.test.ts`)**:
+  - `ResolveInstituteMembershipUseCase`: Tests 20 scenarios including active resolution, suspended rejection, removed rejection, empty credential validation, role resolution, and cross-tenant isolation enforcement.
+- **Route Integration Suite (`apps/web/src/app/api/dashboard/context/route.test.ts`)**:
+  - Tests 11 scenarios: 401 unauthenticated, query parameter injection resistance, 405 method validation, `hasTenant: false` for new users, `hasTenant: true` DTO resolution, suspended user handling, removed association handling, tenant isolation between User A and User B, `Cache-Control: no-store` header presence.
+- **Playwright E2E Suite (`apps/web/e2e/onboarding.spec.ts`)**:
+  - **Scenario A**: New user visiting `/dashboard` → server detects no tenant → redirected to `/onboarding` → completes onboarding → `/dashboard` displays resolved institute name.
+  - **Scenario B**: Already-onboarded user visiting `/onboarding` → tenant guard detects active institute → redirected to `/dashboard`.
+  - **Scenario C**: Browser refresh after onboarding → session cookie persists → `/dashboard` retains resolved `TenantContext`.
+  - **Scenario D**: Client-supplied `instituteId` in query parameter ignored → server resolves strictly from session context.
+
+#### Verification Results:
+- `@coaching-os/identity`: 176/176 tests PASSED
+- `@coaching-os/web`: 20/20 tests PASSED
+- `Playwright E2E`: 9/9 tests PASSED
+- `pnpm env:check`, `db:validate`, `db:health`, `db:drift:check`, `db:seed`: ALL PASSED
+- `pnpm verify:auth`, `verify:infra`, `verify:observability`: ALL PASSED
+- `pnpm test`, `typecheck`, `lint`, `build`: 13/13 packages PASSED (0 errors)
