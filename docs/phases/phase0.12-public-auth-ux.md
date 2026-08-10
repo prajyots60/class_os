@@ -209,8 +209,8 @@ Phase 0.12.0  Architecture & UX Contract Freeze ✅
 Phase 0.12.1  UI Foundation & Design System Audit ✅ (COMPLETED)
 Phase 0.12.2  Public Landing Page 🚧 (IN PROGRESS)
       ├── Phase 0.12.2.0 — Landing Page UX & Content Contract 🟢 (FROZEN)
-      ├── Phase 0.12.2.1 — Marketing Layout Shell (Next)
-      ├── Phase 0.12.2.2 — Hero Section Component
+      ├── Phase 0.12.2.1 — Marketing Layout Shell ✅ (COMPLETED)
+      ├── Phase 0.12.2.2 — Hero Section Component (Next)
       ├── Phase 0.12.2.3 — Product Workflow Section Component
       ├── Phase 0.12.2.4 — Core Capabilities & Roles Section Components
       ├── Phase 0.12.2.5 — Trust & Security Section Component
@@ -282,5 +282,31 @@ Phase 0.12.11 Phase 0.12 Acceptance Gate
 5. **Security Messaging Boundary**: Restricted to factual architectural invariants (tenant isolation by `institute_id`, capability RBAC, server-side session authorization, audit logging). No fake SOC2 or ISO claims.
 6. **Component Layout**: Componentized under `apps/web/src/components/marketing/` to enforce thin `page.tsx` (< 30 lines).
 7. **Public Boundary**: Zero database queries, ORM imports, or tenant context logic in public marketing pages.
+
+---
+
+## 12. Phase 0.12.2.1 — Marketing Layout Shell Completion
+
+**Status:** 🟢 **COMPLETED & VERIFIED**  
+**Code Commit:** `8679d0b` (`feat(web): establish marketing layout shell`)  
+
+### Implementation Details:
+1. **Route Group Architecture**:
+   - `apps/web/src/app/(marketing)/layout.tsx`: Public marketing shell rendering `MarketingHeader` + `<main>` + `MarketingFooter`.
+   - `apps/web/src/app/(marketing)/page.tsx`: Thin composition boundary placeholder serving `/`.
+   - Removed old 375-line `apps/web/src/app/page.tsx` to prevent App Router route collisions.
+2. **`MarketingHeader` (`apps/web/src/components/marketing/marketing-header.tsx`)**:
+   - Reuses `CoachingOSLogo` and `Container` primitives.
+   - Desktop anchor navigation (`/#features`, `/#workflow`, `/#security`).
+   - Auth action CTAs (`/sign-in`, `/sign-up`).
+   - Integrated `<MobileNav />` client toggle component for accessible mobile overlay.
+3. **`MarketingFooter` (`apps/web/src/components/marketing/marketing-footer.tsx`)**:
+   - Reuses `CoachingOSLogo`, `Container`, `Section`, and `Badge` primitives.
+   - Product and Account link columns.
+   - Live system status indicator badge (`"System Operational"`).
+   - Dynamic current year copyright (`© 2026 CoachingOS`).
+4. **Testing Suite**:
+   - Created `apps/web/src/components/marketing/marketing-layout.test.ts` verifying export boundaries.
+
 
 
