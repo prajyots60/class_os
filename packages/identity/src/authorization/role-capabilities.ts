@@ -1,0 +1,104 @@
+import { CAPABILITIES, type Capability } from './capabilities';
+import type { MembershipRole } from '../domain/entities/institute-membership.entity';
+
+/**
+ * Immutable canonical mapping of MembershipRole to Capability sets
+ * Source of truth: docs/phases/phase1.3-rbac.md
+ */
+export const ROLE_CAPABILITIES: Readonly<Record<MembershipRole, readonly Capability[]>> = Object.freeze({
+  owner: Object.freeze(Object.values(CAPABILITIES)) as readonly Capability[],
+
+  teacher: Object.freeze([
+    CAPABILITIES.INSTITUTE_READ,
+    CAPABILITIES.STUDENT_READ,
+    CAPABILITIES.STUDENT_UPDATE,
+    CAPABILITIES.ACADEMIC_READ,
+    CAPABILITIES.ACADEMIC_WRITE,
+    CAPABILITIES.ATTENDANCE_READ,
+    CAPABILITIES.ATTENDANCE_MARK,
+    CAPABILITIES.ATTENDANCE_UPDATE,
+    CAPABILITIES.ATTENDANCE_CORRECT,
+    CAPABILITIES.HOMEWORK_READ,
+    CAPABILITIES.HOMEWORK_CREATE,
+    CAPABILITIES.HOMEWORK_UPDATE,
+    CAPABILITIES.HOMEWORK_DELETE,
+    CAPABILITIES.TEST_READ,
+    CAPABILITIES.TEST_CREATE,
+    CAPABILITIES.TEST_UPDATE,
+    CAPABILITIES.TEST_DELETE,
+    CAPABILITIES.MARKS_READ,
+    CAPABILITIES.MARKS_CREATE,
+    CAPABILITIES.MARKS_UPDATE,
+    CAPABILITIES.MARKS_DELETE,
+    CAPABILITIES.MARKS_PUBLISH,
+    CAPABILITIES.ANNOUNCEMENT_READ,
+    CAPABILITIES.ANNOUNCEMENT_CREATE,
+    CAPABILITIES.ANNOUNCEMENT_UPDATE,
+    CAPABILITIES.ANNOUNCEMENT_DELETE,
+    CAPABILITIES.ANNOUNCEMENT_PUBLISH,
+  ]),
+
+  assistant: Object.freeze([
+    CAPABILITIES.INSTITUTE_READ,
+    CAPABILITIES.STAFF_READ,
+    CAPABILITIES.STUDENT_READ,
+    CAPABILITIES.STUDENT_CREATE,
+    CAPABILITIES.STUDENT_UPDATE,
+    CAPABILITIES.ACADEMIC_READ,
+    CAPABILITIES.ACADEMIC_WRITE,
+    CAPABILITIES.ATTENDANCE_READ,
+    CAPABILITIES.ATTENDANCE_MARK,
+    CAPABILITIES.HOMEWORK_READ,
+    CAPABILITIES.TEST_READ,
+    CAPABILITIES.MARKS_READ,
+    CAPABILITIES.BILLING_READ,
+    CAPABILITIES.BILLING_UPDATE,
+    CAPABILITIES.PAYMENT_READ,
+    CAPABILITIES.PAYMENT_RECORD,
+    CAPABILITIES.RECEIPT_READ,
+    CAPABILITIES.RECEIPT_ISSUE,
+    CAPABILITIES.ANNOUNCEMENT_READ,
+  ]),
+
+  parent: Object.freeze([
+    CAPABILITIES.STUDENT_READ,
+    CAPABILITIES.ACADEMIC_READ,
+    CAPABILITIES.ATTENDANCE_READ,
+    CAPABILITIES.HOMEWORK_READ,
+    CAPABILITIES.TEST_READ,
+    CAPABILITIES.MARKS_READ,
+    CAPABILITIES.BILLING_READ,
+    CAPABILITIES.PAYMENT_READ,
+    CAPABILITIES.RECEIPT_READ,
+    CAPABILITIES.ANNOUNCEMENT_READ,
+  ]),
+});
+
+/**
+ * Deterministic Role → Capability Resolver Engine
+ * Returns a fresh ReadonlySet<Capability> for a given MembershipRole.
+ * If the role is unknown or invalid at runtime, returns an empty ReadonlySet (Deny by Default).
+ */
+export function getCapabilitiesForRole(role: MembershipRole | string): ReadonlySet<Capability> {
+  if (typeof role !== 'string' || !(role in ROLE_CAPABILITIES)) {
+    return new Set<Capability>();
+  }
+
+  const capabilities = ROLE_CAPABILITIES[role as MembershipRole];
+  return new Set<Capability>(capabilities);
+}
+
+/**
+ * Checks whether a specific role possesses a capability in the canonical matrix.
+ */
+export function roleHasCapability(
+  role: MembershipRole | string,
+  capability: Capability,
+): boolean {
+  if (typeof role !== 'string' || !(role in ROLE_CAPABILITIES)) {
+    return false;
+  }
+
+  const capabilities = ROLE_CAPABILITIES[role as MembershipRole];
+  return capabilities.includes(capability);
+}
