@@ -66,9 +66,9 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
         │     ├── 0.12.2.4 — Core Capabilities Section ✅
         │     ├── 0.12.2.5 — Roles & Value Section ✅
         │     ├── 0.12.2.6 — Trust & Security Section ✅
-        │     ├── 0.12.2.7 — Final CTA Section (Next)
-        │     ├── 0.12.2.8 — Responsive, SEO & Accessibility Audit
-        │     └── 0.12.2.9 — Landing Page Acceptance Gate
+        │     ├── 0.12.2.7 — Final CTA Section ✅
+        │     ├── 0.12.2.8 — Responsive, SEO & Accessibility Audit ✅
+        │     └── 0.12.2.9 — Landing Page Acceptance Gate (Next)
         ├── Phase 0.12.3 — Authentication Layout & Shared Components
         ├── Phase 0.12.4 — Sign Up UI
         ├── Phase 0.12.5 — Sign In UI
@@ -182,6 +182,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Phase 0.12.2.4 (Core Capabilities Section)**: Implemented 100% Server Component `<CapabilitiesSection />` (`capabilities-section.tsx`) rendering an 8-card domain grid (Student Management, Academic Operations, Attendance Tracking, Homework & Tasks, Tests & Marks, Fees & Billing, Staff & Role Control, Institute Announcements). Composed in `app/(marketing)/page.tsx` with zero DB/auth dependencies.
 - **Phase 0.12.2.5 (Roles & Value Section)**: Implemented 100% Server Component `<RolesSection />` (`roles-section.tsx`) rendering 4 canonical role cards (Institute Owner, Teacher, Assistant, Parent & Student) highlighting role-specific operational value propositions. Composed in `app/(marketing)/page.tsx` with zero DB/auth dependencies.
 - **Phase 0.12.2.6 (Trust / Security Section)**: Implemented 100% Server Component `<TrustSection />` (`trust-section.tsx`) rendering 4 technical security concept cards (Row-Level Tenant Isolation, Capability RBAC, Server Sessions, Audit Logging) strictly grounded in existing codebase architecture. Composed in `app/(marketing)/page.tsx` with zero DB/auth dependencies.
+- **Phase 0.12.2.7 (Final CTA Section)**: Implemented 100% Server Component `<CTASection />` (`cta-section.tsx`) rendering a conversion panel (`id="get-started"`) with primary CTA `/sign-up`, secondary CTA `/sign-in`, and trust micro-copy. Composed in `app/(marketing)/page.tsx` with zero DB/auth dependencies.
+- **Phase 0.12.2.8 (Responsive, SEO & Accessibility Audit)**: Completed audit pass across all marketing components. Verified 5 responsive viewports (`320px` to `1280px+`), applied `scroll-mt-16` across all landmarks, enforced 1 H1 page hierarchy, added Open Graph & Twitter metadata in `app/(marketing)/layout.tsx`, and verified zero presentation boundary leaks.
 
 ### ✅ Phase 1.1 — Institute Tenant Core
 
