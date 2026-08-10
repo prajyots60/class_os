@@ -57,8 +57,8 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
   ├── Phase 0.11 — Production Deployment               ✅ COMPLETED
   └── Phase 0.12 — Public & Authentication UX          🚧 NOW ACTIVE
         ├── Phase 0.12.0 — Architecture & UX Contract Freeze 🟢 (Freeze)
-        ├── Phase 0.12.1 — UI Foundation & Design System Audit
-        ├── Phase 0.12.2 — Public Landing Page
+        ├── Phase 0.12.1 — UI Foundation & Design System Audit ✅
+        ├── Phase 0.12.2 — Public Landing Page (Next)
         ├── Phase 0.12.3 — Authentication Layout & Shared Components
         ├── Phase 0.12.4 — Sign Up UI
         ├── Phase 0.12.5 — Sign In UI
@@ -164,6 +164,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 ### 🚧 Phase 0.12 — Public & Authentication UX (In Progress)
 
 - **Phase 0.12.0 (Architecture & UX Contract Freeze)**: Conducted complete repository and authentication backend audit. Defined authoritative frontend architecture in `docs/phases/phase0.12-public-auth-ux.md`, establishing route groups (`(marketing)`, `(auth)`, `(app)`), thin App Router page composition boundaries (< 30 lines per `page.tsx`), component ownership boundaries (`components/ui`, `features/auth`, `features/marketing`, `features/onboarding`, `features/dashboard`), authentication state machine, and Phase 0.12 implementation roadmap.
+- **Phase 0.12.1 (UI Foundation & Design System Audit)**: Established the UI foundation in `@coaching-os/ui` and `apps/web`. Retained existing primitives (`Button`, `Input`, `Card`, `Badge`), created missing primitives (`Label`, `Textarea`, `Alert`, `Spinner`, `Skeleton`, `Separator`), created web brand (`CoachingOSLogo`) and layout (`Container`, `Section`) primitives, created unit test suite (`ui-primitives.test.ts`), and verified zero backend/auth/onboarding contract regressions.
 
 ### ✅ Phase 1.1 — Institute Tenant Core
 

@@ -205,9 +205,9 @@ CoachingOS visual design must convey **Professionalism, Speed, Operational Densi
 ## 8. Subphase Implementation Sequence (Phase 0.12 Roadmap)
 
 ```text
-Phase 0.12.0  Architecture & UX Contract Freeze ✅ (CURRENT)
-Phase 0.12.1  UI Foundation & Design System Audit
-Phase 0.12.2  Public Landing Page
+Phase 0.12.0  Architecture & UX Contract Freeze ✅
+Phase 0.12.1  UI Foundation & Design System Audit ✅ (COMPLETED)
+Phase 0.12.2  Public Landing Page (Next)
 Phase 0.12.3  Authentication Layout & Shared Components
 Phase 0.12.4  Sign Up UI
 Phase 0.12.5  Sign In UI
@@ -223,6 +223,30 @@ Phase 0.12.11 Phase 0.12 Acceptance Gate
 
 ## 9. Verification & Non-Regression Invariants
 
-- **Monorepo Tests**: All package unit tests (`@coaching-os/identity`, `@coaching-os/web`, etc.) must pass.
+- **Monorepo Tests**: All package unit tests (`@coaching-os/identity`, `@coaching-os/web`, `@coaching-os/ui`, etc.) must pass.
 - **Verification Commands**: `pnpm env:check`, `db:validate`, `db:health`, `db:drift:check`, `verify:auth`, `verify:infra`, `verify:observability` must pass.
 - **Typecheck & Lint**: `pnpm typecheck`, `pnpm lint`, `pnpm build` must pass cleanly.
+
+---
+
+## 10. Phase 0.12.1 — UI Foundation & Design System Audit Completion
+
+**Status:** 🟢 **COMPLETED & VERIFIED**  
+**Code Commit:** `f504e45` (`feat(ui): establish CoachingOS UI foundation`)  
+
+### Component Inventory & Boundary Decisions:
+1. **`packages/ui` Primitives**:
+   - **Retained & Exported**: `Button`, `Input`, `Card`, `Badge`, `cn`, `THEME_PRESETS`.
+   - **Created Foundational Primitives**:
+     - `Label` (`components/label.tsx`): Reusable accessible form label primitive.
+     - `Textarea` (`components/textarea.tsx`): Reusable text area with label and error support.
+     - `Alert` & `AlertTitle`, `AlertDescription` (`components/alert.tsx`): Status banners (`info`, `success`, `warning`, `destructive`).
+     - `Spinner` (`components/spinner.tsx`): Size-variant SVG loading spinner.
+     - `Skeleton` (`components/skeleton.tsx`): Pulse loading placeholder.
+     - `Separator` (`components/separator.tsx`): Horizontal/vertical divider line.
+2. **`apps/web` Web App Foundational Components**:
+   - `CoachingOSLogo` (`apps/web/src/components/brand/logo.tsx`): Reusable product branding component.
+   - `Container` & `Section` (`apps/web/src/components/layout/container.tsx`): Reusable responsive layout wrappers.
+3. **Unit Test Suite**:
+   - Added `@coaching-os/ui` Vitest test suite (`packages/ui/src/components/ui-primitives.test.ts`) verifying `buttonVariants`, `badgeVariants`, `alertVariants`, `cn`, and `THEME_PRESETS`.
+
