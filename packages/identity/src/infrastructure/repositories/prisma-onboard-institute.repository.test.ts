@@ -4,6 +4,7 @@ import {
   cleanTestDatabase,
   closeTestPool,
   createTestUser,
+  createTestInstitute,
   db,
 } from '@coaching-os/database';
 import { ConflictError, NotFoundError } from '@coaching-os/shared';
@@ -11,7 +12,7 @@ import { InstituteEntity } from '../../domain/entities/institute.entity';
 import { InstituteMembershipEntity } from '../../domain/entities/institute-membership.entity';
 import { PrismaOnboardInstituteRepository } from './prisma-onboard-institute.repository';
 
-describe('PrismaOnboardInstituteRepository Real PostgreSQL Integration & Atomic Rollback Suite', () => {
+describe('PrismaOnboardInstituteRepository Real PostgreSQL Idempotency & Race-Condition Suite', () => {
   let repository: PrismaOnboardInstituteRepository;
 
   beforeAll(() => {
@@ -27,147 +28,164 @@ describe('PrismaOnboardInstituteRepository Real PostgreSQL Integration & Atomic 
     await closeTestPool();
   });
 
-  describe('Atomic Transaction Persistence & Hydration', () => {
-    it('1-4. Persists Institute and Owner User staff link atomically in PostgreSQL database', async () => {
+  describe('A & F. Existing User Protection & Retry Semantics', () => {
+    it('A. Rejects onboarding with ConflictError if user is already associated with an institute', async () => {
+      const existingInst = await createTestInstitute({
+        name: 'Pre-existing Inst',
+        slug: 'pre-existing-inst',
+      });
+
       const user = await createTestUser({
-        name: 'Vanguard Owner',
-        email: 'vanguard_owner@test.com',
+        name: 'Already Onboarded User',
+        email: 'already_onboarded@test.com',
+        instituteId: existingInst.id,
       });
 
-      const instituteEntity = InstituteEntity.create({
-        name: 'Vanguard Learning Institute',
-        slug: 'vanguard-learning',
+      const instToCreate = InstituteEntity.create({
+        name: 'Second Institute Attempt',
+        slug: 'second-inst-attempt',
         phone: '+919876543210',
-        email: 'contact@vanguard.test',
-        timezone: 'Asia/Kolkata',
+        email: 'second@test.com',
       });
 
-      const membershipEntity = InstituteMembershipEntity.create({
+      const membership = InstituteMembershipEntity.create({
         userId: user.id,
-        instituteId: instituteEntity.id,
+        instituteId: instToCreate.id,
         role: 'owner',
         status: 'active',
       });
 
-      const result = await repository.onboard(instituteEntity, membershipEntity);
+      await expect(repository.onboard(instToCreate, membership)).rejects.toThrow(ConflictError);
 
-      // 1. Verify returned domain entities
-      expect(result.institute).toBeInstanceOf(InstituteEntity);
-      expect(result.membership).toBeInstanceOf(InstituteMembershipEntity);
-      expect(result.institute.id).toBe(instituteEntity.id);
-      expect(result.institute.name).toBe('Vanguard Learning Institute');
-      expect(result.institute.slug).toBe('vanguard-learning');
-
-      expect(result.membership.userId).toBe(user.id);
-      expect(result.membership.instituteId).toBe(instituteEntity.id);
-      expect(result.membership.role).toBe('owner');
-      expect(result.membership.status).toBe('active');
-
-      // 2. Direct PostgreSQL Table Verification: Institute row
-      const dbInstitute = await db.institute.findUnique({
-        where: { id: instituteEntity.id },
+      // Verify no second institute was created in PostgreSQL
+      const foundSecond = await db.institute.findUnique({
+        where: { id: instToCreate.id },
       });
-      expect(dbInstitute).not.toBeNull();
-      expect(dbInstitute?.name).toBe('Vanguard Learning Institute');
+      expect(foundSecond).toBeNull();
+    });
 
-      // 3. Direct PostgreSQL Table Verification: User staff institute link
-      const dbUser = await db.user.findUnique({
-        where: { id: user.id },
+    it('F. Retry after successful onboarding is rejected cleanly with ConflictError', async () => {
+      const user = await createTestUser({
+        name: 'Retry Founder',
+        email: 'retry_founder@test.com',
       });
-      expect(dbUser?.instituteId).toBe(instituteEntity.id);
-      expect(dbUser?.status).toBe('active');
+
+      const inst1 = InstituteEntity.create({
+        name: 'First Institute',
+        slug: 'first-institute',
+        phone: '+919876543210',
+        email: 'first@test.com',
+      });
+
+      const mem1 = InstituteMembershipEntity.create({
+        userId: user.id,
+        instituteId: inst1.id,
+        role: 'owner',
+        status: 'active',
+      });
+
+      // First onboarding succeeds
+      const result1 = await repository.onboard(inst1, mem1);
+      expect(result1.institute.id).toBe(inst1.id);
+
+      // User retries onboarding with another institute
+      const inst2 = InstituteEntity.create({
+        name: 'Second Institute Retry',
+        slug: 'second-institute-retry',
+        phone: '+919876543211',
+        email: 'second@test.com',
+      });
+
+      const mem2 = InstituteMembershipEntity.create({
+        userId: user.id,
+        instituteId: inst2.id,
+        role: 'owner',
+        status: 'active',
+      });
+
+      await expect(repository.onboard(inst2, mem2)).rejects.toThrow(ConflictError);
+
+      // Verify user remains bound ONLY to first institute
+      const dbUser = await db.user.findUnique({ where: { id: user.id } });
+      expect(dbUser?.instituteId).toBe(inst1.id);
     });
   });
 
-  describe('Real PostgreSQL Atomic Rollback Guarantees', () => {
-    it('5 & 8. Failure during user linking MUST roll back Institute creation (Zero Orphaned Institutes)', async () => {
-      const nonExistentUserId = '00000000-0000-4000-a000-000000000099';
-
-      const instituteEntity = InstituteEntity.create({
-        name: 'Rollback Target Institute',
-        slug: 'rollback-target-inst',
-        phone: '+919876543210',
-        email: 'rollback@test.com',
-      });
-
-      const membershipEntity = InstituteMembershipEntity.create({
-        userId: nonExistentUserId,
-        instituteId: instituteEntity.id,
-        role: 'owner',
-        status: 'active',
-      });
-
-      // Attempt onboarding with invalid user ID -> user lookup/update fails with NotFoundError
-      await expect(repository.onboard(instituteEntity, membershipEntity)).rejects.toThrow(
-        NotFoundError,
-      );
-
-      // CRITICAL VERIFICATION: Institute MUST NOT exist in PostgreSQL!
-      const dbInstitute = await db.institute.findUnique({
-        where: { id: instituteEntity.id },
-      });
-      expect(dbInstitute).toBeNull();
-    });
-
-    it('6. Database slug constraint failure leaves zero partial records in PostgreSQL', async () => {
+  describe('B & C. Concurrency & Race Condition Suite', () => {
+    it('B. Simultaneous onboarding requests for the SAME user result in exactly ONE Institute and ConflictError on losing request', async () => {
       const user = await createTestUser({
-        name: 'Collision User',
-        email: 'collision_user@test.com',
+        name: 'Race User',
+        email: 'race_user@test.com',
       });
-
-      // Pre-create an institute with slug 'collision-slug'
-      await db.institute.create({
-        data: {
-          name: 'Existing Slug Institute',
-          slug: 'collision-slug',
-          phone: '+919999999999',
-          email: 'existing@test.com',
-        },
-      });
-
-      const instituteEntity = InstituteEntity.create({
-        name: 'New Colliding Institute',
-        slug: 'collision-slug',
-        phone: '+919876543210',
-        email: 'new@test.com',
-      });
-
-      const membershipEntity = InstituteMembershipEntity.create({
-        userId: user.id,
-        instituteId: instituteEntity.id,
-        role: 'owner',
-        status: 'active',
-      });
-
-      await expect(repository.onboard(instituteEntity, membershipEntity)).rejects.toThrow(
-        ConflictError,
-      );
-
-      // User must not be updated to the failed institute
-      const dbUser = await db.user.findUnique({
-        where: { id: user.id },
-      });
-      expect(dbUser?.instituteId).toBeNull();
-    });
-  });
-
-  describe('Concurrency & Uniqueness Invariants', () => {
-    it('11-12. Handles concurrent onboarding attempts with identical slug cleanly (Exactly 1 Institute committed)', async () => {
-      const userA = await createTestUser({ name: 'User A', email: 'user_a@test.com' });
-      const userB = await createTestUser({ name: 'User B', email: 'user_b@test.com' });
 
       const instA = InstituteEntity.create({
-        name: 'Concurrent Institute',
-        slug: 'concurrent-slug',
+        name: 'Concurrent Inst A',
+        slug: 'concurrent-inst-a',
         phone: '+919800000001',
-        email: 'inst_a@test.com',
+        email: 'a@test.com',
       });
 
       const instB = InstituteEntity.create({
-        name: 'Concurrent Institute B',
-        slug: 'concurrent-slug',
+        name: 'Concurrent Inst B',
+        slug: 'concurrent-inst-b',
         phone: '+919800000002',
-        email: 'inst_b@test.com',
+        email: 'b@test.com',
+      });
+
+      const memA = InstituteMembershipEntity.create({
+        userId: user.id,
+        instituteId: instA.id,
+        role: 'owner',
+        status: 'active',
+      });
+
+      const memB = InstituteMembershipEntity.create({
+        userId: user.id,
+        instituteId: instB.id,
+        role: 'owner',
+        status: 'active',
+      });
+
+      // Fire both transactions simultaneously for the exact same user
+      const results = await Promise.allSettled([
+        repository.onboard(instA, memA),
+        repository.onboard(instB, memB),
+      ]);
+
+      const fulfilled = results.filter((r) => r.status === 'fulfilled');
+      const rejected = results.filter((r) => r.status === 'rejected');
+
+      expect(fulfilled).toHaveLength(1);
+      expect(rejected).toHaveLength(1);
+      expect((rejected[0] as PromiseRejectedResult).reason).toBeInstanceOf(ConflictError);
+
+      // Verify PostgreSQL state: User is bound to exactly ONE institute, and only 1 of the 2 institutes exists in DB!
+      const dbUser = await db.user.findUnique({ where: { id: user.id } });
+      expect(dbUser?.instituteId).toBeDefined();
+
+      const createdInsts = await db.institute.findMany({
+        where: { id: { in: [instA.id, instB.id] } },
+      });
+      expect(createdInsts).toHaveLength(1);
+      expect(createdInsts[0].id).toBe(dbUser?.instituteId);
+    });
+
+    it('C & G. Same-slug concurrent onboarding for DIFFERENT users results in exactly ONE Institute and does not mutate losing user tenancy', async () => {
+      const userA = await createTestUser({ name: 'User A', email: 'usera@test.com' });
+      const userB = await createTestUser({ name: 'User B', email: 'userb@test.com' });
+
+      const instA = InstituteEntity.create({
+        name: 'Same Slug Inst',
+        slug: 'same-slug-inst',
+        phone: '+919800000010',
+        email: 'a@test.com',
+      });
+
+      const instB = InstituteEntity.create({
+        name: 'Same Slug Inst B',
+        slug: 'same-slug-inst',
+        phone: '+919800000020',
+        email: 'b@test.com',
       });
 
       const memA = InstituteMembershipEntity.create({
@@ -184,7 +202,6 @@ describe('PrismaOnboardInstituteRepository Real PostgreSQL Integration & Atomic 
         status: 'active',
       });
 
-      // Execute both onboarding attempts concurrently
       const results = await Promise.allSettled([
         repository.onboard(instA, memA),
         repository.onboard(instB, memB),
@@ -193,16 +210,60 @@ describe('PrismaOnboardInstituteRepository Real PostgreSQL Integration & Atomic 
       const fulfilled = results.filter((r) => r.status === 'fulfilled');
       const rejected = results.filter((r) => r.status === 'rejected');
 
-      // Exactly ONE request succeeds, exactly ONE request fails with ConflictError
       expect(fulfilled).toHaveLength(1);
       expect(rejected).toHaveLength(1);
       expect((rejected[0] as PromiseRejectedResult).reason).toBeInstanceOf(ConflictError);
 
-      // Direct DB verification: Exactly ONE institute exists with slug 'concurrent-slug'
+      // Verify PostgreSQL state: Exactly ONE institute exists for 'same-slug-inst'
       const institutesInDb = await db.institute.findMany({
-        where: { slug: 'concurrent-slug' },
+        where: { slug: 'same-slug-inst' },
       });
       expect(institutesInDb).toHaveLength(1);
+
+      // Winning user is linked, losing user remains unlinked (null)
+      const dbUserA = await db.user.findUnique({ where: { id: userA.id } });
+      const dbUserB = await db.user.findUnique({ where: { id: userB.id } });
+
+      const linkedUsers = [dbUserA, dbUserB].filter((u) => u?.instituteId !== null);
+      const unlinkedUsers = [dbUserA, dbUserB].filter((u) => u?.instituteId === null);
+
+      expect(linkedUsers).toHaveLength(1);
+      expect(unlinkedUsers).toHaveLength(1);
+    });
+  });
+
+  describe('D & E. Atomic Rollback Guarantees', () => {
+    it('D & E. Failed transaction leaves zero Institute rows and leaves User.instituteId unchanged (null)', async () => {
+      const user = await createTestUser({
+        name: 'Non Existent Test',
+        email: 'nonexistent_test@test.com',
+      });
+
+      const invalidUserId = '00000000-0000-4000-a000-000000000099';
+
+      const inst = InstituteEntity.create({
+        name: 'Failed Inst',
+        slug: 'failed-inst',
+        phone: '+919800000000',
+        email: 'fail@test.com',
+      });
+
+      const mem = InstituteMembershipEntity.create({
+        userId: invalidUserId,
+        instituteId: inst.id,
+        role: 'owner',
+        status: 'active',
+      });
+
+      await expect(repository.onboard(inst, mem)).rejects.toThrow(NotFoundError);
+
+      // Verify zero institute created
+      const dbInst = await db.institute.findUnique({ where: { id: inst.id } });
+      expect(dbInst).toBeNull();
+
+      // Verify legitimate user remains unchanged (null)
+      const dbUser = await db.user.findUnique({ where: { id: user.id } });
+      expect(dbUser?.instituteId).toBeNull();
     });
   });
 });

@@ -30,13 +30,19 @@ export class PrismaOnboardInstituteRepository implements InstituteOnboardingRepo
   ): Promise<OnboardInstituteResult> {
     try {
       return await db.$transaction(async (tx) => {
-        // 1. Fetch user to verify existence
+        // 1. Fetch user to verify existence and check pre-existing staff tenancy
         const user = await tx.user.findUnique({
           where: { id: membership.userId },
         });
 
         if (!user) {
           throw new NotFoundError(`User with ID ${membership.userId} not found.`);
+        }
+
+        if (user.instituteId !== null) {
+          throw new ConflictError(
+            `User ${membership.userId} is already associated with an active institute tenant.`,
+          );
         }
 
         // 2. Create Institute record in PostgreSQL
@@ -56,13 +62,26 @@ export class PrismaOnboardInstituteRepository implements InstituteOnboardingRepo
           },
         });
 
-        // 3. Atomically update User.instituteId to establish staff owner tenant link
-        const updatedUser = await tx.user.update({
-          where: { id: user.id },
+        // 3. Atomically update User.instituteId IF AND ONLY IF instituteId is still null (concurrency lock)
+        const updateResult = await tx.user.updateMany({
+          where: {
+            id: user.id,
+            instituteId: null,
+          },
           data: {
             instituteId: createdInstitute.id,
             status: membership.status === 'active' ? 'active' : 'suspended',
           },
+        });
+
+        if (updateResult.count === 0) {
+          throw new ConflictError(
+            `User ${membership.userId} is already associated with an active institute tenant.`,
+          );
+        }
+
+        const updatedUser = await tx.user.findUniqueOrThrow({
+          where: { id: user.id },
         });
 
         const createdMembership = InstituteMembershipEntity.from({
@@ -81,10 +100,11 @@ export class PrismaOnboardInstituteRepository implements InstituteOnboardingRepo
         };
       });
     } catch (error: any) {
+      if (error instanceof ConflictError || error instanceof NotFoundError) {
+        throw error;
+      }
       if (error?.code === 'P2002') {
-        throw new ConflictError(
-          `An institute with slug '${institute.slug}' already exists.`,
-        );
+        throw new ConflictError(`An institute with slug '${institute.slug}' already exists.`);
       }
       if (error?.code === 'P2025') {
         throw new NotFoundError(`User with ID ${membership.userId} not found.`);
