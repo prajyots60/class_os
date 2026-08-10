@@ -195,7 +195,16 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.3.6:** Identity Use Case Integration ✅
     - **Phase 1.3.7:** Security & RBAC Test Matrix ✅
     - **Phase 1.3.8:** Phase 1.3 Acceptance Gate ✅ (ACCEPTED 🟢)
-  - **Phase 1.4:** Institute Onboarding Workflow (Next)
+  - **Phase 1.4:** Institute Onboarding Workflow 🚧 (NOW ACTIVE)
+    - **Phase 1.4.0:** Architecture & Workflow Contract Freeze 🟢 (Freeze)
+    - **Phase 1.4.1:** Onboarding Domain & Application Orchestration (Next)
+    - **Phase 1.4.2:** Atomic Institute + Owner Bootstrap Transaction
+    - **Phase 1.4.3:** Idempotency & Conflict Handling
+    - **Phase 1.4.4:** Onboarding API Boundary
+    - **Phase 1.4.5:** Onboarding UI Flow
+    - **Phase 1.4.6:** Tenant Context Resolution & Post-Onboarding Redirect
+    - **Phase 1.4.7:** End-to-End Security & Failure Testing
+    - **Phase 1.4.8:** Phase 1.4 Acceptance Gate
   - **Phase 1.5:** Institute Settings & White-Label Branding
   - **Phase 1.6:** Global ParentIdentity Platform Layer
   - **Phase 1.7:** Tenant InstituteParent CRM Layer
