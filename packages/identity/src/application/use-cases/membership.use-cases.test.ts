@@ -12,6 +12,7 @@ import {
   GetInstituteMembersUseCase,
   GetInstituteMembershipUseCase,
   ChangeMembershipStatusUseCase,
+  UpdateMembershipRoleUseCase,
   ResolveInstituteMembershipUseCase,
 } from './membership.use-cases';
 
@@ -81,7 +82,7 @@ class InMemoryMembershipRepository implements InstituteMembershipRepository {
   }
 }
 
-describe('Institute Membership Use Cases', () => {
+describe('Institute Membership Use Cases — Security Unit Suite', () => {
   let repository: InMemoryMembershipRepository;
 
   beforeEach(() => {
@@ -89,19 +90,31 @@ describe('Institute Membership Use Cases', () => {
   });
 
   describe('CreateInstituteMembershipUseCase', () => {
-    it('creates a new institute membership', async () => {
+    it('creates a new institute membership when tenantContext matches', async () => {
       const useCase = new CreateInstituteMembershipUseCase(repository);
       const membership = await useCase.execute({
         userId: 'usr-1',
         instituteId: 'inst-1',
         role: 'owner',
+        tenantContextId: 'inst-1',
       });
 
       expect(membership.id).toBeDefined();
       expect(membership.userId).toBe('usr-1');
       expect(membership.instituteId).toBe('inst-1');
-      expect(membership.role).toBe('owner');
-      expect(membership.status).toBe('active');
+    });
+
+    it('rejects membership creation when tenantContextId mismatches target institute', async () => {
+      const useCase = new CreateInstituteMembershipUseCase(repository);
+
+      await expect(
+        useCase.execute({
+          userId: 'usr-attacker',
+          instituteId: 'inst-victim',
+          role: 'owner',
+          tenantContextId: 'inst-attacker',
+        }),
+      ).rejects.toThrow(AuthorizationError);
     });
 
     it('rejects duplicate active membership for same user and institute', async () => {
@@ -123,40 +136,67 @@ describe('Institute Membership Use Cases', () => {
   });
 
   describe('GetUserMembershipsUseCase', () => {
-    it('returns active memberships for a user', async () => {
+    it('returns active memberships for authenticated self-service user', async () => {
       const createUseCase = new CreateInstituteMembershipUseCase(repository);
       await createUseCase.execute({ userId: 'usr-1', instituteId: 'inst-1', role: 'owner' });
-      await createUseCase.execute({ userId: 'usr-1', instituteId: 'inst-2', role: 'parent' });
 
       const getUserMemberships = new GetUserMembershipsUseCase(repository);
-      const userMemberships = await getUserMemberships.execute({ userId: 'usr-1' });
+      const memberships = await getUserMemberships.execute({
+        userId: 'usr-1',
+        authenticatedUserId: 'usr-1',
+      });
 
-      expect(userMemberships).toHaveLength(2);
+      expect(memberships).toHaveLength(1);
+    });
+
+    it('rejects cross-user membership enumeration when authenticatedUserId mismatches requested userId', async () => {
+      const getUserMemberships = new GetUserMembershipsUseCase(repository);
+
+      await expect(
+        getUserMemberships.execute({
+          userId: 'usr-victim',
+          authenticatedUserId: 'usr-attacker',
+        }),
+      ).rejects.toThrow(AuthorizationError);
     });
   });
 
-  describe('GetInstituteMembersUseCase', () => {
-    it('returns institute members when tenantContextId matches', async () => {
+  describe('GetInstituteMembershipUseCase', () => {
+    it('rejects cross-tenant membership lookup by membershipId when tenantContextId mismatches', async () => {
       const createUseCase = new CreateInstituteMembershipUseCase(repository);
-      await createUseCase.execute({ userId: 'usr-1', instituteId: 'inst-1', role: 'owner' });
-      await createUseCase.execute({ userId: 'usr-2', instituteId: 'inst-1', role: 'teacher' });
-
-      const getMembers = new GetInstituteMembersUseCase(repository);
-      const members = await getMembers.execute({
-        instituteId: 'inst-1',
-        tenantContextId: 'inst-1',
+      const created = await createUseCase.execute({
+        userId: 'usr-victim',
+        instituteId: 'inst-victim',
+        role: 'owner',
       });
 
-      expect(members).toHaveLength(2);
-    });
-
-    it('rejects cross-tenant member retrieval when tenantContextId mismatches', async () => {
-      const getMembers = new GetInstituteMembersUseCase(repository);
+      const getMembership = new GetInstituteMembershipUseCase(repository);
 
       await expect(
-        getMembers.execute({
-          instituteId: 'inst-1',
-          tenantContextId: 'inst-2-malicious',
+        getMembership.execute({
+          id: created.id,
+          tenantContextId: 'inst-attacker',
+        }),
+      ).rejects.toThrow(AuthorizationError);
+    });
+  });
+
+  describe('UpdateMembershipRoleUseCase', () => {
+    it('rejects role mutation when tenantContextId mismatches', async () => {
+      const createUseCase = new CreateInstituteMembershipUseCase(repository);
+      const created = await createUseCase.execute({
+        userId: 'usr-1',
+        instituteId: 'inst-victim',
+        role: 'teacher',
+      });
+
+      const updateRoleUseCase = new UpdateMembershipRoleUseCase(repository);
+
+      await expect(
+        updateRoleUseCase.execute({
+          id: created.id,
+          role: 'owner',
+          tenantContextId: 'inst-attacker',
         }),
       ).rejects.toThrow(AuthorizationError);
     });

@@ -16,10 +16,19 @@ export interface TenantContext {
   status: MembershipStatus;
 }
 
+export interface CreateMembershipCommand extends CreateInstituteMembershipProps {
+  tenantContextId?: string;
+}
+
 export class CreateInstituteMembershipUseCase {
   constructor(private readonly repository: InstituteMembershipRepository) {}
 
-  public async execute(props: CreateInstituteMembershipProps): Promise<InstituteMembershipEntity> {
+  public async execute(props: CreateMembershipCommand): Promise<InstituteMembershipEntity> {
+    // Security invariant 1: Caller's tenant context must match target institute
+    if (props.tenantContextId && props.tenantContextId !== props.instituteId) {
+      throw new AuthorizationError('Access denied to create membership in target institute.');
+    }
+
     const entity = InstituteMembershipEntity.create(props);
 
     // Fail-fast check for existing membership
@@ -56,6 +65,7 @@ export class CreateInstituteMembershipUseCase {
 
 export interface GetUserMembershipsQuery {
   userId: string;
+  authenticatedUserId?: string;
   activeOnly?: boolean;
 }
 
@@ -65,6 +75,11 @@ export class GetUserMembershipsUseCase {
   public async execute(query: GetUserMembershipsQuery): Promise<InstituteMembershipEntity[]> {
     if (!query.userId || !query.userId.trim()) {
       throw new NotFoundError('User ID cannot be empty');
+    }
+
+    // Security invariant 2: Self-service boundary must not allow inspecting another user's memberships
+    if (query.authenticatedUserId && query.authenticatedUserId !== query.userId) {
+      throw new AuthorizationError("User is not authorized to inspect another user's institute memberships.");
     }
 
     const memberships = await this.repository.findByUserId(query.userId);
@@ -90,7 +105,7 @@ export class GetInstituteMembersUseCase {
       throw new NotFoundError('Institute ID cannot be empty');
     }
 
-    // Security invariant: Caller's trusted tenant context must match requested institute
+    // Security invariant 3: Caller's trusted tenant context must match requested institute
     if (query.tenantContextId && query.tenantContextId !== query.instituteId) {
       throw new AuthorizationError('Access denied to members of requested institute.');
     }
@@ -122,6 +137,7 @@ export class GetInstituteMembershipUseCase {
       throw new NotFoundError('Institute membership not found.');
     }
 
+    // Security invariant 4: Membership lookup by membershipId MUST be scoped by trusted tenantContextId
     if (query.tenantContextId && query.tenantContextId !== found.instituteId) {
       throw new AuthorizationError('Access denied to requested membership.');
     }
@@ -145,6 +161,7 @@ export class ChangeMembershipStatusUseCase {
       throw new NotFoundError(`Membership with ID ${command.id} not found.`);
     }
 
+    // Security invariant 5: Tenant boundary enforcement for status mutation
     if (command.tenantContextId && command.tenantContextId !== existing.instituteId) {
       throw new AuthorizationError('Access denied to change membership status.');
     }
@@ -157,6 +174,40 @@ export class ChangeMembershipStatusUseCase {
         status: updated.status,
       },
       'identity.membership.status_changed',
+    );
+
+    return updated;
+  }
+}
+
+export interface UpdateMembershipRoleCommand {
+  id: string;
+  role: MembershipRole;
+  tenantContextId?: string;
+}
+
+export class UpdateMembershipRoleUseCase {
+  constructor(private readonly repository: InstituteMembershipRepository) {}
+
+  public async execute(command: UpdateMembershipRoleCommand): Promise<InstituteMembershipEntity> {
+    const existing = await this.repository.findById(command.id);
+    if (!existing) {
+      throw new NotFoundError(`Membership with ID ${command.id} not found.`);
+    }
+
+    // Security invariant 6: Tenant boundary enforcement for role mutation
+    if (command.tenantContextId && command.tenantContextId !== existing.instituteId) {
+      throw new AuthorizationError('Access denied to update membership role.');
+    }
+
+    const updated = await this.repository.updateRole(command.id, command.role);
+
+    logger.info(
+      {
+        membershipId: updated.id,
+        role: updated.role,
+      },
+      'identity.membership.role_updated',
     );
 
     return updated;

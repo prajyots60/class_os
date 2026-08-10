@@ -41,11 +41,12 @@ export class PrismaInstituteMembershipRepository implements InstituteMembershipR
           where: { id: user.id },
           data: {
             instituteId: membership.instituteId,
+            status: membership.status === 'active' ? 'active' : 'suspended',
           },
         });
 
         return InstituteMembershipEntity.from({
-          id: membership.id,
+          id: `mem:${user.id}:${membership.instituteId}`,
           userId: user.id,
           instituteId: membership.instituteId,
           role: membership.role,
@@ -64,7 +65,6 @@ export class PrismaInstituteMembershipRepository implements InstituteMembershipR
     }
 
     // 4. Handle parent membership role ('parent')
-    // Get or create ParentIdentity & InstituteParent
     let parentIdentity = user.phone
       ? await db.parentIdentity.findUnique({ where: { phone: user.phone } })
       : null;
@@ -139,25 +139,62 @@ export class PrismaInstituteMembershipRepository implements InstituteMembershipR
   }
 
   public async findById(id: string): Promise<InstituteMembershipEntity | null> {
-    // 1. Check parent institute membership
-    const parentMembership = await db.instituteMembership.findUnique({
-      where: { id },
-      include: { parentIdentity: true },
-    });
+    // 1. Check synthetic colon-delimited staff membership ID: mem:${userId}:${instituteId}
+    if (id.startsWith('mem:')) {
+      const [, userId, instituteId] = id.split(':');
+      if (userId && instituteId) {
+        const user = await db.user.findUnique({ where: { id: userId } });
+        if (user && user.instituteId === instituteId) {
+          return InstituteMembershipEntity.from({
+            id,
+            userId: user.id,
+            instituteId,
+            role: 'owner',
+            status: user.status === 'active' ? 'active' : 'suspended',
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+          });
+        }
+      }
+    }
 
-    if (parentMembership) {
-      const user = await db.user.findFirst({
-        where: { phone: parentMembership.parentIdentity.phone },
+    const isValidUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+
+    if (isValidUuid) {
+      // 2. Check parent institute membership by UUID
+      const parentMembership = await db.instituteMembership.findUnique({
+        where: { id },
+        include: { parentIdentity: true },
       });
-      return InstituteMembershipEntity.from({
-        id: parentMembership.id,
-        userId: user ? user.id : parentMembership.parentIdentityId,
-        instituteId: parentMembership.instituteId,
-        role: 'parent',
-        status: 'active',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+
+      if (parentMembership) {
+        const user = await db.user.findFirst({
+          where: { phone: parentMembership.parentIdentity.phone },
+        });
+        return InstituteMembershipEntity.from({
+          id: parentMembership.id,
+          userId: user ? user.id : parentMembership.parentIdentityId,
+          instituteId: parentMembership.instituteId,
+          role: 'parent',
+          status: 'active',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+      }
+
+      // 3. Check direct staff user by UUID
+      const staffUser = await db.user.findUnique({ where: { id } });
+      if (staffUser && staffUser.instituteId) {
+        return InstituteMembershipEntity.from({
+          id: `mem:${staffUser.id}:${staffUser.instituteId}`,
+          userId: staffUser.id,
+          instituteId: staffUser.instituteId,
+          role: 'owner',
+          status: staffUser.status === 'active' ? 'active' : 'suspended',
+          createdAt: staffUser.createdAt,
+          updatedAt: staffUser.updatedAt,
+        });
+      }
     }
 
     return null;
@@ -167,6 +204,11 @@ export class PrismaInstituteMembershipRepository implements InstituteMembershipR
     userId: string,
     instituteId: string,
   ): Promise<InstituteMembershipEntity | null> {
+    const isValidUserId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId);
+    if (!isValidUserId) {
+      return null;
+    }
+
     const user = await db.user.findUnique({
       where: { id: userId },
     });
@@ -178,7 +220,7 @@ export class PrismaInstituteMembershipRepository implements InstituteMembershipR
     // 1. Check direct staff user institute assignment
     if (user.instituteId === instituteId) {
       return InstituteMembershipEntity.from({
-        id: `mem-${user.id}-${instituteId}`,
+        id: `mem:${user.id}:${instituteId}`,
         userId: user.id,
         instituteId,
         role: 'owner',
@@ -220,6 +262,11 @@ export class PrismaInstituteMembershipRepository implements InstituteMembershipR
   }
 
   public async findByUserId(userId: string): Promise<InstituteMembershipEntity[]> {
+    const isValidUserId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId);
+    if (!isValidUserId) {
+      return [];
+    }
+
     const user = await db.user.findUnique({
       where: { id: userId },
     });
@@ -233,7 +280,7 @@ export class PrismaInstituteMembershipRepository implements InstituteMembershipR
     if (user.instituteId) {
       memberships.push(
         InstituteMembershipEntity.from({
-          id: `mem-${user.id}-${user.instituteId}`,
+          id: `mem:${user.id}:${user.instituteId}`,
           userId: user.id,
           instituteId: user.instituteId,
           role: 'owner',
@@ -271,6 +318,11 @@ export class PrismaInstituteMembershipRepository implements InstituteMembershipR
   }
 
   public async findByInstituteId(instituteId: string): Promise<InstituteMembershipEntity[]> {
+    const isValidInstId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(instituteId);
+    if (!isValidInstId) {
+      return [];
+    }
+
     const memberships: InstituteMembershipEntity[] = [];
 
     // Staff members
@@ -281,7 +333,7 @@ export class PrismaInstituteMembershipRepository implements InstituteMembershipR
     for (const u of staffUsers) {
       memberships.push(
         InstituteMembershipEntity.from({
-          id: `mem-${u.id}-${instituteId}`,
+          id: `mem:${u.id}:${instituteId}`,
           userId: u.id,
           instituteId,
           role: 'owner',
@@ -327,6 +379,15 @@ export class PrismaInstituteMembershipRepository implements InstituteMembershipR
       throw new NotFoundError(`Membership with ID ${id} not found.`);
     }
 
+    if (id.startsWith('mem:') || existing.role !== 'parent') {
+      await db.user.update({
+        where: { id: existing.userId },
+        data: {
+          status: status === 'active' ? 'active' : 'suspended',
+        },
+      });
+    }
+
     if (status === 'removed') {
       existing.remove();
     } else if (status === 'suspended') {
@@ -352,14 +413,17 @@ export class PrismaInstituteMembershipRepository implements InstituteMembershipR
   }
 
   public async delete(id: string): Promise<void> {
-    const existing = await db.instituteMembership.findUnique({
-      where: { id },
-    });
-
-    if (existing) {
-      await db.instituteMembership.delete({
+    const isValidUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+    if (isValidUuid) {
+      const existing = await db.instituteMembership.findUnique({
         where: { id },
       });
+
+      if (existing) {
+        await db.instituteMembership.delete({
+          where: { id },
+        });
+      }
     }
   }
 }

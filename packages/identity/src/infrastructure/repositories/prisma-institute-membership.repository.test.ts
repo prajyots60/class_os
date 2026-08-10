@@ -9,9 +9,16 @@ import {
 import { AuthorizationError, ConflictError, NotFoundError } from '@coaching-os/shared';
 import { InstituteMembershipEntity } from '../../domain/entities/institute-membership.entity';
 import { PrismaInstituteMembershipRepository } from './prisma-institute-membership.repository';
-import { ResolveInstituteMembershipUseCase } from '../../application/use-cases/membership.use-cases';
+import {
+  CreateInstituteMembershipUseCase,
+  GetUserMembershipsUseCase,
+  GetInstituteMembershipUseCase,
+  ChangeMembershipStatusUseCase,
+  UpdateMembershipRoleUseCase,
+  ResolveInstituteMembershipUseCase,
+} from '../../application/use-cases/membership.use-cases';
 
-describe('PrismaInstituteMembershipRepository Integration & Security Suite', () => {
+describe('PrismaInstituteMembershipRepository Integration & Security Audit Suite', () => {
   let repository: PrismaInstituteMembershipRepository;
 
   beforeAll(() => {
@@ -83,23 +90,53 @@ describe('PrismaInstituteMembershipRepository Integration & Security Suite', () 
     await expect(repository.create(entity)).rejects.toThrow(NotFoundError);
   });
 
-  describe('MANDATORY TENANT SECURITY TESTS', () => {
-    it('1. User A cannot access User B membership records', async () => {
-      const instA = await createTestInstitute({ name: 'Institute A' });
-      const instB = await createTestInstitute({ name: 'Institute B' });
+  describe('SECURITY AUDIT — 6 MANDATORY ATTACK PATH VERIFICATIONS', () => {
+    it('1. User A cannot create an owner membership in Institute B (Escalation Protection)', async () => {
+      const instB = await createTestInstitute({ name: 'Victim Institute B' });
+      const attackerUser = await createTestUser({ email: 'attacker@test.com' });
 
-      const userA = await createTestUser({ email: 'userA@test.com' });
+      const createUseCase = new CreateInstituteMembershipUseCase(repository);
+
+      // Attacker attempts to create owner membership in Institute B using Attacker's institute context
+      await expect(
+        createUseCase.execute({
+          userId: attackerUser.id,
+          instituteId: instB.id,
+          role: 'owner',
+          tenantContextId: 'inst-attacker-context-id',
+        }),
+      ).rejects.toThrow(AuthorizationError);
+    });
+
+    it('2. User A cannot enumerate User B memberships through self-service boundary', async () => {
+      const instA = await createTestInstitute({ name: 'Institute A' });
       const userB = await createTestUser({ email: 'userB@test.com' });
+      const attackerUserA = await createTestUser({ email: 'attackerA@test.com' });
 
       await repository.create(
         InstituteMembershipEntity.create({
-          userId: userA.id,
+          userId: userB.id,
           instituteId: instA.id,
           role: 'owner',
         }),
       );
 
-      await repository.create(
+      const getMembershipsUseCase = new GetUserMembershipsUseCase(repository);
+
+      // Attacker A attempts to inspect User B's memberships passing authenticatedUserId = attackerUserA.id
+      await expect(
+        getMembershipsUseCase.execute({
+          userId: userB.id,
+          authenticatedUserId: attackerUserA.id,
+        }),
+      ).rejects.toThrow(AuthorizationError);
+    });
+
+    it('3. User A cannot retrieve Institute B membership by membershipId (Cross-Tenant Lookup)', async () => {
+      const instB = await createTestInstitute({ name: 'Institute B' });
+      const userB = await createTestUser({ email: 'userB@test.com' });
+
+      const membershipB = await repository.create(
         InstituteMembershipEntity.create({
           userId: userB.id,
           instituteId: instB.id,
@@ -107,56 +144,84 @@ describe('PrismaInstituteMembershipRepository Integration & Security Suite', () 
         }),
       );
 
-      const userAMemberships = await repository.findByUserId(userA.id);
-      expect(userAMemberships).toHaveLength(1);
-      expect(userAMemberships[0].instituteId).toBe(instA.id);
-      expect(userAMemberships[0].instituteId).not.toBe(instB.id);
-    });
+      const getMembershipUseCase = new GetInstituteMembershipUseCase(repository);
 
-    it('2. User belonging to Institute A cannot access Institute B through ResolveInstituteMembershipUseCase', async () => {
-      const instA = await createTestInstitute({ name: 'Institute A' });
-      const instB = await createTestInstitute({ name: 'Institute B' });
-
-      const userA = await createTestUser({ email: 'userA@test.com' });
-
-      await repository.create(
-        InstituteMembershipEntity.create({
-          userId: userA.id,
-          instituteId: instA.id,
-          role: 'owner',
-        }),
-      );
-
-      const resolver = new ResolveInstituteMembershipUseCase(repository);
-
-      // User A attempts to resolve tenant context for Institute B
+      // User A attempts to retrieve Membership B using User A's Institute A tenant context
       await expect(
-        resolver.execute({
-          userId: userA.id,
-          requestedInstituteId: instB.id,
+        getMembershipUseCase.execute({
+          id: membershipB.id,
+          tenantContextId: 'inst-A-tenant-context',
         }),
       ).rejects.toThrow(AuthorizationError);
     });
 
-    it('3. Arbitrary client-provided instituteId cannot bypass server membership resolution', async () => {
-      const instA = await createTestInstitute({ name: 'Institute A' });
-      const maliciousInstId = '00000000-0000-4000-8000-999999999999';
+    it('4. User A cannot change another tenant membership status', async () => {
+      const instB = await createTestInstitute({ name: 'Institute B' });
+      const userB = await createTestUser({ email: 'userB@test.com' });
 
+      const membershipB = await repository.create(
+        InstituteMembershipEntity.create({
+          userId: userB.id,
+          instituteId: instB.id,
+          role: 'teacher',
+        }),
+      );
+
+      const changeStatusUseCase = new ChangeMembershipStatusUseCase(repository);
+
+      await expect(
+        changeStatusUseCase.execute({
+          id: membershipB.id,
+          status: 'suspended',
+          tenantContextId: 'inst-A-tenant-context',
+        }),
+      ).rejects.toThrow(AuthorizationError);
+    });
+
+    it('5. User A cannot promote themselves or another user to owner in another institute', async () => {
+      const instB = await createTestInstitute({ name: 'Institute B' });
+      const userB = await createTestUser({ email: 'userB@test.com' });
+
+      const membershipB = await repository.create(
+        InstituteMembershipEntity.create({
+          userId: userB.id,
+          instituteId: instB.id,
+          role: 'teacher',
+        }),
+      );
+
+      const updateRoleUseCase = new UpdateMembershipRoleUseCase(repository);
+
+      await expect(
+        updateRoleUseCase.execute({
+          id: membershipB.id,
+          role: 'owner',
+          tenantContextId: 'inst-A-tenant-context',
+        }),
+      ).rejects.toThrow(AuthorizationError);
+    });
+
+    it('6. Suspended and removed memberships remain unauthorized in ResolveInstituteMembershipUseCase', async () => {
+      const instA = await createTestInstitute({ name: 'Institute A' });
       const userA = await createTestUser({ email: 'userA@test.com' });
-      await repository.create(
+
+      const membership = await repository.create(
         InstituteMembershipEntity.create({
           userId: userA.id,
           instituteId: instA.id,
-          role: 'owner',
+          role: 'teacher',
         }),
       );
+
+      // Suspend membership
+      await repository.updateStatus(membership.id, 'suspended');
 
       const resolver = new ResolveInstituteMembershipUseCase(repository);
 
       await expect(
         resolver.execute({
           userId: userA.id,
-          requestedInstituteId: maliciousInstId,
+          requestedInstituteId: instA.id,
         }),
       ).rejects.toThrow(AuthorizationError);
     });
