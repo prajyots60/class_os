@@ -1,0 +1,228 @@
+# Phase 0.12 — Public & Authentication UX Architecture Contract
+
+**Status:** Architecture Freeze 🟢  
+**Milestone:** Phase 0.12.0 — Architecture & UX Contract  
+**Target:** Establish a scalable, componentized frontend architecture for CoachingOS, defining public marketing, authentication journeys, route groups, thin page composition boundaries, and design system contracts.
+
+---
+
+## 1. Executive Summary & Audit Findings
+
+### 1.1 Existing Frontend & Auth Audit Findings
+- **App Router Structure**: Currently flat (`app/page.tsx`, `app/onboarding/page.tsx`, `app/dashboard/page.tsx`).
+- **Authentication Backend Capabilities (`@coaching-os/auth`)**:
+  - `signUp.email` (`POST /api/auth/sign-up/email` with 5 attempts / 60s rate limit) — **Supported**
+  - `signIn.email` (`POST /api/auth/sign-in/email` with 3 attempts / 10s rate limit) — **Supported**
+  - `signOut` (`POST /api/auth/sign-out`) — **Supported**
+  - `useSession` / `getAuthenticatedSession` — **Supported**
+  - `forgetPassword` / `resetPassword` — Rate limit rules configured in Better Auth (`/forget-password`, `/reset-password`), but email delivery / reset token workflow is **Deferred (Phase 0.12.6)** until email infrastructure is connected.
+  - OAuth / Magic Link / Email Verification — **Not Configured / Deferred**.
+- **Page Composition Audit**:
+  - `app/page.tsx` currently contains 375 lines of inline showcase UI, demo form validation, and theme controls.
+  - `app/onboarding/page.tsx` contains 221 lines of inline form state, Zod validation, and fetch handlers.
+  - Needs refactoring into thin App Router route compositions using feature components under `features/`.
+
+---
+
+## 2. Monorepo Frontend Architecture & Folder Structure
+
+```text
+apps/web/src/
+├── app/
+│   ├── (marketing)/              ← Route Group: Public Marketing Pages
+│   │   ├── layout.tsx            ← Marketing Header + Main + Footer Layout
+│   │   └── page.tsx              ← Thin composition: <LandingPage />
+│   │
+│   ├── (auth)/                   ← Route Group: Authentication Shell
+│   │   ├── layout.tsx            ← Centered Auth Card Layout & Branding Shell
+│   │   ├── login/
+│   │   │   └── page.tsx          ← Thin composition: <SignInPage />
+│   │   ├── signup/
+│   │   │   └── page.tsx          ← Thin composition: <SignUpPage />
+│   │   ├── forgot-password/
+│   │   │   └── page.tsx          ← Thin composition: <ForgotPasswordPage /> (Deferred)
+│   │   └── reset-password/
+│   │       └── page.tsx          ← Thin composition: <ResetPasswordPage /> (Deferred)
+│   │
+│   ├── (app)/                    ← Route Group: Protected Application Shell
+│   │   ├── layout.tsx            ← Authenticated App Layout (Topbar, Sidebar container)
+│   │   ├── onboarding/
+│   │   │   └── page.tsx          ← Thin composition: <OnboardingPage />
+│   │   └── dashboard/
+│   │       └── page.tsx          ← Thin composition: <DashboardPage />
+│   │
+│   ├── api/                      ← HTTP Route Handlers
+│   ├── globals.css
+│   └── layout.tsx                ← Root Layout (HTML, Fonts, ThemeProvider)
+│
+├── components/                   ← GENERIC REUSABLE UI PRIMITIVES
+│   ├── ui/                       ← Reusable Design System Tokens (Button, Input, Card, Badge)
+│   ├── layout/                   ← Layout Primitives (Container, Section, PageHeader)
+│   └── navigation/               ← Shared Navigation Primitives (Logo, NavLink, UserMenu)
+│
+├── features/                     ← BUSINESS & PRODUCT-SPECIFIC UI & LOGIC
+│   ├── marketing/                ← Public Landing Page Feature
+│   │   └── components/           ← HeroSection, FeaturesGrid, WorkflowSection, FinalCTA, Footer
+│   │
+│   ├── auth/                     ← Authentication Feature
+│   │   ├── components/           ← SignInForm, SignUpForm, AuthCard, PasswordField, AuthError
+│   │   ├── hooks/                ← useAuthSession, useAuthActions
+│   │   └── schemas/              ← signInSchema, signUpSchema (Zod)
+│   │
+│   ├── onboarding/               ← Institute Onboarding Feature
+│   │   ├── components/           ← InstituteSetupForm, OnboardingHeader, SlugPreview
+│   │   └── hooks/                ← useInstituteOnboarding
+│   │
+│   └── dashboard/                ← Tenant Dashboard Feature
+│       └── components/           ← TenantHeader, StatCards, QuickActions
+│
+├── lib/                          ← Utilities & Infrastructure Clients
+│   ├── auth/                     ← Auth client exports & session helpers
+│   └── utils/                    ← Formatting & DOM utilities
+├── providers/                    ← Global React Context Providers
+└── stores/                       ← Zustand UI stores
+```
+
+---
+
+## 3. Thin Page Composition Principle (Non-Negotiable)
+
+**Invariant:** App Router pages (`app/**/page.tsx`) MUST remain thin route composition boundaries (under 30 lines of code). They MUST NOT contain inline form state, raw fetch API calls, or multi-hundred-line JSX layouts.
+
+### Example Page Composition Invariant:
+```tsx
+// app/(auth)/login/page.tsx (THIN ROUTE BOUNDARY)
+import { SignInForm } from '@/features/auth/components/sign-in-form';
+
+export default function LoginPage() {
+  return <SignInForm />;
+}
+```
+
+---
+
+## 4. Component Ownership Rules
+
+| Directory | Ownership Scope | Allowed Content | Prohibited Content |
+|---|---|---|---|
+| `components/ui/` | Generic Design System Primitives | `Button`, `Input`, `Card`, `Badge`, `Dialog` | CoachingOS business logic, domain entities, API calls |
+| `components/layout/` | Structural Containers | `Container`, `Section`, `Grid`, `PageHeader` | Feature-specific business forms or auth hooks |
+| `components/navigation/` | Shared Nav Primitives | `Logo`, `NavLink`, `UserMenu` | Direct database or server action imports |
+| `features/auth/` | Authentication Business Logic & UI | `SignInForm`, `SignUpForm`, `useAuthSession` | Direct Prisma imports or server-side authorization authority |
+| `features/marketing/` | Public Product Showcase UI | `HeroSection`, `WorkflowSection`, `Footer` | Auth session mutations or protected tenant logic |
+| `features/onboarding/` | Onboarding Setup UI | `InstituteSetupForm`, `SlugPreview` | Direct DB mutations (calls `/api/onboarding/institute`) |
+| `features/dashboard/` | Authenticated Tenant UI | `TenantHeader`, `OverviewStats` | Bypassing `GET /api/dashboard/context` guard |
+
+---
+
+## 5. Security & Authorization Boundary
+
+The browser MUST NEVER be treated as the authority for identity, tenancy, or permissions.
+
+```text
+Browser Client Component
+         │
+         ├── Sends Session Cookie / Authentication Request
+         │
+         ▼
+Server Boundary (API Route / Server Component)
+         │
+         ├── 1. Better Auth session validation (getAuthenticatedSession)
+         ├── 2. ResolveInstituteMembershipUseCase
+         ├── 3. Produce Trusted TenantContext
+         └── 4. Evaluate Capability via AuthorizationEngine
+```
+
+- **Client Session Hook (`useSession`)**: Used purely for UX state (display user name, toggle auth buttons, show loading skeletons).
+- **Server Tenant Guard (`GET /api/dashboard/context`)**: Sole authority for tenant context resolution (`hasTenant: true/false`).
+
+---
+
+## 6. Authentication & Route State Machine
+
+### Navigation State Rules:
+
+```text
+                                  ┌────────────────────────┐
+                                  │   Anonymous Visitor    │
+                                  └───────────┬────────────┘
+                                              │
+                         ┌────────────────────┴────────────────────┐
+                         ▼                                         ▼
+                 ┌───────────────┐                         ┌───────────────┐
+                 │  / (Landing)  │                         │ /login, /signup│
+                 └───────┬───────┘                         └───────┬───────┘
+                         │                                         │
+                         └────────────────────┬────────────────────┘
+                                              │ Authenticate via Better Auth
+                                              ▼
+                                   ┌─────────────────────┐
+                                   │ Session Active      │
+                                   └──────────┬──────────┘
+                                              │
+                              GET /api/dashboard/context
+                                              │
+                      ┌───────────────────────┴───────────────────────┐
+                      ▼                                               ▼
+             hasTenant: false                                 hasTenant: true
+                      │                                               │
+                      ▼                                               ▼
+         ┌────────────────────────┐                      ┌────────────────────────┐
+         │      /onboarding       │                      │       /dashboard       │
+         │ (Institute Setup Form) │                      │   (Tenant Workspace)   │
+         └────────────┬───────────┘                      └────────────────────────┘
+                      │ Onboarding Complete (201)
+                      └───────────────────────────────────────────────┘
+```
+
+1. **Anonymous User**:
+   - Visiting `/` → Renders Marketing Landing Page.
+   - Visiting `/login` or `/signup` → Renders Authentication Forms.
+   - Visiting `/onboarding` or `/dashboard` → Server/Guard detects no session → Redirects to `/login`.
+
+2. **Authenticated User (Without Active Institute Tenant)**:
+   - Visiting `/` or `/login` or `/signup` → Redirected to `/onboarding`.
+   - Visiting `/dashboard` → Server/Guard resolves `hasTenant: false` → Redirected to `/onboarding`.
+   - Visiting `/onboarding` → Renders Institute Onboarding Form.
+
+3. **Authenticated User (With Active Institute Tenant)**:
+   - Visiting `/` or `/login` or `/signup` or `/onboarding` → Server/Guard resolves `hasTenant: true` → Redirected to `/dashboard`.
+   - Visiting `/dashboard` → Renders Authenticated Institute Workspace.
+
+---
+
+## 7. Visual Design & Product Aesthetics Directive
+
+CoachingOS visual design must convey **Professionalism, Speed, Operational Density, and Trust**.
+
+- **Target Audience**: Coaching institute owners, teachers, parents, and administrative staff.
+- **Palette**: Deep navy/slate neutrals, vibrant indigo/royal primary accents (`hsl(222, 47%, 11%)`), emerald success badges, warm amber warning indicators.
+- **Typography**: Inter / Outfit sans-serif hierarchy with high legibility, strict vertical baseline grid, and high-density data tables.
+- **Micro-Animations**: Framer Motion subtle hover effects, layout transitions, button loading states (`shouldReduceMotion` respected).
+
+---
+
+## 8. Subphase Implementation Sequence (Phase 0.12 Roadmap)
+
+```text
+Phase 0.12.0  Architecture & UX Contract Freeze ✅ (CURRENT)
+Phase 0.12.1  UI Foundation & Design System Audit
+Phase 0.12.2  Public Landing Page
+Phase 0.12.3  Authentication Layout & Shared Components
+Phase 0.12.4  Sign Up UI
+Phase 0.12.5  Sign In UI
+Phase 0.12.6  Password Recovery UI (Deferred until Email Provider Ready)
+Phase 0.12.7  Session & Route Guards
+Phase 0.12.8  Authenticated Application Shell
+Phase 0.12.9  Full Browser Journey Integration
+Phase 0.12.10 Security & UX Test Matrix
+Phase 0.12.11 Phase 0.12 Acceptance Gate
+```
+
+---
+
+## 9. Verification & Non-Regression Invariants
+
+- **Monorepo Tests**: All package unit tests (`@coaching-os/identity`, `@coaching-os/web`, etc.) must pass.
+- **Verification Commands**: `pnpm env:check`, `db:validate`, `db:health`, `db:drift:check`, `verify:auth`, `verify:infra`, `verify:observability` must pass.
+- **Typecheck & Lint**: `pnpm typecheck`, `pnpm lint`, `pnpm build` must pass cleanly.

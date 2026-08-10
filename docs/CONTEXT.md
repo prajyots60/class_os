@@ -54,7 +54,20 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
   ├── Phase 0.8  — Testing Infrastructure                ✅ COMPLETED
   ├── Phase 0.9  — Git & CI Pipelines                   ✅ COMPLETED
   ├── Phase 0.10 — Observability Setup                  ✅ COMPLETED
-  └── Phase 0.11 — Production Deployment               ✅ COMPLETED
+  ├── Phase 0.11 — Production Deployment               ✅ COMPLETED
+  └── Phase 0.12 — Public & Authentication UX          🚧 NOW ACTIVE
+        ├── Phase 0.12.0 — Architecture & UX Contract Freeze 🟢 (Freeze)
+        ├── Phase 0.12.1 — UI Foundation & Design System Audit
+        ├── Phase 0.12.2 — Public Landing Page
+        ├── Phase 0.12.3 — Authentication Layout & Shared Components
+        ├── Phase 0.12.4 — Sign Up UI
+        ├── Phase 0.12.5 — Sign In UI
+        ├── Phase 0.12.6 — Password Recovery UI (Deferred)
+        ├── Phase 0.12.7 — Session & Route Guards
+        ├── Phase 0.12.8 — Authenticated Application Shell
+        ├── Phase 0.12.9 — Full Browser Journey Integration
+        ├── Phase 0.12.10 — Security & UX Test Matrix
+        └── Phase 0.12.11 — Phase 0.12 Acceptance Gate
                                                         ↓
                                                   PHASE 0 GATE (PASSED)
 
@@ -146,6 +159,12 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - Enforced 4 isolated environment trust boundaries (Development, Test, Preview, Production).
 - Created production deployment playbook in `docs/DEPLOYMENT.md` detailing pre-deployment, deployment, post-deployment, and rollback checklists.
 - Documented `ADR-0007` (Production Deployment Strategy) and updated `ENGINEERING_PLAYBOOK.md` Section 17.
+- **Phase 0.11 (Production Deployment Strategy)**: Established production deployment strategy in `docs/adr/0007-production-deployment-strategy.md` and `docs/DEPLOYMENT.md`.
+
+### 🚧 Phase 0.12 — Public & Authentication UX (In Progress)
+
+- **Phase 0.12.0 (Architecture & UX Contract Freeze)**: Conducted complete repository and authentication backend audit. Defined authoritative frontend architecture in `docs/phases/phase0.12-public-auth-ux.md`, establishing route groups (`(marketing)`, `(auth)`, `(app)`), thin App Router page composition boundaries (< 30 lines per `page.tsx`), component ownership boundaries (`components/ui`, `features/auth`, `features/marketing`, `features/onboarding`, `features/dashboard`), authentication state machine, and Phase 0.12 implementation roadmap.
+
 ### ✅ Phase 1.1 — Institute Tenant Core
 
 - Established framework-independent `InstituteEntity` in `@coaching-os/identity` with slug normalization, validation, and status lifecycle transition rules (`active`, `suspended`, `archived`).
