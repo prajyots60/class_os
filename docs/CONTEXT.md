@@ -163,7 +163,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - Integrated structured observability events (`identity.membership.create.success`, `identity.membership.status_changed`, `identity.membership.resolve.success`, `security.membership.authorization_denied`).
 - Created unit tests and real PostgreSQL integration suite verifying persistence, duplicate membership protection (`ConflictError`), status transitions, and mandatory multi-tenant security isolation. Zero Prisma schema changes or migrations.
 
-### ✅ Phase 1.3 — Capability-Based RBAC (Subphases 1.3.0 – 1.3.5 Completed)
+### ✅ Phase 1.3 — Capability-Based RBAC (Subphases 1.3.0 – 1.3.6 Completed)
 
 - **Phase 1.3.0 (RBAC Architecture & Capability Matrix Freeze)**: Established and froze the authoritative RBAC architecture contract in `docs/phases/phase1.3-rbac.md`, defining capability-based authorization internally (`resource:action`), role identity externally (`owner`, `teacher`, `assistant`, `parent`), and the 6-step decision pipeline.
 - **Phase 1.3.1 (Capability Taxonomy & Strongly-Typed Enums)**: Implemented canonical 49-capability registry (`CAPABILITIES`), strongly-typed `Capability`, `CapabilityResource`, and `CapabilityAction` types, and `isCapability` runtime validation guards in `@coaching-os/identity`.
@@ -171,6 +171,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Phase 1.3.3 (Authorization Engine & Assertion Guards)**: Built central `AuthorizationEngine` (`hasCapability`, `hasAllCapabilities`, `hasAnyCapability`, `requireCapability`, `requireAllCapabilities`, `requireAnyCapability`) and assertion guards throwing `AuthorizationError` (`403`) with safe `security.authorization.denied` event logging.
 - **Phase 1.3.4 (Tenant-Scoped Capability Evaluation)**: Hardened tenant-scoped evaluation requiring server-resolved trusted `TenantContext` (`userId`, `instituteId`, `membershipId`, `role`, `status`), proving zero cross-tenant capability leakage across multi-tenant user memberships and defending against context substitution attacks.
 - **Phase 1.3.5 (Resource-Scoped Filtering Helpers)**: Implemented pure Layer 2 resource scope policy helpers (`canParentAccessStudent`, `filterStudentsForParent`, `canTeacherAccessBatch`, `canTeacherAccessStudent`, `canAccessStudent`, `requireStudentAccess`) linking capability authorization with parent child links and teacher batch assignments. Verified zero database queries, zero external dependencies, and zero Prisma schema changes.
+- **Phase 1.3.6 (Identity Use Case Integration)**: Integrated `requireCapability` authorization into all identity domain application use cases (`GetInstituteUseCase`, `UpdateInstituteUseCase`, `ChangeInstituteStatusUseCase`, `GetInstituteMembersUseCase`, `GetInstituteMembershipUseCase`, `CreateInstituteMembershipUseCase`, `UpdateMembershipRoleUseCase`, `ChangeMembershipStatusUseCase`). Enforced authorization checks BEFORE repository persistence operations and built owner escalation protection.
 
 ## 4. Next Milestone Roadmap
 
@@ -189,8 +190,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.3.3:** Authorization Engine & Assertion Guards ✅
     - **Phase 1.3.4:** Tenant-Scoped Capability Evaluation ✅
     - **Phase 1.3.5:** Resource-Scoped Filtering Helpers (Parent/Teacher) ✅
-    - **Phase 1.3.6:** Identity Use Case Integration (Next)
-    - **Phase 1.3.7:** Security & RBAC Test Matrix
+    - **Phase 1.3.6:** Identity Use Case Integration ✅
+    - **Phase 1.3.7:** Security & RBAC Test Matrix (Next)
     - **Phase 1.3.8:** Phase 1.3 Acceptance Gate
   - **Phase 1.4:** Institute Onboarding Workflow
   - **Phase 1.5:** Institute Settings & White-Label Branding

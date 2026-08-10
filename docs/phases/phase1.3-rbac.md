@@ -193,8 +193,27 @@ Phase 1.3.1 — Capability Taxonomy & Strongly-Typed Enums       ✅ COMPLETED
 Phase 1.3.2 — Role → Capability Resolver Engine                 ✅ COMPLETED
 Phase 1.3.3 — Authorization Engine & Assertion Guards           ✅ COMPLETED
 Phase 1.3.4 — Tenant-Scoped Capability Evaluation               ✅ COMPLETED
-Phase 1.3.5 — Resource-Scoped Filtering Helpers (Parent/Teacher) 🚧 NEXT TASK
-Phase 1.3.6 — Identity Use Case Integration
-Phase 1.3.7 — Security & RBAC Test Matrix
+Phase 1.3.5 — Resource-Scoped Filtering Helpers (Parent/Teacher) ✅ COMPLETED
+Phase 1.3.6 — Identity Use Case Integration                     ✅ COMPLETED
+Phase 1.3.7 — Security & RBAC Test Matrix                       🚧 NEXT TASK
 Phase 1.3.8 — Phase 1.3 Acceptance Gate
 ```
+
+---
+
+## 6. Phase 1.3.6 — Identity Use Case Authorization Mapping
+
+| Protected Use Case | Capability Required | Tenant Context Check | Escalation Guard |
+| :--- | :--- | :--- | :--- |
+| `GetInstituteUseCase` | `institute:read` | `context.instituteId === found.id` | N/A |
+| `UpdateInstituteUseCase` | `institute:update` | `context.instituteId === command.id` | Checked BEFORE DB write |
+| `ChangeInstituteStatusUseCase` | `institute:update` / `institute:archive` | `context.instituteId === command.id` | Checked BEFORE DB write |
+| `CreateInstituteUseCase` | *Pre-tenant onboarding* | N/A (Initial creation flow) | Single owner bootstrapping |
+| `GetInstituteMembersUseCase` | `staff:read` | `context.instituteId === query.instituteId` | N/A |
+| `GetInstituteMembershipUseCase` | `staff:read` | `context.instituteId === found.instituteId` | N/A |
+| `CreateInstituteMembershipUseCase` | `staff:invite` | `context.instituteId === props.instituteId` | Creating `owner` requires `institute:update` |
+| `UpdateMembershipRoleUseCase` | `staff:role_change` | `context.instituteId === existing.instituteId` | Promotion to `owner` requires `institute:update` |
+| `ChangeMembershipStatusUseCase` | `staff:remove` / `staff:update` | `context.instituteId === existing.instituteId` | Checked BEFORE DB write |
+| `GetUserMembershipsUseCase` | Self-Service | `authenticatedUserId === query.userId` | Prevents cross-user enumeration |
+| `ResolveInstituteMembershipUseCase` | Auth Gateway | Resolves active membership | Rejects suspended/removed memberships |
+
