@@ -17,9 +17,7 @@ export class CreateInstituteUseCase {
     // Check if slug already exists to fail fast with a friendly ConflictError before DB write
     const existing = await this.repository.findBySlug(entity.slug);
     if (existing) {
-      throw new ConflictError(
-        `An institute with slug '${entity.slug}' already exists.`,
-      );
+      throw new ConflictError(`An institute with slug '${entity.slug}' already exists.`);
     }
 
     const created = await this.repository.create(entity);
@@ -115,7 +113,9 @@ export class ChangeInstituteStatusUseCase {
 
   public async execute(command: ChangeInstituteStatusCommand): Promise<InstituteEntity> {
     if (command.tenantContextId && command.tenantContextId !== command.id) {
-      throw new AuthorizationError('Access denied to update status of requested institute resource.');
+      throw new AuthorizationError(
+        'Access denied to update status of requested institute resource.',
+      );
     }
 
     const existing = await this.repository.findById(command.id);

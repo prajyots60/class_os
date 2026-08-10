@@ -85,9 +85,7 @@ describe('InstituteEntity', () => {
 
       expect(institute.name).toBe('Updated Name');
       expect(institute.phone).toBe('+919999999999');
-      expect(institute.updatedAt.getTime()).toBeGreaterThanOrEqual(
-        initialUpdatedAt.getTime(),
-      );
+      expect(institute.updatedAt.getTime()).toBeGreaterThanOrEqual(initialUpdatedAt.getTime());
     });
 
     it('throws ValidationError when updating name to empty string', () => {
@@ -97,9 +95,7 @@ describe('InstituteEntity', () => {
         email: 'initial@example.com',
       });
 
-      expect(() => institute.updateDetails({ name: '   ' })).toThrow(
-        ValidationError,
-      );
+      expect(() => institute.updateDetails({ name: '   ' })).toThrow(ValidationError);
     });
   });
 

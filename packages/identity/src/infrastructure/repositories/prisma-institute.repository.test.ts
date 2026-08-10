@@ -71,9 +71,7 @@ describe('PrismaInstituteRepository Integration & Tenant Security Suite', () => 
       email: 'dup@test.com',
     });
 
-    await expect(repository.create(duplicateEntity)).rejects.toThrow(
-      ConflictError,
-    );
+    await expect(repository.create(duplicateEntity)).rejects.toThrow(ConflictError);
   });
 
   it('updates Institute details in PostgreSQL', async () => {

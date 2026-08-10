@@ -59,7 +59,8 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
                                                   PHASE 0 GATE (PASSED)
 
 PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
-  └── Phase 1.1 — Institute Tenant Core                 ✅ COMPLETED
+  ├── Phase 1.1 — Institute Tenant Core                 ✅ COMPLETED
+  └── Phase 1.2 — Users & Memberships                   ✅ COMPLETED
     ↓
 PHASE 2  Academics Module                             ⏳ UPCOMING
     ↓
@@ -147,13 +148,14 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - Documented `ADR-0007` (Production Deployment Strategy) and updated `ENGINEERING_PLAYBOOK.md` Section 17.
 - Prepared Phase 0 Gate Verification Report.
 
-### ✅ Phase 1.1 — Institute Tenant Core
+### ✅ Phase 1.2 — Users & Memberships
 
-- Established framework-independent `InstituteEntity` in `@coaching-os/identity` with slug normalization, validation, and status lifecycle transition rules (`active`, `suspended`, `archived`).
-- Defined `InstituteRepository` contract and built `PrismaInstituteRepository` mapping Prisma `Institute` models to domain entities and translating constraint failures (`P2002` -> `ConflictError`, `P2025` -> `NotFoundError`).
-- Implemented `CreateInstituteUseCase`, `GetInstituteUseCase`, `UpdateInstituteUseCase`, and `ChangeInstituteStatusUseCase` with Zod presentation validators (`createInstituteSchema`, `updateInstituteSchema`, `changeInstituteStatusSchema`).
-- Integrated structured observability events (`identity.institute.create.success`, `identity.institute.update.success`, `identity.institute.status_changed`).
-- Created unit tests and real PostgreSQL integration suite verifying persistence, duplicate slug conflict mapping, missing record handling, and cross-tenant security isolation. Zero Prisma schema changes or migrations.
+- Established framework-independent `InstituteMembershipEntity` in `@coaching-os/identity` defining organizational roles (`owner`, `teacher`, `assistant`, `parent`) and statuses (`active`, `suspended`, `removed`).
+- Defined `InstituteMembershipRepository` contract and built `PrismaInstituteMembershipRepository` bridging direct staff user relations (`User.instituteId`) and parent identity memberships (`InstituteMembership`).
+- Implemented application use cases (`CreateInstituteMembershipUseCase`, `GetUserMembershipsUseCase`, `GetInstituteMembersUseCase`, `GetInstituteMembershipUseCase`, `ChangeMembershipStatusUseCase`, `ResolveInstituteMembershipUseCase`) with Zod presentation validators.
+- Built central server-side `ResolveInstituteMembershipUseCase` enforcing trusted `TenantContext` resolution for authenticated requests and rejecting unauthorized/cross-tenant attempts with `AuthorizationError`.
+- Integrated structured observability events (`identity.membership.create.success`, `identity.membership.status_changed`, `identity.membership.resolve.success`, `security.membership.authorization_denied`).
+- Created unit tests and real PostgreSQL integration suite verifying persistence, duplicate membership protection (`ConflictError`), status transitions, and mandatory multi-tenant security isolation. Zero Prisma schema changes or migrations.
 
 ## 4. Next Milestone Roadmap
 
@@ -164,8 +166,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Phase 1 Implementation Map:**
   - **Phase 1.0:** Domain & Architecture Contract Freeze ✅
   - **Phase 1.1:** Institute Tenant Core ✅
-  - **Phase 1.2:** Users & Memberships (Next)
-  - **Phase 1.3:** Capability-Based RBAC
+  - **Phase 1.2:** Users & Memberships ✅
+  - **Phase 1.3:** Capability-Based RBAC (Next)
   - **Phase 1.4:** Institute Onboarding Workflow
   - **Phase 1.5:** Institute Settings & White-Label Branding
   - **Phase 1.6:** Global ParentIdentity Platform Layer
