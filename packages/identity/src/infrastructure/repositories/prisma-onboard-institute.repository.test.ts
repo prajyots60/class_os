@@ -230,6 +230,108 @@ describe('PrismaOnboardInstituteRepository Real PostgreSQL Idempotency & Race-Co
       expect(linkedUsers).toHaveLength(1);
       expect(unlinkedUsers).toHaveLength(1);
     });
+
+    it('C2. High Concurrency: 5 simultaneous onboarding attempts for the SAME user result in exactly ONE successful onboarding and 4 conflicts', async () => {
+      const user = await createTestUser({
+        name: 'High Concurrency Founder',
+        email: 'high_conc_founder@test.com',
+      });
+
+      const attempts = Array.from({ length: 5 }, (_, i) => {
+        const inst = InstituteEntity.create({
+          name: `Concurrent Inst ${i}`,
+          slug: `conc-inst-${i}-${Date.now()}`,
+          phone: `+9198000000${i}0`,
+          email: `conc_${i}@test.com`,
+        });
+
+        const mem = InstituteMembershipEntity.create({
+          userId: user.id,
+          instituteId: inst.id,
+          role: 'owner',
+          status: 'active',
+        });
+
+        return { inst, mem };
+      });
+
+      const results = await Promise.allSettled(
+        attempts.map(({ inst, mem }) => repository.onboard(inst, mem)),
+      );
+
+      const fulfilled = results.filter((r) => r.status === 'fulfilled');
+      const rejected = results.filter((r) => r.status === 'rejected');
+
+      expect(fulfilled).toHaveLength(1);
+      expect(rejected).toHaveLength(4);
+      rejected.forEach((r) => {
+        expect((r as PromiseRejectedResult).reason).toBeInstanceOf(ConflictError);
+      });
+
+      // Verify DB consistency: exactly 1 institute created, user points to that 1 institute
+      const dbUser = await db.user.findUnique({ where: { id: user.id } });
+      expect(dbUser?.instituteId).toBeDefined();
+
+      const createdCount = await db.institute.count({
+        where: { id: { in: attempts.map((a) => a.inst.id) } },
+      });
+      expect(createdCount).toBe(1);
+    });
+
+    it('G2. High Concurrency: 5 simultaneous onboarding attempts with the SAME slug across 5 different users create exactly ONE institute', async () => {
+      const users = await Promise.all(
+        Array.from({ length: 5 }, (_, i) =>
+          createTestUser({
+            name: `Slug User ${i}`,
+            email: `slug_user_${i}_${Date.now()}@test.com`,
+          }),
+        ),
+      );
+
+      const sharedSlug = `shared-slug-${Date.now()}`;
+
+      const attempts = users.map((u, i) => {
+        const inst = InstituteEntity.create({
+          name: `Shared Slug Academy ${i}`,
+          slug: sharedSlug,
+          phone: `+9198111100${i}0`,
+          email: `shared_${i}@test.com`,
+        });
+
+        const mem = InstituteMembershipEntity.create({
+          userId: u.id,
+          instituteId: inst.id,
+          role: 'owner',
+          status: 'active',
+        });
+
+        return { user: u, inst, mem };
+      });
+
+      const results = await Promise.allSettled(
+        attempts.map(({ inst, mem }) => repository.onboard(inst, mem)),
+      );
+
+      const fulfilled = results.filter((r) => r.status === 'fulfilled');
+      const rejected = results.filter((r) => r.status === 'rejected');
+
+      expect(fulfilled).toHaveLength(1);
+      expect(rejected).toHaveLength(4);
+
+      // Verify DB consistency: exactly 1 institute created for the slug
+      const institutesInDb = await db.institute.findMany({ where: { slug: sharedSlug } });
+      expect(institutesInDb).toHaveLength(1);
+
+      // Exactly 1 user bound, 4 unlinked
+      const dbUsers = await db.user.findMany({
+        where: { id: { in: users.map((u) => u.id) } },
+      });
+      const boundUsers = dbUsers.filter((u) => u.instituteId !== null);
+      const unboundUsers = dbUsers.filter((u) => u.instituteId === null);
+
+      expect(boundUsers).toHaveLength(1);
+      expect(unboundUsers).toHaveLength(4);
+    });
   });
 
   describe('D & E. Atomic Rollback Guarantees', () => {
@@ -267,3 +369,4 @@ describe('PrismaOnboardInstituteRepository Real PostgreSQL Idempotency & Race-Co
     });
   });
 });
+

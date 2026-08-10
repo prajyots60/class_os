@@ -285,4 +285,121 @@ describe('POST /api/onboarding/institute API Boundary Integration Suite', () => 
       expect(delRes.status).toBe(405);
     });
   });
+
+  // ── Phase 1.4.7 — Security & Failure Hardening Extension ──────────────────
+
+  describe('6. Phase 1.4.7 Security & Adversarial Attack Matrix', () => {
+    it('6.1 Input Attack Matrix: Rejects invalid email address with 400 VALIDATION_ERROR', async () => {
+      const { req } = await createAuthenticatedRequest(
+        'http://localhost:3000/api/onboarding/institute',
+        'POST',
+        {
+          name: 'Invalid Email Academy',
+          phone: '+919876543210',
+          email: 'not-a-valid-email-address',
+        },
+      );
+
+      const res = await POST(req);
+      expect(res.status).toBe(400);
+
+      const json = await res.json();
+      expect(json.error.code).toBe('VALIDATION_ERROR');
+    });
+
+    it('6.2 Input Attack Matrix: Rejects invalid phone format with 400 VALIDATION_ERROR', async () => {
+      const { req } = await createAuthenticatedRequest(
+        'http://localhost:3000/api/onboarding/institute',
+        'POST',
+        {
+          name: 'Invalid Phone Academy',
+          phone: '12345', // Short invalid phone
+          email: 'valid@test.com',
+        },
+      );
+
+      const res = await POST(req);
+      expect(res.status).toBe(400);
+
+      const json = await res.json();
+      expect(json.error.code).toBe('VALIDATION_ERROR');
+    });
+
+    it('6.3 Input Attack Matrix: Rejects oversized institute name string with 400 VALIDATION_ERROR', async () => {
+      const oversizedName = 'A'.repeat(300);
+      const { req } = await createAuthenticatedRequest(
+        'http://localhost:3000/api/onboarding/institute',
+        'POST',
+        {
+          name: oversizedName,
+          phone: '+919876543210',
+          email: 'valid@test.com',
+        },
+      );
+
+      const res = await POST(req);
+      expect(res.status).toBe(400);
+
+      const json = await res.json();
+      expect(json.error.code).toBe('VALIDATION_ERROR');
+    });
+
+    it('6.4 Replay Attack: Replaying exact same request payload after success returns 409 CONFLICT', async () => {
+      const payload = {
+        name: 'Replay Test Academy',
+        phone: '+919876543210',
+        email: 'replay@test.com',
+      };
+
+      const { cookieHeader } = await createAuthenticatedRequest(
+        'http://localhost:3000/api/onboarding/institute',
+        'POST',
+        payload,
+      );
+
+      const req1 = new NextRequest('http://localhost:3000/api/onboarding/institute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', cookie: cookieHeader },
+        body: JSON.stringify(payload),
+      });
+
+      const res1 = await POST(req1);
+      expect(res1.status).toBe(201);
+
+      // Replay exact same request
+      const req2 = new NextRequest('http://localhost:3000/api/onboarding/institute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', cookie: cookieHeader },
+        body: JSON.stringify(payload),
+      });
+
+      const res2 = await POST(req2);
+      expect(res2.status).toBe(409);
+
+      const json2 = await res2.json();
+      expect(json2.error.code).toBe('CONFLICT');
+    });
+
+    it('6.5 Response Leakage Audit: Success DTO payload leaks zero secrets, stack traces, or DB credentials', async () => {
+      const { req } = await createAuthenticatedRequest(
+        'http://localhost:3000/api/onboarding/institute',
+        'POST',
+        {
+          name: 'Audit Clean Academy',
+          phone: '+919876543210',
+          email: 'audit@test.com',
+        },
+      );
+
+      const res = await POST(req);
+      const rawBody = await res.text();
+
+      expect(rawBody).not.toContain('DATABASE_URL');
+      expect(rawBody).not.toContain('password');
+      expect(rawBody).not.toContain('secret');
+      expect(rawBody).not.toContain('stack');
+      expect(rawBody).not.toContain('prisma');
+    });
+  });
 });
+

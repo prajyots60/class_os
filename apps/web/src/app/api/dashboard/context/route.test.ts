@@ -277,5 +277,58 @@ describe('GET /api/dashboard/context API Integration Suite', () => {
       expect(json.tenantContext.userId).toBe(userA.id);
       expect(json.tenantContext.instituteId).toBe(onboardedA.institute.id);
     });
+
+    it('4.2 Header Tenant Injection: Custom x-institute-id and x-role headers are ignored by server', async () => {
+      const { cookieHeader, user } = await createAuthenticatedSession();
+      const onboarded = await onboardInstitute(cookieHeader, 'hdr-sec');
+
+      const fakeInstId = '00000000-0000-4000-a000-000000000077';
+      const injectHeaders = new Headers({
+        cookie: cookieHeader,
+        'x-institute-id': fakeInstId,
+        'x-tenant-id': fakeInstId,
+        'x-role': 'superadmin',
+        'x-membership-id': 'fake-membership-id',
+      });
+
+      const req = new NextRequest('http://localhost:3000/api/dashboard/context', {
+        method: 'GET',
+        headers: injectHeaders,
+      });
+
+      const res = await GET(req);
+      expect(res.status).toBe(200);
+
+      const json = await res.json();
+      expect(json.hasTenant).toBe(true);
+
+      // SECURITY: Server strictly resolves from session context, ignores custom injection headers
+      expect(json.tenantContext.userId).toBe(user.id);
+      expect(json.tenantContext.instituteId).toBe(onboarded.institute.id);
+      expect(json.tenantContext.instituteId).not.toBe(fakeInstId);
+      expect(json.tenantContext.role).toBe('owner');
+      expect(json.tenantContext.role).not.toBe('superadmin');
+    });
+
+    it('4.3 Response Leakage Audit: GET /api/dashboard/context exposes zero secrets, tokens, or stack traces', async () => {
+      const { cookieHeader } = await createAuthenticatedSession();
+      await onboardInstitute(cookieHeader, 'leak-audit');
+
+      const headers = new Headers({ cookie: cookieHeader });
+      const req = new NextRequest('http://localhost:3000/api/dashboard/context', {
+        method: 'GET',
+        headers,
+      });
+
+      const res = await GET(req);
+      const rawText = await res.text();
+
+      expect(rawText).not.toContain('DATABASE_URL');
+      expect(rawText).not.toContain('password');
+      expect(rawText).not.toContain('secret');
+      expect(rawText).not.toContain('stack');
+      expect(rawText).not.toContain('prisma');
+    });
   });
 });
+

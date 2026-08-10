@@ -177,13 +177,15 @@ test.describe('Institute Onboarding UI & End-to-End Flow Suite', () => {
     const fakeInstituteId = '00000000-0000-4000-a000-000000000099';
 
     // 1. Sign up (no institute)
-    await page.request.post('/api/auth/sign-up/email', {
+    const signUpResponse = await page.request.post('/api/auth/sign-up/email', {
       data: { email: testEmail, password, name: 'Scenario D User' },
     });
+    const cookie = signUpResponse.headers()['set-cookie'];
 
     // 2. Attempt to manipulate tenant context via query param
     const response = await page.request.get(
       `/api/dashboard/context?instituteId=${fakeInstituteId}`,
+      { headers: { cookie } },
     );
     expect(response.status()).toBe(200);
 
@@ -191,4 +193,101 @@ test.describe('Institute Onboarding UI & End-to-End Flow Suite', () => {
     // User has no institute — server ignores the injected query param and returns hasTenant: false
     expect(body.hasTenant).toBe(false);
   });
+
+  // ── Scenario E — Header tenant injection is ignored ──
+
+  test('Scenario E: Custom x-institute-id and x-role headers in request are ignored', async ({ page }) => {
+    const testEmail = `scenario_e_${Date.now()}@test.com`;
+    const password = 'SecureTestPassword123!';
+    const fakeInstituteId = '00000000-0000-4000-a000-000000000088';
+
+    const signUpResponse = await page.request.post('/api/auth/sign-up/email', {
+      data: { email: testEmail, password, name: 'Scenario E User' },
+    });
+    const cookie = signUpResponse.headers()['set-cookie'];
+
+    const response = await page.request.get('/api/dashboard/context', {
+      headers: {
+        cookie,
+        'x-institute-id': fakeInstituteId,
+        'x-role': 'superadmin',
+      },
+    });
+
+    expect(response.status()).toBe(200);
+    const body = await response.json();
+    expect(body.hasTenant).toBe(false);
+  });
+
+  // ── Scenario F — Body identity injection is ignored ──
+
+  test('Scenario F: Body identity injection (userId, role, status) during onboarding is overridden by server', async ({ page }) => {
+    const testEmail = `scenario_f_${Date.now()}@test.com`;
+    const password = 'SecureTestPassword123!';
+    const fakeUserId = '00000000-0000-4000-a000-000000000077';
+
+    const signUpResponse = await page.request.post('/api/auth/sign-up/email', {
+      data: { email: testEmail, password, name: 'Scenario F User' },
+    });
+    const cookie = signUpResponse.headers()['set-cookie'];
+
+    const response = await page.request.post('/api/onboarding/institute', {
+      headers: { cookie },
+      data: {
+        name: 'Injection Guard Academy',
+        phone: '+919876543210',
+        email: 'injection_guard@test.com',
+        userId: fakeUserId,
+        role: 'parent',
+        status: 'suspended',
+      },
+    });
+
+    expect(response.status()).toBe(201);
+    const body = await response.json();
+
+    // Server-resolved context reflects owner role, active status, and real user ID
+    expect(body.data.tenantContext.userId).not.toBe(fakeUserId);
+    expect(body.data.tenantContext.role).toBe('owner');
+    expect(body.data.tenantContext.status).toBe('active');
+  });
+
+  // ── Scenario G — Replay onboarding attempt returns 409 Conflict ──
+
+  test('Scenario G: Replaying onboarding API call returns 409 CONFLICT for onboarded session', async ({ page }) => {
+    const testEmail = `scenario_g_${Date.now()}@test.com`;
+    const password = 'SecureTestPassword123!';
+
+    const signUpResponse = await page.request.post('/api/auth/sign-up/email', {
+      data: { email: testEmail, password, name: 'Scenario G User' },
+    });
+    const cookie = signUpResponse.headers()['set-cookie'];
+
+    // First onboarding
+    const res1 = await page.request.post('/api/onboarding/institute', {
+      headers: { cookie },
+      data: {
+        name: 'Replay Academy One',
+        phone: '+919876543210',
+        email: 'replay1@test.com',
+      },
+    });
+    expect(res1.status()).toBe(201);
+
+    // Immediate replay attempt
+    const res2 = await page.request.post('/api/onboarding/institute', {
+      headers: { cookie },
+      data: {
+        name: 'Replay Academy Two',
+        phone: '+919876543211',
+        email: 'replay2@test.com',
+      },
+    });
+
+    expect(res2.status()).toBe(409);
+    const body2 = await res2.json();
+    expect(body2.error.code).toBe('CONFLICT');
+  });
 });
+
+
