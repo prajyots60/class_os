@@ -175,6 +175,11 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Phase 1.3.7 (Security & RBAC Test Matrix)**: Built adversarial security matrix test suite in `packages/identity/src/authorization/rbac-security-matrix.test.ts` executing 28 comprehensive security scenarios verifying contract consistency, parameterized role capability resolution across 196 combinations, context substitution attacks, cross-tenant resource attacks, tenant context forgery, membership status lifecycle defense, role escalation prevention, layer bypass isolation, and repository mutation prevention.
 - **Phase 1.3.8 (Phase 1.3 Acceptance Gate)**: Completed final architectural audit, capability/role matrix verification, tenant isolation review, full pipeline verification suite execution, and formal Phase 1.3 acceptance gate approval.
 
+### 🚧 Phase 1.4 — Institute Onboarding Workflow (In Progress)
+
+- **Phase 1.4.0 (Architecture & Workflow Contract Freeze)**: Defined authoritative onboarding architecture contract in `docs/phases/phase1.4-onboarding.md`, establishing atomic tenant bootstrap (`Institute` + `Owner Membership`), derived onboarding state, server trust boundaries, and bootstrap authorization exemption.
+- **Phase 1.4.1 (Onboarding Domain & Application Orchestration)**: Implemented framework-independent `OnboardInstituteUseCase`, `InstituteOnboardingRepository` contract interface, `onboardInstituteSchema` Zod presentation validator, and unit test suite verifying server-controlled owner invariants (`role === 'owner'`, `status === 'active'`), input validation, fail-fast slug collision handling, and `ResolveInstituteMembershipUseCase` compatibility. Zero Prisma/HTTP/React imports in domain layer.
+
 ## 4. Next Milestone Roadmap
 
 ### 🚧 PHASE 1 — IDENTITY MODULE (NOW ACTIVE)
@@ -197,8 +202,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.3.8:** Phase 1.3 Acceptance Gate ✅ (ACCEPTED 🟢)
   - **Phase 1.4:** Institute Onboarding Workflow 🚧 (NOW ACTIVE)
     - **Phase 1.4.0:** Architecture & Workflow Contract Freeze 🟢 (Freeze)
-    - **Phase 1.4.1:** Onboarding Domain & Application Orchestration (Next)
-    - **Phase 1.4.2:** Atomic Institute + Owner Bootstrap Transaction
+    - **Phase 1.4.1:** Onboarding Domain & Application Orchestration ✅
+    - **Phase 1.4.2:** Atomic Institute + Owner Bootstrap Transaction (Next)
     - **Phase 1.4.3:** Idempotency & Conflict Handling
     - **Phase 1.4.4:** Onboarding API Boundary
     - **Phase 1.4.5:** Onboarding UI Flow

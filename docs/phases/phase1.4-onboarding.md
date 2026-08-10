@@ -280,8 +280,8 @@ Response (201 Created):
 
 ```text
 Phase 1.4.0 — Architecture & Workflow Contract Freeze         ✅ COMPLETED
-Phase 1.4.1 — Onboarding Domain & Application Orchestration   🚧 NEXT TASK
-Phase 1.4.2 — Atomic Institute + Owner Bootstrap Transaction
+Phase 1.4.1 — Onboarding Domain & Application Orchestration   ✅ COMPLETED
+Phase 1.4.2 — Atomic Institute + Owner Bootstrap Transaction   🚧 NEXT TASK
 Phase 1.4.3 — Idempotency & Conflict Handling
 Phase 1.4.4 — Onboarding API Boundary (POST /api/onboarding/institute)
 Phase 1.4.5 — Onboarding UI Flow (/onboarding)
