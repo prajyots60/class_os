@@ -1,8 +1,8 @@
 # Phase 1.4 — Institute Onboarding Workflow Architecture Contract
 
-**Status:** Architecture Freeze 🟢  
-**Milestone:** Phase 1.4.0 — Architecture & Workflow Contract  
-**Target:** Define the authoritative, atomic, and secure first-time user onboarding journey for CoachingOS, transforming an authenticated user into the active owner of a new institute tenant.
+**Status:** ACCEPTED / FROZEN 🟢  
+**Milestone:** Phase 1.4.8 — Acceptance Gate & Architectural Freeze  
+**Target:** Formally audit, verify, accept, and freeze the atomic, secure, and performant Institute Onboarding Workflow for CoachingOS.
 
 ---
 
@@ -724,4 +724,38 @@ GET /api/dashboard/context Response
 - `pnpm env:check`, `db:validate`, `db:health`, `db:drift:check`, `db:seed`: ALL PASSED
 - `pnpm verify:auth`, `verify:infra`, `verify:observability`: ALL PASSED
 - `pnpm test`, `typecheck`, `lint`, `build`: 13/13 packages PASSED (0 errors)
+
+---
+
+### 19.8 Phase 1.4.8 — Acceptance Gate & Formal Architectural Freeze
+
+**Acceptance Gate Date:** 2026-08-10  
+**Acceptance Decision:** 🟢 **PASSED & ACCEPTED**  
+**Architecture Status:** 🟢 **FROZEN**  
+
+#### Subphase Completion Audit Matrix:
+1. **Phase 1.4.0 — Architecture & Workflow Contract Freeze**: 🟢 ACCEPTED (Frozen contract defined in Section 1–18).
+2. **Phase 1.4.1 — Onboarding Domain & Application Orchestration**: 🟢 ACCEPTED (`OnboardInstituteUseCase`, zero UI/DB imports).
+3. **Phase 1.4.2 — Atomic Institute + Owner Bootstrap Transaction**: 🟢 ACCEPTED (`PrismaOnboardInstituteRepository` inside `$transaction`, zero synthetic parent records).
+4. **Phase 1.4.3 — Idempotency & Conflict Handling**: 🟢 ACCEPTED (Same-user concurrency lock, same-slug `@unique` index authority, atomic rollbacks).
+5. **Phase 1.4.4 — Onboarding API Boundary**: 🟢 ACCEPTED (`POST /api/onboarding/institute` presentation route, Better Auth session authority).
+6. **Phase 1.4.5 — Onboarding UI Flow**: 🟢 ACCEPTED (`/onboarding` & `/dashboard` pages with Client Component guards).
+7. **Phase 1.4.6 — Tenant Context Resolution & Post-Onboarding Redirect**: 🟢 ACCEPTED (`GET /api/dashboard/context`, active/suspended/removed lifecycle guards).
+8. **Phase 1.4.7 — End-to-End Security & Failure Testing**: 🟢 ACCEPTED (12/12 Playwright E2E security matrix, adversarial input attack matrix).
+9. **Phase 1.4.8 — Acceptance Gate**: 🟢 ACCEPTED (Full monorepo verification pipeline clean, 0 unresolved defects).
+
+#### Verification Pipeline Final Evidence:
+- **`@coaching-os/identity` Unit & Integration Suite**: 178/178 tests PASSED (14 test files).
+- **`@coaching-os/web` API Route Suite**: 27/27 tests PASSED (3 test files).
+- **Playwright End-to-End Suite (`pnpm test:e2e`)**: 12/12 tests PASSED.
+- **Environment & Database Health (`env:check`, `db:validate`, `db:health`, `db:drift:check`, `db:seed`)**: 100% PASSED (0 schema drift).
+- **Better Auth & Observability Verification (`verify:auth`, `verify:infra`, `verify:observability`)**: 100% PASSED.
+- **Monorepo Strict Typecheck (`pnpm typecheck`)**: 13/13 packages PASSED.
+- **Monorepo ESLint Quality (`pnpm lint`)**: 13/13 packages PASSED (0 errors).
+- **Monorepo & Next.js Production Build (`pnpm build`)**: 13/13 packages PASSED.
+- **Phase 1.3 Capability-Based RBAC Baseline**: 100% Preserved (49 capabilities, 4 role mappings unchanged).
+- **Unresolved Defects**: 0 BLOCKER, 0 HIGH, 0 MEDIUM, 0 LOW.
+
+**Conclusion:** Phase 1.4 — Institute Onboarding Workflow is formally **ACCEPTED** and **FROZEN**.
+
 
