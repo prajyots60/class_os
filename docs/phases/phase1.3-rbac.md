@@ -28,72 +28,72 @@
 
 ---
 
-## 2. Standardized Capability Taxonomy (`resource.action`)
+## 2. Standardized Capability Taxonomy (`resource:action`)
 
-Capabilities are strongly-typed string literals defined using the `<resource>.<action>` taxonomy:
+Capabilities are strongly-typed string literals defined using the `<resource>:<action>` taxonomy:
 
-### A. Institute Management (`institute.*`, `settings.*`, `branding.*`)
-- `institute.read`: View institute profile details and status.
-- `institute.update`: Update core institute details (name, contact, timezone).
-- `institute.archive`: Archive or deactivate institute (restricted to owner).
-- `settings.read`: View institute operational settings.
-- `settings.update`: Modify institute operational settings.
-- `branding.read`: View custom white-label branding configurations.
-- `branding.update`: Modify institute fonts, colors, logos, PWA assets.
+### A. Institute Management (`institute:*`, `settings:*`, `branding:*`)
+- `institute:read`: View institute profile details and status.
+- `institute:update`: Update core institute details (name, contact, timezone).
+- `institute:archive`: Archive or deactivate institute (restricted to owner).
+- `settings:read`: View institute operational settings.
+- `settings:update`: Modify institute operational settings.
+- `branding:read`: View custom white-label branding configurations.
+- `branding:update`: Modify institute fonts, colors, logos, PWA assets.
 
-### B. Staff & Membership Management (`staff.*`)
-- `staff.read`: View staff directory and membership roles.
-- `staff.invite`: Create staff memberships and send invitations.
-- `staff.update`: Modify staff member profile details.
-- `staff.remove`: Remove or deactivate staff memberships.
-- `staff.role.change`: Change membership role of staff members.
+### B. Staff & Membership Management (`staff:*`)
+- `staff:read`: View staff directory and membership roles.
+- `staff:invite`: Create staff memberships and send invitations.
+- `staff:update`: Modify staff member profile details.
+- `staff:remove`: Remove or deactivate staff memberships.
+- `staff:role_change`: Change membership role of staff members.
 
-### C. Student & Guardian Management (`student.*`)
-- `student.read`: View student profiles and details. *(Parent/Teacher resource-scoped)*
-- `student.create`: Admit new students into the institute.
-- `student.update`: Modify student profiles and batch assignments.
-- `student.archive`: Withdraw or archive a student profile.
+### C. Student & Guardian Management (`student:*`)
+- `student:read`: View student profiles and details. *(Parent/Teacher resource-scoped)*
+- `student:create`: Admit new students into the institute.
+- `student:update`: Modify student profiles and batch assignments.
+- `student:archive`: Withdraw or archive a student profile.
 
-### D. Academic Hierarchy & Attendance (`academic.*`, `attendance.*`)
-- `academic.read`: View programs, subjects, batches, and schedules.
-- `academic.write`: Create and modify programs, subjects, batches, schedules.
-- `attendance.read`: View attendance records. *(Parent/Teacher resource-scoped)*
-- `attendance.mark`: Take initial attendance for a session.
-- `attendance.update`: Edit existing attendance session records.
-- `attendance.correct`: Make official attendance corrections.
+### D. Academic Hierarchy & Attendance (`academic:*`, `attendance:*`)
+- `academic:read`: View programs, subjects, batches, and schedules.
+- `academic:write`: Create and modify programs, subjects, batches, schedules.
+- `attendance:read`: View attendance records. *(Parent/Teacher resource-scoped)*
+- `attendance:mark`: Take initial attendance for a session.
+- `attendance:update`: Edit existing attendance session records.
+- `attendance:correct`: Make official attendance corrections.
 
-### E. Homework & Examinations (`homework.*`, `test.*`, `marks.*`)
-- `homework.read`: View homework assignments and submissions. *(Parent resource-scoped)*
-- `homework.create`: Create new homework assignments.
-- `homework.update`: Edit existing homework assignments.
-- `homework.delete`: Remove homework assignments.
-- `test.read`: View test schedules and gradebooks. *(Parent resource-scoped)*
-- `test.create`: Create new test schedules.
-- `test.update`: Modify test schedules.
-- `test.delete`: Remove test schedules.
-- `marks.read`: View test marks and grade cards. *(Parent resource-scoped)*
-- `marks.create`: Enter initial test marks.
-- `marks.update`: Edit entered test marks.
-- `marks.delete`: Delete test marks.
-- `marks.publish`: Formally publish test marks to parents/students.
+### E. Homework & Examinations (`homework:*`, `test:*`, `marks:*`)
+- `homework:read`: View homework assignments and submissions. *(Parent resource-scoped)*
+- `homework:create`: Create new homework assignments.
+- `homework:update`: Edit existing homework assignments.
+- `homework:delete`: Remove homework assignments.
+- `test:read`: View test schedules and gradebooks. *(Parent resource-scoped)*
+- `test:create`: Create new test schedules.
+- `test:update`: Modify test schedules.
+- `test:delete`: Remove test schedules.
+- `marks:read`: View test marks and grade cards. *(Parent resource-scoped)*
+- `marks:create`: Enter initial test marks.
+- `marks:update`: Edit entered test marks.
+- `marks:delete`: Delete test marks.
+- `marks:publish`: Formally publish test marks to parents/students.
 
-### F. Billing, Invoices & Financials (`billing.*`, `payment.*`, `receipt.*`)
-- `billing.read`: View fee structures and invoice summaries. *(Parent resource-scoped)*
-- `billing.create`: Create fee structures and assign invoices.
-- `billing.update`: Modify fee structures and invoice terms.
-- `billing.cancel`: Void or cancel invoices.
-- `payment.read`: View payment transaction history. *(Parent resource-scoped)*
-- `payment.record`: Record offline fee payment transactions.
-- `receipt.read`: View payment receipts. *(Parent resource-scoped)*
-- `receipt.issue`: Generate and issue official payment receipts.
+### F. Billing, Invoices & Financials (`billing:*`, `payment:*`, `receipt:*`)
+- `billing:read`: View fee structures and invoice summaries. *(Parent resource-scoped)*
+- `billing:create`: Create fee structures and assign invoices.
+- `billing:update`: Modify fee structures and invoice terms.
+- `billing:cancel`: Void or cancel invoices.
+- `payment:read`: View payment transaction history. *(Parent resource-scoped)*
+- `payment:record`: Record offline fee payment transactions.
+- `receipt:read`: View payment receipts. *(Parent resource-scoped)*
+- `receipt:issue`: Generate and issue official payment receipts.
 
-### G. Communication & Audit (`announcement.*`, `audit.*`)
-- `announcement.read`: View institute announcements.
-- `announcement.create`: Draft announcements.
-- `announcement.update`: Modify draft announcements.
-- `announcement.delete`: Delete announcements.
-- `announcement.publish`: Broadcast announcements to parents/students.
-- `audit.read`: View institute audit logs and security trails.
+### G. Communication & Audit (`announcement:*`, `audit:*`)
+- `announcement:read`: View institute announcements.
+- `announcement:create`: Draft announcements.
+- `announcement:update`: Modify draft announcements.
+- `announcement:delete`: Delete announcements.
+- `announcement:publish`: Broadcast announcements to parents/students.
+- `audit:read`: View institute audit logs and security trails.
 
 ---
 
@@ -101,55 +101,55 @@ Capabilities are strongly-typed string literals defined using the `<resource>.<a
 
 | Capability | `owner` | `teacher` | `assistant` | `parent` |
 | :--- | :---: | :---: | :---: | :---: |
-| `institute.read` | ✅ | ✅ | ✅ | — |
-| `institute.update` | ✅ | — | — | — |
-| `institute.archive` | ✅ | — | — | — |
-| `staff.read` | ✅ | — | ✅ | — |
-| `staff.invite` | ✅ | — | — | — |
-| `staff.update` | ✅ | — | — | — |
-| `staff.remove` | ✅ | — | — | — |
-| `staff.role.change` | ✅ | — | — | — |
-| `student.read` | ✅ | ✅ *(Scoped)* | ✅ | ✅ *(Scoped)* |
-| `student.create` | ✅ | — | ✅ | — |
-| `student.update` | ✅ | ✅ *(Scoped)* | ✅ | — |
-| `student.archive` | ✅ | — | — | — |
-| `academic.read` | ✅ | ✅ | ✅ | ✅ |
-| `academic.write` | ✅ | ✅ | ✅ | — |
-| `attendance.read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
-| `attendance.mark` | ✅ | ✅ | ✅ | — |
-| `attendance.update` | ✅ | ✅ | — | — |
-| `attendance.correct` | ✅ | ✅ | — | — |
-| `homework.read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
-| `homework.create` | ✅ | ✅ | — | — |
-| `homework.update` | ✅ | ✅ | — | — |
-| `homework.delete` | ✅ | ✅ | — | — |
-| `test.read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
-| `test.create` | ✅ | ✅ | — | — |
-| `test.update` | ✅ | ✅ | — | — |
-| `test.delete` | ✅ | ✅ | — | — |
-| `marks.read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
-| `marks.create` | ✅ | ✅ | — | — |
-| `marks.update` | ✅ | ✅ | — | — |
-| `marks.delete` | ✅ | ✅ | — | — |
-| `marks.publish` | ✅ | ✅ | — | — |
-| `billing.read` | ✅ | — | ✅ | ✅ *(Scoped)* |
-| `billing.create` | ✅ | — | — | — |
-| `billing.update` | ✅ | — | ✅ | — |
-| `billing.cancel` | ✅ | — | — | — |
-| `payment.read` | ✅ | — | ✅ | ✅ *(Scoped)* |
-| `payment.record` | ✅ | — | ✅ | — |
-| `receipt.read` | ✅ | — | ✅ | ✅ *(Scoped)* |
-| `receipt.issue` | ✅ | — | ✅ | — |
-| `announcement.read` | ✅ | ✅ | ✅ | ✅ |
-| `announcement.create` | ✅ | ✅ | — | — |
-| `announcement.update` | ✅ | ✅ | — | — |
-| `announcement.delete` | ✅ | ✅ | — | — |
-| `announcement.publish` | ✅ | ✅ | — | — |
-| `settings.read` | ✅ | — | — | — |
-| `settings.update` | ✅ | — | — | — |
-| `branding.read` | ✅ | — | — | — |
-| `branding.update` | ✅ | — | — | — |
-| `audit.read` | ✅ | — | — | — |
+| `institute:read` | ✅ | ✅ | ✅ | — |
+| `institute:update` | ✅ | — | — | — |
+| `institute:archive` | ✅ | — | — | — |
+| `staff:read` | ✅ | — | ✅ | — |
+| `staff:invite` | ✅ | — | — | — |
+| `staff:update` | ✅ | — | — | — |
+| `staff:remove` | ✅ | — | — | — |
+| `staff:role_change` | ✅ | — | — | — |
+| `student:read` | ✅ | ✅ *(Scoped)* | ✅ | ✅ *(Scoped)* |
+| `student:create` | ✅ | — | ✅ | — |
+| `student:update` | ✅ | ✅ *(Scoped)* | ✅ | — |
+| `student:archive` | ✅ | — | — | — |
+| `academic:read` | ✅ | ✅ | ✅ | ✅ |
+| `academic:write` | ✅ | ✅ | ✅ | — |
+| `attendance:read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
+| `attendance:mark` | ✅ | ✅ | ✅ | — |
+| `attendance:update` | ✅ | ✅ | — | — |
+| `attendance:correct` | ✅ | ✅ | — | — |
+| `homework:read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
+| `homework:create` | ✅ | ✅ | — | — |
+| `homework:update` | ✅ | ✅ | — | — |
+| `homework:delete` | ✅ | ✅ | — | — |
+| `test:read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
+| `test:create` | ✅ | ✅ | — | — |
+| `test:update` | ✅ | ✅ | — | — |
+| `test:delete` | ✅ | ✅ | — | — |
+| `marks:read` | ✅ | ✅ | ✅ | ✅ *(Scoped)* |
+| `marks:create` | ✅ | ✅ | — | — |
+| `marks:update` | ✅ | ✅ | — | — |
+| `marks:delete` | ✅ | ✅ | — | — |
+| `marks:publish` | ✅ | ✅ | — | — |
+| `billing:read` | ✅ | — | ✅ | ✅ *(Scoped)* |
+| `billing:create` | ✅ | — | — | — |
+| `billing:update` | ✅ | — | ✅ | — |
+| `billing:cancel` | ✅ | — | — | — |
+| `payment:read` | ✅ | — | ✅ | ✅ *(Scoped)* |
+| `payment:record` | ✅ | — | ✅ | — |
+| `receipt:read` | ✅ | — | ✅ | ✅ *(Scoped)* |
+| `receipt:issue` | ✅ | — | ✅ | — |
+| `announcement:read` | ✅ | ✅ | ✅ | ✅ |
+| `announcement:create` | ✅ | ✅ | — | — |
+| `announcement:update` | ✅ | ✅ | — | — |
+| `announcement:delete` | ✅ | ✅ | — | — |
+| `announcement:publish` | ✅ | ✅ | — | — |
+| `settings:read` | ✅ | — | — | — |
+| `settings:update` | ✅ | — | — | — |
+| `branding:read` | ✅ | — | — | — |
+| `branding:update` | ✅ | — | — | — |
+| `audit:read` | ✅ | — | — | — |
 
 *(Note: `Scoped` indicates that possessing the capability alone is insufficient; a secondary resource policy check is executed.)*
 

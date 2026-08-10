@@ -1,5 +1,8 @@
 export const IDENTITY_MODULE_NAME = 'identity';
 
+// Authorization Vocabulary & Registry
+export * from './authorization';
+
 // Domain Entities & Repositories
 export * from './domain/entities/institute.entity';
 export * from './domain/entities/institute-membership.entity';
