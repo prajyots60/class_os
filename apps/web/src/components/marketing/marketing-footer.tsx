@@ -46,6 +46,11 @@ export function MarketingFooter() {
                   </Link>
                 </li>
                 <li>
+                  <Link href="/#roles" className="transition-colors hover:text-[hsl(var(--foreground))]">
+                    Roles & Value
+                  </Link>
+                </li>
+                <li>
                   <Link href="/#security" className="transition-colors hover:text-[hsl(var(--foreground))]">
                     Security & Trust
                   </Link>
