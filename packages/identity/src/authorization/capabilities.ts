@@ -71,6 +71,19 @@ export const CAPABILITIES = {
   PARENT_CREATE: 'parent:create',
   PARENT_UPDATE: 'parent:update',
   PARENT_ARCHIVE: 'parent:archive',
+
+  // Guardian & Relationship Management (Phase 1.9)
+  GUARDIAN_READ: 'guardian:read',
+  GUARDIAN_CREATE: 'guardian:create',
+  GUARDIAN_UPDATE: 'guardian:update',
+  GUARDIAN_ARCHIVE: 'guardian:archive',
+  GUARDIAN_PRIMARY: 'guardian:primary',
+
+  RELATIONSHIP_READ: 'relationship:read',
+  RELATIONSHIP_CREATE: 'relationship:create',
+  RELATIONSHIP_UPDATE: 'relationship:update',
+  RELATIONSHIP_ARCHIVE: 'relationship:archive',
+  RELATIONSHIP_PRIMARY: 'relationship:primary',
 } as const;
 
 export type Capability = (typeof CAPABILITIES)[keyof typeof CAPABILITIES];
@@ -82,6 +95,8 @@ export type CapabilityResource =
   | 'staff'
   | 'student'
   | 'parent'
+  | 'guardian'
+  | 'relationship'
   | 'academic'
   | 'attendance'
   | 'homework'
@@ -108,7 +123,8 @@ export type CapabilityAction =
   | 'publish'
   | 'cancel'
   | 'record'
-  | 'issue';
+  | 'issue'
+  | 'primary';
 
 const ALL_CAPABILITIES_SET: ReadonlySet<string> = new Set(Object.values(CAPABILITIES));
 
@@ -119,6 +135,8 @@ const ALL_RESOURCES_SET: ReadonlySet<string> = new Set([
   'staff',
   'student',
   'parent',
+  'guardian',
+  'relationship',
   'academic',
   'attendance',
   'homework',
@@ -147,6 +165,7 @@ const ALL_ACTIONS_SET: ReadonlySet<string> = new Set([
   'cancel',
   'record',
   'issue',
+  'primary',
 ]);
 
 /**

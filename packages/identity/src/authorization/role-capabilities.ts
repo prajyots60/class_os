@@ -6,7 +6,7 @@ import type { MembershipRole } from '../domain/entities/institute-membership.ent
  * Source of truth: docs/phases/phase1.3-rbac.md
  */
 export const ROLE_CAPABILITIES: Readonly<Record<MembershipRole, readonly Capability[]>> = Object.freeze({
-  owner: Object.freeze(Object.values(CAPABILITIES)) as readonly Capability[],
+  owner: Object.freeze(Array.from(new Set(Object.values(CAPABILITIES)))) as readonly Capability[],
 
   teacher: Object.freeze([
     CAPABILITIES.INSTITUTE_READ,
@@ -15,6 +15,8 @@ export const ROLE_CAPABILITIES: Readonly<Record<MembershipRole, readonly Capabil
     CAPABILITIES.PARENT_READ,
     CAPABILITIES.PARENT_CREATE,
     CAPABILITIES.PARENT_UPDATE,
+    CAPABILITIES.GUARDIAN_READ,
+    CAPABILITIES.RELATIONSHIP_READ,
     CAPABILITIES.ACADEMIC_READ,
     CAPABILITIES.ACADEMIC_WRITE,
     CAPABILITIES.ATTENDANCE_READ,
@@ -48,6 +50,14 @@ export const ROLE_CAPABILITIES: Readonly<Record<MembershipRole, readonly Capabil
     CAPABILITIES.STUDENT_CREATE,
     CAPABILITIES.STUDENT_UPDATE,
     CAPABILITIES.PARENT_READ,
+    CAPABILITIES.GUARDIAN_READ,
+    CAPABILITIES.GUARDIAN_CREATE,
+    CAPABILITIES.GUARDIAN_UPDATE,
+    CAPABILITIES.GUARDIAN_PRIMARY,
+    CAPABILITIES.RELATIONSHIP_READ,
+    CAPABILITIES.RELATIONSHIP_CREATE,
+    CAPABILITIES.RELATIONSHIP_UPDATE,
+    CAPABILITIES.RELATIONSHIP_PRIMARY,
     CAPABILITIES.ACADEMIC_READ,
     CAPABILITIES.ACADEMIC_WRITE,
     CAPABILITIES.ATTENDANCE_READ,
