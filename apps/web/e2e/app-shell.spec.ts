@@ -45,8 +45,10 @@ async function registerTestUserWithRetry(
   throw new Error(`Registration rate limited after retries for ${user.email}`);
 }
 
-test.beforeAll({ timeout: 60000 }, async ({ playwright }) => {
+test.beforeAll(async ({ playwright }) => {
+  test.setTimeout(60000);
   const timestamp = Date.now();
+
   const baseURL = process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000';
 
   // ── User A: Authenticated, No Tenant ────────────────────────────────────────
