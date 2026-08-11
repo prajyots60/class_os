@@ -473,8 +473,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.9.2:** Relationship Repository & PostgreSQL Persistence ✅ COMPLETED
     - **Phase 1.9.3:** Relationship Application Use Cases ✅ COMPLETED
     - **Phase 1.9.4:** Guardian/Student Linking & Authorization ✅ COMPLETED
-    - **Phase 1.9.5:** Relationship API Boundary & Validators
-    - **Phase 1.9.6:** Relationship Security / Privacy E2E Matrix
+    - **Phase 1.9.5:** Relationship API Boundary & Validators ✅ COMPLETED
+    - **Phase 1.9.6:** Relationship Security / Privacy E2E Matrix ✅ COMPLETED
     - **Phase 1.9.7:** Staff Guardian/Relationship UI
     - **Phase 1.9.8:** UX, Accessibility & Workflow Testing
     - **Phase 1.9.9:** Phase 1.9 Acceptance Gate
