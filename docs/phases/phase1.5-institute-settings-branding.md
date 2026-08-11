@@ -1,7 +1,7 @@
 # Phase 1.5 — Institute Settings & White-Label Branding Specification & Contract
 
-> **Phase Status:** 🟢 **FROZEN** (Phase 1.5.0 Contract Freeze)  
-> **Milestone:** Phase 1.5.0 — Architecture & Contract Freeze  
+> **Phase Status:** 🟢 **ACTIVE** (Phase 1.5.2 Completed)  
+> **Milestone:** Phase 1.5.2 — Settings API Endpoints & Validators  
 > **Author:** Antigravity (Google DeepMind Agentic Pair Programmer)  
 > **Date:** August 11, 2026  
 
@@ -278,13 +278,13 @@ export const updateInstituteSettingsSchema = z.object({
 ```text
 Phase 1.5.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     ↓
-Phase 1.5.1 — Settings Domain Use Cases & Authorization
+Phase 1.5.1 — Settings Domain Use Cases & Authorization ✅ COMPLETED
     ↓
-Phase 1.5.2 — Settings API Endpoints & Validators
+Phase 1.5.2 — Settings API Endpoints & Validators ✅ COMPLETED
     ↓
-Phase 1.5.3 — Settings & Branding UI Feature (/settings)
+Phase 1.5.3 — Settings & Branding UI Feature (/settings) ⏳ (NEXT)
     ↓
-Phase 1.5.4 — Security E2E Matrix & Acceptance Gate
+Phase 1.5.4 — Security E2E Matrix & Acceptance Gate ⏳
 ```
 
 ---

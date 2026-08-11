@@ -90,8 +90,8 @@ PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
   └── Phase 1.5 — Institute Settings & Branding          🚧 NOW ACTIVE
         ├── Phase 1.5.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
         ├── Phase 1.5.1 — Settings Domain Use Cases & Auth ✅ COMPLETED
-        ├── Phase 1.5.2 — Settings API & Validators ⏳
-        ├── Phase 1.5.3 — Settings UI Feature ⏳
+        ├── Phase 1.5.2 — Settings API & Validators ✅ COMPLETED
+        ├── Phase 1.5.3 — Settings UI Feature ⏳ (NEXT)
         └── Phase 1.5.4 — Security E2E & Acceptance Gate ⏳
     ↓
 PHASE 2  Academics Module                             ⏳ UPCOMING
@@ -367,8 +367,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 1.5:** Institute Settings & White-Label Branding 🚧 (NOW ACTIVE)
     - **Phase 1.5.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.5.1:** Settings Domain Use Cases & Authorization ✅ COMPLETED
-    - **Phase 1.5.2:** Settings API & Validators ⏳
-    - **Phase 1.5.3:** Settings UI Feature ⏳
+    - **Phase 1.5.2:** Settings API & Validators ✅ COMPLETED
+    - **Phase 1.5.3:** Settings UI Feature ⏳ (NEXT)
     - **Phase 1.5.4:** Security E2E & Acceptance Gate ⏳
   - **Phase 1.6:** Global ParentIdentity Platform Layer
   - **Phase 1.7:** Tenant InstituteParent CRM Layer
