@@ -369,13 +369,16 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Better Auth Integration**: Built `ResolveParentIdentityForUserUseCase` auto-linking Better Auth phone users to global `ParentIdentity` upon authentication/signup while preserving identity sovereignty.
 - **Security & Acceptance Gate**: Verified multi-tenant isolation, parameter injection protection, and global identity invariants across unit, integration, and Playwright E2E suites (`parent-identity-security.spec.ts`). **Phase 1.6 formally ACCEPTED and FROZEN.**
 
-### 🟢 Phase 1.7 — Tenant InstituteParent CRM Layer (Subphases 1.7.0 – 1.7.6 COMPLETED)
+### 🟢 Phase 1.7 — Tenant InstituteParent CRM Layer (ACCEPTED & FROZEN)
 
 - **Architecture & Domain Contract (ADR-0010 & Phase 1.7.0)**: Defined the tenant-scoped CRM aggregate `InstituteParent` bridging global `ParentIdentity` into specific coaching institutes. Enforced database composite uniqueness `UNIQUE(instituteId, parentIdentityId)` and tenant-local lifecycle standing (`active`, `inactive`).
 - **Domain Entity & Repository (Phase 1.7.1 & 1.7.2)**: Implemented `InstituteParentEntity` with state mutation methods (`updateNotes`, `inactivate`, `activate`, `changeStatus`) and `PrismaInstituteParentRepository` enforcing mandatory `instituteId` scoping across all query paths.
 - **Use Cases & Linking (Phase 1.7.3 & 1.7.4)**: Implemented `CreateInstituteParentUseCase`, `GetInstituteParentUseCase`, `ListInstituteParentsUseCase`, `UpdateInstituteParentUseCase`, and `ArchiveInstituteParentUseCase`. Integrated race-condition-safe canonical phone normalization (`PhoneNumber` VO) and auto-linking to `ParentIdentity`. Registered parent capabilities (`PARENT_READ`, `PARENT_CREATE`, `PARENT_UPDATE`, `PARENT_ARCHIVE`) and updated RBAC matrix (53 total capabilities).
 - **API Boundary & Validators (Phase 1.7.5)**: Implemented Next.js App Router handlers (`/api/institute/parents` and `/api/institute/parents/[id]`) with strict Zod presentation validators (`createInstituteParentSchema`, `updateInstituteParentSchema`, `listInstituteParentsQuerySchema`, `instituteParentParamsSchema`). Rejects client identity injection attempts via `.strict()` schemas. Enforced HTTP method safety (405 Method Not Allowed with `Allow` headers).
 - **Security & E2E Test Matrix (Phase 1.7.6)**: Developed 14-scenario Vitest route integration test suite (`route.test.ts`) and 10-scenario Playwright E2E security matrix (`institute-parent-security.spec.ts`) verifying unauthenticated 401 guards, header/body parameter injection defenses, cross-tenant 404 barriers, soft archiving invariants, and zero database stack leaks.
+- **Staff UI / CRM Feature (Phase 1.7.7)**: Built responsive, accessible staff CRM interface (`/parents`) with desktop table and mobile card views, dynamic capability-driven action visibility, header controls (search & status filter), and accessible dialog modals for Add, Edit, Archive, and Global Identity vs. Tenant CRM details separation.
+- **UX & Accessibility Audit (Phase 1.7.8)**: Conducted full browser workflow and keyboard accessibility pass. Resolved React 19 cascading render warnings in form state reset callbacks. Ensured `Escape` key closes dialogs and focus restoration is maintained.
+- **Acceptance Gate (Phase 1.7.9)**: Verified complete pipeline (`env:check`, `db:validate`, `db:health`, `db:drift:check`, `verify:auth`, `verify:infra`, `verify:observability`, `lint`, `typecheck`, `test`, `build`, `test:e2e`). **Phase 1.7 formally ACCEPTED and FROZEN.**
 
 ## 4. Next Milestone Roadmap
 
@@ -422,7 +425,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.6.4:** Parent Identity ↔ Authentication Integration ✅ COMPLETED
     - **Phase 1.6.5:** Multi-Tenant Security & Authorization Matrix ✅ COMPLETED
     - **Phase 1.6.6:** Phase 1.6 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
-  - **Phase 1.7:** Tenant InstituteParent CRM Layer 🟡 (IN PROGRESS)
+  - **Phase 1.7:** Tenant InstituteParent CRM Layer 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.7.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.7.1:** InstituteParent Domain Entity & Value Objects ✅ COMPLETED
     - **Phase 1.7.2:** InstituteParent Repository & PostgreSQL Persistence Layer ✅ COMPLETED
@@ -430,10 +433,10 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.7.4:** ParentIdentity ↔ InstituteParent Linking & Authorization ✅ COMPLETED
     - **Phase 1.7.5:** InstituteParent API Boundary & Validators ✅ COMPLETED
     - **Phase 1.7.6:** InstituteParent Security / Privacy E2E Matrix ✅ COMPLETED
-    - **Phase 1.7.7:** InstituteParent Staff UI / CRM Feature ⏳ (NEXT)
-    - **Phase 1.7.8:** UX, Accessibility & Tenant-Scoped Workflow Testing
-    - **Phase 1.7.9:** Phase 1.7 Acceptance Gate
-  - **Phase 1.8:** Student Admission & Profile Core
+    - **Phase 1.7.7:** InstituteParent Staff UI / CRM Feature ✅ COMPLETED
+    - **Phase 1.7.8:** UX, Accessibility & Tenant-Scoped Workflow Testing ✅ COMPLETED
+    - **Phase 1.7.9:** Phase 1.7 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
+  - **Phase 1.8:** Student Admission & Profile Core ⏳ (NEXT)
   - **Phase 1.9:** Guardian & Student Links
   - **Phase 1.10:** Academic Hierarchy (Programs, Subjects, Batches)
   - **Phase 1.11:** Student Enrollment Lifecycle
