@@ -25,6 +25,8 @@
   "dependencies": {
     "@coaching-os/config": "workspace:*",
     "@coaching-os/database": "workspace:*",
+    "@coaching-os/identity": "workspace:*",
+    "@coaching-os/shared": "workspace:*",
     "better-auth": "^1.6.25"
   },
   "devDependencies": {

@@ -164,6 +164,7 @@ export type InstituteScalarFieldEnum = (typeof InstituteScalarFieldEnum)[keyof t
 export const UserScalarFieldEnum = {
   id: 'id',
   instituteId: 'instituteId',
+  parentIdentityId: 'parentIdentityId',
   name: 'name',
   phone: 'phone',
   email: 'email',

@@ -121,6 +121,7 @@ model ParentIdentity {
 
   memberships   InstituteMembership[]
   childProfiles ChildProfile[]
+  users         User[]
 
   @@index([status])
   @@map("parent_identities")
@@ -210,28 +211,31 @@ model Institute {
 }
 
 model User {
-  id            String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  instituteId   String?    @map("institute_id") @db.Uuid
-  name          String     @db.VarChar(255)
-  phone         String?    @db.VarChar(20)
-  email         String     @unique @db.VarChar(255)
-  emailVerified Boolean    @default(false) @map("email_verified")
-  image         String?    @db.Text
-  status        UserStatus @default(active)
-  createdAt     DateTime   @default(now()) @map("created_at")
-  updatedAt     DateTime   @updatedAt @map("updated_at")
-  deletedAt     DateTime?  @map("deleted_at")
+  id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId      String?         @map("institute_id") @db.Uuid
+  parentIdentityId String?         @map("parent_identity_id") @db.Uuid
+  name             String          @db.VarChar(255)
+  phone            String?         @db.VarChar(20)
+  email            String          @unique @db.VarChar(255)
+  emailVerified    Boolean         @default(false) @map("email_verified")
+  image            String?         @db.Text
+  status           UserStatus      @default(active)
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+  deletedAt        DateTime?       @map("deleted_at")
 
-  institute          Institute?     @relation(fields: [instituteId], references: [id], onDelete: Cascade)
-  assignedBatches    Batch[]        @relation("TeacherBatches")
-  assignedSchedules  Schedule[]     @relation("TeacherSchedules")
-  substituteSessions BatchSession[] @relation("SubstituteTeacherSessions")
-  collectedPayments  Payment[]      @relation("CollectedByPayments")
+  institute          Institute?      @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  parentIdentity     ParentIdentity? @relation(fields: [parentIdentityId], references: [id], onDelete: SetNull)
+  assignedBatches    Batch[]         @relation("TeacherBatches")
+  assignedSchedules  Schedule[]      @relation("TeacherSchedules")
+  substituteSessions BatchSession[]  @relation("SubstituteTeacherSessions")
+  collectedPayments  Payment[]       @relation("CollectedByPayments")
   auditLogs          AuditLog[]
   sessions           Session[]
   accounts           Account[]
 
   @@index([instituteId, status])
+  @@index([parentIdentityId])
   @@map("users")
 }
 

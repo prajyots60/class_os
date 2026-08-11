@@ -375,18 +375,18 @@ Phase 1.6.1 — ParentIdentity Domain Entities & Value Objects 🟢 (COMPLETED)
     ↓
 Phase 1.6.2 — ParentIdentity Repository & Persistence Layer 🟢 (COMPLETED)
     ↓
-Phase 1.6.3 — ParentIdentity Application Use Cases ⏳ (NEXT)
+Phase 1.6.3 — ParentIdentity Application Use Cases 🟢 (COMPLETED)
     ↓
-Phase 1.6.4 — Parent Identity ↔ Authentication Integration
+Phase 1.6.4 — Parent Identity ↔ Authentication Integration 🟢 (COMPLETED)
     ↓
-Phase 1.6.5 — Multi-Tenant Security & Authorization Matrix
+Phase 1.6.5 — Multi-Tenant Security & Authorization Matrix ⏳ (NEXT)
     ↓
 Phase 1.6.6 — Phase 1.6 Acceptance Gate
 ```
 
 ---
 
-## 20.1 Subphase Execution Log: Phase 1.6.1 & 1.6.2 Completion
+## 20.1 Subphase Execution Log
 
 ### Phase 1.6.1 — ParentIdentity Domain Entities & Value Objects (COMPLETED)
 - **`PhoneNumber` Value Object (`packages/identity/src/domain/value-objects/phone-number.vo.ts`)**:
@@ -406,6 +406,27 @@ Phase 1.6.6 — Phase 1.6 Acceptance Gate
 - **`PrismaParentIdentityRepository` (`packages/identity/src/infrastructure/repositories/prisma-parent-identity.repository.ts`)**:
   - Implements PostgreSQL persistence adapter, handling P2002 duplicate key constraint (`ConflictError`) and P2025 (`NotFoundError`).
   - Integration test suite: `packages/identity/src/infrastructure/repositories/prisma-parent-identity.repository.integration.test.ts` (11/11 passing against real PostgreSQL database).
+
+### Phase 1.6.3 — ParentIdentity Application Use Cases (COMPLETED)
+- **DTO Layer (`packages/identity/src/application/dto/parent-identity.dto.ts`)**:
+  - `ParentIdentityDTO` interface & `toParentIdentityDTO` mapper stripping internal database representations.
+- **Application Use Cases (`packages/identity/src/application/use-cases/parent-identity.use-cases.ts`)**:
+  - `CreateParentIdentityUseCase`: Race-safe creation handling canonical `PhoneNumber` normalization & DB `ConflictError`.
+  - `GetParentIdentityUseCase`: Id lookup returning clean DTO or `NotFoundError`.
+  - `GetParentIdentityByPhoneUseCase`: E.164 phone lookup returning DTO or `NotFoundError`.
+  - `UpdateParentIdentityProfileUseCase`: Profile mutation (`name`, `avatar`) enforcing entity `deactivated` check.
+  - `ChangeParentIdentityStatusUseCase`: Lifecycle status transitions enforcing domain state machine invariants.
+  - `ResolveParentIdentityForUserUseCase`: Identity resolution for authenticated users establishing durable `user.parentIdentityId` links.
+- **Unit & Integration Suite (`packages/identity/src/application/use-cases/parent-identity.use-cases.test.ts`)**: 11/11 passing tests.
+
+### Phase 1.6.4 — Better Auth ↔ ParentIdentity Integration (COMPLETED)
+- **Database Migration (`infrastructure/database/prisma/migrations/20260811111446_add_user_parent_identity_link`)**:
+  - Added nullable `parentIdentityId` foreign key and index to `users` model for explicit User ↔ ParentIdentity 1:1 durable association.
+- **Authentication Session Helpers (`infrastructure/auth/src/session.ts`)**:
+  - `resolveAuthenticatedParentIdentity`: Server-side identity resolution from Better Auth session headers.
+  - `requireParentIdentity`: Server-side context guard returning `AuthenticatedParentContext` (`userId`, `parentIdentityId`, `parentIdentity`) or throwing structured `AuthenticationError`/`AuthorizationError`.
+- **Authentication Integration Suite (`infrastructure/auth/src/parent-identity-auth.integration.test.ts`)**:
+  - 7/7 tests passing covering `AUTH-PARENT-01` through `AUTH-PARENT-10` security invariants.
 
 ---
 

@@ -1,5 +1,11 @@
 import { auth } from './auth';
 import { db } from '@coaching-os/database';
+import { AuthenticationError, AuthorizationError } from '@coaching-os/shared';
+import {
+  PrismaParentIdentityRepository,
+  ResolveParentIdentityForUserUseCase,
+  type ParentIdentityDTO,
+} from '@coaching-os/identity';
 
 export interface TenantContext {
   userId: string;
@@ -12,6 +18,12 @@ export interface TenantContext {
     email: string;
     status: string;
   };
+}
+
+export interface AuthenticatedParentContext {
+  userId: string;
+  parentIdentityId: string;
+  parentIdentity: ParentIdentityDTO;
 }
 
 /**
@@ -35,9 +47,69 @@ export async function getAuthenticatedSession(headers: Headers) {
 export async function requireSession(headers: Headers) {
   const session = await getAuthenticatedSession(headers);
   if (!session) {
-    throw new Error('UNAUTHORIZED: Valid authentication session is required.');
+    throw new AuthenticationError('UNAUTHORIZED: Valid authentication session is required.');
   }
   return session;
+}
+
+/**
+ * Resolves the authenticated parent identity for a request.
+ * Returns null if unauthenticated or no parent identity is associated.
+ */
+export async function resolveAuthenticatedParentIdentity(
+  headers: Headers,
+  options?: { autoCreateIfMissing?: boolean },
+): Promise<AuthenticatedParentContext | null> {
+  const session = await getAuthenticatedSession(headers);
+  if (!session || !session.user) {
+    return null;
+  }
+
+  const repo = new PrismaParentIdentityRepository();
+  const resolveUseCase = new ResolveParentIdentityForUserUseCase(repo);
+
+  const parentDTO = await resolveUseCase.execute({
+    userId: session.user.id,
+    autoCreateIfMissing: options?.autoCreateIfMissing ?? false,
+  });
+
+  if (!parentDTO) {
+    return null;
+  }
+
+  if (parentDTO.status === 'deactivated') {
+    throw new AuthenticationError('UNAUTHENTICATED: Parent identity is deactivated.');
+  }
+
+  return {
+    userId: session.user.id,
+    parentIdentityId: parentDTO.id,
+    parentIdentity: parentDTO,
+  };
+}
+
+/**
+ * Requires an authenticated ParentIdentity for a request.
+ * Throws AuthenticationError if unauthenticated or deactivated.
+ * Throws AuthorizationError if user has no linked ParentIdentity.
+ */
+export async function requireParentIdentity(
+  headers: Headers,
+  options?: { autoCreateIfMissing?: boolean },
+): Promise<AuthenticatedParentContext> {
+  const session = await getAuthenticatedSession(headers);
+  if (!session || !session.user) {
+    throw new AuthenticationError('UNAUTHENTICATED: Valid authentication session is required.');
+  }
+
+  const result = await resolveAuthenticatedParentIdentity(headers, options);
+  if (!result) {
+    throw new AuthorizationError(
+      'PARENT_IDENTITY_REQUIRED: Authenticated user has no linked ParentIdentity.',
+    );
+  }
+
+  return result;
 }
 
 /**
@@ -60,7 +132,7 @@ export async function requireInstituteMembership(
   });
 
   if (!user || user.status !== 'active') {
-    throw new Error('FORBIDDEN: User account is inactive or not found.');
+    throw new AuthorizationError('FORBIDDEN: User account is inactive or not found.');
   }
 
   // 2. Check direct institute assignment (Owner / Teacher / Assistant)
@@ -78,9 +150,18 @@ export async function requireInstituteMembership(
     };
   }
 
-  // 3. Check Parent Identity Institute Membership if phone exists
-  if (user.phone) {
-    const membership = await db.instituteMembership.findFirst({
+  // 3. Check Parent Identity Institute Membership
+  const parentId = user.parentIdentityId;
+  let membership = null;
+  if (parentId) {
+    membership = await db.instituteMembership.findFirst({
+      where: {
+        instituteId: requestedInstituteId,
+        parentIdentityId: parentId,
+      },
+    });
+  } else if (user.phone) {
+    membership = await db.instituteMembership.findFirst({
       where: {
         instituteId: requestedInstituteId,
         parentIdentity: {
@@ -88,24 +169,24 @@ export async function requireInstituteMembership(
         },
       },
     });
-
-    if (membership) {
-      return {
-        userId: user.id,
-        instituteId: requestedInstituteId,
-        membershipId: membership.id,
-        role: 'parent',
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          status: user.status,
-        },
-      };
-    }
   }
 
-  throw new Error(
+  if (membership) {
+    return {
+      userId: user.id,
+      instituteId: requestedInstituteId,
+      membershipId: membership.id,
+      role: 'parent',
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        status: user.status,
+      },
+    };
+  }
+
+  throw new AuthorizationError(
     `FORBIDDEN: User ${userId} is not an authorized member of institute ${requestedInstituteId}.`,
   );
 }
