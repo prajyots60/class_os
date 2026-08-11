@@ -88,12 +88,15 @@ PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
   ├── Phase 1.2 — Users & Memberships                   ✅ COMPLETED
   ├── Phase 1.3 — Capability-Based RBAC                 ✅ COMPLETED & FROZEN
   ├── Phase 1.4 — Institute Onboarding Workflow          ✅ COMPLETED & FROZEN
-  └── Phase 1.5 — Institute Settings & Branding          ✅ COMPLETED & FROZEN
-        ├── Phase 1.5.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-        ├── Phase 1.5.1 — Settings Domain Use Cases & Auth ✅ COMPLETED
-        ├── Phase 1.5.2 — Settings API & Validators ✅ COMPLETED
-        ├── Phase 1.5.3 — Settings UI Feature ✅ COMPLETED
-        └── Phase 1.5.4 — Security E2E & Acceptance Gate 🟢 (ACCEPTED & FROZEN)
+  ├── Phase 1.5 — Institute Settings & Branding          ✅ COMPLETED & FROZEN
+  │     ├── Phase 1.5.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+  │     ├── Phase 1.5.1 — Settings Domain Use Cases & Auth ✅ COMPLETED
+  │     ├── Phase 1.5.2 — Settings API & Validators ✅ COMPLETED
+  │     ├── Phase 1.5.3 — Settings UI Feature ✅ COMPLETED
+  │     └── Phase 1.5.4 — Security E2E & Acceptance Gate 🟢 (ACCEPTED & FROZEN)
+  └── Phase 1.6 — Global ParentIdentity Platform Layer  🟡 IN PROGRESS
+        ├── Phase 1.6.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+        └── Phase 1.6.1 — ParentIdentity Domain Entities & Value Objects ⏳ (NEXT)
     ↓
 PHASE 2  Academics Module                             ⏳ UPCOMING
     ↓
@@ -379,7 +382,14 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.5.2:** Settings API & Validators ✅ COMPLETED
     - **Phase 1.5.3:** Settings UI Feature ✅ COMPLETED
     - **Phase 1.5.4:** Security E2E & Acceptance Gate 🟢 (ACCEPTED & FROZEN)
-  - **Phase 1.6:** Global ParentIdentity Platform Layer
+  - **Phase 1.6:** Global ParentIdentity Platform Layer 🟡 (IN PROGRESS)
+    - **Phase 1.6.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.6.1:** ParentIdentity Domain Entities & Value Objects ⏳ (NEXT)
+    - **Phase 1.6.2:** ParentIdentity Repository & Persistence Layer
+    - **Phase 1.6.3:** ParentIdentity Application Use Cases
+    - **Phase 1.6.4:** Parent Identity ↔ Authentication Integration
+    - **Phase 1.6.5:** Multi-Tenant Security & Authorization Matrix
+    - **Phase 1.6.6:** Phase 1.6 Acceptance Gate
   - **Phase 1.7:** Tenant InstituteParent CRM Layer
   - **Phase 1.8:** Student Admission & Profile Core
   - **Phase 1.9:** Guardian & Student Links
