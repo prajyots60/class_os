@@ -1,6 +1,6 @@
 # Phase 1.8 — Student Admission & Profile Core
 
-- **Status**: 🟢 **Phase 1.8.0 – 1.8.6 COMPLETED & FROZEN**
+- **Status**: 🟢 **Phase 1.8.0 – 1.8.7 COMPLETED & FROZEN**
 - **Date**: 2026-08-11
 - **Authors**: Senior Staff Architecture & Identity Team
 
@@ -279,19 +279,16 @@ Phase 1.8.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
 Phase 1.8.1 — Student Domain Entity & Value Objects 🟢 (COMPLETED)
 Phase 1.8.2 — Student Repository & PostgreSQL Persistence Layer 🟢 (COMPLETED)
     ↓
-Phase 1.8.3 — Student Application Use Cases ⏳ NEXT
-Phase 1.8.4 — Student Admission & Lifecycle Rules ⏳ NEXT
-    (Implement together)
+Phase 1.8.3 — Student Application Use Cases 🟢 (COMPLETED)
+Phase 1.8.4 — Student Admission & Lifecycle Rules 🟢 (COMPLETED)
     ↓
-Phase 1.8.5 — Student API Boundary & Validators
-Phase 1.8.6 — Student Security / Tenant E2E Matrix
-    (Implement together)
+Phase 1.8.5 — Student API Boundary & Validators 🟢 (COMPLETED)
+Phase 1.8.6 — Student Security / Tenant E2E Matrix 🟢 (COMPLETED)
     ↓
-Phase 1.8.7 — Student Staff UI / Admission Feature
-Phase 1.8.8 — UX, Accessibility & Admission Workflow Testing
-    (Implement together)
+Phase 1.8.7 — Student Staff UI / Admission Feature 🟢 (COMPLETED)
+Phase 1.8.8 — UX, Accessibility & Admission Workflow Testing 🟢 (COMPLETED)
     ↓
-Phase 1.8.9 — Phase 1.8 Acceptance Gate
+Phase 1.8.9 — Phase 1.8 Acceptance Gate ⏳ NEXT
 ```
 
 ---

@@ -44,8 +44,7 @@ export const APP_NAVIGATION_CONFIG: readonly NavigationSection[] = Object.freeze
         href: '/students',
         iconName: 'Users',
         capability: 'student:read',
-        isImplemented: false,
-        badgeText: 'Soon',
+        isImplemented: true,
       },
       {
         id: 'staff',
