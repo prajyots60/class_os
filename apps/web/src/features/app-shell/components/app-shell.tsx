@@ -41,6 +41,7 @@ export function AppShell({
 
   return (
     <div
+      id="workspace-app-shell"
       style={styleObj}
       className="min-h-screen bg-[hsl(var(--background))] text-[hsl(var(--foreground))] flex flex-col"
     >

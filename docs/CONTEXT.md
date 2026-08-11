@@ -88,12 +88,12 @@ PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
   ├── Phase 1.2 — Users & Memberships                   ✅ COMPLETED
   ├── Phase 1.3 — Capability-Based RBAC                 ✅ COMPLETED & FROZEN
   ├── Phase 1.4 — Institute Onboarding Workflow          ✅ COMPLETED & FROZEN
-  └── Phase 1.5 — Institute Settings & Branding          🚧 NOW ACTIVE
+  └── Phase 1.5 — Institute Settings & Branding          ✅ COMPLETED & FROZEN
         ├── Phase 1.5.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
         ├── Phase 1.5.1 — Settings Domain Use Cases & Auth ✅ COMPLETED
         ├── Phase 1.5.2 — Settings API & Validators ✅ COMPLETED
         ├── Phase 1.5.3 — Settings UI Feature ✅ COMPLETED
-        └── Phase 1.5.4 — Security E2E & Acceptance Gate ⏳ (NEXT)
+        └── Phase 1.5.4 — Security E2E & Acceptance Gate 🟢 (ACCEPTED & FROZEN)
     ↓
 PHASE 2  Academics Module                             ⏳ UPCOMING
     ↓
@@ -334,6 +334,14 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - Infrastructure Checks: `pnpm env:check`, `pnpm db:validate`, `pnpm db:health`, `pnpm db:drift:check`, `pnpm verify:auth`, `pnpm verify:observability` passed 100%.
 - **Formal Decision**: **Phase 0.12 — Public & Authentication UX is formally ACCEPTED and FROZEN.**
 
+### 🟢 Phase 1.5 — Institute Settings & White-Label Branding (ACCEPTED & FROZEN)
+
+- **Architecture & Use Cases (`packages/identity`)**: Implemented domain use cases `GetInstituteSettingsUseCase` and `UpdateInstituteSettingsUseCase` enforcing strict capability authorization (`settings:read`, `settings:update`), audit logging, and domain entity invariants.
+- **API Boundary (`/api/institute/settings`)**: Built production-grade GET and PATCH endpoints with Next.js App Router, Zod validation, HTTP status mapping, request correlation headers (`x-request-id`), method guards (POST/PUT/DELETE return 405 with `Allow` header), and strict protection of immutable fields (`id`, `slug`, `status`, `role`).
+- **UI & Theme Propagation (`/settings`)**: Built responsive, accessible settings page (`InstituteSettingsContent`) with real-time brand color preview, non-HTTPS logo validation, client-side input sanitization, and live CSS `--primary` variable injection into `AppShell` with `router.refresh()`.
+- **Security & Multi-Tenant E2E Verification (`apps/web/e2e/institute-settings-security.spec.ts`)**: Built 15 Playwright security E2E scenarios verifying unauthenticated 401 protection, RBAC 403 authorization guards, multi-tenant scope isolation, parameter/header spoofing defense, CSS/XSS injection defense for HEX colors and URLs, and workspace theme persistence across page reloads and internal navigation.
+- **Formal Decision**: **Phase 1.5 — Institute Settings & White-Label Branding is formally ACCEPTED and FROZEN.**
+
 ## 4. Next Milestone Roadmap
 
 
@@ -365,12 +373,12 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.4.6:** Tenant Context Resolution & Post-Onboarding Redirect ✅
     - **Phase 1.4.7:** End-to-End Security & Failure Testing ✅
     - **Phase 1.4.8:** Phase 1.4 Acceptance Gate ✅ (ACCEPTED 🟢)
-  - **Phase 1.5:** Institute Settings & White-Label Branding 🚧 (NOW ACTIVE)
+  - **Phase 1.5:** Institute Settings & White-Label Branding ✅ (ACCEPTED 🟢)
     - **Phase 1.5.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.5.1:** Settings Domain Use Cases & Authorization ✅ COMPLETED
     - **Phase 1.5.2:** Settings API & Validators ✅ COMPLETED
     - **Phase 1.5.3:** Settings UI Feature ✅ COMPLETED
-    - **Phase 1.5.4:** Security E2E & Acceptance Gate ⏳ (NEXT)
+    - **Phase 1.5.4:** Security E2E & Acceptance Gate 🟢 (ACCEPTED & FROZEN)
   - **Phase 1.6:** Global ParentIdentity Platform Layer
   - **Phase 1.7:** Tenant InstituteParent CRM Layer
   - **Phase 1.8:** Student Admission & Profile Core

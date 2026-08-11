@@ -225,6 +225,7 @@ export function InstituteSettingsContent() {
           primaryColor: updated.primaryColor || '',
         });
         setSuccessMessage('Settings saved successfully.');
+        router.refresh();
         return;
       }
 

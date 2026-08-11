@@ -1,7 +1,7 @@
 # Phase 1.5 — Institute Settings & White-Label Branding Specification & Contract
 
-> **Phase Status:** 🟢 **ACTIVE** (Phase 1.5.3 Completed)  
-> **Milestone:** Phase 1.5.3 — Settings UI Feature (/settings)  
+> **Phase Status:** 🟢 **ACCEPTED & FROZEN** (Phase 1.5.4 Completed & Passed Verification)  
+> **Milestone:** Phase 1.5.4 — Security E2E Matrix & Acceptance Gate  
 > **Author:** Antigravity (Google DeepMind Agentic Pair Programmer)  
 > **Date:** August 11, 2026  
 
@@ -284,7 +284,7 @@ Phase 1.5.2 — Settings API Endpoints & Validators ✅ COMPLETED
     ↓
 Phase 1.5.3 — Settings & Branding UI Feature (/settings) ✅ COMPLETED
     ↓
-Phase 1.5.4 — Security E2E Matrix & Acceptance Gate ⏳ (NEXT)
+Phase 1.5.4 — Security E2E Matrix & Acceptance Gate 🟢 (ACCEPTED & FROZEN)
 ```
 
 ---
