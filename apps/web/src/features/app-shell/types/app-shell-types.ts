@@ -27,6 +27,7 @@ export interface InstituteDisplay {
   slug: string;
   status: string;
   logoUrl?: string | null;
+  primaryColor?: string | null;
 }
 
 export interface AppShellProps {

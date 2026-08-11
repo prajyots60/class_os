@@ -6,6 +6,7 @@ import { APP_NAVIGATION_CONFIG } from '../navigation/navigation-config';
 import { AppSidebar } from './app-sidebar';
 import { MobileSidebar } from './mobile-sidebar';
 import { AppHeader } from './app-header';
+import { hexToHsl } from '../utils/theme-utils';
 
 /**
  * AppShell — Root layout container for the authenticated workspace.
@@ -25,7 +26,6 @@ export function AppShell({
 }: AppShellProps) {
   const [isMobileOpen, setIsMobileOpen] = React.useState(false);
 
-
   const handleOpenMobile = React.useCallback(() => {
     setIsMobileOpen(true);
   }, []);
@@ -34,8 +34,16 @@ export function AppShell({
     setIsMobileOpen(false);
   }, []);
 
+  const primaryHsl = hexToHsl(institute.primaryColor);
+  const styleObj = primaryHsl
+    ? ({ '--primary': primaryHsl } as React.CSSProperties)
+    : undefined;
+
   return (
-    <div className="min-h-screen bg-[hsl(var(--background))] text-[hsl(var(--foreground))] flex flex-col">
+    <div
+      style={styleObj}
+      className="min-h-screen bg-[hsl(var(--background))] text-[hsl(var(--foreground))] flex flex-col"
+    >
       {/* Desktop Sidebar (Fixed left 250px on md+) */}
       <AppSidebar
         institute={institute}

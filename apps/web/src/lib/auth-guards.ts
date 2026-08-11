@@ -46,6 +46,8 @@ export interface ServerInstituteDisplay {
   name: string;
   slug: string;
   status: string;
+  logoUrl?: string | null;
+  primaryColor?: string | null;
 }
 
 /**
@@ -150,6 +152,8 @@ export async function resolveServerTenantContext(userId: string): Promise<Server
           name: institute.name,
           slug: institute.slug,
           status: institute.status,
+          logoUrl: institute.logoUrl,
+          primaryColor: institute.primaryColor,
         }
       : null,
   };

@@ -113,5 +113,19 @@ export const APP_NAVIGATION_CONFIG: readonly NavigationSection[] = Object.freeze
       },
     ],
   },
+  {
+    id: 'settings',
+    label: 'Administration',
+    items: [
+      {
+        id: 'settings',
+        label: 'Settings & Branding',
+        href: '/settings',
+        iconName: 'Settings',
+        capability: 'settings:read',
+        isImplemented: true,
+      },
+    ],
+  },
 ]);
 

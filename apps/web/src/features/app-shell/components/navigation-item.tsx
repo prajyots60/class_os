@@ -13,6 +13,7 @@ import {
   CreditCard,
   Megaphone,
   HelpCircle,
+  Settings,
   type LucideIcon,
 } from 'lucide-react';
 import { Badge } from '@coaching-os/ui';
@@ -27,6 +28,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   FileText,
   CreditCard,
   Megaphone,
+  Settings,
 };
 
 export interface NavigationItemProps {

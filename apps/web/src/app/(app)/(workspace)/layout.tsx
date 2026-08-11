@@ -54,6 +54,8 @@ export default async function WorkspaceLayout({
     name: institute.name,
     slug: institute.slug,
     status: institute.status,
+    logoUrl: institute.logoUrl,
+    primaryColor: institute.primaryColor,
   };
 
   // Compute capability-filtered navigation sections server-side

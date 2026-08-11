@@ -1,7 +1,7 @@
 # Phase 1.5 — Institute Settings & White-Label Branding Specification & Contract
 
-> **Phase Status:** 🟢 **ACTIVE** (Phase 1.5.2 Completed)  
-> **Milestone:** Phase 1.5.2 — Settings API Endpoints & Validators  
+> **Phase Status:** 🟢 **ACTIVE** (Phase 1.5.3 Completed)  
+> **Milestone:** Phase 1.5.3 — Settings UI Feature (/settings)  
 > **Author:** Antigravity (Google DeepMind Agentic Pair Programmer)  
 > **Date:** August 11, 2026  
 
@@ -282,9 +282,9 @@ Phase 1.5.1 — Settings Domain Use Cases & Authorization ✅ COMPLETED
     ↓
 Phase 1.5.2 — Settings API Endpoints & Validators ✅ COMPLETED
     ↓
-Phase 1.5.3 — Settings & Branding UI Feature (/settings) ⏳ (NEXT)
+Phase 1.5.3 — Settings & Branding UI Feature (/settings) ✅ COMPLETED
     ↓
-Phase 1.5.4 — Security E2E Matrix & Acceptance Gate ⏳
+Phase 1.5.4 — Security E2E Matrix & Acceptance Gate ⏳ (NEXT)
 ```
 
 ---

@@ -26,6 +26,9 @@ export default defineConfig({
     env: {
       ...process.env,
       DISABLE_AUTH_RATE_LIMIT: 'true',
+      DATABASE_URL:
+        process.env.TEST_DATABASE_URL ||
+        'postgresql://postgres:Supra@003@localhost:5432/coachingos_test?schema=public',
     },
   },
 });

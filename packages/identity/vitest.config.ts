@@ -5,5 +5,8 @@ export default defineConfig({
     environment: 'node',
     fileParallelism: false,
     maxConcurrency: 1,
+    env: {
+      NODE_ENV: 'test',
+    },
   },
 });
