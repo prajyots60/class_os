@@ -389,6 +389,17 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **UX & Accessibility Audit (Phase 1.7.8)**: Conducted full browser workflow and keyboard accessibility pass. Resolved React 19 cascading render warnings in form state reset callbacks. Ensured `Escape` key closes dialogs and focus restoration is maintained.
 - **Acceptance Gate (Phase 1.7.9)**: Verified complete pipeline (`env:check`, `db:validate`, `db:health`, `db:drift:check`, `verify:auth`, `verify:infra`, `verify:observability`, `lint`, `typecheck`, `test`, `build`, `test:e2e`). **Phase 1.7 formally ACCEPTED and FROZEN.**
 
+### 🟢 Phase 1.8 — Student Admission & Profile Core (ACCEPTED & FROZEN)
+
+- **Architecture & Domain Boundary (ADR-0011 & Phase 1.8.0)**: Defined the tenant-scoped student learner aggregate (`Student`) decoupled from global identity (`ParentIdentity`), academic enrollment (Phase 1.10/1.11), and guardian links (Phase 1.9). Enforced database composite uniqueness `UNIQUE(instituteId, admissionNumber)` and dual lifecycle state machines (`admissionStatus`: `pending`, `admitted`, `rejected`, `cancelled`; standing `status`: `active`, `inactive`, `archived`).
+- **Domain Entity & Persistence (Phase 1.8.1 & 1.8.2)**: Implemented `StudentEntity` with state machine transition guards (`admit`, `reject`, `cancel`, `deactivate`, `reactivate`, `archive`) and `PrismaStudentRepository` enforcing strict `instituteId` tenant-scoping across all query and mutation paths.
+- **Use Cases & Lifecycle Rules (Phase 1.8.3 & 1.8.4)**: Implemented `CreateStudentUseCase`, `GetStudentUseCase`, `ListStudentsUseCase`, `UpdateStudentProfileUseCase`, `AdmitStudentUseCase`, `RejectStudentUseCase`, `CancelStudentUseCase`, `DeactivateStudentUseCase`, `ReactivateStudentUseCase`, and `ArchiveStudentUseCase`. Enforced capability authorization guards (`STUDENT_READ`, `STUDENT_CREATE`, `STUDENT_UPDATE`, `STUDENT_ARCHIVE`).
+- **API Boundary & Validators (Phase 1.8.5)**: Implemented Next.js App Router handlers (`/api/institute/students`, `/api/institute/students/[id]`, and lifecycle routes `/admit`, `/reject`, `/cancel`, `/deactivate`, `/activate`) with strict Zod validators (`createStudentSchema`, `updateStudentSchema`, `listStudentsQuerySchema`). Enforced HTTP 405 Method Not Allowed guards and strict rejection of client identity injection via `.strict()` schemas.
+- **Security & E2E Matrix (Phase 1.8.6)**: Developed 21-scenario Vitest route suite and 11-scenario Playwright E2E security suite (`student-security.spec.ts`) verifying unauthenticated 401 guards, tenant-safe 404 barriers for cross-tenant access, duplicate admission number 409 conflict protection, and parameter injection defenses.
+- **Staff UI & CRM Feature (Phase 1.8.7)**: Built responsive, accessible staff Student workspace (`/students`) with table and mobile card views, dynamic capability-driven controls, header filters (search, admission status, standing status), and interactive dialog modals for Create, Edit, View Details, and State Transitions.
+- **UX & Accessibility Audit (Phase 1.8.8)**: Conducted 20-scenario Playwright E2E audit suite (`student-workflow.spec.ts`) verifying focus management, ARIA error attributes, Escape key dismissal, 375px mobile viewport rendering, and state transition integrity.
+- **Acceptance Gate (Phase 1.8.9)**: Verified complete build pipeline (`lint`, `typecheck`, `test`, `build`, `test:e2e`). **Phase 1.8 formally ACCEPTED and FROZEN.**
+
 ## 4. Next Milestone Roadmap
 
 
@@ -445,17 +456,17 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.7.7:** InstituteParent Staff UI / CRM Feature ✅ COMPLETED
     - **Phase 1.7.8:** UX, Accessibility & Tenant-Scoped Workflow Testing ✅ COMPLETED
     - **Phase 1.7.9:** Phase 1.7 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
-  - **Phase 1.8:** Student Admission & Profile Core 🟡 (IN PROGRESS)
+  - **Phase 1.8:** Student Admission & Profile Core 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.8.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.8.1:** Student Domain Entity & Value Objects ✅ COMPLETED
     - **Phase 1.8.2:** Student Repository & PostgreSQL Persistence Layer ✅ COMPLETED
     - **Phase 1.8.3:** Student Application Use Cases ✅ COMPLETED
     - **Phase 1.8.4:** Student Admission & Lifecycle Rules ✅ COMPLETED
-    - **Phase 1.8.5:** Student API Boundary & Validators ⏳ (NEXT)
-    - **Phase 1.8.6:** Student Security / Tenant E2E Matrix
-    - **Phase 1.8.7:** Student Staff UI / Admission Feature
-    - **Phase 1.8.8:** UX, Accessibility & Admission Workflow Testing
-    - **Phase 1.8.9:** Phase 1.8 Acceptance Gate
+    - **Phase 1.8.5:** Student API Boundary & Validators ✅ COMPLETED
+    - **Phase 1.8.6:** Student Security / Tenant E2E Matrix ✅ COMPLETED
+    - **Phase 1.8.7:** Student Staff UI / Admission Feature ✅ COMPLETED
+    - **Phase 1.8.8:** UX, Accessibility & Admission Workflow Testing ✅ COMPLETED
+    - **Phase 1.8.9:** Phase 1.8 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
   - **Phase 1.9:** Guardian & Student Links
   - **Phase 1.10:** Academic Hierarchy (Programs, Subjects, Batches)
   - **Phase 1.11:** Student Enrollment Lifecycle
