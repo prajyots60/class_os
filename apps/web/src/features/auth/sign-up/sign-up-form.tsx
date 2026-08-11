@@ -53,13 +53,26 @@ export function SignUpForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 
-  // Redirect already-authenticated users to onboarding/dashboard.
-  // This runs after session resolves to avoid a flash of the form.
+  // Redirect already-authenticated users — check tenant state first.
+  // Users with an active tenant go to /dashboard; users without go to /onboarding.
   React.useEffect(() => {
     if (!isSessionPending && session) {
-      router.replace('/onboarding');
+      // Resolve tenant state from the server to decide where to send the user
+      fetch('/api/dashboard/context', { method: 'GET', cache: 'no-store' })
+        .then((res) => {
+          if (res.ok) return res.json();
+          return { hasTenant: false };
+        })
+        .then((body) => {
+          router.replace(body?.hasTenant ? '/dashboard' : '/onboarding');
+        })
+        .catch(() => {
+          // Fallback to onboarding on network error — server will enforce on submit
+          router.replace('/onboarding');
+        });
     }
   }, [isSessionPending, session, router]);
+
 
   const {
     register,

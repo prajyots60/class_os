@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { SignInForm, sanitizeCallbackUrl, mapSignInError } from './sign-in-form';
+import { SignInForm, mapSignInError } from './sign-in-form';
+import { sanitizeCallbackUrl } from '../utils/sanitize-callback-url';
 import { signInSchema } from './sign-in-schema';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

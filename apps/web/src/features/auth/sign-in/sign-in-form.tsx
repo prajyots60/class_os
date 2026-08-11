@@ -13,25 +13,8 @@ import { AuthError } from '../components/auth-error';
 import { AuthFooter } from '../components/auth-footer';
 import { signInSchema, type SignInFormValues } from './sign-in-schema';
 import type { SignInState } from './sign-in-types';
+import { sanitizeCallbackUrl } from '../utils/sanitize-callback-url';
 
-/**
- * Sanitizes an optional callbackUrl query parameter.
- * SECURITY: Only allows relative internal paths starting with a single '/'
- * Rejects external URLs (e.g. https://..., //evil.com, javascript:...).
- */
-export function sanitizeCallbackUrl(url: string | null): string | null {
-  if (!url) return null;
-  const trimmed = url.trim();
-  if (
-    trimmed.startsWith('/') &&
-    !trimmed.startsWith('//') &&
-    !trimmed.startsWith('/\\') &&
-    !/^[a-z0-9+-.]+:/i.test(trimmed)
-  ) {
-    return trimmed;
-  }
-  return null;
-}
 
 /**
  * Maps raw Better Auth / network errors into safe, user-facing messages.
