@@ -379,9 +379,9 @@ Phase 1.6.3 — ParentIdentity Application Use Cases 🟢 (COMPLETED)
     ↓
 Phase 1.6.4 — Parent Identity ↔ Authentication Integration 🟢 (COMPLETED)
     ↓
-Phase 1.6.5 — Multi-Tenant Security & Authorization Matrix ⏳ (NEXT)
+Phase 1.6.5 — Multi-Tenant Security & Authorization Matrix 🟢 (COMPLETED)
     ↓
-Phase 1.6.6 — Phase 1.6 Acceptance Gate
+Phase 1.6.6 — Phase 1.6 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
 ```
 
 ---
@@ -427,6 +427,18 @@ Phase 1.6.6 — Phase 1.6 Acceptance Gate
   - `requireParentIdentity`: Server-side context guard returning `AuthenticatedParentContext` (`userId`, `parentIdentityId`, `parentIdentity`) or throwing structured `AuthenticationError`/`AuthorizationError`.
 - **Authentication Integration Suite (`infrastructure/auth/src/parent-identity-auth.integration.test.ts`)**:
   - 7/7 tests passing covering `AUTH-PARENT-01` through `AUTH-PARENT-10` security invariants.
+
+### Phase 1.6.5 — Multi-Tenant Security & Authorization Matrix (COMPLETED)
+- **Security Matrix Documentation (`docs/phases/phase1.6-security-matrix.md`)**:
+  - Documented 25 threat invariants (`PARENT-SEC-01` through `PARENT-SEC-25`).
+- **Comprehensive Security Matrix Suite (`infrastructure/auth/src/parent-identity-security-matrix.test.ts`)**:
+  - 13/13 passing tests covering spoofing defense, state machine terminality, DTO privacy, race conditions, and session revocation.
+- **E2E Security Suite (`apps/web/e2e/parent-identity-security.spec.ts`)**:
+  - Playwright E2E tests verifying header injection defense, zero PII/tenant leakage, and database constraint safety.
+
+### Phase 1.6.6 — Phase 1.6 Acceptance Gate (ACCEPTED & FROZEN)
+- All 11 verification pipeline tasks passed 100%.
+- Phase 1.6 architecture formally accepted and frozen.
 
 ---
 
