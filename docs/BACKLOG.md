@@ -59,6 +59,22 @@
 | Student authentication              | ❌ Not planned for MVP | Students do not log in                          |
 | OAuth (Google / Apple)              | ⏳ Later               | Future enhancement                              |
 | 2FA / Passkeys                      | ⏳ Later               | Future enhancement                              |
+| Password Recovery (Phase 0.12.6)    | ⏸ DEFERRED            | Deferred until transactional email provider set |
+
+### AUTH-003 — Phase 0.12.6 Password Recovery Workflow
+
+- **Status:** ⏸ **DEFERRED**
+- **Reason:** Transactional email infrastructure/provider is not yet configured.
+- **Existing Groundwork:**
+  - Better Auth password recovery configuration groundwork exists in `infrastructure/auth/src/auth.ts`.
+  - Relevant rate-limit configuration exists (`/forget-password`, `/reset-password`).
+  - No production email delivery workflow has been implemented.
+- **Important Note:** This phase is intentionally incomplete and must be resumed later. Do not mark Password Recovery as completed merely because Phase 0.12 itself is accepted and frozen.
+- **Resume Condition:** Transactional email infrastructure is available and verified.
+- **Expected Scope When Resumed:**
+  ```text
+  Forgot Password UI → Request reset → Transactional email → Secure reset token/link → Reset Password UI → Password update → Session/security handling → E2E + security verification
+  ```
 
 ---
 

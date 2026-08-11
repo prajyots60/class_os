@@ -635,7 +635,7 @@ Phase 0.12.11 Phase 0.12 Acceptance Gate
    - **Production Build**: `100% successful` (`pnpm build`). All route groups (`(marketing)`, `(auth)`, `(app)`) compiled successfully.
    - **Database & Auth Infrastructure Checks**: `pnpm env:check`, `pnpm db:validate`, `pnpm db:health`, `pnpm db:drift:check`, `pnpm verify:auth`, `pnpm verify:observability` (100% passed).
 3. **Explicitly Deferred Items**:
-   - Phase 0.12.6 Password Recovery transactional email infrastructure (deferred to future production email integration).
+   - **Phase 0.12.6 remains explicitly deferred.** Phase 0.12 acceptance does not imply password recovery is implemented. It will be resumed independently once transactional email infrastructure is available and verified.
    - Phase 1 identity and academic domain modules.
 4. **Milestone Declaration**:
    - **Phase 0.12 — Public & Authentication UX is formally ACCEPTED and FROZEN.** No further architecture or component modifications permitted in Phase 0.12.

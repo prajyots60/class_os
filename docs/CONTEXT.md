@@ -72,7 +72,7 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
         ├── Phase 0.12.3 — Authentication Layout & Shared Components ✅
         ├── Phase 0.12.4 — Sign Up UI & Registration Flow ✅
         ├── Phase 0.12.5 — Sign In UI & Authentication Flow ✅
-        ├── Phase 0.12.6 — Password Recovery UI (Deferred)
+        ├── Phase 0.12.6 — Password Recovery ⏸ DEFERRED
         ├── Phase 0.12.7 — Session & Route Guards ✅
         ├── Phase 0.12.8 — Authenticated Application Shell ✅
         ├── Phase 0.12.9 — Full Browser Journey Integration ✅
@@ -242,7 +242,22 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Security Invariants & Callback URL Sanitization**: Built `sanitizeCallbackUrl` helper to sanitize `callbackUrl` query parameters, strictly enforcing single relative internal paths (e.g. `/dashboard`) and rejecting external phishing URLs (e.g. `https://evil.com`). Payload contains ONLY `email` and `password`. Zero raw Prisma errors or tracebacks exposed.
 - **Testing & Verification**: Created unit test suites `sign-in-schema.test.ts` (7/7 passed) and `sign-in-form.test.ts` (17/17 passed). Built Playwright E2E suite `apps/web/e2e/sign-in.spec.ts` (8/8 passed in 8.2s). Verified 100% monorepo build, lint, typecheck, environment, database, auth, and observability checks.
 
-- **Phase 0.12.5 Sign In Security**:  `sanitizeCallbackUrl` previously embedded inline in `sign-in-form.tsx` has been extracted to canonical shared module `apps/web/src/features/auth/utils/sanitize-callback-url.ts` and imported by both sign-in and server-side guards.
+- **Phase 0.12.5 Sign In Security**: `sanitizeCallbackUrl` previously embedded inline in `sign-in-form.tsx` has been extracted to canonical shared module `apps/web/src/features/auth/utils/sanitize-callback-url.ts` and imported by both sign-in and server-side guards.
+
+### ⏸ Phase 0.12.6 — Password Recovery (DEFERRED)
+
+- **Status:** ⏸ **DEFERRED**
+- **Reason:** Transactional email infrastructure/provider is not yet configured.
+- **Existing Groundwork:**
+  - Better Auth password recovery configuration groundwork exists in `infrastructure/auth/src/auth.ts`.
+  - Relevant rate-limit rules exist (`/forget-password`, `/reset-password`).
+  - No production email delivery workflow has been implemented.
+- **Important Note:** This phase is intentionally incomplete and must be resumed later. Do not mark Password Recovery as completed merely because Phase 0.12 itself is accepted and frozen.
+- **Resume Condition:** Transactional email infrastructure is available and verified.
+- **Expected Scope When Resumed:**
+  ```text
+  Forgot Password UI → Request reset → Transactional email → Secure reset token/link → Reset Password UI → Password update → Session/security handling → E2E + security verification
+  ```
 
 ### ✅ Phase 0.12.7 — Session & Route Guards (COMPLETED)
 
