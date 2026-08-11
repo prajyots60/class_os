@@ -73,8 +73,8 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
         ├── Phase 0.12.4 — Sign Up UI & Registration Flow ✅
         ├── Phase 0.12.5 — Sign In UI & Authentication Flow ✅
         ├── Phase 0.12.6 — Password Recovery UI (Deferred)
-        ├── Phase 0.12.7 — Session & Route Guards (Next)
-        ├── Phase 0.12.8 — Authenticated Application Shell
+        ├── Phase 0.12.7 — Session & Route Guards ✅
+        ├── Phase 0.12.8 — Authenticated Application Shell (Next)
         ├── Phase 0.12.9 — Full Browser Journey Integration
         ├── Phase 0.12.10 — Security & UX Test Matrix
         └── Phase 0.12.11 — Phase 0.12 Acceptance Gate
@@ -241,6 +241,27 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Better Auth Integration & Session Routing**: Connected `SignInForm` directly to `signIn.email()` from `@coaching-os/auth/client`. On successful authentication, queries `/api/dashboard/context` server-side to resolve tenant association, navigating users with an active institute to `/dashboard` (or safe `callbackUrl`) and users without an institute to `/onboarding`.
 - **Security Invariants & Callback URL Sanitization**: Built `sanitizeCallbackUrl` helper to sanitize `callbackUrl` query parameters, strictly enforcing single relative internal paths (e.g. `/dashboard`) and rejecting external phishing URLs (e.g. `https://evil.com`). Payload contains ONLY `email` and `password`. Zero raw Prisma errors or tracebacks exposed.
 - **Testing & Verification**: Created unit test suites `sign-in-schema.test.ts` (7/7 passed) and `sign-in-form.test.ts` (17/17 passed). Built Playwright E2E suite `apps/web/e2e/sign-in.spec.ts` (8/8 passed in 8.2s). Verified 100% monorepo build, lint, typecheck, environment, database, auth, and observability checks.
+
+- **Phase 0.12.5 Sign In Security**:  `sanitizeCallbackUrl` previously embedded inline in `sign-in-form.tsx` has been extracted to canonical shared module `apps/web/src/features/auth/utils/sanitize-callback-url.ts` and imported by both sign-in and server-side guards.
+
+### ✅ Phase 0.12.7 — Session & Route Guards (COMPLETED)
+
+- **Architectural Decision — No Middleware**: Confirmed and documented decision to use Server Component server-side guards instead of Next.js middleware. Tenant resolution requires DB lookups, which belong closer to the application/domain boundary than the edge. Security chain: `Better Auth session → server identity → tenant membership → RBAC → domain operation`.
+- **`auth-guards.ts` Server Guard Module**: Created `apps/web/src/lib/auth-guards.ts` providing `requireAuthSession(callbackPath)` (hard-redirects to `/sign-in?callbackUrl=<sanitized>` if no session) and `resolveServerTenantContext(userId)` returning `ServerTenantState` discriminated union (`hasTenant: false` | `hasTenant: true; tenantContext: TenantContext; institute: ServerInstituteDisplay`).
+- **Direct Domain Use-Case Invocation**: `resolveServerTenantContext` calls `GetUserMembershipsUseCase` → `ResolveInstituteMembershipUseCase` directly — no HTTP self-call to `/api/dashboard/context`. Eliminates server-to-server HTTP round-trip.
+- **`/dashboard` Converted to Server Component**: Replaced client-component with async Server Component. Server authenticates session and resolves tenant state before any HTML is sent. Unauthenticated → `/sign-in?callbackUrl=%2Fdashboard`. No tenant → `/onboarding`. Dashboard client UI extracted to `DashboardContent` client component receiving only minimum presentation data (no raw session, no TenantContext).
+- **`/onboarding` Converted to Server Component**: Replaced client-component with async Server Component. Unauthenticated → `/sign-in?callbackUrl=%2Fonboarding`. Has tenant → `/dashboard` (prevents duplicate onboarding). Form UI extracted to `OnboardingContent` client component.
+- **`sanitizeCallbackUrl` Canonical Shared Utility**: Extracted from `sign-in-form.tsx` to `apps/web/src/features/auth/utils/sanitize-callback-url.ts`. Both sign-in and server-side guards use the same implementation. Prevents open-redirect bugs from implementation divergence.
+- **Sign-Up Redirect Fixed**: `SignUpForm` now calls `/api/dashboard/context` before redirecting authenticated users — routes to `/dashboard` if tenant exists, `/onboarding` if not.
+- **Route Security Matrix Frozen**:
+  - `/dashboard` — unauthenticated → `/sign-in`, no-tenant → `/onboarding`, has-tenant → render
+  - `/onboarding` — unauthenticated → `/sign-in`, has-tenant → `/dashboard`, no-tenant → render
+  - `/sign-in` / `/sign-up` — has-tenant → `/dashboard`
+- **Build Output Confirms Server Rendering**: `/dashboard` and `/onboarding` appear as `ƒ` (Dynamic, server-rendered on demand) in Next.js build output.
+- **Unit Tests**: `sanitize-callback-url.test.ts` (22 tests), `auth-guards.test.ts` (11 tests). All 122 web unit tests passing.
+- **E2E Test Suite**: Created `apps/web/e2e/route-guards.spec.ts` with fixture-based approach (3 independent fixtures: anonymous, noTenant, tenant). Tests cover full route security matrix, redirect loop protection, session lifecycle (cookie removal, sign-out), callback URL security (external phishing, protocol-relative, javascript:), API protection (401 responses), and tenant manipulation rejection.
+- **Verification**: `pnpm env:check` ✅, `pnpm db:validate` ✅, `pnpm db:health` ✅, `pnpm test (122/122)` ✅, `pnpm typecheck` ✅, `pnpm lint` ✅, `pnpm build` ✅.
+- **Commit**: `feat(web): phase 0.12.7 — server-side session & route guards` (`c836c98`)
 
 ## 4. Next Milestone Roadmap
 
