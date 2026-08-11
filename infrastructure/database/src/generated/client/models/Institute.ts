@@ -249,6 +249,7 @@ export type InstituteWhereInput = {
   auditLogs?: Prisma.AuditLogListRelationFilter
   memberships?: Prisma.InstituteMembershipListRelationFilter
   studentLinks?: Prisma.StudentLinkListRelationFilter
+  instituteParentStudents?: Prisma.InstituteParentStudentListRelationFilter
 }
 
 export type InstituteOrderByWithRelationInput = {
@@ -282,6 +283,7 @@ export type InstituteOrderByWithRelationInput = {
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
   memberships?: Prisma.InstituteMembershipOrderByRelationAggregateInput
   studentLinks?: Prisma.StudentLinkOrderByRelationAggregateInput
+  instituteParentStudents?: Prisma.InstituteParentStudentOrderByRelationAggregateInput
 }
 
 export type InstituteWhereUniqueInput = Prisma.AtLeast<{
@@ -318,6 +320,7 @@ export type InstituteWhereUniqueInput = Prisma.AtLeast<{
   auditLogs?: Prisma.AuditLogListRelationFilter
   memberships?: Prisma.InstituteMembershipListRelationFilter
   studentLinks?: Prisma.StudentLinkListRelationFilter
+  instituteParentStudents?: Prisma.InstituteParentStudentListRelationFilter
 }, "id" | "slug">
 
 export type InstituteOrderByWithAggregationInput = {
@@ -385,6 +388,7 @@ export type InstituteCreateInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateInput = {
@@ -418,6 +422,7 @@ export type InstituteUncheckedCreateInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUpdateInput = {
@@ -451,6 +456,7 @@ export type InstituteUpdateInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateInput = {
@@ -484,6 +490,7 @@ export type InstituteUncheckedUpdateInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateManyInput = {
@@ -640,6 +647,20 @@ export type InstituteUpdateOneRequiredWithoutInstituteParentsNestedInput = {
   upsert?: Prisma.InstituteUpsertWithoutInstituteParentsInput
   connect?: Prisma.InstituteWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.InstituteUpdateToOneWithWhereWithoutInstituteParentsInput, Prisma.InstituteUpdateWithoutInstituteParentsInput>, Prisma.InstituteUncheckedUpdateWithoutInstituteParentsInput>
+}
+
+export type InstituteCreateNestedOneWithoutInstituteParentStudentsInput = {
+  create?: Prisma.XOR<Prisma.InstituteCreateWithoutInstituteParentStudentsInput, Prisma.InstituteUncheckedCreateWithoutInstituteParentStudentsInput>
+  connectOrCreate?: Prisma.InstituteCreateOrConnectWithoutInstituteParentStudentsInput
+  connect?: Prisma.InstituteWhereUniqueInput
+}
+
+export type InstituteUpdateOneRequiredWithoutInstituteParentStudentsNestedInput = {
+  create?: Prisma.XOR<Prisma.InstituteCreateWithoutInstituteParentStudentsInput, Prisma.InstituteUncheckedCreateWithoutInstituteParentStudentsInput>
+  connectOrCreate?: Prisma.InstituteCreateOrConnectWithoutInstituteParentStudentsInput
+  upsert?: Prisma.InstituteUpsertWithoutInstituteParentStudentsInput
+  connect?: Prisma.InstituteWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InstituteUpdateToOneWithWhereWithoutInstituteParentStudentsInput, Prisma.InstituteUpdateWithoutInstituteParentStudentsInput>, Prisma.InstituteUncheckedUpdateWithoutInstituteParentStudentsInput>
 }
 
 export type InstituteCreateNestedOneWithoutStudentsInput = {
@@ -882,6 +903,7 @@ export type InstituteCreateWithoutMembershipsInput = {
   branding?: Prisma.BrandingCreateNestedOneWithoutInstituteInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutMembershipsInput = {
@@ -914,6 +936,7 @@ export type InstituteUncheckedCreateWithoutMembershipsInput = {
   branding?: Prisma.BrandingUncheckedCreateNestedOneWithoutInstituteInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutMembershipsInput = {
@@ -962,6 +985,7 @@ export type InstituteUpdateWithoutMembershipsInput = {
   branding?: Prisma.BrandingUpdateOneWithoutInstituteNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutMembershipsInput = {
@@ -994,6 +1018,7 @@ export type InstituteUncheckedUpdateWithoutMembershipsInput = {
   branding?: Prisma.BrandingUncheckedUpdateOneWithoutInstituteNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutStudentLinksInput = {
@@ -1026,6 +1051,7 @@ export type InstituteCreateWithoutStudentLinksInput = {
   branding?: Prisma.BrandingCreateNestedOneWithoutInstituteInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutStudentLinksInput = {
@@ -1058,6 +1084,7 @@ export type InstituteUncheckedCreateWithoutStudentLinksInput = {
   branding?: Prisma.BrandingUncheckedCreateNestedOneWithoutInstituteInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutStudentLinksInput = {
@@ -1106,6 +1133,7 @@ export type InstituteUpdateWithoutStudentLinksInput = {
   branding?: Prisma.BrandingUpdateOneWithoutInstituteNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutStudentLinksInput = {
@@ -1138,6 +1166,7 @@ export type InstituteUncheckedUpdateWithoutStudentLinksInput = {
   branding?: Prisma.BrandingUncheckedUpdateOneWithoutInstituteNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutUsersInput = {
@@ -1170,6 +1199,7 @@ export type InstituteCreateWithoutUsersInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutUsersInput = {
@@ -1202,6 +1232,7 @@ export type InstituteUncheckedCreateWithoutUsersInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutUsersInput = {
@@ -1250,6 +1281,7 @@ export type InstituteUpdateWithoutUsersInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutUsersInput = {
@@ -1282,6 +1314,7 @@ export type InstituteUncheckedUpdateWithoutUsersInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutInstituteParentsInput = {
@@ -1314,6 +1347,7 @@ export type InstituteCreateWithoutInstituteParentsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutInstituteParentsInput = {
@@ -1346,6 +1380,7 @@ export type InstituteUncheckedCreateWithoutInstituteParentsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutInstituteParentsInput = {
@@ -1394,6 +1429,7 @@ export type InstituteUpdateWithoutInstituteParentsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutInstituteParentsInput = {
@@ -1409,6 +1445,155 @@ export type InstituteUncheckedUpdateWithoutInstituteParentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutInstituteNestedInput
+  students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
+  programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
+  subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
+  batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
+  enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
+  attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutInstituteNestedInput
+  homework?: Prisma.HomeworkUncheckedUpdateManyWithoutInstituteNestedInput
+  tests?: Prisma.TestUncheckedUpdateManyWithoutInstituteNestedInput
+  marks?: Prisma.MarksUncheckedUpdateManyWithoutInstituteNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutInstituteNestedInput
+  announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutInstituteNestedInput
+  settings?: Prisma.SettingsUncheckedUpdateOneWithoutInstituteNestedInput
+  branding?: Prisma.BrandingUncheckedUpdateOneWithoutInstituteNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
+  memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
+  studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
+}
+
+export type InstituteCreateWithoutInstituteParentStudentsInput = {
+  id?: string
+  name: string
+  slug: string
+  phone: string
+  email: string
+  logoUrl?: string | null
+  primaryColor?: string | null
+  timezone?: string
+  status?: $Enums.InstituteStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutInstituteInput
+  instituteParents?: Prisma.InstituteParentCreateNestedManyWithoutInstituteInput
+  students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
+  programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
+  subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
+  batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
+  enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
+  attendance?: Prisma.AttendanceCreateNestedManyWithoutInstituteInput
+  homework?: Prisma.HomeworkCreateNestedManyWithoutInstituteInput
+  tests?: Prisma.TestCreateNestedManyWithoutInstituteInput
+  marks?: Prisma.MarksCreateNestedManyWithoutInstituteInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutInstituteInput
+  announcements?: Prisma.AnnouncementCreateNestedManyWithoutInstituteInput
+  settings?: Prisma.SettingsCreateNestedOneWithoutInstituteInput
+  branding?: Prisma.BrandingCreateNestedOneWithoutInstituteInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
+  memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
+  studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+}
+
+export type InstituteUncheckedCreateWithoutInstituteParentStudentsInput = {
+  id?: string
+  name: string
+  slug: string
+  phone: string
+  email: string
+  logoUrl?: string | null
+  primaryColor?: string | null
+  timezone?: string
+  status?: $Enums.InstituteStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParents?: Prisma.InstituteParentUncheckedCreateNestedManyWithoutInstituteInput
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
+  programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
+  subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
+  batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
+  enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
+  attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutInstituteInput
+  homework?: Prisma.HomeworkUncheckedCreateNestedManyWithoutInstituteInput
+  tests?: Prisma.TestUncheckedCreateNestedManyWithoutInstituteInput
+  marks?: Prisma.MarksUncheckedCreateNestedManyWithoutInstituteInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutInstituteInput
+  announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutInstituteInput
+  settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutInstituteInput
+  branding?: Prisma.BrandingUncheckedCreateNestedOneWithoutInstituteInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
+  memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
+  studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+}
+
+export type InstituteCreateOrConnectWithoutInstituteParentStudentsInput = {
+  where: Prisma.InstituteWhereUniqueInput
+  create: Prisma.XOR<Prisma.InstituteCreateWithoutInstituteParentStudentsInput, Prisma.InstituteUncheckedCreateWithoutInstituteParentStudentsInput>
+}
+
+export type InstituteUpsertWithoutInstituteParentStudentsInput = {
+  update: Prisma.XOR<Prisma.InstituteUpdateWithoutInstituteParentStudentsInput, Prisma.InstituteUncheckedUpdateWithoutInstituteParentStudentsInput>
+  create: Prisma.XOR<Prisma.InstituteCreateWithoutInstituteParentStudentsInput, Prisma.InstituteUncheckedCreateWithoutInstituteParentStudentsInput>
+  where?: Prisma.InstituteWhereInput
+}
+
+export type InstituteUpdateToOneWithWhereWithoutInstituteParentStudentsInput = {
+  where?: Prisma.InstituteWhereInput
+  data: Prisma.XOR<Prisma.InstituteUpdateWithoutInstituteParentStudentsInput, Prisma.InstituteUncheckedUpdateWithoutInstituteParentStudentsInput>
+}
+
+export type InstituteUpdateWithoutInstituteParentStudentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInstituteStatusFieldUpdateOperationsInput | $Enums.InstituteStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutInstituteNestedInput
+  instituteParents?: Prisma.InstituteParentUpdateManyWithoutInstituteNestedInput
+  students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
+  programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
+  subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
+  batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
+  enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
+  attendance?: Prisma.AttendanceUpdateManyWithoutInstituteNestedInput
+  homework?: Prisma.HomeworkUpdateManyWithoutInstituteNestedInput
+  tests?: Prisma.TestUpdateManyWithoutInstituteNestedInput
+  marks?: Prisma.MarksUpdateManyWithoutInstituteNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutInstituteNestedInput
+  announcements?: Prisma.AnnouncementUpdateManyWithoutInstituteNestedInput
+  settings?: Prisma.SettingsUpdateOneWithoutInstituteNestedInput
+  branding?: Prisma.BrandingUpdateOneWithoutInstituteNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
+  memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
+  studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+}
+
+export type InstituteUncheckedUpdateWithoutInstituteParentStudentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInstituteStatusFieldUpdateOperationsInput | $Enums.InstituteStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParents?: Prisma.InstituteParentUncheckedUpdateManyWithoutInstituteNestedInput
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
@@ -1458,6 +1643,7 @@ export type InstituteCreateWithoutStudentsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutStudentsInput = {
@@ -1490,6 +1676,7 @@ export type InstituteUncheckedCreateWithoutStudentsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutStudentsInput = {
@@ -1538,6 +1725,7 @@ export type InstituteUpdateWithoutStudentsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutStudentsInput = {
@@ -1570,6 +1758,7 @@ export type InstituteUncheckedUpdateWithoutStudentsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutProgramsInput = {
@@ -1602,6 +1791,7 @@ export type InstituteCreateWithoutProgramsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutProgramsInput = {
@@ -1634,6 +1824,7 @@ export type InstituteUncheckedCreateWithoutProgramsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutProgramsInput = {
@@ -1682,6 +1873,7 @@ export type InstituteUpdateWithoutProgramsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutProgramsInput = {
@@ -1714,6 +1906,7 @@ export type InstituteUncheckedUpdateWithoutProgramsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutSubjectsInput = {
@@ -1746,6 +1939,7 @@ export type InstituteCreateWithoutSubjectsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutSubjectsInput = {
@@ -1778,6 +1972,7 @@ export type InstituteUncheckedCreateWithoutSubjectsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutSubjectsInput = {
@@ -1826,6 +2021,7 @@ export type InstituteUpdateWithoutSubjectsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutSubjectsInput = {
@@ -1858,6 +2054,7 @@ export type InstituteUncheckedUpdateWithoutSubjectsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutBatchesInput = {
@@ -1890,6 +2087,7 @@ export type InstituteCreateWithoutBatchesInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutBatchesInput = {
@@ -1922,6 +2120,7 @@ export type InstituteUncheckedCreateWithoutBatchesInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutBatchesInput = {
@@ -1970,6 +2169,7 @@ export type InstituteUpdateWithoutBatchesInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutBatchesInput = {
@@ -2002,6 +2202,7 @@ export type InstituteUncheckedUpdateWithoutBatchesInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutEnrollmentsInput = {
@@ -2034,6 +2235,7 @@ export type InstituteCreateWithoutEnrollmentsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutEnrollmentsInput = {
@@ -2066,6 +2268,7 @@ export type InstituteUncheckedCreateWithoutEnrollmentsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutEnrollmentsInput = {
@@ -2114,6 +2317,7 @@ export type InstituteUpdateWithoutEnrollmentsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutEnrollmentsInput = {
@@ -2146,6 +2350,7 @@ export type InstituteUncheckedUpdateWithoutEnrollmentsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutBatchSessionsInput = {
@@ -2178,6 +2383,7 @@ export type InstituteCreateWithoutBatchSessionsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutBatchSessionsInput = {
@@ -2210,6 +2416,7 @@ export type InstituteUncheckedCreateWithoutBatchSessionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutBatchSessionsInput = {
@@ -2258,6 +2465,7 @@ export type InstituteUpdateWithoutBatchSessionsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutBatchSessionsInput = {
@@ -2290,6 +2498,7 @@ export type InstituteUncheckedUpdateWithoutBatchSessionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutAttendanceInput = {
@@ -2322,6 +2531,7 @@ export type InstituteCreateWithoutAttendanceInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutAttendanceInput = {
@@ -2354,6 +2564,7 @@ export type InstituteUncheckedCreateWithoutAttendanceInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutAttendanceInput = {
@@ -2402,6 +2613,7 @@ export type InstituteUpdateWithoutAttendanceInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutAttendanceInput = {
@@ -2434,6 +2646,7 @@ export type InstituteUncheckedUpdateWithoutAttendanceInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutHomeworkInput = {
@@ -2466,6 +2679,7 @@ export type InstituteCreateWithoutHomeworkInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutHomeworkInput = {
@@ -2498,6 +2712,7 @@ export type InstituteUncheckedCreateWithoutHomeworkInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutHomeworkInput = {
@@ -2546,6 +2761,7 @@ export type InstituteUpdateWithoutHomeworkInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutHomeworkInput = {
@@ -2578,6 +2794,7 @@ export type InstituteUncheckedUpdateWithoutHomeworkInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutTestsInput = {
@@ -2610,6 +2827,7 @@ export type InstituteCreateWithoutTestsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutTestsInput = {
@@ -2642,6 +2860,7 @@ export type InstituteUncheckedCreateWithoutTestsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutTestsInput = {
@@ -2690,6 +2909,7 @@ export type InstituteUpdateWithoutTestsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutTestsInput = {
@@ -2722,6 +2942,7 @@ export type InstituteUncheckedUpdateWithoutTestsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutMarksInput = {
@@ -2754,6 +2975,7 @@ export type InstituteCreateWithoutMarksInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutMarksInput = {
@@ -2786,6 +3008,7 @@ export type InstituteUncheckedCreateWithoutMarksInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutMarksInput = {
@@ -2834,6 +3057,7 @@ export type InstituteUpdateWithoutMarksInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutMarksInput = {
@@ -2866,6 +3090,7 @@ export type InstituteUncheckedUpdateWithoutMarksInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutReceiptsInput = {
@@ -2898,6 +3123,7 @@ export type InstituteCreateWithoutReceiptsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutReceiptsInput = {
@@ -2930,6 +3156,7 @@ export type InstituteUncheckedCreateWithoutReceiptsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutReceiptsInput = {
@@ -2978,6 +3205,7 @@ export type InstituteUpdateWithoutReceiptsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutReceiptsInput = {
@@ -3010,6 +3238,7 @@ export type InstituteUncheckedUpdateWithoutReceiptsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutAnnouncementsInput = {
@@ -3042,6 +3271,7 @@ export type InstituteCreateWithoutAnnouncementsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutAnnouncementsInput = {
@@ -3074,6 +3304,7 @@ export type InstituteUncheckedCreateWithoutAnnouncementsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutAnnouncementsInput = {
@@ -3122,6 +3353,7 @@ export type InstituteUpdateWithoutAnnouncementsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutAnnouncementsInput = {
@@ -3154,6 +3386,7 @@ export type InstituteUncheckedUpdateWithoutAnnouncementsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutSettingsInput = {
@@ -3186,6 +3419,7 @@ export type InstituteCreateWithoutSettingsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutSettingsInput = {
@@ -3218,6 +3452,7 @@ export type InstituteUncheckedCreateWithoutSettingsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutSettingsInput = {
@@ -3266,6 +3501,7 @@ export type InstituteUpdateWithoutSettingsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutSettingsInput = {
@@ -3298,6 +3534,7 @@ export type InstituteUncheckedUpdateWithoutSettingsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutBrandingInput = {
@@ -3330,6 +3567,7 @@ export type InstituteCreateWithoutBrandingInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutBrandingInput = {
@@ -3362,6 +3600,7 @@ export type InstituteUncheckedCreateWithoutBrandingInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutBrandingInput = {
@@ -3410,6 +3649,7 @@ export type InstituteUpdateWithoutBrandingInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutBrandingInput = {
@@ -3442,6 +3682,7 @@ export type InstituteUncheckedUpdateWithoutBrandingInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteCreateWithoutAuditLogsInput = {
@@ -3474,6 +3715,7 @@ export type InstituteCreateWithoutAuditLogsInput = {
   branding?: Prisma.BrandingCreateNestedOneWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteUncheckedCreateWithoutAuditLogsInput = {
@@ -3506,6 +3748,7 @@ export type InstituteUncheckedCreateWithoutAuditLogsInput = {
   branding?: Prisma.BrandingUncheckedCreateNestedOneWithoutInstituteInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
   studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
 }
 
 export type InstituteCreateOrConnectWithoutAuditLogsInput = {
@@ -3554,6 +3797,7 @@ export type InstituteUpdateWithoutAuditLogsInput = {
   branding?: Prisma.BrandingUpdateOneWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
 }
 
 export type InstituteUncheckedUpdateWithoutAuditLogsInput = {
@@ -3586,6 +3830,7 @@ export type InstituteUncheckedUpdateWithoutAuditLogsInput = {
   branding?: Prisma.BrandingUncheckedUpdateOneWithoutInstituteNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
   studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
 }
 
 
@@ -3611,6 +3856,7 @@ export type InstituteCountOutputType = {
   auditLogs: number
   memberships: number
   studentLinks: number
+  instituteParentStudents: number
 }
 
 export type InstituteCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3631,6 +3877,7 @@ export type InstituteCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   auditLogs?: boolean | InstituteCountOutputTypeCountAuditLogsArgs
   memberships?: boolean | InstituteCountOutputTypeCountMembershipsArgs
   studentLinks?: boolean | InstituteCountOutputTypeCountStudentLinksArgs
+  instituteParentStudents?: boolean | InstituteCountOutputTypeCountInstituteParentStudentsArgs
 }
 
 /**
@@ -3762,6 +4009,13 @@ export type InstituteCountOutputTypeCountStudentLinksArgs<ExtArgs extends runtim
   where?: Prisma.StudentLinkWhereInput
 }
 
+/**
+ * InstituteCountOutputType without action
+ */
+export type InstituteCountOutputTypeCountInstituteParentStudentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InstituteParentStudentWhereInput
+}
+
 
 export type InstituteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3794,6 +4048,7 @@ export type InstituteSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   auditLogs?: boolean | Prisma.Institute$auditLogsArgs<ExtArgs>
   memberships?: boolean | Prisma.Institute$membershipsArgs<ExtArgs>
   studentLinks?: boolean | Prisma.Institute$studentLinksArgs<ExtArgs>
+  instituteParentStudents?: boolean | Prisma.Institute$instituteParentStudentsArgs<ExtArgs>
   _count?: boolean | Prisma.InstituteCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["institute"]>
 
@@ -3860,6 +4115,7 @@ export type InstituteInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   auditLogs?: boolean | Prisma.Institute$auditLogsArgs<ExtArgs>
   memberships?: boolean | Prisma.Institute$membershipsArgs<ExtArgs>
   studentLinks?: boolean | Prisma.Institute$studentLinksArgs<ExtArgs>
+  instituteParentStudents?: boolean | Prisma.Institute$instituteParentStudentsArgs<ExtArgs>
   _count?: boolean | Prisma.InstituteCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InstituteIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -3887,6 +4143,7 @@ export type $InstitutePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
     memberships: Prisma.$InstituteMembershipPayload<ExtArgs>[]
     studentLinks: Prisma.$StudentLinkPayload<ExtArgs>[]
+    instituteParentStudents: Prisma.$InstituteParentStudentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -4313,6 +4570,7 @@ export interface Prisma__InstituteClient<T, Null = never, ExtArgs extends runtim
   auditLogs<T extends Prisma.Institute$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institute$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   memberships<T extends Prisma.Institute$membershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institute$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InstituteMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   studentLinks<T extends Prisma.Institute$studentLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institute$studentLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  instituteParentStudents<T extends Prisma.Institute$instituteParentStudentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institute$instituteParentStudentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InstituteParentStudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5189,6 +5447,30 @@ export type Institute$studentLinksArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.StudentLinkScalarFieldEnum | Prisma.StudentLinkScalarFieldEnum[]
+}
+
+/**
+ * Institute.instituteParentStudents
+ */
+export type Institute$instituteParentStudentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InstituteParentStudent
+   */
+  select?: Prisma.InstituteParentStudentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InstituteParentStudent
+   */
+  omit?: Prisma.InstituteParentStudentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InstituteParentStudentInclude<ExtArgs> | null
+  where?: Prisma.InstituteParentStudentWhereInput
+  orderBy?: Prisma.InstituteParentStudentOrderByWithRelationInput | Prisma.InstituteParentStudentOrderByWithRelationInput[]
+  cursor?: Prisma.InstituteParentStudentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InstituteParentStudentScalarFieldEnum | Prisma.InstituteParentStudentScalarFieldEnum[]
 }
 
 /**

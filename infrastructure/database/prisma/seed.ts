@@ -210,8 +210,9 @@ export async function main() {
       status: 'active',
       parents: {
         create: {
+          instituteId: institute.id,
           instituteParentId: instituteParent1.id,
-          relation: 'father',
+          relationshipType: 'father',
         },
       },
     },

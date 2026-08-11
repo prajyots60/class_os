@@ -2844,9 +2844,16 @@ export type InstituteParentScalarFieldEnum = (typeof InstituteParentScalarFieldE
 
 
 export const InstituteParentStudentScalarFieldEnum = {
+  id: 'id',
+  instituteId: 'instituteId',
   instituteParentId: 'instituteParentId',
   studentId: 'studentId',
-  relation: 'relation'
+  relationshipType: 'relationshipType',
+  isPrimary: 'isPrimary',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type InstituteParentStudentScalarFieldEnum = (typeof InstituteParentStudentScalarFieldEnum)[keyof typeof InstituteParentStudentScalarFieldEnum]
@@ -3270,16 +3277,30 @@ export type ListEnumInstituteParentStatusFieldRefInput<$PrismaModel> = FieldRefI
 
 
 /**
- * Reference to a field of type 'Relation'
+ * Reference to a field of type 'GuardianRelationshipType'
  */
-export type EnumRelationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Relation'>
+export type EnumGuardianRelationshipTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GuardianRelationshipType'>
     
 
 
 /**
- * Reference to a field of type 'Relation[]'
+ * Reference to a field of type 'GuardianRelationshipType[]'
  */
-export type ListEnumRelationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Relation[]'>
+export type ListEnumGuardianRelationshipTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GuardianRelationshipType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'GuardianRelationshipStatus'
+ */
+export type EnumGuardianRelationshipStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GuardianRelationshipStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'GuardianRelationshipStatus[]'
+ */
+export type ListEnumGuardianRelationshipStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GuardianRelationshipStatus[]'>
     
 
 

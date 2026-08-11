@@ -166,11 +166,23 @@ export const PaymentMode = {
 export type PaymentMode = (typeof PaymentMode)[keyof typeof PaymentMode]
 
 
-export const Relation = {
-  mother: 'mother',
+export const GuardianRelationshipType = {
   father: 'father',
+  mother: 'mother',
   guardian: 'guardian',
+  stepfather: 'stepfather',
+  stepmother: 'stepmother',
+  grandparent: 'grandparent',
+  sibling: 'sibling',
   other: 'other'
 } as const
 
-export type Relation = (typeof Relation)[keyof typeof Relation]
+export type GuardianRelationshipType = (typeof GuardianRelationshipType)[keyof typeof GuardianRelationshipType]
+
+
+export const GuardianRelationshipStatus = {
+  active: 'active',
+  archived: 'archived'
+} as const
+
+export type GuardianRelationshipStatus = (typeof GuardianRelationshipStatus)[keyof typeof GuardianRelationshipStatus]

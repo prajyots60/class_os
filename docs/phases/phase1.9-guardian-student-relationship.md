@@ -406,8 +406,8 @@ identity.guardian_relationship.archived
 ```text
 Phase 1.9.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     ↓
-Phase 1.9.1 — Relationship Domain Entity & Value Objects
-Phase 1.9.2 — Relationship Repository & PostgreSQL Persistence
+Phase 1.9.1 — Relationship Domain Entity & Value Objects ✅ COMPLETED
+Phase 1.9.2 — Relationship Repository & PostgreSQL Persistence ✅ COMPLETED
     ↓
 Phase 1.9.3 — Relationship Application Use Cases
 Phase 1.9.4 — Guardian/Student Linking & Authorization

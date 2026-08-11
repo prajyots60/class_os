@@ -119,11 +119,20 @@ enum PaymentMode {
   bank_transfer
 }
 
-enum Relation {
-  mother
+enum GuardianRelationshipType {
   father
+  mother
   guardian
+  stepfather
+  stepmother
+  grandparent
+  sibling
   other
+}
+
+enum GuardianRelationshipStatus {
+  active
+  archived
 }
 
 // ==========================================
@@ -227,6 +236,7 @@ model Institute {
   auditLogs           AuditLog[]
   memberships         InstituteMembership[]
   studentLinks        StudentLink[]
+  instituteParentStudents InstituteParentStudent[]
 
   @@map("institutes")
 }
@@ -330,14 +340,25 @@ model InstituteParent {
 }
 
 model InstituteParentStudent {
-  instituteParentId String   @map("institute_parent_id") @db.Uuid
-  studentId        String   @map("student_id") @db.Uuid
-  relation         Relation @default(father)
+  id                String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId       String                     @map("institute_id") @db.Uuid
+  instituteParentId String                     @map("institute_parent_id") @db.Uuid
+  studentId         String                     @map("student_id") @db.Uuid
+  relationshipType  GuardianRelationshipType   @default(father) @map("relationship_type")
+  isPrimary         Boolean                    @default(false) @map("is_primary")
+  status            GuardianRelationshipStatus @default(active)
+  createdAt         DateTime                   @default(now()) @map("created_at")
+  updatedAt         DateTime                   @updatedAt @map("updated_at")
+  deletedAt         DateTime?                  @map("deleted_at")
 
+  institute       Institute       @relation(fields: [instituteId], references: [id], onDelete: Cascade)
   instituteParent InstituteParent @relation(fields: [instituteParentId], references: [id], onDelete: Cascade)
   student         Student         @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
-  @@id([instituteParentId, studentId])
+  @@unique([instituteId, instituteParentId, studentId], name: "institute_parent_student_unique", map: "institute_parent_student_unique")
+  @@index([instituteId, studentId])
+  @@index([instituteId, instituteParentId])
+  @@index([instituteId, status])
   @@map("institute_parent_students")
 }
 

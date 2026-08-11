@@ -469,8 +469,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.8.8:** UX, Accessibility & Admission Workflow Testing ✅ COMPLETED
   - **Phase 1.9:** Guardian & Student Links 🟡 (IN PROGRESS)
     - **Phase 1.9.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.9.1:** Relationship Domain Entity & Value Objects
-    - **Phase 1.9.2:** Relationship Repository & PostgreSQL Persistence
+    - **Phase 1.9.1:** Relationship Domain Entity & Value Objects ✅ COMPLETED
+    - **Phase 1.9.2:** Relationship Repository & PostgreSQL Persistence ✅ COMPLETED
     - **Phase 1.9.3:** Relationship Application Use Cases
     - **Phase 1.9.4:** Guardian/Student Linking & Authorization
     - **Phase 1.9.5:** Relationship API Boundary & Validators

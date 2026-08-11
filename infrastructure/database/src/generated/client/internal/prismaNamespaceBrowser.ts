@@ -238,9 +238,16 @@ export type InstituteParentScalarFieldEnum = (typeof InstituteParentScalarFieldE
 
 
 export const InstituteParentStudentScalarFieldEnum = {
+  id: 'id',
+  instituteId: 'instituteId',
   instituteParentId: 'instituteParentId',
   studentId: 'studentId',
-  relation: 'relation'
+  relationshipType: 'relationshipType',
+  isPrimary: 'isPrimary',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type InstituteParentStudentScalarFieldEnum = (typeof InstituteParentStudentScalarFieldEnum)[keyof typeof InstituteParentStudentScalarFieldEnum]
