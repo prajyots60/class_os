@@ -45,7 +45,7 @@ export function StudentHeader({
         </div>
 
         {canCreate && (
-          <Button onClick={onAddStudentClick} className="gap-2 shrink-0 self-start sm:self-auto">
+          <Button onClick={onAddStudentClick} data-testid="add-student-button" className="gap-2 shrink-0 self-start sm:self-auto">
             <UserPlus className="h-4 w-4" aria-hidden="true" />
             Add Student
           </Button>
