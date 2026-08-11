@@ -38,7 +38,22 @@ enum InstituteStatus {
 
 enum StudentStatus {
   active
+  inactive
   archived
+}
+
+enum StudentAdmissionStatus {
+  pending
+  admitted
+  rejected
+  cancelled
+}
+
+enum StudentGender {
+  male
+  female
+  other
+  prefer_not_to_say
 }
 
 enum BatchStatus {
@@ -327,23 +342,35 @@ model InstituteParentStudent {
 }
 
 model Student {
-  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  instituteId     String        @map("institute_id") @db.Uuid
-  admissionNumber String?       @map("admission_number") @db.VarChar(50)
-  firstName       String        @map("first_name") @db.VarChar(100)
-  lastName        String        @map("last_name") @db.VarChar(100)
-  dateOfBirth     DateTime?     @map("date_of_birth") @db.Date
-  status          StudentStatus @default(active)
-  createdAt       DateTime      @default(now()) @map("created_at")
-  updatedAt       DateTime      @updatedAt @map("updated_at")
-  deletedAt       DateTime?     @map("deleted_at")
+  id              String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId     String                 @map("institute_id") @db.Uuid
+  admissionNumber String                 @map("admission_number") @db.VarChar(50)
+  firstName       String                 @map("first_name") @db.VarChar(100)
+  middleName      String?                @map("middle_name") @db.VarChar(100)
+  lastName        String                 @map("last_name") @db.VarChar(100)
+  dateOfBirth     DateTime?              @map("date_of_birth") @db.Date
+  gender          StudentGender?         @map("gender")
+  phone           String?                @db.VarChar(20)
+  email           String?                @db.VarChar(255)
+  address         String?                @db.Text
+  city            String?                @db.VarChar(100)
+  state           String?                @db.VarChar(100)
+  postalCode      String?                @map("postal_code") @db.VarChar(20)
+  admissionDate   DateTime?              @map("admission_date") @db.Date
+  admissionStatus StudentAdmissionStatus @default(admitted) @map("admission_status")
+  status          StudentStatus          @default(active)
+  createdAt       DateTime               @default(now()) @map("created_at")
+  updatedAt       DateTime               @updatedAt @map("updated_at")
+  deletedAt       DateTime?              @map("deleted_at")
 
   institute    Institute                @relation(fields: [instituteId], references: [id], onDelete: Cascade)
   parents      InstituteParentStudent[]
   enrollments  Enrollment[]
   studentLinks StudentLink[]
 
+  @@unique([instituteId, admissionNumber], name: "student_admission_number_unique")
   @@index([instituteId, status])
+  @@index([instituteId, admissionStatus])
   @@index([firstName, lastName])
   @@map("students")
 }

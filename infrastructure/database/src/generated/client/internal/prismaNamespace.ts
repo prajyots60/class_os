@@ -2857,8 +2857,18 @@ export const StudentScalarFieldEnum = {
   instituteId: 'instituteId',
   admissionNumber: 'admissionNumber',
   firstName: 'firstName',
+  middleName: 'middleName',
   lastName: 'lastName',
   dateOfBirth: 'dateOfBirth',
+  gender: 'gender',
+  phone: 'phone',
+  email: 'email',
+  address: 'address',
+  city: 'city',
+  state: 'state',
+  postalCode: 'postalCode',
+  admissionDate: 'admissionDate',
+  admissionStatus: 'admissionStatus',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -3270,6 +3280,34 @@ export type EnumRelationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'Relation[]'
  */
 export type ListEnumRelationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Relation[]'>
+    
+
+
+/**
+ * Reference to a field of type 'StudentGender'
+ */
+export type EnumStudentGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentGender'>
+    
+
+
+/**
+ * Reference to a field of type 'StudentGender[]'
+ */
+export type ListEnumStudentGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentGender[]'>
+    
+
+
+/**
+ * Reference to a field of type 'StudentAdmissionStatus'
+ */
+export type EnumStudentAdmissionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentAdmissionStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'StudentAdmissionStatus[]'
+ */
+export type ListEnumStudentAdmissionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentAdmissionStatus[]'>
     
 
 

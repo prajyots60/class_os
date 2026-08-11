@@ -446,10 +446,10 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.7.9:** Phase 1.7 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
   - **Phase 1.8:** Student Admission & Profile Core 🟡 (IN PROGRESS)
     - **Phase 1.8.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.8.1:** Student Domain Entity & Value Objects ⏳ (NEXT)
-    - **Phase 1.8.2:** Student Repository & PostgreSQL Persistence Layer
-    - **Phase 1.8.3:** Student Application Use Cases
-    - **Phase 1.8.4:** Student Admission & Lifecycle Rules
+    - **Phase 1.8.1:** Student Domain Entity & Value Objects ✅ COMPLETED
+    - **Phase 1.8.2:** Student Repository & PostgreSQL Persistence Layer ✅ COMPLETED
+    - **Phase 1.8.3:** Student Application Use Cases ⏳ (NEXT)
+    - **Phase 1.8.4:** Student Admission & Lifecycle Rules ⏳ (NEXT)
     - **Phase 1.8.5:** Student API Boundary & Validators
     - **Phase 1.8.6:** Student Security / Tenant E2E Matrix
     - **Phase 1.8.7:** Student Staff UI / Admission Feature

@@ -8,12 +8,15 @@ export * from './domain/entities/institute.entity';
 export * from './domain/entities/institute-membership.entity';
 export * from './domain/entities/parent-identity.entity';
 export * from './domain/entities/institute-parent.entity';
+export * from './domain/entities/student.entity';
 export * from './domain/value-objects/phone-number.vo';
+export * from './domain/value-objects/date-of-birth.vo';
 export * from './domain/repositories/institute.repository';
 export * from './domain/repositories/institute-membership.repository';
 export * from './domain/repositories/institute-onboarding.repository';
 export * from './domain/repositories/parent-identity.repository';
 export * from './domain/repositories/institute-parent.repository';
+export * from './domain/repositories/student.repository';
 
 // Application Use Cases
 export * from './application/dto/parent-identity.dto';
@@ -37,3 +40,4 @@ export * from './infrastructure/repositories/prisma-institute-membership.reposit
 export * from './infrastructure/repositories/prisma-onboard-institute.repository';
 export * from './infrastructure/repositories/prisma-parent-identity.repository';
 export * from './infrastructure/repositories/prisma-institute-parent.repository';
+export * from './infrastructure/repositories/prisma-student.repository';

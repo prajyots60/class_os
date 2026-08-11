@@ -46,10 +46,31 @@ export type InstituteStatus = (typeof InstituteStatus)[keyof typeof InstituteSta
 
 export const StudentStatus = {
   active: 'active',
+  inactive: 'inactive',
   archived: 'archived'
 } as const
 
 export type StudentStatus = (typeof StudentStatus)[keyof typeof StudentStatus]
+
+
+export const StudentAdmissionStatus = {
+  pending: 'pending',
+  admitted: 'admitted',
+  rejected: 'rejected',
+  cancelled: 'cancelled'
+} as const
+
+export type StudentAdmissionStatus = (typeof StudentAdmissionStatus)[keyof typeof StudentAdmissionStatus]
+
+
+export const StudentGender = {
+  male: 'male',
+  female: 'female',
+  other: 'other',
+  prefer_not_to_say: 'prefer_not_to_say'
+} as const
+
+export type StudentGender = (typeof StudentGender)[keyof typeof StudentGender]
 
 
 export const BatchStatus = {
