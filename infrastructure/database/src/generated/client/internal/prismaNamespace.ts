@@ -2833,12 +2833,11 @@ export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[k
 export const InstituteParentScalarFieldEnum = {
   id: 'id',
   instituteId: 'instituteId',
-  name: 'name',
-  primaryPhone: 'primaryPhone',
-  secondaryPhone: 'secondaryPhone',
+  parentIdentityId: 'parentIdentityId',
+  notes: 'notes',
+  status: 'status',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  updatedAt: 'updatedAt'
 } as const
 
 export type InstituteParentScalarFieldEnum = (typeof InstituteParentScalarFieldEnum)[keyof typeof InstituteParentScalarFieldEnum]
@@ -3243,6 +3242,20 @@ export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'UserStatus[]'
  */
 export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'InstituteParentStatus'
+ */
+export type EnumInstituteParentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstituteParentStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'InstituteParentStatus[]'
+ */
+export type ListEnumInstituteParentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstituteParentStatus[]'>
     
 
 

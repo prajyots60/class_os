@@ -27,6 +27,14 @@ export const ParentIdentityStatus = {
 export type ParentIdentityStatus = (typeof ParentIdentityStatus)[keyof typeof ParentIdentityStatus]
 
 
+export const InstituteParentStatus = {
+  active: 'active',
+  inactive: 'inactive'
+} as const
+
+export type InstituteParentStatus = (typeof InstituteParentStatus)[keyof typeof InstituteParentStatus]
+
+
 export const InstituteStatus = {
   active: 'active',
   suspended: 'suspended',

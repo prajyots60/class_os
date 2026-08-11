@@ -168,17 +168,16 @@ export async function main() {
   // Tenant-Scoped Parent 1
   const instituteParent1 = await db.instituteParent.upsert({
     where: {
-      primaryPhone_instituteId: {
-        primaryPhone: '+919999911111',
+      institute_parent_unique: {
         instituteId: institute.id,
+        parentIdentityId: parentId1.id,
       },
     },
     update: {},
     create: {
       id: '66666666-6666-4666-a666-666666666661',
       instituteId: institute.id,
-      name: 'Suresh Gupta',
-      primaryPhone: '+919999911111',
+      parentIdentityId: parentId1.id,
     },
   });
 

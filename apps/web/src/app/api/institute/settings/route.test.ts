@@ -476,8 +476,7 @@ describe('API /api/institute/settings Integration & Security Matrix', () => {
       const instParent = await db.instituteParent.create({
         data: {
           instituteId: onboarded.institute.id,
-          name: 'Parent User',
-          primaryPhone: '+919988776655',
+          parentIdentityId: parentIdentity.id,
         },
       });
 

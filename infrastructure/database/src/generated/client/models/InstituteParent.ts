@@ -27,34 +27,31 @@ export type AggregateInstituteParent = {
 export type InstituteParentMinAggregateOutputType = {
   id: string | null
   instituteId: string | null
-  name: string | null
-  primaryPhone: string | null
-  secondaryPhone: string | null
+  parentIdentityId: string | null
+  notes: string | null
+  status: $Enums.InstituteParentStatus | null
   createdAt: Date | null
   updatedAt: Date | null
-  deletedAt: Date | null
 }
 
 export type InstituteParentMaxAggregateOutputType = {
   id: string | null
   instituteId: string | null
-  name: string | null
-  primaryPhone: string | null
-  secondaryPhone: string | null
+  parentIdentityId: string | null
+  notes: string | null
+  status: $Enums.InstituteParentStatus | null
   createdAt: Date | null
   updatedAt: Date | null
-  deletedAt: Date | null
 }
 
 export type InstituteParentCountAggregateOutputType = {
   id: number
   instituteId: number
-  name: number
-  primaryPhone: number
-  secondaryPhone: number
+  parentIdentityId: number
+  notes: number
+  status: number
   createdAt: number
   updatedAt: number
-  deletedAt: number
   _all: number
 }
 
@@ -62,34 +59,31 @@ export type InstituteParentCountAggregateOutputType = {
 export type InstituteParentMinAggregateInputType = {
   id?: true
   instituteId?: true
-  name?: true
-  primaryPhone?: true
-  secondaryPhone?: true
+  parentIdentityId?: true
+  notes?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
-  deletedAt?: true
 }
 
 export type InstituteParentMaxAggregateInputType = {
   id?: true
   instituteId?: true
-  name?: true
-  primaryPhone?: true
-  secondaryPhone?: true
+  parentIdentityId?: true
+  notes?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
-  deletedAt?: true
 }
 
 export type InstituteParentCountAggregateInputType = {
   id?: true
   instituteId?: true
-  name?: true
-  primaryPhone?: true
-  secondaryPhone?: true
+  parentIdentityId?: true
+  notes?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
-  deletedAt?: true
   _all?: true
 }
 
@@ -168,12 +162,11 @@ export type InstituteParentGroupByArgs<ExtArgs extends runtime.Types.Extensions.
 export type InstituteParentGroupByOutputType = {
   id: string
   instituteId: string
-  name: string
-  primaryPhone: string
-  secondaryPhone: string | null
+  parentIdentityId: string
+  notes: string | null
+  status: $Enums.InstituteParentStatus
   createdAt: Date
   updatedAt: Date
-  deletedAt: Date | null
   _count: InstituteParentCountAggregateOutputType | null
   _min: InstituteParentMinAggregateOutputType | null
   _max: InstituteParentMaxAggregateOutputType | null
@@ -200,13 +193,13 @@ export type InstituteParentWhereInput = {
   NOT?: Prisma.InstituteParentWhereInput | Prisma.InstituteParentWhereInput[]
   id?: Prisma.UuidFilter<"InstituteParent"> | string
   instituteId?: Prisma.UuidFilter<"InstituteParent"> | string
-  name?: Prisma.StringFilter<"InstituteParent"> | string
-  primaryPhone?: Prisma.StringFilter<"InstituteParent"> | string
-  secondaryPhone?: Prisma.StringNullableFilter<"InstituteParent"> | string | null
+  parentIdentityId?: Prisma.UuidFilter<"InstituteParent"> | string
+  notes?: Prisma.StringNullableFilter<"InstituteParent"> | string | null
+  status?: Prisma.EnumInstituteParentStatusFilter<"InstituteParent"> | $Enums.InstituteParentStatus
   createdAt?: Prisma.DateTimeFilter<"InstituteParent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"InstituteParent"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableFilter<"InstituteParent"> | Date | string | null
   institute?: Prisma.XOR<Prisma.InstituteScalarRelationFilter, Prisma.InstituteWhereInput>
+  parentIdentity?: Prisma.XOR<Prisma.ParentIdentityScalarRelationFilter, Prisma.ParentIdentityWhereInput>
   students?: Prisma.InstituteParentStudentListRelationFilter
   memberships?: Prisma.InstituteMembershipListRelationFilter
 }
@@ -214,44 +207,43 @@ export type InstituteParentWhereInput = {
 export type InstituteParentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  primaryPhone?: Prisma.SortOrder
-  secondaryPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentIdentityId?: Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   institute?: Prisma.InstituteOrderByWithRelationInput
+  parentIdentity?: Prisma.ParentIdentityOrderByWithRelationInput
   students?: Prisma.InstituteParentStudentOrderByRelationAggregateInput
   memberships?: Prisma.InstituteMembershipOrderByRelationAggregateInput
 }
 
 export type InstituteParentWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  primaryPhone_instituteId?: Prisma.InstituteParentPrimaryPhoneInstituteIdCompoundUniqueInput
+  institute_parent_unique?: Prisma.InstituteParentInstitute_parent_uniqueCompoundUniqueInput
   AND?: Prisma.InstituteParentWhereInput | Prisma.InstituteParentWhereInput[]
   OR?: Prisma.InstituteParentWhereInput[]
   NOT?: Prisma.InstituteParentWhereInput | Prisma.InstituteParentWhereInput[]
   instituteId?: Prisma.UuidFilter<"InstituteParent"> | string
-  name?: Prisma.StringFilter<"InstituteParent"> | string
-  primaryPhone?: Prisma.StringFilter<"InstituteParent"> | string
-  secondaryPhone?: Prisma.StringNullableFilter<"InstituteParent"> | string | null
+  parentIdentityId?: Prisma.UuidFilter<"InstituteParent"> | string
+  notes?: Prisma.StringNullableFilter<"InstituteParent"> | string | null
+  status?: Prisma.EnumInstituteParentStatusFilter<"InstituteParent"> | $Enums.InstituteParentStatus
   createdAt?: Prisma.DateTimeFilter<"InstituteParent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"InstituteParent"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableFilter<"InstituteParent"> | Date | string | null
   institute?: Prisma.XOR<Prisma.InstituteScalarRelationFilter, Prisma.InstituteWhereInput>
+  parentIdentity?: Prisma.XOR<Prisma.ParentIdentityScalarRelationFilter, Prisma.ParentIdentityWhereInput>
   students?: Prisma.InstituteParentStudentListRelationFilter
   memberships?: Prisma.InstituteMembershipListRelationFilter
-}, "id" | "primaryPhone_instituteId">
+}, "id" | "institute_parent_unique">
 
 export type InstituteParentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  primaryPhone?: Prisma.SortOrder
-  secondaryPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentIdentityId?: Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.InstituteParentCountOrderByAggregateInput
   _max?: Prisma.InstituteParentMaxOrderByAggregateInput
   _min?: Prisma.InstituteParentMinOrderByAggregateInput
@@ -263,23 +255,21 @@ export type InstituteParentScalarWhereWithAggregatesInput = {
   NOT?: Prisma.InstituteParentScalarWhereWithAggregatesInput | Prisma.InstituteParentScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"InstituteParent"> | string
   instituteId?: Prisma.UuidWithAggregatesFilter<"InstituteParent"> | string
-  name?: Prisma.StringWithAggregatesFilter<"InstituteParent"> | string
-  primaryPhone?: Prisma.StringWithAggregatesFilter<"InstituteParent"> | string
-  secondaryPhone?: Prisma.StringNullableWithAggregatesFilter<"InstituteParent"> | string | null
+  parentIdentityId?: Prisma.UuidWithAggregatesFilter<"InstituteParent"> | string
+  notes?: Prisma.StringNullableWithAggregatesFilter<"InstituteParent"> | string | null
+  status?: Prisma.EnumInstituteParentStatusWithAggregatesFilter<"InstituteParent"> | $Enums.InstituteParentStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"InstituteParent"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"InstituteParent"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"InstituteParent"> | Date | string | null
 }
 
 export type InstituteParentCreateInput = {
   id?: string
-  name: string
-  primaryPhone: string
-  secondaryPhone?: string | null
+  notes?: string | null
+  status?: $Enums.InstituteParentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   institute: Prisma.InstituteCreateNestedOneWithoutInstituteParentsInput
+  parentIdentity: Prisma.ParentIdentityCreateNestedOneWithoutInstituteParentsInput
   students?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteParentInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteParentInput
 }
@@ -287,25 +277,23 @@ export type InstituteParentCreateInput = {
 export type InstituteParentUncheckedCreateInput = {
   id?: string
   instituteId: string
-  name: string
-  primaryPhone: string
-  secondaryPhone?: string | null
+  parentIdentityId: string
+  notes?: string | null
+  status?: $Enums.InstituteParentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   students?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteParentInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteParentInput
 }
 
 export type InstituteParentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  primaryPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  secondaryPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstituteParentStatusFieldUpdateOperationsInput | $Enums.InstituteParentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   institute?: Prisma.InstituteUpdateOneRequiredWithoutInstituteParentsNestedInput
+  parentIdentity?: Prisma.ParentIdentityUpdateOneRequiredWithoutInstituteParentsNestedInput
   students?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteParentNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteParentNestedInput
 }
@@ -313,12 +301,11 @@ export type InstituteParentUpdateInput = {
 export type InstituteParentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  primaryPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  secondaryPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentIdentityId?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstituteParentStatusFieldUpdateOperationsInput | $Enums.InstituteParentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   students?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteParentNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteParentNestedInput
 }
@@ -326,38 +313,29 @@ export type InstituteParentUncheckedUpdateInput = {
 export type InstituteParentCreateManyInput = {
   id?: string
   instituteId: string
-  name: string
-  primaryPhone: string
-  secondaryPhone?: string | null
+  parentIdentityId: string
+  notes?: string | null
+  status?: $Enums.InstituteParentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
 }
 
 export type InstituteParentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  primaryPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  secondaryPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstituteParentStatusFieldUpdateOperationsInput | $Enums.InstituteParentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type InstituteParentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  primaryPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  secondaryPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentIdentityId?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstituteParentStatusFieldUpdateOperationsInput | $Enums.InstituteParentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
-
-export type InstituteParentScalarRelationFilter = {
-  is?: Prisma.InstituteParentWhereInput
-  isNot?: Prisma.InstituteParentWhereInput
 }
 
 export type InstituteParentListRelationFilter = {
@@ -370,42 +348,86 @@ export type InstituteParentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type InstituteParentPrimaryPhoneInstituteIdCompoundUniqueInput = {
-  primaryPhone: string
+export type InstituteParentScalarRelationFilter = {
+  is?: Prisma.InstituteParentWhereInput
+  isNot?: Prisma.InstituteParentWhereInput
+}
+
+export type InstituteParentInstitute_parent_uniqueCompoundUniqueInput = {
   instituteId: string
+  parentIdentityId: string
 }
 
 export type InstituteParentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  primaryPhone?: Prisma.SortOrder
-  secondaryPhone?: Prisma.SortOrder
+  parentIdentityId?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrder
 }
 
 export type InstituteParentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  primaryPhone?: Prisma.SortOrder
-  secondaryPhone?: Prisma.SortOrder
+  parentIdentityId?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrder
 }
 
 export type InstituteParentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  primaryPhone?: Prisma.SortOrder
-  secondaryPhone?: Prisma.SortOrder
+  parentIdentityId?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrder
+}
+
+export type InstituteParentCreateNestedManyWithoutParentIdentityInput = {
+  create?: Prisma.XOR<Prisma.InstituteParentCreateWithoutParentIdentityInput, Prisma.InstituteParentUncheckedCreateWithoutParentIdentityInput> | Prisma.InstituteParentCreateWithoutParentIdentityInput[] | Prisma.InstituteParentUncheckedCreateWithoutParentIdentityInput[]
+  connectOrCreate?: Prisma.InstituteParentCreateOrConnectWithoutParentIdentityInput | Prisma.InstituteParentCreateOrConnectWithoutParentIdentityInput[]
+  createMany?: Prisma.InstituteParentCreateManyParentIdentityInputEnvelope
+  connect?: Prisma.InstituteParentWhereUniqueInput | Prisma.InstituteParentWhereUniqueInput[]
+}
+
+export type InstituteParentUncheckedCreateNestedManyWithoutParentIdentityInput = {
+  create?: Prisma.XOR<Prisma.InstituteParentCreateWithoutParentIdentityInput, Prisma.InstituteParentUncheckedCreateWithoutParentIdentityInput> | Prisma.InstituteParentCreateWithoutParentIdentityInput[] | Prisma.InstituteParentUncheckedCreateWithoutParentIdentityInput[]
+  connectOrCreate?: Prisma.InstituteParentCreateOrConnectWithoutParentIdentityInput | Prisma.InstituteParentCreateOrConnectWithoutParentIdentityInput[]
+  createMany?: Prisma.InstituteParentCreateManyParentIdentityInputEnvelope
+  connect?: Prisma.InstituteParentWhereUniqueInput | Prisma.InstituteParentWhereUniqueInput[]
+}
+
+export type InstituteParentUpdateManyWithoutParentIdentityNestedInput = {
+  create?: Prisma.XOR<Prisma.InstituteParentCreateWithoutParentIdentityInput, Prisma.InstituteParentUncheckedCreateWithoutParentIdentityInput> | Prisma.InstituteParentCreateWithoutParentIdentityInput[] | Prisma.InstituteParentUncheckedCreateWithoutParentIdentityInput[]
+  connectOrCreate?: Prisma.InstituteParentCreateOrConnectWithoutParentIdentityInput | Prisma.InstituteParentCreateOrConnectWithoutParentIdentityInput[]
+  upsert?: Prisma.InstituteParentUpsertWithWhereUniqueWithoutParentIdentityInput | Prisma.InstituteParentUpsertWithWhereUniqueWithoutParentIdentityInput[]
+  createMany?: Prisma.InstituteParentCreateManyParentIdentityInputEnvelope
+  set?: Prisma.InstituteParentWhereUniqueInput | Prisma.InstituteParentWhereUniqueInput[]
+  disconnect?: Prisma.InstituteParentWhereUniqueInput | Prisma.InstituteParentWhereUniqueInput[]
+  delete?: Prisma.InstituteParentWhereUniqueInput | Prisma.InstituteParentWhereUniqueInput[]
+  connect?: Prisma.InstituteParentWhereUniqueInput | Prisma.InstituteParentWhereUniqueInput[]
+  update?: Prisma.InstituteParentUpdateWithWhereUniqueWithoutParentIdentityInput | Prisma.InstituteParentUpdateWithWhereUniqueWithoutParentIdentityInput[]
+  updateMany?: Prisma.InstituteParentUpdateManyWithWhereWithoutParentIdentityInput | Prisma.InstituteParentUpdateManyWithWhereWithoutParentIdentityInput[]
+  deleteMany?: Prisma.InstituteParentScalarWhereInput | Prisma.InstituteParentScalarWhereInput[]
+}
+
+export type InstituteParentUncheckedUpdateManyWithoutParentIdentityNestedInput = {
+  create?: Prisma.XOR<Prisma.InstituteParentCreateWithoutParentIdentityInput, Prisma.InstituteParentUncheckedCreateWithoutParentIdentityInput> | Prisma.InstituteParentCreateWithoutParentIdentityInput[] | Prisma.InstituteParentUncheckedCreateWithoutParentIdentityInput[]
+  connectOrCreate?: Prisma.InstituteParentCreateOrConnectWithoutParentIdentityInput | Prisma.InstituteParentCreateOrConnectWithoutParentIdentityInput[]
+  upsert?: Prisma.InstituteParentUpsertWithWhereUniqueWithoutParentIdentityInput | Prisma.InstituteParentUpsertWithWhereUniqueWithoutParentIdentityInput[]
+  createMany?: Prisma.InstituteParentCreateManyParentIdentityInputEnvelope
+  set?: Prisma.InstituteParentWhereUniqueInput | Prisma.InstituteParentWhereUniqueInput[]
+  disconnect?: Prisma.InstituteParentWhereUniqueInput | Prisma.InstituteParentWhereUniqueInput[]
+  delete?: Prisma.InstituteParentWhereUniqueInput | Prisma.InstituteParentWhereUniqueInput[]
+  connect?: Prisma.InstituteParentWhereUniqueInput | Prisma.InstituteParentWhereUniqueInput[]
+  update?: Prisma.InstituteParentUpdateWithWhereUniqueWithoutParentIdentityInput | Prisma.InstituteParentUpdateWithWhereUniqueWithoutParentIdentityInput[]
+  updateMany?: Prisma.InstituteParentUpdateManyWithWhereWithoutParentIdentityInput | Prisma.InstituteParentUpdateManyWithWhereWithoutParentIdentityInput[]
+  deleteMany?: Prisma.InstituteParentScalarWhereInput | Prisma.InstituteParentScalarWhereInput[]
 }
 
 export type InstituteParentCreateNestedOneWithoutMembershipsInput = {
@@ -464,6 +486,10 @@ export type InstituteParentUncheckedUpdateManyWithoutInstituteNestedInput = {
   deleteMany?: Prisma.InstituteParentScalarWhereInput | Prisma.InstituteParentScalarWhereInput[]
 }
 
+export type EnumInstituteParentStatusFieldUpdateOperationsInput = {
+  set?: $Enums.InstituteParentStatus
+}
+
 export type InstituteParentCreateNestedOneWithoutStudentsInput = {
   create?: Prisma.XOR<Prisma.InstituteParentCreateWithoutStudentsInput, Prisma.InstituteParentUncheckedCreateWithoutStudentsInput>
   connectOrCreate?: Prisma.InstituteParentCreateOrConnectWithoutStudentsInput
@@ -478,27 +504,86 @@ export type InstituteParentUpdateOneRequiredWithoutStudentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InstituteParentUpdateToOneWithWhereWithoutStudentsInput, Prisma.InstituteParentUpdateWithoutStudentsInput>, Prisma.InstituteParentUncheckedUpdateWithoutStudentsInput>
 }
 
-export type InstituteParentCreateWithoutMembershipsInput = {
+export type InstituteParentCreateWithoutParentIdentityInput = {
   id?: string
-  name: string
-  primaryPhone: string
-  secondaryPhone?: string | null
+  notes?: string | null
+  status?: $Enums.InstituteParentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   institute: Prisma.InstituteCreateNestedOneWithoutInstituteParentsInput
+  students?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteParentInput
+  memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteParentInput
+}
+
+export type InstituteParentUncheckedCreateWithoutParentIdentityInput = {
+  id?: string
+  instituteId: string
+  notes?: string | null
+  status?: $Enums.InstituteParentStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  students?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteParentInput
+  memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteParentInput
+}
+
+export type InstituteParentCreateOrConnectWithoutParentIdentityInput = {
+  where: Prisma.InstituteParentWhereUniqueInput
+  create: Prisma.XOR<Prisma.InstituteParentCreateWithoutParentIdentityInput, Prisma.InstituteParentUncheckedCreateWithoutParentIdentityInput>
+}
+
+export type InstituteParentCreateManyParentIdentityInputEnvelope = {
+  data: Prisma.InstituteParentCreateManyParentIdentityInput | Prisma.InstituteParentCreateManyParentIdentityInput[]
+  skipDuplicates?: boolean
+}
+
+export type InstituteParentUpsertWithWhereUniqueWithoutParentIdentityInput = {
+  where: Prisma.InstituteParentWhereUniqueInput
+  update: Prisma.XOR<Prisma.InstituteParentUpdateWithoutParentIdentityInput, Prisma.InstituteParentUncheckedUpdateWithoutParentIdentityInput>
+  create: Prisma.XOR<Prisma.InstituteParentCreateWithoutParentIdentityInput, Prisma.InstituteParentUncheckedCreateWithoutParentIdentityInput>
+}
+
+export type InstituteParentUpdateWithWhereUniqueWithoutParentIdentityInput = {
+  where: Prisma.InstituteParentWhereUniqueInput
+  data: Prisma.XOR<Prisma.InstituteParentUpdateWithoutParentIdentityInput, Prisma.InstituteParentUncheckedUpdateWithoutParentIdentityInput>
+}
+
+export type InstituteParentUpdateManyWithWhereWithoutParentIdentityInput = {
+  where: Prisma.InstituteParentScalarWhereInput
+  data: Prisma.XOR<Prisma.InstituteParentUpdateManyMutationInput, Prisma.InstituteParentUncheckedUpdateManyWithoutParentIdentityInput>
+}
+
+export type InstituteParentScalarWhereInput = {
+  AND?: Prisma.InstituteParentScalarWhereInput | Prisma.InstituteParentScalarWhereInput[]
+  OR?: Prisma.InstituteParentScalarWhereInput[]
+  NOT?: Prisma.InstituteParentScalarWhereInput | Prisma.InstituteParentScalarWhereInput[]
+  id?: Prisma.UuidFilter<"InstituteParent"> | string
+  instituteId?: Prisma.UuidFilter<"InstituteParent"> | string
+  parentIdentityId?: Prisma.UuidFilter<"InstituteParent"> | string
+  notes?: Prisma.StringNullableFilter<"InstituteParent"> | string | null
+  status?: Prisma.EnumInstituteParentStatusFilter<"InstituteParent"> | $Enums.InstituteParentStatus
+  createdAt?: Prisma.DateTimeFilter<"InstituteParent"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"InstituteParent"> | Date | string
+}
+
+export type InstituteParentCreateWithoutMembershipsInput = {
+  id?: string
+  notes?: string | null
+  status?: $Enums.InstituteParentStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  institute: Prisma.InstituteCreateNestedOneWithoutInstituteParentsInput
+  parentIdentity: Prisma.ParentIdentityCreateNestedOneWithoutInstituteParentsInput
   students?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteParentInput
 }
 
 export type InstituteParentUncheckedCreateWithoutMembershipsInput = {
   id?: string
   instituteId: string
-  name: string
-  primaryPhone: string
-  secondaryPhone?: string | null
+  parentIdentityId: string
+  notes?: string | null
+  status?: $Enums.InstituteParentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   students?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteParentInput
 }
 
@@ -520,48 +605,44 @@ export type InstituteParentUpdateToOneWithWhereWithoutMembershipsInput = {
 
 export type InstituteParentUpdateWithoutMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  primaryPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  secondaryPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstituteParentStatusFieldUpdateOperationsInput | $Enums.InstituteParentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   institute?: Prisma.InstituteUpdateOneRequiredWithoutInstituteParentsNestedInput
+  parentIdentity?: Prisma.ParentIdentityUpdateOneRequiredWithoutInstituteParentsNestedInput
   students?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteParentNestedInput
 }
 
 export type InstituteParentUncheckedUpdateWithoutMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  primaryPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  secondaryPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentIdentityId?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstituteParentStatusFieldUpdateOperationsInput | $Enums.InstituteParentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   students?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteParentNestedInput
 }
 
 export type InstituteParentCreateWithoutInstituteInput = {
   id?: string
-  name: string
-  primaryPhone: string
-  secondaryPhone?: string | null
+  notes?: string | null
+  status?: $Enums.InstituteParentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
+  parentIdentity: Prisma.ParentIdentityCreateNestedOneWithoutInstituteParentsInput
   students?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteParentInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteParentInput
 }
 
 export type InstituteParentUncheckedCreateWithoutInstituteInput = {
   id?: string
-  name: string
-  primaryPhone: string
-  secondaryPhone?: string | null
+  parentIdentityId: string
+  notes?: string | null
+  status?: $Enums.InstituteParentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   students?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteParentInput
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteParentInput
 }
@@ -592,41 +673,25 @@ export type InstituteParentUpdateManyWithWhereWithoutInstituteInput = {
   data: Prisma.XOR<Prisma.InstituteParentUpdateManyMutationInput, Prisma.InstituteParentUncheckedUpdateManyWithoutInstituteInput>
 }
 
-export type InstituteParentScalarWhereInput = {
-  AND?: Prisma.InstituteParentScalarWhereInput | Prisma.InstituteParentScalarWhereInput[]
-  OR?: Prisma.InstituteParentScalarWhereInput[]
-  NOT?: Prisma.InstituteParentScalarWhereInput | Prisma.InstituteParentScalarWhereInput[]
-  id?: Prisma.UuidFilter<"InstituteParent"> | string
-  instituteId?: Prisma.UuidFilter<"InstituteParent"> | string
-  name?: Prisma.StringFilter<"InstituteParent"> | string
-  primaryPhone?: Prisma.StringFilter<"InstituteParent"> | string
-  secondaryPhone?: Prisma.StringNullableFilter<"InstituteParent"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"InstituteParent"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"InstituteParent"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableFilter<"InstituteParent"> | Date | string | null
-}
-
 export type InstituteParentCreateWithoutStudentsInput = {
   id?: string
-  name: string
-  primaryPhone: string
-  secondaryPhone?: string | null
+  notes?: string | null
+  status?: $Enums.InstituteParentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   institute: Prisma.InstituteCreateNestedOneWithoutInstituteParentsInput
+  parentIdentity: Prisma.ParentIdentityCreateNestedOneWithoutInstituteParentsInput
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteParentInput
 }
 
 export type InstituteParentUncheckedCreateWithoutStudentsInput = {
   id?: string
   instituteId: string
-  name: string
-  primaryPhone: string
-  secondaryPhone?: string | null
+  parentIdentityId: string
+  notes?: string | null
+  status?: $Enums.InstituteParentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteParentInput
 }
 
@@ -648,70 +713,104 @@ export type InstituteParentUpdateToOneWithWhereWithoutStudentsInput = {
 
 export type InstituteParentUpdateWithoutStudentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  primaryPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  secondaryPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstituteParentStatusFieldUpdateOperationsInput | $Enums.InstituteParentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   institute?: Prisma.InstituteUpdateOneRequiredWithoutInstituteParentsNestedInput
+  parentIdentity?: Prisma.ParentIdentityUpdateOneRequiredWithoutInstituteParentsNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteParentNestedInput
 }
 
 export type InstituteParentUncheckedUpdateWithoutStudentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  primaryPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  secondaryPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentIdentityId?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstituteParentStatusFieldUpdateOperationsInput | $Enums.InstituteParentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteParentNestedInput
+}
+
+export type InstituteParentCreateManyParentIdentityInput = {
+  id?: string
+  instituteId: string
+  notes?: string | null
+  status?: $Enums.InstituteParentStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type InstituteParentUpdateWithoutParentIdentityInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstituteParentStatusFieldUpdateOperationsInput | $Enums.InstituteParentStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  institute?: Prisma.InstituteUpdateOneRequiredWithoutInstituteParentsNestedInput
+  students?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteParentNestedInput
+  memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteParentNestedInput
+}
+
+export type InstituteParentUncheckedUpdateWithoutParentIdentityInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  instituteId?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstituteParentStatusFieldUpdateOperationsInput | $Enums.InstituteParentStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  students?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteParentNestedInput
+  memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteParentNestedInput
+}
+
+export type InstituteParentUncheckedUpdateManyWithoutParentIdentityInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  instituteId?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstituteParentStatusFieldUpdateOperationsInput | $Enums.InstituteParentStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type InstituteParentCreateManyInstituteInput = {
   id?: string
-  name: string
-  primaryPhone: string
-  secondaryPhone?: string | null
+  parentIdentityId: string
+  notes?: string | null
+  status?: $Enums.InstituteParentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
 }
 
 export type InstituteParentUpdateWithoutInstituteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  primaryPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  secondaryPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstituteParentStatusFieldUpdateOperationsInput | $Enums.InstituteParentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentIdentity?: Prisma.ParentIdentityUpdateOneRequiredWithoutInstituteParentsNestedInput
   students?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteParentNestedInput
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteParentNestedInput
 }
 
 export type InstituteParentUncheckedUpdateWithoutInstituteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  primaryPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  secondaryPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentIdentityId?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstituteParentStatusFieldUpdateOperationsInput | $Enums.InstituteParentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   students?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteParentNestedInput
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteParentNestedInput
 }
 
 export type InstituteParentUncheckedUpdateManyWithoutInstituteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  primaryPhone?: Prisma.StringFieldUpdateOperationsInput | string
-  secondaryPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentIdentityId?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstituteParentStatusFieldUpdateOperationsInput | $Enums.InstituteParentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -757,13 +856,13 @@ export type InstituteParentCountOutputTypeCountMembershipsArgs<ExtArgs extends r
 export type InstituteParentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   instituteId?: boolean
-  name?: boolean
-  primaryPhone?: boolean
-  secondaryPhone?: boolean
+  parentIdentityId?: boolean
+  notes?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  deletedAt?: boolean
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
+  parentIdentity?: boolean | Prisma.ParentIdentityDefaultArgs<ExtArgs>
   students?: boolean | Prisma.InstituteParent$studentsArgs<ExtArgs>
   memberships?: boolean | Prisma.InstituteParent$membershipsArgs<ExtArgs>
   _count?: boolean | Prisma.InstituteParentCountOutputTypeDefaultArgs<ExtArgs>
@@ -772,68 +871,70 @@ export type InstituteParentSelect<ExtArgs extends runtime.Types.Extensions.Inter
 export type InstituteParentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   instituteId?: boolean
-  name?: boolean
-  primaryPhone?: boolean
-  secondaryPhone?: boolean
+  parentIdentityId?: boolean
+  notes?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  deletedAt?: boolean
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
+  parentIdentity?: boolean | Prisma.ParentIdentityDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["instituteParent"]>
 
 export type InstituteParentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   instituteId?: boolean
-  name?: boolean
-  primaryPhone?: boolean
-  secondaryPhone?: boolean
+  parentIdentityId?: boolean
+  notes?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  deletedAt?: boolean
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
+  parentIdentity?: boolean | Prisma.ParentIdentityDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["instituteParent"]>
 
 export type InstituteParentSelectScalar = {
   id?: boolean
   instituteId?: boolean
-  name?: boolean
-  primaryPhone?: boolean
-  secondaryPhone?: boolean
+  parentIdentityId?: boolean
+  notes?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  deletedAt?: boolean
 }
 
-export type InstituteParentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "instituteId" | "name" | "primaryPhone" | "secondaryPhone" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["instituteParent"]>
+export type InstituteParentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "instituteId" | "parentIdentityId" | "notes" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["instituteParent"]>
 export type InstituteParentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
+  parentIdentity?: boolean | Prisma.ParentIdentityDefaultArgs<ExtArgs>
   students?: boolean | Prisma.InstituteParent$studentsArgs<ExtArgs>
   memberships?: boolean | Prisma.InstituteParent$membershipsArgs<ExtArgs>
   _count?: boolean | Prisma.InstituteParentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InstituteParentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
+  parentIdentity?: boolean | Prisma.ParentIdentityDefaultArgs<ExtArgs>
 }
 export type InstituteParentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
+  parentIdentity?: boolean | Prisma.ParentIdentityDefaultArgs<ExtArgs>
 }
 
 export type $InstituteParentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "InstituteParent"
   objects: {
     institute: Prisma.$InstitutePayload<ExtArgs>
+    parentIdentity: Prisma.$ParentIdentityPayload<ExtArgs>
     students: Prisma.$InstituteParentStudentPayload<ExtArgs>[]
     memberships: Prisma.$InstituteMembershipPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     instituteId: string
-    name: string
-    primaryPhone: string
-    secondaryPhone: string | null
+    parentIdentityId: string
+    notes: string | null
+    status: $Enums.InstituteParentStatus
     createdAt: Date
     updatedAt: Date
-    deletedAt: Date | null
   }, ExtArgs["result"]["instituteParent"]>
   composites: {}
 }
@@ -1229,6 +1330,7 @@ readonly fields: InstituteParentFieldRefs;
 export interface Prisma__InstituteParentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   institute<T extends Prisma.InstituteDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InstituteDefaultArgs<ExtArgs>>): Prisma.Prisma__InstituteClient<runtime.Types.Result.GetResult<Prisma.$InstitutePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  parentIdentity<T extends Prisma.ParentIdentityDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ParentIdentityDefaultArgs<ExtArgs>>): Prisma.Prisma__ParentIdentityClient<runtime.Types.Result.GetResult<Prisma.$ParentIdentityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   students<T extends Prisma.InstituteParent$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InstituteParent$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InstituteParentStudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   memberships<T extends Prisma.InstituteParent$membershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InstituteParent$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InstituteMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1262,12 +1364,11 @@ export interface Prisma__InstituteParentClient<T, Null = never, ExtArgs extends 
 export interface InstituteParentFieldRefs {
   readonly id: Prisma.FieldRef<"InstituteParent", 'String'>
   readonly instituteId: Prisma.FieldRef<"InstituteParent", 'String'>
-  readonly name: Prisma.FieldRef<"InstituteParent", 'String'>
-  readonly primaryPhone: Prisma.FieldRef<"InstituteParent", 'String'>
-  readonly secondaryPhone: Prisma.FieldRef<"InstituteParent", 'String'>
+  readonly parentIdentityId: Prisma.FieldRef<"InstituteParent", 'String'>
+  readonly notes: Prisma.FieldRef<"InstituteParent", 'String'>
+  readonly status: Prisma.FieldRef<"InstituteParent", 'InstituteParentStatus'>
   readonly createdAt: Prisma.FieldRef<"InstituteParent", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"InstituteParent", 'DateTime'>
-  readonly deletedAt: Prisma.FieldRef<"InstituteParent", 'DateTime'>
 }
     
 

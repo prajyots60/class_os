@@ -392,10 +392,10 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.6.6:** Phase 1.6 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
   - **Phase 1.7:** Tenant InstituteParent CRM Layer 🟡 (IN PROGRESS)
     - **Phase 1.7.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.7.1:** InstituteParent Domain Entity & Value Objects ⏳ (NEXT)
-    - **Phase 1.7.2:** InstituteParent Repository & PostgreSQL Persistence Layer ⏳ (NEXT)
-    - **Phase 1.7.3:** InstituteParent Application Use Cases
-    - **Phase 1.7.4:** ParentIdentity ↔ InstituteParent Linking & Authorization
+    - **Phase 1.7.1:** InstituteParent Domain Entity & Value Objects ✅ COMPLETED
+    - **Phase 1.7.2:** InstituteParent Repository & PostgreSQL Persistence Layer ✅ COMPLETED
+    - **Phase 1.7.3:** InstituteParent Application Use Cases ⏳ (NEXT)
+    - **Phase 1.7.4:** ParentIdentity ↔ InstituteParent Linking & Authorization ⏳ (NEXT)
     - **Phase 1.7.5:** InstituteParent API Boundary & Validators
     - **Phase 1.7.6:** InstituteParent Security / Privacy E2E Matrix
     - **Phase 1.7.7:** InstituteParent Staff UI / CRM Feature

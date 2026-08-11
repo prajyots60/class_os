@@ -201,6 +201,7 @@ export type ParentIdentityWhereInput = {
   memberships?: Prisma.InstituteMembershipListRelationFilter
   childProfiles?: Prisma.ChildProfileListRelationFilter
   users?: Prisma.UserListRelationFilter
+  instituteParents?: Prisma.InstituteParentListRelationFilter
 }
 
 export type ParentIdentityOrderByWithRelationInput = {
@@ -214,6 +215,7 @@ export type ParentIdentityOrderByWithRelationInput = {
   memberships?: Prisma.InstituteMembershipOrderByRelationAggregateInput
   childProfiles?: Prisma.ChildProfileOrderByRelationAggregateInput
   users?: Prisma.UserOrderByRelationAggregateInput
+  instituteParents?: Prisma.InstituteParentOrderByRelationAggregateInput
 }
 
 export type ParentIdentityWhereUniqueInput = Prisma.AtLeast<{
@@ -230,6 +232,7 @@ export type ParentIdentityWhereUniqueInput = Prisma.AtLeast<{
   memberships?: Prisma.InstituteMembershipListRelationFilter
   childProfiles?: Prisma.ChildProfileListRelationFilter
   users?: Prisma.UserListRelationFilter
+  instituteParents?: Prisma.InstituteParentListRelationFilter
 }, "id" | "phone">
 
 export type ParentIdentityOrderByWithAggregationInput = {
@@ -269,6 +272,7 @@ export type ParentIdentityCreateInput = {
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutParentIdentityInput
   childProfiles?: Prisma.ChildProfileCreateNestedManyWithoutParentIdentityInput
   users?: Prisma.UserCreateNestedManyWithoutParentIdentityInput
+  instituteParents?: Prisma.InstituteParentCreateNestedManyWithoutParentIdentityInput
 }
 
 export type ParentIdentityUncheckedCreateInput = {
@@ -282,6 +286,7 @@ export type ParentIdentityUncheckedCreateInput = {
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutParentIdentityInput
   childProfiles?: Prisma.ChildProfileUncheckedCreateNestedManyWithoutParentIdentityInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutParentIdentityInput
+  instituteParents?: Prisma.InstituteParentUncheckedCreateNestedManyWithoutParentIdentityInput
 }
 
 export type ParentIdentityUpdateInput = {
@@ -295,6 +300,7 @@ export type ParentIdentityUpdateInput = {
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutParentIdentityNestedInput
   childProfiles?: Prisma.ChildProfileUpdateManyWithoutParentIdentityNestedInput
   users?: Prisma.UserUpdateManyWithoutParentIdentityNestedInput
+  instituteParents?: Prisma.InstituteParentUpdateManyWithoutParentIdentityNestedInput
 }
 
 export type ParentIdentityUncheckedUpdateInput = {
@@ -308,6 +314,7 @@ export type ParentIdentityUncheckedUpdateInput = {
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutParentIdentityNestedInput
   childProfiles?: Prisma.ChildProfileUncheckedUpdateManyWithoutParentIdentityNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutParentIdentityNestedInput
+  instituteParents?: Prisma.InstituteParentUncheckedUpdateManyWithoutParentIdentityNestedInput
 }
 
 export type ParentIdentityCreateManyInput = {
@@ -440,6 +447,20 @@ export type ParentIdentityUpdateOneWithoutUsersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ParentIdentityUpdateToOneWithWhereWithoutUsersInput, Prisma.ParentIdentityUpdateWithoutUsersInput>, Prisma.ParentIdentityUncheckedUpdateWithoutUsersInput>
 }
 
+export type ParentIdentityCreateNestedOneWithoutInstituteParentsInput = {
+  create?: Prisma.XOR<Prisma.ParentIdentityCreateWithoutInstituteParentsInput, Prisma.ParentIdentityUncheckedCreateWithoutInstituteParentsInput>
+  connectOrCreate?: Prisma.ParentIdentityCreateOrConnectWithoutInstituteParentsInput
+  connect?: Prisma.ParentIdentityWhereUniqueInput
+}
+
+export type ParentIdentityUpdateOneRequiredWithoutInstituteParentsNestedInput = {
+  create?: Prisma.XOR<Prisma.ParentIdentityCreateWithoutInstituteParentsInput, Prisma.ParentIdentityUncheckedCreateWithoutInstituteParentsInput>
+  connectOrCreate?: Prisma.ParentIdentityCreateOrConnectWithoutInstituteParentsInput
+  upsert?: Prisma.ParentIdentityUpsertWithoutInstituteParentsInput
+  connect?: Prisma.ParentIdentityWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ParentIdentityUpdateToOneWithWhereWithoutInstituteParentsInput, Prisma.ParentIdentityUpdateWithoutInstituteParentsInput>, Prisma.ParentIdentityUncheckedUpdateWithoutInstituteParentsInput>
+}
+
 export type ParentIdentityCreateWithoutMembershipsInput = {
   id?: string
   phone: string
@@ -450,6 +471,7 @@ export type ParentIdentityCreateWithoutMembershipsInput = {
   updatedAt?: Date | string
   childProfiles?: Prisma.ChildProfileCreateNestedManyWithoutParentIdentityInput
   users?: Prisma.UserCreateNestedManyWithoutParentIdentityInput
+  instituteParents?: Prisma.InstituteParentCreateNestedManyWithoutParentIdentityInput
 }
 
 export type ParentIdentityUncheckedCreateWithoutMembershipsInput = {
@@ -462,6 +484,7 @@ export type ParentIdentityUncheckedCreateWithoutMembershipsInput = {
   updatedAt?: Date | string
   childProfiles?: Prisma.ChildProfileUncheckedCreateNestedManyWithoutParentIdentityInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutParentIdentityInput
+  instituteParents?: Prisma.InstituteParentUncheckedCreateNestedManyWithoutParentIdentityInput
 }
 
 export type ParentIdentityCreateOrConnectWithoutMembershipsInput = {
@@ -490,6 +513,7 @@ export type ParentIdentityUpdateWithoutMembershipsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   childProfiles?: Prisma.ChildProfileUpdateManyWithoutParentIdentityNestedInput
   users?: Prisma.UserUpdateManyWithoutParentIdentityNestedInput
+  instituteParents?: Prisma.InstituteParentUpdateManyWithoutParentIdentityNestedInput
 }
 
 export type ParentIdentityUncheckedUpdateWithoutMembershipsInput = {
@@ -502,6 +526,7 @@ export type ParentIdentityUncheckedUpdateWithoutMembershipsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   childProfiles?: Prisma.ChildProfileUncheckedUpdateManyWithoutParentIdentityNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutParentIdentityNestedInput
+  instituteParents?: Prisma.InstituteParentUncheckedUpdateManyWithoutParentIdentityNestedInput
 }
 
 export type ParentIdentityCreateWithoutChildProfilesInput = {
@@ -514,6 +539,7 @@ export type ParentIdentityCreateWithoutChildProfilesInput = {
   updatedAt?: Date | string
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutParentIdentityInput
   users?: Prisma.UserCreateNestedManyWithoutParentIdentityInput
+  instituteParents?: Prisma.InstituteParentCreateNestedManyWithoutParentIdentityInput
 }
 
 export type ParentIdentityUncheckedCreateWithoutChildProfilesInput = {
@@ -526,6 +552,7 @@ export type ParentIdentityUncheckedCreateWithoutChildProfilesInput = {
   updatedAt?: Date | string
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutParentIdentityInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutParentIdentityInput
+  instituteParents?: Prisma.InstituteParentUncheckedCreateNestedManyWithoutParentIdentityInput
 }
 
 export type ParentIdentityCreateOrConnectWithoutChildProfilesInput = {
@@ -554,6 +581,7 @@ export type ParentIdentityUpdateWithoutChildProfilesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutParentIdentityNestedInput
   users?: Prisma.UserUpdateManyWithoutParentIdentityNestedInput
+  instituteParents?: Prisma.InstituteParentUpdateManyWithoutParentIdentityNestedInput
 }
 
 export type ParentIdentityUncheckedUpdateWithoutChildProfilesInput = {
@@ -566,6 +594,7 @@ export type ParentIdentityUncheckedUpdateWithoutChildProfilesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutParentIdentityNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutParentIdentityNestedInput
+  instituteParents?: Prisma.InstituteParentUncheckedUpdateManyWithoutParentIdentityNestedInput
 }
 
 export type ParentIdentityCreateWithoutUsersInput = {
@@ -578,6 +607,7 @@ export type ParentIdentityCreateWithoutUsersInput = {
   updatedAt?: Date | string
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutParentIdentityInput
   childProfiles?: Prisma.ChildProfileCreateNestedManyWithoutParentIdentityInput
+  instituteParents?: Prisma.InstituteParentCreateNestedManyWithoutParentIdentityInput
 }
 
 export type ParentIdentityUncheckedCreateWithoutUsersInput = {
@@ -590,6 +620,7 @@ export type ParentIdentityUncheckedCreateWithoutUsersInput = {
   updatedAt?: Date | string
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutParentIdentityInput
   childProfiles?: Prisma.ChildProfileUncheckedCreateNestedManyWithoutParentIdentityInput
+  instituteParents?: Prisma.InstituteParentUncheckedCreateNestedManyWithoutParentIdentityInput
 }
 
 export type ParentIdentityCreateOrConnectWithoutUsersInput = {
@@ -618,6 +649,7 @@ export type ParentIdentityUpdateWithoutUsersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutParentIdentityNestedInput
   childProfiles?: Prisma.ChildProfileUpdateManyWithoutParentIdentityNestedInput
+  instituteParents?: Prisma.InstituteParentUpdateManyWithoutParentIdentityNestedInput
 }
 
 export type ParentIdentityUncheckedUpdateWithoutUsersInput = {
@@ -630,6 +662,75 @@ export type ParentIdentityUncheckedUpdateWithoutUsersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutParentIdentityNestedInput
   childProfiles?: Prisma.ChildProfileUncheckedUpdateManyWithoutParentIdentityNestedInput
+  instituteParents?: Prisma.InstituteParentUncheckedUpdateManyWithoutParentIdentityNestedInput
+}
+
+export type ParentIdentityCreateWithoutInstituteParentsInput = {
+  id?: string
+  phone: string
+  name?: string | null
+  avatar?: string | null
+  status?: $Enums.ParentIdentityStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutParentIdentityInput
+  childProfiles?: Prisma.ChildProfileCreateNestedManyWithoutParentIdentityInput
+  users?: Prisma.UserCreateNestedManyWithoutParentIdentityInput
+}
+
+export type ParentIdentityUncheckedCreateWithoutInstituteParentsInput = {
+  id?: string
+  phone: string
+  name?: string | null
+  avatar?: string | null
+  status?: $Enums.ParentIdentityStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutParentIdentityInput
+  childProfiles?: Prisma.ChildProfileUncheckedCreateNestedManyWithoutParentIdentityInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutParentIdentityInput
+}
+
+export type ParentIdentityCreateOrConnectWithoutInstituteParentsInput = {
+  where: Prisma.ParentIdentityWhereUniqueInput
+  create: Prisma.XOR<Prisma.ParentIdentityCreateWithoutInstituteParentsInput, Prisma.ParentIdentityUncheckedCreateWithoutInstituteParentsInput>
+}
+
+export type ParentIdentityUpsertWithoutInstituteParentsInput = {
+  update: Prisma.XOR<Prisma.ParentIdentityUpdateWithoutInstituteParentsInput, Prisma.ParentIdentityUncheckedUpdateWithoutInstituteParentsInput>
+  create: Prisma.XOR<Prisma.ParentIdentityCreateWithoutInstituteParentsInput, Prisma.ParentIdentityUncheckedCreateWithoutInstituteParentsInput>
+  where?: Prisma.ParentIdentityWhereInput
+}
+
+export type ParentIdentityUpdateToOneWithWhereWithoutInstituteParentsInput = {
+  where?: Prisma.ParentIdentityWhereInput
+  data: Prisma.XOR<Prisma.ParentIdentityUpdateWithoutInstituteParentsInput, Prisma.ParentIdentityUncheckedUpdateWithoutInstituteParentsInput>
+}
+
+export type ParentIdentityUpdateWithoutInstituteParentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumParentIdentityStatusFieldUpdateOperationsInput | $Enums.ParentIdentityStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.InstituteMembershipUpdateManyWithoutParentIdentityNestedInput
+  childProfiles?: Prisma.ChildProfileUpdateManyWithoutParentIdentityNestedInput
+  users?: Prisma.UserUpdateManyWithoutParentIdentityNestedInput
+}
+
+export type ParentIdentityUncheckedUpdateWithoutInstituteParentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumParentIdentityStatusFieldUpdateOperationsInput | $Enums.ParentIdentityStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutParentIdentityNestedInput
+  childProfiles?: Prisma.ChildProfileUncheckedUpdateManyWithoutParentIdentityNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutParentIdentityNestedInput
 }
 
 
@@ -641,12 +742,14 @@ export type ParentIdentityCountOutputType = {
   memberships: number
   childProfiles: number
   users: number
+  instituteParents: number
 }
 
 export type ParentIdentityCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   memberships?: boolean | ParentIdentityCountOutputTypeCountMembershipsArgs
   childProfiles?: boolean | ParentIdentityCountOutputTypeCountChildProfilesArgs
   users?: boolean | ParentIdentityCountOutputTypeCountUsersArgs
+  instituteParents?: boolean | ParentIdentityCountOutputTypeCountInstituteParentsArgs
 }
 
 /**
@@ -680,6 +783,13 @@ export type ParentIdentityCountOutputTypeCountUsersArgs<ExtArgs extends runtime.
   where?: Prisma.UserWhereInput
 }
 
+/**
+ * ParentIdentityCountOutputType without action
+ */
+export type ParentIdentityCountOutputTypeCountInstituteParentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InstituteParentWhereInput
+}
+
 
 export type ParentIdentitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -692,6 +802,7 @@ export type ParentIdentitySelect<ExtArgs extends runtime.Types.Extensions.Intern
   memberships?: boolean | Prisma.ParentIdentity$membershipsArgs<ExtArgs>
   childProfiles?: boolean | Prisma.ParentIdentity$childProfilesArgs<ExtArgs>
   users?: boolean | Prisma.ParentIdentity$usersArgs<ExtArgs>
+  instituteParents?: boolean | Prisma.ParentIdentity$instituteParentsArgs<ExtArgs>
   _count?: boolean | Prisma.ParentIdentityCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["parentIdentity"]>
 
@@ -730,6 +841,7 @@ export type ParentIdentityInclude<ExtArgs extends runtime.Types.Extensions.Inter
   memberships?: boolean | Prisma.ParentIdentity$membershipsArgs<ExtArgs>
   childProfiles?: boolean | Prisma.ParentIdentity$childProfilesArgs<ExtArgs>
   users?: boolean | Prisma.ParentIdentity$usersArgs<ExtArgs>
+  instituteParents?: boolean | Prisma.ParentIdentity$instituteParentsArgs<ExtArgs>
   _count?: boolean | Prisma.ParentIdentityCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ParentIdentityIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -741,6 +853,7 @@ export type $ParentIdentityPayload<ExtArgs extends runtime.Types.Extensions.Inte
     memberships: Prisma.$InstituteMembershipPayload<ExtArgs>[]
     childProfiles: Prisma.$ChildProfilePayload<ExtArgs>[]
     users: Prisma.$UserPayload<ExtArgs>[]
+    instituteParents: Prisma.$InstituteParentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1147,6 +1260,7 @@ export interface Prisma__ParentIdentityClient<T, Null = never, ExtArgs extends r
   memberships<T extends Prisma.ParentIdentity$membershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ParentIdentity$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InstituteMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   childProfiles<T extends Prisma.ParentIdentity$childProfilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ParentIdentity$childProfilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChildProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   users<T extends Prisma.ParentIdentity$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ParentIdentity$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  instituteParents<T extends Prisma.ParentIdentity$instituteParentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ParentIdentity$instituteParentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InstituteParentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1645,6 +1759,30 @@ export type ParentIdentity$usersArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
+}
+
+/**
+ * ParentIdentity.instituteParents
+ */
+export type ParentIdentity$instituteParentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InstituteParent
+   */
+  select?: Prisma.InstituteParentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InstituteParent
+   */
+  omit?: Prisma.InstituteParentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InstituteParentInclude<ExtArgs> | null
+  where?: Prisma.InstituteParentWhereInput
+  orderBy?: Prisma.InstituteParentOrderByWithRelationInput | Prisma.InstituteParentOrderByWithRelationInput[]
+  cursor?: Prisma.InstituteParentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InstituteParentScalarFieldEnum | Prisma.InstituteParentScalarFieldEnum[]
 }
 
 /**

@@ -49,15 +49,22 @@ export async function createTestUser(
 
 export async function createTestInstituteParent(
   instituteId: string,
-  overrides: Partial<{ name: string; primaryPhone: string }> = {},
+  overrides: Partial<{ parentIdentityId?: string; notes?: string; name?: string; primaryPhone?: string }> = {},
 ) {
-  const uniqueId = crypto.randomUUID().substring(0, 8);
+  let parentIdentityId = overrides.parentIdentityId;
+  if (!parentIdentityId) {
+    const parentIdentity = await createTestParentIdentity({
+      ...(overrides.primaryPhone ? { phone: overrides.primaryPhone } : {}),
+      ...(overrides.name ? { name: overrides.name } : {}),
+    });
+    parentIdentityId = parentIdentity.id;
+  }
+
   return db.instituteParent.create({
     data: {
       instituteId,
-      name: overrides.name || `Parent ${uniqueId}`,
-      primaryPhone:
-        overrides.primaryPhone || `+9198${Math.floor(10000000 + Math.random() * 90000000)}`,
+      parentIdentityId,
+      notes: overrides.notes || null,
     },
   });
 }

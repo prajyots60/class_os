@@ -78,10 +78,12 @@ export class PrismaInstituteMembershipRepository implements InstituteMembershipR
       });
     }
 
-    let instituteParent = await db.instituteParent.findFirst({
+    let instituteParent = await db.instituteParent.findUnique({
       where: {
-        instituteId: membership.instituteId,
-        primaryPhone: parentIdentity.phone,
+        institute_parent_unique: {
+          instituteId: membership.instituteId,
+          parentIdentityId: parentIdentity.id,
+        },
       },
     });
 
@@ -89,8 +91,7 @@ export class PrismaInstituteMembershipRepository implements InstituteMembershipR
       instituteParent = await db.instituteParent.create({
         data: {
           instituteId: membership.instituteId,
-          name: user.name,
-          primaryPhone: parentIdentity.phone,
+          parentIdentityId: parentIdentity.id,
         },
       });
     }
