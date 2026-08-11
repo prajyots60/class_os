@@ -1,22 +1,33 @@
 import * as React from 'react';
-import { AuthHeader, AuthFooter } from '../../../features/auth';
+import type { Metadata } from 'next';
+import { SignInForm } from '../../../features/auth/sign-in';
+import { Spinner } from '@coaching-os/ui';
 
-export default function SignInPlaceholderPage() {
+export const metadata: Metadata = {
+  title: 'Sign In — CoachingOS',
+  description:
+    'Sign in to your CoachingOS account to access your coaching institute workspace.',
+};
+
+/**
+ * /sign-in — Public authentication page.
+ *
+ * ARCHITECTURE:
+ * - This page is a thin Server Component composition boundary (< 30 lines).
+ * - All form interaction, auth client logic, and search params handling live in <SignInForm />.
+ * - <React.Suspense> wraps <SignInForm /> to handle useSearchParams() during static generation.
+ * - No database, Prisma, or Better Auth server imports belong here.
+ */
+export default function SignInPage() {
   return (
-    <>
-      <AuthHeader
-        title="Sign in to your institute"
-        description="Enter your credentials to access your CoachingOS workspace."
-        eyebrow="Account Access"
-      />
-      <div className="py-8 text-center text-xs font-mono text-[hsl(var(--muted-foreground))] rounded-lg border border-dashed border-[hsl(var(--border))] bg-[hsl(var(--muted))]/10">
-        [ Sign In Form UI Placeholder &mdash; Phase 0.12.5 ]
-      </div>
-      <AuthFooter
-        prompt="Don't have an account?"
-        linkLabel="Create Institute Account"
-        href="/sign-up"
-      />
-    </>
+    <React.Suspense
+      fallback={
+        <div className="flex min-h-[300px] items-center justify-center">
+          <Spinner size="md" />
+        </div>
+      }
+    >
+      <SignInForm />
+    </React.Suspense>
   );
 }

@@ -5,3 +5,6 @@ export * from './components/auth-field';
 export * from './components/auth-error';
 export * from './components/auth-footer';
 export * from './components/auth-layout-shell';
+export * from './sign-up';
+export * from './sign-in';
+
