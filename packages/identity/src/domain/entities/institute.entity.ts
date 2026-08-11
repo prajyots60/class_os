@@ -123,6 +123,18 @@ export class InstituteEntity {
     if (!['active', 'suspended', 'archived'].includes(props.status)) {
       throw new ValidationError(`Invalid InstituteStatus: ${props.status}`);
     }
+    if (props.primaryColor && props.primaryColor.trim() !== '') {
+      if (!InstituteEntity.validatePrimaryColor(props.primaryColor)) {
+        throw new ValidationError(
+          'Primary color must be a valid HEX color code (e.g. #0F172A or #3B82F6)',
+        );
+      }
+    }
+    if (props.logoUrl && props.logoUrl.trim() !== '') {
+      if (!InstituteEntity.validateLogoUrl(props.logoUrl)) {
+        throw new ValidationError('Logo URL must be a valid HTTPS URL');
+      }
+    }
   }
 
   public static normalizeSlug(input: string): string {
@@ -137,6 +149,24 @@ export class InstituteEntity {
 
   public static validateSlug(slug: string): boolean {
     return SLUG_REGEX.test(slug);
+  }
+
+  public static validatePrimaryColor(color: string): boolean {
+    const HEX_COLOR_REGEX = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
+    return HEX_COLOR_REGEX.test(color.trim());
+  }
+
+  public static validateLogoUrl(url: string): boolean {
+    const trimmed = url.trim();
+    if (!trimmed.startsWith('https://')) {
+      return false;
+    }
+    try {
+      new URL(trimmed);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   // Getters
@@ -207,12 +237,28 @@ export class InstituteEntity {
     }
 
     if (props.logoUrl !== undefined) {
-      this._logoUrl = props.logoUrl ?? null;
+      if (props.logoUrl !== null && props.logoUrl.trim() !== '') {
+        if (!InstituteEntity.validateLogoUrl(props.logoUrl)) {
+          throw new ValidationError('Logo URL must be a valid HTTPS URL');
+        }
+        this._logoUrl = props.logoUrl.trim();
+      } else {
+        this._logoUrl = null;
+      }
       updated = true;
     }
 
     if (props.primaryColor !== undefined) {
-      this._primaryColor = props.primaryColor ?? null;
+      if (props.primaryColor !== null && props.primaryColor.trim() !== '') {
+        if (!InstituteEntity.validatePrimaryColor(props.primaryColor)) {
+          throw new ValidationError(
+            'Primary color must be a valid HEX color code (e.g. #0F172A or #3B82F6)',
+          );
+        }
+        this._primaryColor = props.primaryColor.trim();
+      } else {
+        this._primaryColor = null;
+      }
       updated = true;
     }
 

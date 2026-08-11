@@ -14,6 +14,7 @@ export * from './domain/repositories/institute-onboarding.repository';
 export * from './application/use-cases/institute.use-cases';
 export * from './application/use-cases/membership.use-cases';
 export * from './application/use-cases/onboarding.use-cases';
+export * from './application/use-cases/settings.use-cases';
 
 // Presentation Validators
 export * from './presentation/validators/institute.validator';
