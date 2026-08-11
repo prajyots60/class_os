@@ -75,8 +75,8 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
         ├── Phase 0.12.6 — Password Recovery UI (Deferred)
         ├── Phase 0.12.7 — Session & Route Guards ✅
         ├── Phase 0.12.8 — Authenticated Application Shell ✅
-        ├── Phase 0.12.9 — Full Browser Journey Integration (Next)
-        ├── Phase 0.12.10 — Security & UX Test Matrix
+        ├── Phase 0.12.9 — Full Browser Journey Integration ✅
+        ├── Phase 0.12.10 — Security & UX Test Matrix (Next)
         └── Phase 0.12.11 — Phase 0.12 Acceptance Gate
                                                         ↓
                                                   PHASE 0 GATE (PASSED)
@@ -286,6 +286,12 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - Unit tests: `navigation.test.ts` (5 tests) and `app-shell.test.tsx` (2 tests). Total web unit tests: 129/129 passed.
   - Playwright E2E suite: `apps/web/e2e/app-shell.spec.ts` (5 scenarios passed: desktop workspace shell, mobile drawer, tenant isolation, no-tenant redirect, sign-out).
   - Full monorepo verification: `pnpm typecheck`, `pnpm lint`, `pnpm build`, `pnpm env:check`, `pnpm db:validate`, `pnpm db:health` (100% passed).
+
+### ✅ Phase 0.12.9 — Full Browser Journey Integration (COMPLETED)
+
+- **Canonical E2E Suite (`apps/web/e2e/full-browser-journey.spec.ts`)**: Built comprehensive Playwright automated suite covering Journeys A through F (unauthenticated → sign-up → onboarding → institute setup → tenant workspace → refresh persistence → sign-out → returning sign-in → no-tenant guard → existing tenant guard → auth page guards).
+- **Security & Boundary Hardening**: Verified callback URL sanitization (`https://evil.example.com` blocked), server session revocation, browser-side tenant isolation (User A vs User B data boundary), back-button cache protection, and mobile drawer accessibility (`< 768px`).
+- **Complete Test Verification**: 67/67 Playwright E2E tests passed; 129/129 unit/integration tests passed; 100% monorepo build, lint, typecheck, environment, database, auth, and observability checks passed cleanly across 13 packages.
 
 ## 4. Next Milestone Roadmap
 

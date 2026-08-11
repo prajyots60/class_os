@@ -1,4 +1,4 @@
-import { test, expect, type BrowserContext } from '@playwright/test';
+import { test, expect, type BrowserContext, type APIRequestContext } from '@playwright/test';
 
 /**
  * Phase 0.12.8 — Authenticated Application Shell E2E Test Suite
@@ -29,7 +29,7 @@ let instituteName: string;
 let instituteSlug: string;
 
 async function registerTestUserWithRetry(
-  requestContext: any,
+  requestContext: APIRequestContext,
   user: { email: string; password: string; name: string },
 ) {
   let attempts = 0;

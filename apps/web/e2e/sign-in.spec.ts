@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type APIRequestContext } from '@playwright/test';
 
 /**
  * Phase 0.12.5 — Sign In UI & Authentication Flow E2E Test Suite
@@ -10,6 +10,23 @@ import { test, expect } from '@playwright/test';
  * Does NOT bypass Better Auth: all authentications go through /api/auth/sign-in/email.
  */
 
+async function registerTestUserWithRetry(
+  requestContext: APIRequestContext,
+  user: { email: string; password: string; name: string },
+) {
+  let attempts = 0;
+  while (attempts < 4) {
+    const res = await requestContext.post('/api/auth/sign-up/email', { data: user });
+    if (res.status() === 429) {
+      attempts++;
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+      continue;
+    }
+    return res;
+  }
+  return requestContext.post('/api/auth/sign-up/email', { data: user });
+}
+
 test.describe('Sign In Authentication Flow E2E Suite', () => {
   let testUser: { email: string; password: string };
 
@@ -20,16 +37,15 @@ test.describe('Sign In Authentication Flow E2E Suite', () => {
       password: 'SecurePassword123!',
     };
 
-    // Register single test user for the suite
-    const regRes = await request.post('/api/auth/sign-up/email', {
-      data: {
-        email: testUser.email,
-        password: testUser.password,
-        name: 'SignIn Suite Tester',
-      },
+    // Register single test user for the suite with retry
+    const regRes = await registerTestUserWithRetry(request, {
+      email: testUser.email,
+      password: testUser.password,
+      name: 'SignIn Suite Tester',
     });
-    expect(regRes.status()).toBe(200);
+    expect([200, 201]).toContain(regRes.status());
   });
+
 
   // ── Test 1: Form renders correctly ──
   test('1. /sign-in renders form with all required fields and correct auth layout', async ({

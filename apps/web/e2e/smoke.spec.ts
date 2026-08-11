@@ -1,16 +1,19 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('CoachingOS Web Application E2E Smoke Suite', () => {
-  test('renders home page and design showcase with semantic headings', async ({ page }) => {
+  test('renders marketing landing page with primary headline and CTA actions', async ({ page }) => {
     await page.goto('/');
 
-    // Verify main h1 title heading
-    const mainHeading = page.getByRole('heading', { name: /Sharma Physics Classes/i, level: 1 });
+    // Verify main H1 title heading
+    const mainHeading = page.getByRole('heading', {
+      name: /Run your coaching institute from one place/i,
+      level: 1,
+    });
     await expect(mainHeading).toBeVisible();
 
-    // Verify Theme selector options exist
-    await expect(page.getByText(/Theme A/i)).toBeVisible();
-    await expect(page.getByText(/Theme B/i)).toBeVisible();
+    // Verify primary and secondary CTA buttons exist
+    await expect(page.getByRole('link', { name: /Get Started/i }).first()).toBeVisible();
+    await expect(page.getByRole('link', { name: /Sign In/i }).first()).toBeVisible();
   });
 
   test('handles unauthorized auth endpoint requests safely', async ({ page }) => {

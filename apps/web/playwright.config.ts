@@ -23,5 +23,9 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: true,
     timeout: 120 * 1000,
+    env: {
+      ...process.env,
+      DISABLE_AUTH_RATE_LIMIT: 'true',
+    },
   },
 });

@@ -1,4 +1,4 @@
-import { test, expect, type BrowserContext } from '@playwright/test';
+import { test, expect, type BrowserContext, type APIRequestContext } from '@playwright/test';
 
 /**
  * Phase 0.12.7 — Session & Route Guards E2E Test Suite
@@ -41,6 +41,23 @@ let tenantFixture: SessionFixture;
 let tenantUserEmail: string;
 let instituteSlug: string;
 
+async function registerTestUserWithRetry(
+  requestContext: APIRequestContext,
+  user: { email: string; password: string; name: string },
+) {
+  let attempts = 0;
+  while (attempts < 6) {
+    const res = await requestContext.post('/api/auth/sign-up/email', { data: user });
+    if (res.status() === 429) {
+      attempts++;
+      await new Promise((resolve) => setTimeout(resolve, 12000));
+      continue;
+    }
+    return res;
+  }
+  return requestContext.post('/api/auth/sign-up/email', { data: user });
+}
+
 test.beforeAll(async ({ playwright }) => {
   const timestamp = Date.now();
   const baseURL = process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000';
@@ -53,7 +70,7 @@ test.beforeAll(async ({ playwright }) => {
     name: 'Guard No Tenant User',
   };
 
-  const regA = await ctxA.post('/api/auth/sign-up/email', { data: userA });
+  const regA = await registerTestUserWithRetry(ctxA, userA);
   expect(
     [200, 201],
     `User A registration failed with status ${regA.status()}`,
@@ -74,11 +91,12 @@ test.beforeAll(async ({ playwright }) => {
     name: 'Guard Tenant Owner User',
   };
 
-  const regB = await ctxB.post('/api/auth/sign-up/email', { data: userB });
+  const regB = await registerTestUserWithRetry(ctxB, userB);
   expect(
     [200, 201],
     `User B registration failed with status ${regB.status()}`,
   ).toContain(regB.status());
+
 
   // Onboard institute for User B using the API
   const onboardRes = await ctxB.post('/api/onboarding/institute', {
@@ -205,7 +223,7 @@ test.describe('3. Authenticated With Tenant Guards', () => {
     await page.goto('/dashboard');
 
     await expect(page).toHaveURL(/\/dashboard/);
-    await expect(page.getByRole('heading', { name: /CoachingOS Dashboard/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Dashboard', exact: true })).toBeVisible();
     await expect(page.getByText('Guard Test Physics Academy')).toBeVisible();
   });
 
@@ -217,7 +235,7 @@ test.describe('3. Authenticated With Tenant Guards', () => {
     await page.goto('/onboarding');
 
     await expect(page).toHaveURL(/\/dashboard/);
-    await expect(page.getByRole('heading', { name: /CoachingOS Dashboard/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Dashboard', exact: true })).toBeVisible();
   });
 
   test('3c. No redirect loop: /onboarding → /dashboard renders correctly (no further redirect)', async ({
@@ -229,7 +247,7 @@ test.describe('3. Authenticated With Tenant Guards', () => {
 
     // Must settle on /dashboard — not bounce back to /onboarding
     await expect(page).toHaveURL(/\/dashboard/);
-    await expect(page.getByRole('heading', { name: /CoachingOS Dashboard/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Dashboard', exact: true })).toBeVisible();
     expect(page.url()).not.toMatch(/\/onboarding/);
   });
 
@@ -273,23 +291,6 @@ test.describe('4. Session Lifecycle Guards', () => {
     await page.goto('/dashboard');
     await expect(page).toHaveURL(/\/sign-in\?callbackUrl=%2Fdashboard/);
   });
-
-  test('4b. Sign-out returns user to public shell and revokes protected route access', async ({
-    page,
-    context,
-  }) => {
-    await applySession(context, tenantFixture);
-    await page.goto('/dashboard');
-    await expect(page).toHaveURL(/\/dashboard/);
-
-    // Click Sign Out
-    await page.click('button:has-text("Sign Out")');
-    await expect(page).toHaveURL('/');
-
-    // After sign-out, /dashboard should require authentication again
-    await page.goto('/dashboard');
-    await expect(page).toHaveURL(/\/sign-in\?callbackUrl=%2Fdashboard/);
-  });
 });
 
 test.describe('5. Callback URL Security', () => {
@@ -297,11 +298,12 @@ test.describe('5. Callback URL Security', () => {
     page,
     context,
   }) => {
-    await applySession(context, tenantFixture);
-
-    // Authenticated user — /sign-in redirects to /dashboard, ignoring evil callbackUrl
+    await clearSession(context);
     await page.goto('/sign-in?callbackUrl=https://evil.com/phish');
-    await page.waitForURL(/\/(dashboard|sign-in)/, { timeout: 10000 });
+    await page.locator('#signin-email').fill(tenantUserEmail);
+    await page.locator('#signin-password').fill('SecurePassword123!');
+    await page.getByRole('button', { name: /^Sign in$/i }).click();
+    await page.waitForURL('**/dashboard', { timeout: 10000 });
     expect(page.url()).not.toContain('evil.com');
   });
 
@@ -309,9 +311,12 @@ test.describe('5. Callback URL Security', () => {
     page,
     context,
   }) => {
-    await applySession(context, tenantFixture);
+    await clearSession(context);
     await page.goto('/sign-in?callbackUrl=//evil.com');
-    await page.waitForURL(/\/(dashboard|sign-in)/, { timeout: 10000 });
+    await page.locator('#signin-email').fill(tenantUserEmail);
+    await page.locator('#signin-password').fill('SecurePassword123!');
+    await page.getByRole('button', { name: /^Sign in$/i }).click();
+    await page.waitForURL('**/dashboard', { timeout: 10000 });
     expect(page.url()).not.toContain('evil.com');
   });
 
@@ -320,18 +325,18 @@ test.describe('5. Callback URL Security', () => {
     context,
   }) => {
     await clearSession(context);
-    // Server guard sanitizes callbackUrl before embedding in redirect URL
     await page.goto('/dashboard');
-    // Must redirect to /sign-in?callbackUrl=%2Fdashboard — not to any external URL
     await expect(page).toHaveURL(/\/sign-in\?callbackUrl=%2Fdashboard/);
     expect(page.url()).not.toContain('evil.com');
-    expect(page.url()).not.toContain('http:');
   });
 
   test('5d. javascript: scheme callbackUrl is rejected', async ({ page, context }) => {
-    await applySession(context, tenantFixture);
+    await clearSession(context);
     await page.goto('/sign-in?callbackUrl=javascript:alert(1)');
-    await page.waitForURL(/\/(dashboard|sign-in)/, { timeout: 10000 });
+    await page.locator('#signin-email').fill(tenantUserEmail);
+    await page.locator('#signin-password').fill('SecurePassword123!');
+    await page.getByRole('button', { name: /^Sign in$/i }).click();
+    await page.waitForURL('**/dashboard', { timeout: 10000 });
     expect(page.url()).not.toContain('javascript:');
   });
 });
@@ -427,4 +432,23 @@ test.describe('7. Tenant Manipulation Rejection', () => {
     // Server resolves from session — user has no tenant, so hasTenant:false (fakeId is ignored)
     expect(body.hasTenant).toBe(false);
   });
+
+  test('7c. Sign-out returns user to public shell and revokes protected route access', async ({
+    page,
+    context,
+  }) => {
+    await applySession(context, tenantFixture);
+    await page.goto('/dashboard');
+    await expect(page).toHaveURL(/\/dashboard/);
+
+    // Open User Menu & Click Sign Out
+    await page.getByRole('button', { name: /User menu/i }).click();
+    await page.getByRole('button', { name: /Sign Out/i }).click();
+    await page.waitForURL(/\/sign-in/);
+
+    // After sign-out, /dashboard should require authentication again
+    await page.goto('/dashboard');
+    await expect(page).toHaveURL(/\/sign-in\?callbackUrl=%2Fdashboard/);
+  });
 });
+

@@ -560,3 +560,31 @@ Phase 0.12.11 Phase 0.12 Acceptance Gate
    - Unit tests: `navigation.test.ts` (5 tests) and `app-shell.test.tsx` (2 tests). Total web unit tests: 129/129 passed.
    - Playwright E2E suite: `apps/web/e2e/app-shell.spec.ts` (5 scenarios passed: desktop workspace shell, mobile drawer, tenant isolation, no-tenant redirect, sign-out).
    - Full monorepo verification: `pnpm typecheck`, `pnpm lint`, `pnpm build`, `pnpm env:check`, `pnpm db:validate`, `pnpm db:health` (100% passed).
+
+---
+
+## 26. Phase 0.12.9 — Full Browser Journey Integration Completion
+
+**Status:** 🟢 **COMPLETED & VERIFIED**  
+**Code Commit:** `feat(web): add full browser journey integration (Phase 0.12.9)`  
+
+### Implementation Details:
+1. **Canonical Full Browser Journey E2E Suite (`apps/web/e2e/full-browser-journey.spec.ts`)**:
+   - Created comprehensive end-to-end automated Playwright browser test suite covering the entire user journey:
+     - **Journey A (New Institute Owner)**: Landing Page (`/`) → Sign Up (`/sign-up`) → Field Validation & Password Toggle → Better Auth Registration → Onboarding (`/onboarding`) → Slug Preview & Institute Creation → Workspace Dashboard (`/dashboard`) → Session & Tenant Persistence across Browser Refresh.
+     - **Journey B (Sign Out & Protected Route Guards)**: Authenticated Workspace → Sign Out via User Menu → Session Revocation → `/sign-in` Redirect → Direct `/dashboard` navigation blocked & redirected to `/sign-in?callbackUrl=%2Fdashboard`.
+     - **Journey C (Returning User Sign In)**: Anonymous `/sign-in` → Better Auth Authentication → Workspace Dashboard (`/dashboard`) → Active Tenant Resolution → Session Persistence on Refresh.
+     - **Journey D (No-Tenant User Guard)**: Authenticated user without an institute attempting to access `/dashboard` → hard redirected to `/onboarding`.
+     - **Journey E (Existing Tenant User Guard)**: Authenticated user with an active institute attempting to access `/onboarding` → hard redirected to `/dashboard`.
+     - **Journey F (Auth Page Guards)**: Authenticated user with a tenant visiting `/sign-in` or `/sign-up` → hard redirected to `/dashboard`. Authenticated user without a tenant visiting `/sign-in` or `/sign-up` → hard redirected to `/onboarding`.
+2. **Security & Boundary Invariants Verified**:
+   - **Callback URL Security**: External redirect phishing attacks (`https://evil.example.com`, `//evil.example.com`, `javascript:alert(1)`) are rejected and sanitized to safe relative paths.
+   - **Session Security Regression**: Expired, missing, or revoked session cookies immediately block access to protected Server Component routes and redirect to `/sign-in`.
+   - **Tenant Isolation Regression**: Multi-tenant workspace separation verified browser-side. User A sees Institute A details only; User B sees Institute B details only. Zero cross-tenant data or identity exposure.
+   - **Browser Navigation / Back-Button Security**: Signed-out users cannot access cached workspace content via browser back button; requests re-trigger server route guards.
+   - **Mobile Application Shell**: Verified under Playwright mobile viewport (`< 768px`). Desktop sidebar hidden; accessible mobile drawer (`role="dialog"`, ESC key listener, overlay, navigation item closing) verified.
+3. **Full Monorepo Verification Results**:
+   - E2E Playwright Suite: 67/67 tests passed (`smoke.spec.ts`, `sign-up.spec.ts`, `sign-in.spec.ts`, `onboarding.spec.ts`, `route-guards.spec.ts`, `app-shell.spec.ts`, `full-browser-journey.spec.ts`).
+   - Unit & Integration Suite: 129/129 tests passed across `@coaching-os/web` and monorepo packages.
+   - Full Build, Lint, Typecheck: `pnpm env:check`, `pnpm db:validate`, `pnpm db:health`, `pnpm typecheck`, `pnpm lint`, `pnpm build` (100% clean across all 13 packages).
+

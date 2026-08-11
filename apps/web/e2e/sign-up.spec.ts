@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type APIRequestContext } from '@playwright/test';
 
 /**
  * Phase 0.12.4 — Sign Up UI & Registration Flow E2E Test Suite
@@ -136,16 +136,35 @@ test.describe('Sign Up Registration Flow E2E Suite', () => {
     ).toBeVisible({ timeout: 10000 });
   });
 
+async function registerTestUserWithRetry(
+  requestContext: APIRequestContext,
+  user: { email: string; password: string; name: string },
+) {
+  let attempts = 0;
+  while (attempts < 4) {
+    const res = await requestContext.post('/api/auth/sign-up/email', { data: user });
+    if (res.status() === 429) {
+      attempts++;
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+      continue;
+    }
+    return res;
+  }
+  return requestContext.post('/api/auth/sign-up/email', { data: user });
+}
+
   // ── Test 7: Duplicate email registration error ──
   test('7. Duplicate email shows safe user-facing error (not raw DB error)', async ({ page }) => {
     const duplicateEmail = `dup_signup_${Date.now()}@test.com`;
     const password = 'SecurePassword123!';
 
-    // Register once via API
-    const signUpResponse = await page.request.post('/api/auth/sign-up/email', {
-      data: { email: duplicateEmail, password, name: 'First Tester' },
+    // Register once via API with rate-limit retry
+    const signUpResponse = await registerTestUserWithRetry(page.request, {
+      email: duplicateEmail,
+      password,
+      name: 'First Tester',
     });
-    expect(signUpResponse.status()).toBe(200);
+    expect([200, 201]).toContain(signUpResponse.status());
 
     // Clear cookies to ensure unauthenticated state for page navigation
     await page.context().clearCookies();
@@ -175,11 +194,14 @@ test.describe('Sign Up Registration Flow E2E Suite', () => {
     const email = `auth_redirect_${Date.now()}@test.com`;
     const password = 'SecurePassword123!';
 
-    // Create account and establish session
-    const signUpResponse = await page.request.post('/api/auth/sign-up/email', {
-      data: { email, password, name: 'Auth Redirect Tester' },
+    // Create account and establish session with rate-limit retry
+    const signUpResponse = await registerTestUserWithRetry(page.request, {
+      email,
+      password,
+      name: 'Auth Redirect Tester',
     });
-    expect(signUpResponse.status()).toBe(200);
+    expect([200, 201]).toContain(signUpResponse.status());
+
 
     // Now visit /sign-up as an authenticated user
     await page.goto('/sign-up');
