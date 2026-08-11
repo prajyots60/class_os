@@ -31,6 +31,14 @@ export const APP_NAVIGATION_CONFIG: readonly NavigationSection[] = Object.freeze
     label: 'Management',
     items: [
       {
+        id: 'parents',
+        label: 'Parents',
+        href: '/parents',
+        iconName: 'Users',
+        capability: 'parent:read',
+        isImplemented: true,
+      },
+      {
         id: 'students',
         label: 'Students',
         href: '/students',
