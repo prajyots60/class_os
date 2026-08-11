@@ -181,7 +181,7 @@ export class StudentEntity {
    */
   public static create(props: CreateStudentProps): StudentEntity {
     const now = new Date();
-    const admissionStatus = props.admissionStatus || 'admitted';
+    const admissionStatus = props.admissionStatus || 'pending';
     const defaultStatus = admissionStatus === 'admitted' ? 'active' : 'inactive';
 
     return new StudentEntity({

@@ -21,12 +21,14 @@ export * from './domain/repositories/student.repository';
 // Application Use Cases
 export * from './application/dto/parent-identity.dto';
 export * from './application/dto/institute-parent.dto';
+export * from './application/dto/student.dto';
 export * from './application/use-cases/institute.use-cases';
 export * from './application/use-cases/membership.use-cases';
 export * from './application/use-cases/onboarding.use-cases';
 export * from './application/use-cases/settings.use-cases';
 export * from './application/use-cases/parent-identity.use-cases';
 export * from './application/use-cases/institute-parent.use-cases';
+export * from './application/use-cases/student.use-cases';
 
 // Presentation Validators
 export * from './presentation/validators/institute.validator';

@@ -11,17 +11,17 @@
 ```text
 coaching-os/
 ├── apps/                         ← Next.js Web Application & API Route Adapters
-│   └── web/                      ← Main Web Portal (App Router, UI Pages, Route Handlers, E2E)
+│   └── web/                      ← Main Web Portal (App Router, Feature Components, Route Handlers, E2E)
 │
 ├── packages/                     ← Isolated Modular Domain Packages
-│   ├── identity/                 ← Institute Tenants, Users, Memberships, Capability RBAC
+│   ├── identity/                 ← Institute Tenants, Users, Memberships, Capability RBAC, Parents & Students
 │   ├── academics/                ← Schedules, Sessions, Batches, Attendance, Homework
 │   ├── billing/                  ← Fee Structures, Invoices, Receipts, Payments
 │   ├── communication/            ← Announcements, Notifications, WhatsApp Triggers
 │   ├── administration/           ← Staff Management & System Configuration
 │   ├── audit/                    ← Event Tracking & Audit Logging
 │   ├── shared/                   ← Error Taxonomy, Domain Events, Common Utilities
-│   └── ui/                       ← Token-Driven UI Primitives (Button, Card, Input, Theme)
+│   └── ui/                       ← Token-Driven UI Primitives (Button, Card, Input, Modal, Theme)
 │
 ├── infrastructure/               ← Production Infrastructure & Framework Adapters
 │   ├── database/                 ← Prisma 7 ORM, PostgreSQL Client, Migrations, Test Database
@@ -32,8 +32,8 @@ coaching-os/
 │   └── storage/                  ← Storage Service Interfaces & Asset Wrappers
 │
 └── docs/                         ← System Architecture Specifications, Phase Contracts & ADRs
-    ├── adr/                      ├── Architecture Decision Records (ADR 0001 - 0007)
-    └── phases/                   └── Phase Contracts (Phase 1.0, 1.3 RBAC, 1.4 Onboarding)
+    ├── adr/                      ├── Architecture Decision Records (ADR 0001 - 0011)
+    └── phases/                   └── Phase Contracts (Phase 0.12, 1.0, 1.3 RBAC, 1.4 - 1.8 Core)
 ```
 
 ---
@@ -75,8 +75,11 @@ apps/web/
 │   │   │   ├── auth/             ← Better Auth catch-all route (`/api/auth/[...all]`)
 │   │   │   ├── dashboard/        ← Server tenant context handler (`GET /api/dashboard/context`)
 │   │   │   ├── health/           ← System baseline health endpoint (`GET /api/health`)
+│   │   │   ├── institute/        ← Tenant settings & parent CRM endpoints
+│   │   │   │   ├── parents/      ← InstituteParent API (`/api/institute/parents`, `/parents/link`)
+│   │   │   │   └── settings/     ← Institute settings API (`/api/institute/settings`)
 │   │   │   └── onboarding/       ← Institute onboarding endpoint (`POST /api/onboarding/institute`)
-│   │   ├── dashboard/            ← Authenticated tenant dashboard page (`page.tsx`)
+│   │   ├── dashboard/            ← Authenticated tenant dashboard pages & sub-views
 │   │   ├── onboarding/           ← Institute setup onboarding form page (`page.tsx`)
 │   │   ├── error.tsx             ← Global Next.js error boundary
 │   │   ├── globals.css           ← Global styles & CSS variables
@@ -84,6 +87,15 @@ apps/web/
 │   │   ├── loading.tsx           ← Loading spinner fallback
 │   │   ├── not-found.tsx         ← 404 Not Found page
 │   │   └── page.tsx              ← Landing page showcase
+│   ├── components/               ← Shared UI layout & marketing presentation components
+│   ├── features/                 ← Feature-driven application components
+│   │   ├── app-shell/            ← Header, Navigation sidebar, Tenant Context Banner
+│   │   ├── auth/                 ← Auth forms, login modals, session state components
+│   │   ├── dashboard/            ← Authenticated staff dashboard components
+│   │   ├── institute-parent/     ← Tenant Parent CRM UI components & modals
+│   │   ├── institute-settings/   ← White-label settings & branding form UI components
+│   │   └── onboarding/           ← Multi-step institute setup onboarding wizard
+│   ├── lib/                      ← API clients, auth guards, fetch helpers
 │   ├── providers/                ← Global React context providers (Auth, Query, UI)
 │   └── stores/                   ← Client-side state management stores (Zustand)
 ├── eslint.config.mjs             ← ESLint configuration
@@ -100,34 +112,54 @@ apps/web/
 ```text
 packages/identity/
 ├── src/
-│   ├── application/              ← Application Use Cases
+│   ├── application/              ← Application DTOs & Use Cases
+│   │   ├── dto/
+│   │   │   ├── institute-parent.dto.ts     ← InstituteParent DTO & conversion helper
+│   │   │   ├── parent-identity.dto.ts      ← ParentIdentity DTO & conversion helper
+│   │   │   └── student.dto.ts              ← Student DTO & conversion helper
 │   │   └── use-cases/
 │   │       ├── institute.use-cases.ts      ← Institute CRUD & query orchestration
+│   │       ├── institute-parent.use-cases.ts← InstituteParent CRM orchestration
 │   │       ├── membership.use-cases.ts     ← Membership resolution & context builder
-│   │       └── onboarding.use-cases.ts     ← Institute onboarding orchestration
+│   │       ├── onboarding.use-cases.ts     ← Institute onboarding orchestration
+│   │       ├── parent-identity.use-cases.ts← Platform Global ParentIdentity orchestration
+│   │       ├── settings.use-cases.ts       ← Institute Settings & Branding orchestration
+│   │       └── student.use-cases.ts        ← Student admission, lifecycle & profile use cases
 │   ├── authorization/            ← Capability-Based RBAC Engine
 │   │   ├── authorization-engine.ts         ← Dynamic capability evaluation & guards
-│   │   ├── capabilities.ts                 ← Capability taxonomy enum (49 capabilities)
+│   │   ├── capabilities.ts                 ← Capability taxonomy enum (53 capabilities)
 │   │   ├── resource-scope.ts               ← Resource filtering & parent/teacher scopes
-│   │   └── role-capabilities.ts            ← Role → Capability map (Owner, Teacher, Assistant, Parent)
+│   │   └── role-capabilities.ts            ← Role → Capability map (Owner, Assistant, Teacher, Parent)
 │   ├── domain/                   ← Framework-Independent Business Domain
 │   │   ├── entities/
 │   │   │   ├── institute.entity.ts         ← Institute domain entity & status invariants
-│   │   │   └── institute-membership.entity.ts ← Membership domain entity & role invariants
+│   │   │   ├── institute-membership.entity.ts ← Membership domain entity & role invariants
+│   │   │   ├── institute-parent.entity.ts  ← Tenant-scoped parent CRM entity
+│   │   │   ├── parent-identity.entity.ts   ← Platform-global parent identity entity
+│   │   │   └── student.entity.ts           ← Student learner aggregate & state machine
+│   │   ├── value-objects/
+│   │   │   ├── date-of-birth.vo.ts         ← DateOfBirth value object validation
+│   │   │   └── phone-number.vo.ts          ← E.164 PhoneNumber value object validation
 │   │   └── repositories/
 │   │       ├── institute.repository.ts     ← Institute persistence interface
 │   │       ├── institute-membership.repository.ts ← Membership repository interface
-│   │       └── institute-onboarding.repository.ts ← Atomic onboarding unit of work interface
+│   │       ├── institute-onboarding.repository.ts ← Atomic onboarding unit of work interface
+│   │       ├── institute-parent.repository.ts ← InstituteParent repository interface
+│   │       ├── parent-identity.repository.ts  ← ParentIdentity repository interface
+│   │       └── student.repository.ts        ← Student repository interface
 │   ├── infrastructure/           ← Prisma Persistence Implementations
 │   │   └── repositories/
 │   │       ├── prisma-institute.repository.ts ← PostgreSQL Institute repository
 │   │       ├── prisma-institute-membership.repository.ts ← PostgreSQL Membership repository
+│   │       ├── prisma-institute-parent.repository.ts    ← PostgreSQL InstituteParent repository
 │   │       ├── prisma-onboard-institute.repository.ts    ← PostgreSQL $transaction atomic bootstrapper
+│   │       ├── prisma-parent-identity.repository.ts     ← PostgreSQL ParentIdentity repository
 │   │       ├── prisma-rbac-role-capability.repository.ts ← Role-capability resolver adapter
-│   │       └── prisma-user.repository.ts   ← PostgreSQL User repository
+│   │       └── prisma-student.repository.ts            ← PostgreSQL Student repository
 │   ├── presentation/             ← Presentation Validators
 │   │   └── validators/
 │   │       ├── institute.validator.ts      ← Institute input schemas (Zod)
+│   │       ├── institute-parent.validator.ts← InstituteParent CRM schemas (Zod)
 │   │       ├── membership.validator.ts     ← Membership input schemas (Zod)
 │   │       └── onboarding.validator.ts     ← Onboarding presentation schema (Zod)
 │   └── index.ts                  ← Explicit barrel exports for package consumers
@@ -151,7 +183,7 @@ packages/
 │       └── index.ts              ← Barrel exports
 └── ui/                           ← Shared UI token primitives
     └── src/
-        ├── components/           ← Reusable UI components (Button, Input, Card, Modal)
+        ├── components/           ← Reusable UI components (Button, Input, Card, Modal, Form)
         ├── lib/                  ← UI class utility helpers (`cn()`)
         ├── theme/                ← Design tokens & theme provider
         └── index.ts              ← Primitive barrel exports
@@ -216,11 +248,23 @@ docs/
 │   ├── 0004-testing-database-strategy.md
 │   ├── 0005-ci-strategy.md
 │   ├── 0006-observability-strategy.md
-│   └── 0007-production-deployment-strategy.md
+│   ├── 0007-production-deployment-strategy.md
+│   ├── 0008-brand-identity-template-architecture.md
+│   ├── 0009-global-parent-identity-architecture.md
+│   ├── 0010-institute-parent-crm-architecture.md
+│   └── 0011-student-admission-profile-architecture.md
 ├── phases/                       ← Authoritative Phase Contracts & Architecture Freezes
+│   ├── phase0.12-public-auth-ux.md
+│   ├── phase0.12.2-landing-page.md
+│   ├── phase0.12.10-security-ux-matrix.md
 │   ├── phase1.md                 ← Phase 1.0 Architecture Freeze
 │   ├── phase1.3-rbac.md          ← Phase 1.3 Capability-Based RBAC Architecture Freeze
-│   └── phase1.4-onboarding.md    ← Phase 1.4 Institute Onboarding Workflow Freeze
+│   ├── phase1.4-onboarding.md    ← Phase 1.4 Institute Onboarding Workflow Freeze
+│   ├── phase1.5-institute-settings-branding.md ← Phase 1.5 Settings & Branding Freeze
+│   ├── phase1.6-global-parentidentity.md ← Phase 1.6 Global ParentIdentity Layer Freeze
+│   ├── phase1.6-security-matrix.md
+│   ├── phase1.7-instituteparent-crm.md  ← Phase 1.7 Tenant Parent CRM Layer Freeze
+│   └── phase1.8-student-admission-profile.md ← Phase 1.8 Student Admission & Profile Freeze
 ├── BACKLOG.md                    ← Product backlog & future phase items
 ├── CONTEXT.md                    ← Active milestone tracker & phase history
 ├── ENGINEERING_PLAYBOOK.md       ← Monorepo development guidelines & rules
@@ -237,15 +281,12 @@ docs/
 
 | Package / App | Category | Purpose | Core Tech Stack |
 |---|---|---|---|
-| `@coaching-os/web` | Application | Presentation UI & API Route Handlers | Next.js 16, React 19, Tailwind CSS v4 |
-| `@coaching-os/identity` | Package | Multi-tenant Identity, Memberships & RBAC | TypeScript, Zod, Vitest |
+| `@coaching-os/web` | Application | Presentation UI & API Route Handlers | Next.js 16, React 19, Vanilla CSS (CSS Variables) |
+| `@coaching-os/identity` | Package | Multi-tenant Identity, Memberships, RBAC, Parents & Students | TypeScript, Zod, Vitest |
 | `@coaching-os/academics` | Package | Batches, Schedules, Attendance, Homework | TypeScript, Zod |
 | `@coaching-os/billing` | Package | Fees, Invoices, Receipts, Payments | TypeScript, Zod |
-| `@coaching-os/communication` | Package | Announcements & WhatsApp Messaging | TypeScript, Zod |
-| `@coaching-os/administration` | Package | System Settings & Staff Administration | TypeScript, Zod |
-| `@coaching-os/audit` | Package | Audit Log & Security Tracing Contracts | TypeScript |
 | `@coaching-os/shared` | Package | Error Taxonomy, Result Helpers & Common Types | TypeScript |
-| `@coaching-os/ui` | Package | Design System Tokens & Primitive Components | Tailwind CSS v4, React 19 |
+| `@coaching-os/ui` | Package | Design System Tokens & Primitive Components | Vanilla CSS Tokens, React 19 |
 | `@coaching-os/database` | Infrastructure | Prisma ORM 7, PostgreSQL Client Adapter | Prisma 7, pg.Pool, `@prisma/adapter-pg` |
 | `@coaching-os/auth` | Infrastructure | Better Auth Session & Membership Adapter | Better Auth 1.6, Web Crypto |
 | `@coaching-os/observability` | Infrastructure | Pino Logging, PII Redaction & Error Reporting | Pino, Node performance API |

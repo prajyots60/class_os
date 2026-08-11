@@ -66,6 +66,7 @@ describe('PrismaStudentRepository Integration Suite', () => {
       email: 'aarav@example.com',
       city: 'Mumbai',
       state: 'Maharashtra',
+      admissionStatus: 'admitted',
     });
 
     const saved = await repository.create(student);
@@ -184,6 +185,7 @@ describe('PrismaStudentRepository Integration Suite', () => {
       firstName: 'Aarav',
       lastName: 'Sharma',
       email: 'aarav@test.com',
+      admissionStatus: 'admitted',
     });
     const s2 = StudentEntity.create({
       instituteId: instituteA_Id,

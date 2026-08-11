@@ -30,6 +30,16 @@ describe('StudentEntity Domain Entity', () => {
       expect(student.gender).toBe('male');
       expect(student.phone?.value).toBe('+919876543210');
       expect(student.email).toBe('aarav.sharma@example.com');
+      expect(student.admissionStatus).toBe('pending');
+      expect(student.status).toBe('inactive');
+    });
+
+    it('should construct an admitted Student entity when admissionStatus is admitted', () => {
+      const student = StudentEntity.create({
+        ...validProps,
+        admissionStatus: 'admitted',
+      });
+
       expect(student.admissionStatus).toBe('admitted');
       expect(student.status).toBe('active');
     });
@@ -184,7 +194,10 @@ describe('StudentEntity Domain Entity', () => {
     });
 
     it('should support deactivating and soft archiving a student', () => {
-      const student = StudentEntity.create(validProps);
+      const student = StudentEntity.create({
+        ...validProps,
+        admissionStatus: 'admitted',
+      });
       expect(student.status).toBe('active');
 
       student.deactivate();
@@ -198,7 +211,10 @@ describe('StudentEntity Domain Entity', () => {
 
   describe('DTO Serialization', () => {
     it('should serialize entity to clean DTO representation', () => {
-      const student = StudentEntity.create(validProps);
+      const student = StudentEntity.create({
+        ...validProps,
+        admissionStatus: 'admitted',
+      });
       const dto = student.toDTO();
 
       expect(dto.id).toBe(student.id);
