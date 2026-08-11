@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, Input } from '@coaching-os/ui';
-import { Users, UserPlus, Search, Filter } from 'lucide-react';
+import { UserPlus, Search, Filter } from 'lucide-react';
 
 export interface InstituteParentHeaderProps {
   search: string;

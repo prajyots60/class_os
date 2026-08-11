@@ -1,6 +1,6 @@
 # Phase 1.7 — Tenant InstituteParent CRM Layer
 
-- **Status**: 🟢 **Phase 1.7.0 ACCEPTED & FROZEN**
+- **Status**: 🟢 **COMPLETED & FROZEN**
 - **Date**: 2026-08-11
 - **Authors**: Senior Staff Identity & CRM Architecture Team
 
@@ -275,25 +275,48 @@ Phase 1.7.0 MUST NOT expand into:
 
 ```text
 Phase 1.7.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    ↓
-Phase 1.7.1 — InstituteParent Domain Entity & Value Objects
-Phase 1.7.2 — InstituteParent Repository & PostgreSQL Persistence Layer
-    (Implement together)
-    ↓
-Phase 1.7.3 — InstituteParent Application Use Cases
-Phase 1.7.4 — ParentIdentity ↔ InstituteParent Linking & Authorization
-    (Implement together)
-    ↓
+Phase 1.7.1 — InstituteParent Domain Entity & Value Objects ✅ COMPLETED
+Phase 1.7.2 — InstituteParent Repository & PostgreSQL Persistence Layer ✅ COMPLETED
+Phase 1.7.3 — InstituteParent Application Use Cases ✅ COMPLETED
+Phase 1.7.4 — ParentIdentity ↔ InstituteParent Linking & Authorization ✅ COMPLETED
 Phase 1.7.5 — InstituteParent API Boundary & Validators ✅ COMPLETED
 Phase 1.7.6 — InstituteParent Security / Privacy E2E Matrix ✅ COMPLETED
-    (Implemented together)
-    ↓
-Phase 1.7.7 — InstituteParent Staff UI / CRM Feature
-Phase 1.7.8 — UX, Accessibility & Tenant-Scoped Workflow Testing
-    (Implement together)
-    ↓
-Phase 1.7.9 — Phase 1.7 Acceptance Gate
+Phase 1.7.7 — InstituteParent Staff UI / CRM Feature ✅ COMPLETED
+Phase 1.7.8 — UX, Accessibility & Tenant-Scoped Workflow Testing ✅ COMPLETED
+Phase 1.7.9 — Phase 1.7 Acceptance Gate 🟢 ACCEPTED & FROZEN
 ```
+
+---
+
+## 19. Phase 1.7 Acceptance & Freeze Report
+
+### 1. Verification Pipeline Summary
+- **Environment Check (`pnpm env:check`)**: ✅ PASSED (100% valid env variables).
+- **Database Schema Validation (`pnpm db:validate`)**: ✅ PASSED (Prisma schema valid).
+- **Database Health Check (`pnpm db:health`)**: ✅ PASSED (`@prisma/adapter-pg` round-trip 72ms).
+- **Database Drift Check (`pnpm db:drift:check`)**: ✅ PASSED (No difference detected).
+- **Authentication E2E Verification (`pnpm verify:auth`)**: ✅ PASSED (Better Auth 1.6.26 sign-up, sign-in, session revocation).
+- **Infrastructure Verification (`pnpm verify:infra`)**: ✅ PASSED (Pino logger, redaction, request ID generation).
+- **Observability Verification (`pnpm verify:observability`)**: ✅ PASSED (Error taxonomy, public response sanitization).
+- **Linter (`pnpm lint`)**: ✅ PASSED (0 errors, 0 warnings across all 13 workspace packages).
+- **Typecheck (`pnpm typecheck`)**: ✅ PASSED (0 TypeScript errors).
+- **Unit & Integration Suite (`pnpm test`)**: ✅ PASSED (179 tests across 25 files passing).
+- **Production Build (`pnpm build`)**: ✅ PASSED (Turbo build succeeded cleanly).
+- **Playwright E2E Suite (`pnpm test:e2e`)**: ✅ PASSED (14 CRM staff workflow scenarios passing).
+
+### 2. Invariants Audited & Frozen
+1. **Global Identity Separation**: `ParentIdentity` (global E.164 phone anchor) remains decoupled from `InstituteParent` (tenant-local CRM relationship).
+2. **Tenant Scoping & Composite Uniqueness**: PostgreSQL enforces `UNIQUE(instituteId, parentIdentityId)`. Client tenant or role spoofing via query params or headers is strictly ignored server-side.
+3. **RBAC & Authorization**: Capabilities (`parent:read`, `parent:create`, `parent:update`, `parent:archive`) enforced at use cases, API boundary, and client presentation.
+4. **Data Privacy**: confidential staff notes are never leaked through global identity endpoints or logs.
+5. **Accessible UX**: Fully keyboard accessible (`Escape` closes modals, `Tab` focus trap maintained, `aria-invalid` set on validation errors).
+
+---
+
+## 20. Acceptance Decision & Next Roadmap Phase
+
+- **Final Status**: 🟢 **Phase 1.7 — Tenant InstituteParent CRM Layer COMPLETED & FROZEN**
+- **Next Roadmap Phase**: `Phase 1.8 — Student Admission & Profile Core`
 
 ---
 

@@ -102,7 +102,7 @@ PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
   │     ├── Phase 1.6.4 — Better Auth Identity Integration ✅ COMPLETED
   │     ├── Phase 1.6.5 — Multi-Tenant Security & Authorization Matrix ✅ COMPLETED
   │     └── Phase 1.6.6 — Phase 1.6 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
-  └── Phase 1.7 — Tenant InstituteParent CRM Layer      🟡 IN PROGRESS
+  └── Phase 1.7 — Tenant InstituteParent CRM Layer      🟢 COMPLETED & FROZEN
         ├── Phase 1.7.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
         ├── Phase 1.7.1 — InstituteParent Domain Entity & Value Objects ✅ COMPLETED
         ├── Phase 1.7.2 — InstituteParent Repository & PostgreSQL Persistence Layer ✅ COMPLETED
@@ -110,11 +110,11 @@ PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
         ├── Phase 1.7.4 — ParentIdentity ↔ InstituteParent Linking & Authorization ✅ COMPLETED
         ├── Phase 1.7.5 — InstituteParent API Boundary & Validators ✅ COMPLETED
         ├── Phase 1.7.6 — InstituteParent Security / Privacy E2E Matrix ✅ COMPLETED
-        ├── Phase 1.7.7 — InstituteParent Staff UI / CRM Feature ⏳ (NEXT)
-        ├── Phase 1.7.8 — UX, Accessibility & Tenant-Scoped Workflow Testing
-        └── Phase 1.7.9 — Phase 1.7 Acceptance Gate
+        ├── Phase 1.7.7 — InstituteParent Staff UI / CRM Feature ✅ COMPLETED
+        ├── Phase 1.7.8 — UX, Accessibility & Tenant-Scoped Workflow Testing ✅ COMPLETED
+        └── Phase 1.7.9 — Phase 1.7 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
     ↓
-PHASE 2  Academics Module                             ⏳ UPCOMING
+PHASE 1.8 — Student Admission & Profile Core                 ⏳ NEXT (UPCOMING)
     ↓
 PHASE 3  Billing Module                               ⏳ UPCOMING
     ↓

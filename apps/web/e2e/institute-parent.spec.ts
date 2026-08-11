@@ -20,10 +20,12 @@ import { test, expect, type APIRequestContext, type PlaywrightWorkerArgs } from 
  * - CRM-E2E-14: Global ParentIdentity remains unaffected by tenant soft-archive
  */
 
+type CookieItem = Awaited<ReturnType<APIRequestContext['storageState']>>['cookies'][number];
+
 interface SessionFixture {
   email: string;
   institute: { id: string; name: string };
-  cookies: Array<any>;
+  cookies: CookieItem[];
   baseURL: string;
 }
 
@@ -304,7 +306,7 @@ test.describe('Phase 1.7.7 — InstituteParent Staff CRM Feature Suite', () => {
     const listB = await apiCtxB.get('/api/institute/parents');
     expect(listB.status()).toBe(200);
     const dataB = await listB.json();
-    const found = dataB.data.some((p: any) => p.parentIdentity?.phone === phoneA);
+    const found = dataB.data.some((p: { parentIdentity?: { phone?: string } }) => p.parentIdentity?.phone === phoneA);
     expect(found).toBe(false);
 
     await apiCtxA.dispose();

@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { Card, Button, Badge } from '@coaching-os/ui';
-import { X, User, Phone, ShieldCheck, Calendar, FileText, Building2 } from 'lucide-react';
+import { X, Phone, ShieldCheck, Calendar, FileText, Building2 } from 'lucide-react';
 import { InstituteParentStatusBadge } from './institute-parent-status-badge';
 import type { InstituteParentDTO } from '../types/institute-parent-ui.types';
 

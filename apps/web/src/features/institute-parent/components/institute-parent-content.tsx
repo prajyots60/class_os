@@ -127,6 +127,40 @@ export function InstituteParentContent() {
   }, [router]);
 
   // 2. Fetch Parents List from API
+  useEffect(() => {
+    let active = true;
+
+    if (!isContextLoading && !accessDenied && canRead) {
+      Promise.resolve().then(async () => {
+        setIsLoading(true);
+        setError(null);
+
+        const res = await fetchParentsList({
+          status: statusFilter,
+          page,
+          limit,
+        });
+
+        if (!active) return;
+
+        if (res.success) {
+          setParents(res.data || []);
+          setTotal(res.meta?.total || 0);
+          setTotalPages(res.meta?.totalPages || 1);
+        } else {
+          setError(res.error?.message || "We couldn't load parent records.");
+          setParents([]);
+        }
+
+        setIsLoading(false);
+      });
+    }
+
+    return () => {
+      active = false;
+    };
+  }, [isContextLoading, accessDenied, canRead, statusFilter, page, limit]);
+
   const loadParents = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -142,18 +176,12 @@ export function InstituteParentContent() {
       setTotal(res.meta?.total || 0);
       setTotalPages(res.meta?.totalPages || 1);
     } else {
-      setError(res.error?.message || 'We couldn\'t load parent records.');
+      setError(res.error?.message || "We couldn't load parent records.");
       setParents([]);
     }
 
     setIsLoading(false);
   }, [statusFilter, page, limit]);
-
-  useEffect(() => {
-    if (!isContextLoading && !accessDenied && canRead) {
-      loadParents();
-    }
-  }, [isContextLoading, accessDenied, canRead, loadParents]);
 
   // Filter parent list on the client for search query (while preserving API paging contract)
   const filteredParents = useMemo(() => {

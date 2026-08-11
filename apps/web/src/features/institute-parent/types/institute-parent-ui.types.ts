@@ -43,7 +43,7 @@ export interface ApiParentsListResponse {
 
 export interface ApiParentResponse {
   success: boolean;
-  data: InstituteParentDTO;
+  data: InstituteParentDTO | null;
   error?: {
     code: string;
     message: string;

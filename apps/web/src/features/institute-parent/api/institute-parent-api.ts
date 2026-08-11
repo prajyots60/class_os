@@ -68,7 +68,7 @@ export async function fetchParentById(id: string): Promise<ApiParentResponse> {
   if (!response.ok) {
     return {
       success: false,
-      data: null as any,
+      data: null,
       error: {
         code: data?.error?.code || 'FETCH_ERROR',
         message: data?.error?.message || 'Failed to fetch parent details.',

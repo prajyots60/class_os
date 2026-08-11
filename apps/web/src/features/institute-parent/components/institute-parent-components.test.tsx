@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import * as React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { InstituteParentStatusBadge } from './institute-parent-status-badge';
