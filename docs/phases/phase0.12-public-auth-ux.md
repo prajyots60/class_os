@@ -466,9 +466,58 @@ Phase 0.12.11 Phase 0.12 Acceptance Gate
 4. **Testing Suite**:
    - Created `apps/web/src/features/auth/components/auth-foundation.test.ts` (6 unit tests). Verified export boundaries and zero prohibited server/database/auth dependencies in presentation components.
 5. **Explicit Deferrals**:
-   - Sign Up form logic & submit handler (Deferred to Phase 0.12.4).
-   - Sign In form logic & submit handler (Deferred to Phase 0.12.5).
+   - Sign Up form logic & submit handler (Completed in Phase 0.12.4).
+   - Sign In form logic & submit handler (Completed in Phase 0.12.5).
    - Password reset, email verification, OAuth UI (Deferred).
+
+---
+
+## 22. Phase 0.12.4 — Sign Up UI & Registration Flow Completion
+
+**Status:** 🟢 **COMPLETED & VERIFIED**  
+**Code Commit:** `41217f4` (`feat(web): implement sign up UI & registration flow (Phase 0.12.4)`)  
+
+### Implementation Details:
+1. **Sign-Up Form Schema & Types**:
+   - `signUpSchema` (`apps/web/src/features/auth/sign-up/sign-up-schema.ts`): Zod validator for name (min 2), email format, password (min 8), and confirm password matching.
+   - `sign-up-types.ts`: `SignUpState` state machine (`idle | submitting | success | error`) and `SignUpPayload` DTO.
+2. **SignUpForm Client Component**:
+   - `SignUpForm` (`apps/web/src/features/auth/sign-up/sign-up-form.tsx`): Built with `react-hook-form` and `@hookform/resolvers/zod`.
+   - Connected directly to `signUp.email()` from `@coaching-os/auth/client`.
+   - Includes password visibility toggles (`Eye` / `EyeOff`), loading state (`Spinner`), and safe error mapping (`AuthError`).
+   - `useSession()` guard automatically redirects authenticated users away from `/sign-up` to `/onboarding`.
+3. **Route Page Composition**:
+   - `app/(auth)/sign-up/page.tsx`: Thin Server Component composition embedding `<SignUpForm />`.
+4. **Testing & Security Matrix**:
+   - Unit tests: `sign-up-schema.test.ts` (14/14 passed) and `sign-up-form.test.ts` (7/7 passed).
+   - E2E tests: `apps/web/e2e/sign-up.spec.ts` (9/9 passed).
+   - Security: Zero tenant/identity payload injection (`userId`, `instituteId`, `membershipId`, `role`, `status`, `tenantId`). Safe error mapping prevents database/Prisma traceback exposure.
+
+---
+
+## 23. Phase 0.12.5 — Sign In UI & Authentication Flow Completion
+
+**Status:** 🟢 **COMPLETED & VERIFIED**  
+**Code Commit:** `Pending` (`feat(web): implement sign-in authentication flow`)  
+
+### Implementation Details:
+1. **Sign-In Form Schema & Types**:
+   - `signInSchema` (`apps/web/src/features/auth/sign-in/sign-in-schema.ts`): Zod validation for required `email` ("Email address is required.", "Please enter a valid email address.") and `password` ("Password is required.").
+   - `sign-in-types.ts`: `SignInPhase` state machine (`idle | submitting | success | error`), `SignInState`, and `SignInPayload` DTO.
+2. **SignInForm Client Component**:
+   - `SignInForm` (`apps/web/src/features/auth/sign-in/sign-in-form.tsx`): Built with `react-hook-form` and `@hookform/resolvers/zod` with `mode: 'onSubmit'`.
+   - Connected directly to `signIn.email()` from `@coaching-os/auth/client`.
+   - Includes password visibility toggle (`Eye` / `EyeOff`), `autoComplete="current-password"`, `autoComplete="email"`, `Spinner` loading indicator, and `AuthError` alerts.
+   - `sanitizeCallbackUrl` helper sanitizes optional `callbackUrl` search params, rejecting external phishing URLs (e.g. `https://evil.com`) and allowing only safe relative internal paths (e.g. `/dashboard`).
+   - Post-authentication routing checks `/api/dashboard/context` server-side: redirects users with an active institute to `/dashboard` (or safe `callbackUrl`), and users without an institute to `/onboarding`.
+   - `useSession()` guard automatically redirects already-authenticated users away from `/sign-in` to `/dashboard` or `/onboarding`.
+3. **Route Page Composition**:
+   - `app/(auth)/sign-in/page.tsx`: Thin Server Component composition boundary (< 30 lines) embedding `<SignInForm />` inside `<React.Suspense>`.
+4. **Testing & Verification**:
+   - Unit tests: `sign-in-schema.test.ts` (7/7 passed) and `sign-in-form.test.ts` (17/17 passed), verifying validation rules, URL sanitization, safe error mapping, and architecture invariants.
+   - E2E tests: `apps/web/e2e/sign-in.spec.ts` (8/8 passed in 8.2s), verifying form rendering, field validation, invalid credentials error, password visibility toggle, full sign-in → `/onboarding` redirect flow, session redirect for authenticated users, payload security (sending ONLY `email` and `password`), and malicious callbackUrl rejection.
+   - Full monorepo verification: `pnpm typecheck`, `pnpm lint`, `pnpm build`, `pnpm env:check`, `pnpm db:validate`, `pnpm db:health`, `pnpm verify:auth`, `pnpm verify:infra`, `pnpm verify:observability` (100% passed).
+
 
 
 

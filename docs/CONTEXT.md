@@ -71,9 +71,9 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
         │     └── 0.12.2.9 — Landing Page Acceptance Gate 🟢 (ACCEPTED)
         ├── Phase 0.12.3 — Authentication Layout & Shared Components ✅
         ├── Phase 0.12.4 — Sign Up UI & Registration Flow ✅
-        ├── Phase 0.12.5 — Sign In UI (Next)
+        ├── Phase 0.12.5 — Sign In UI & Authentication Flow ✅
         ├── Phase 0.12.6 — Password Recovery UI (Deferred)
-        ├── Phase 0.12.7 — Session & Route Guards
+        ├── Phase 0.12.7 — Session & Route Guards (Next)
         ├── Phase 0.12.8 — Authenticated Application Shell
         ├── Phase 0.12.9 — Full Browser Journey Integration
         ├── Phase 0.12.10 — Security & UX Test Matrix
@@ -234,9 +234,16 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Form Validation & UX State**: Implemented Zod validation schema `signUpSchema` (name, email, password min 8, password matching) and robust state handling with `@hookform/resolvers/zod`. Added password visibility toggles (`Eye` / `EyeOff`), loading state with `Spinner`, and `AuthError` alerts.
 - **Better Auth Client Integration**: Connected `SignUpForm` directly to `@coaching-os/auth/client` (`signUp.email`), ensuring authentication sessions are established automatically upon successful registration.
 - **Server Identity Boundary Invariants**: Verified that zero identity attributes (`userId`, `instituteId`, `membershipId`, `role`, `status`, `tenantId`) are accepted from client request payloads. Automatically redirects authenticated users away from `/sign-up` to `/onboarding`.
-- **Testing & Verification**: Created unit test suites `sign-up-schema.test.ts` (14/14 passed) and `sign-up-form.test.ts` (7/7 passed), verifying schema validation rules, security invariants, and module boundary checks. Built Playwright E2E test suite `apps/web/e2e/sign-up.spec.ts` (9/9 passed), verifying field validation, password toggle, duplicate registration error handling, session redirects, and payload security. Passed full typecheck, lint, and Next.js build (`pnpm build`).
+### ✅ Phase 0.12.5 — Sign In UI & Authentication Flow (COMPLETED)
+
+- **Sign In Feature Architecture**: Created `/sign-in` page (`app/(auth)/sign-in/page.tsx`) as a thin composition boundary (< 30 lines) embedding `<SignInForm />` inside `<React.Suspense>`.
+- **Form Validation & UX State**: Implemented `signInSchema` (`sign-in-schema.ts`), `SignInState` state machine, and `SignInPayload` DTO in `apps/web/src/features/auth/sign-in`. Built `SignInForm` with `react-hook-form` and `@hookform/resolvers/zod` with `mode: 'onSubmit'`. Features interactive password visibility toggle (`Eye` / `EyeOff`), loading state with `Spinner`, and safe user-facing error mapping (`mapSignInError`).
+- **Better Auth Integration & Session Routing**: Connected `SignInForm` directly to `signIn.email()` from `@coaching-os/auth/client`. On successful authentication, queries `/api/dashboard/context` server-side to resolve tenant association, navigating users with an active institute to `/dashboard` (or safe `callbackUrl`) and users without an institute to `/onboarding`.
+- **Security Invariants & Callback URL Sanitization**: Built `sanitizeCallbackUrl` helper to sanitize `callbackUrl` query parameters, strictly enforcing single relative internal paths (e.g. `/dashboard`) and rejecting external phishing URLs (e.g. `https://evil.com`). Payload contains ONLY `email` and `password`. Zero raw Prisma errors or tracebacks exposed.
+- **Testing & Verification**: Created unit test suites `sign-in-schema.test.ts` (7/7 passed) and `sign-in-form.test.ts` (17/17 passed). Built Playwright E2E suite `apps/web/e2e/sign-in.spec.ts` (8/8 passed in 8.2s). Verified 100% monorepo build, lint, typecheck, environment, database, auth, and observability checks.
 
 ## 4. Next Milestone Roadmap
+
 
 ### 🚧 PHASE 1 — IDENTITY MODULE (NOW ACTIVE)
 
