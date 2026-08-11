@@ -390,7 +390,17 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.6.4:** Parent Identity ↔ Authentication Integration ✅ COMPLETED
     - **Phase 1.6.5:** Multi-Tenant Security & Authorization Matrix ✅ COMPLETED
     - **Phase 1.6.6:** Phase 1.6 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
-  - **Phase 1.7:** Tenant InstituteParent CRM Layer ⏳ (NEXT)
+  - **Phase 1.7:** Tenant InstituteParent CRM Layer 🟡 (IN PROGRESS)
+    - **Phase 1.7.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.7.1:** InstituteParent Domain Entity & Value Objects ⏳ (NEXT)
+    - **Phase 1.7.2:** InstituteParent Repository & PostgreSQL Persistence Layer ⏳ (NEXT)
+    - **Phase 1.7.3:** InstituteParent Application Use Cases
+    - **Phase 1.7.4:** ParentIdentity ↔ InstituteParent Linking & Authorization
+    - **Phase 1.7.5:** InstituteParent API Boundary & Validators
+    - **Phase 1.7.6:** InstituteParent Security / Privacy E2E Matrix
+    - **Phase 1.7.7:** InstituteParent Staff UI / CRM Feature
+    - **Phase 1.7.8:** UX, Accessibility & Tenant-Scoped Workflow Testing
+    - **Phase 1.7.9:** Phase 1.7 Acceptance Gate
   - **Phase 1.8:** Student Admission & Profile Core
   - **Phase 1.9:** Guardian & Student Links
   - **Phase 1.10:** Academic Hierarchy (Programs, Subjects, Batches)
