@@ -31,6 +31,7 @@ CoachingOS is a multi-tenant SaaS operating system built for founder-led coachin
 - **[ADR-0003: Asynchronous Workflow Engine Strategy](file:///home/supra/Desktop/class_os/docs/adr/0003-async-workflow-engine-strategy.md)**
 - **[ADR-0004: Testing Database & Isolation Strategy](file:///home/supra/Desktop/class_os/docs/adr/0004-testing-database-strategy.md)**
 - **[ADR-0005: GitHub Actions Continuous Integration Strategy](file:///home/supra/Desktop/class_os/docs/adr/0005-ci-strategy.md)**
+- **[ADR-0008: Brand Identity & Template Engine Architecture (Future Roadmap)](file:///home/supra/Desktop/class_os/docs/adr/0008-brand-identity-template-architecture.md)**
 - **[Phase 1 Domain & Architecture Contract](file:///home/supra/Desktop/class_os/docs/phases/phase1.md)**
 - **[Engineering Backlog](file:///home/supra/Desktop/class_os/docs/BACKLOG.md)**
 

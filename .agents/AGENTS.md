@@ -87,6 +87,10 @@ Infrastructure Adapters
    - Component names: `PascalCase.tsx`.
    - Utility functions: `camelCase.ts`.
    - Exports: Use explicit barrel exports (`src/index.ts`) in each workspace package.
+4. **Token-Level CSS & Design System Discipline**:
+   - All UI components MUST consume semantic CSS design tokens (`bg-primary`, `text-primary-foreground`, `bg-background`, `text-foreground`, `border-border`, `ring-ring`, `rounded-md`) from `@coaching-os/ui` and global CSS variables.
+   - **NEVER** hardcode hex colors (e.g., `bg-[#2563eb]`) or raw static color utilities (e.g., `bg-blue-600`, `text-slate-900`) inside UI components.
+   - Strict token discipline ensures future template-based tenant branding (see [ADR 0008](file:///home/supra/Desktop/class_os/docs/adr/0008-brand-identity-template-architecture.md)) applies seamlessly without component refactoring.
 
 ---
 
