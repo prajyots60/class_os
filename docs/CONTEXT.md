@@ -118,9 +118,9 @@ PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
         ├── Phase 1.8.2 — Student Repository & PostgreSQL Persistence Layer ✅ COMPLETED
         ├── Phase 1.8.3 — Student Application Use Cases ✅ COMPLETED
         ├── Phase 1.8.4 — Student Admission & Lifecycle Rules ✅ COMPLETED
-        ├── Phase 1.8.5 — Student API Boundary & Validators ⏳ NEXT
-        ├── Phase 1.8.6 — Student Security / Tenant E2E Matrix
-        ├── Phase 1.8.7 — Student Staff UI / Admission Feature
+        ├── Phase 1.8.5 — Student API Boundary & Validators ✅ COMPLETED
+        ├── Phase 1.8.6 — Student Security / Tenant E2E Matrix ✅ COMPLETED
+        ├── Phase 1.8.7 — Student Staff UI / Admission Feature ⏳ NEXT
         ├── Phase 1.8.8 — UX, Accessibility & Admission Workflow Testing
         └── Phase 1.8.9 — Phase 1.8 Acceptance Gate
     ↓

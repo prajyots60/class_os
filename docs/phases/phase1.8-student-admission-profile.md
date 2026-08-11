@@ -1,6 +1,6 @@
 # Phase 1.8 — Student Admission & Profile Core
 
-- **Status**: 🟢 **Phase 1.8.0 – 1.8.4 COMPLETED & FROZEN**
+- **Status**: 🟢 **Phase 1.8.0 – 1.8.6 COMPLETED & FROZEN**
 - **Date**: 2026-08-11
 - **Authors**: Senior Staff Architecture & Identity Team
 
@@ -229,10 +229,13 @@ export const CAPABILITIES = {
 | `STUDENT-12` | Cross-Tenant Archive | DELETE request targeting alien student ID | Returns 404 Not Found | Scoped archive operation |
 | `STUDENT-13` | Duplicate Admission No. | Creating student with existing admission number | Returns 409 Conflict | `@@unique([instituteId, admissionNumber])` |
 | `STUDENT-14` | Race Condition | Concurrent creation of same admission number | DB unique constraint error | Caught and converted to `ConflictError` |
-| `STUDENT-15` | Audit Log Bypass | Mutating student without audit logging | System audit check | Domain event emitter in use case |
+| `STUDENT-15` | Audit Traceability | Mutating student without log traceability | System audit check | Pino structured observability logging (`@coaching-os/observability`) |
 | `STUDENT-16` | Identity Leakage | Exposing parent identity in student DTO | Inspecting Student DTO | Zero parent fields in `StudentDTO` |
 | `STUDENT-17` | Guardian Leakage | Leaking unlinked guardian records | Inspecting student details | Link check enforced in Phase 1.9 |
 | `STUDENT-18` | Enrollment Leakage | Leaking batch enrollment in profile DTO | Inspecting student DTO | Enrollment boundary isolated to Phase 1.11 |
+
+> [!NOTE]
+> **Audit Traceability Clarification (`STUDENT-15`)**: Phase 1.8 enforces structured application and observability logging (`logger.info` via `@coaching-os/observability`) across all 10 student use cases, recording `actorUserId`, `instituteId`, `studentId`, `admissionNumber`, and `operation` while redacting PII. Durable domain audit trail persistence via the dedicated `@coaching-os/audit` package is distinct from observability logging and is scheduled for system-wide audit event integration.
 
 ---
 
