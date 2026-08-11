@@ -371,11 +371,11 @@ Phase 1.6 explicitly **DOES NOT**:
 ```text
 Phase 1.6.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     ↓
-Phase 1.6.1 — ParentIdentity Domain Entities & Value Objects ⏳ (NEXT)
+Phase 1.6.1 — ParentIdentity Domain Entities & Value Objects 🟢 (COMPLETED)
     ↓
-Phase 1.6.2 — ParentIdentity Repository & Persistence Layer
+Phase 1.6.2 — ParentIdentity Repository & Persistence Layer 🟢 (COMPLETED)
     ↓
-Phase 1.6.3 — ParentIdentity Application Use Cases
+Phase 1.6.3 — ParentIdentity Application Use Cases ⏳ (NEXT)
     ↓
 Phase 1.6.4 — Parent Identity ↔ Authentication Integration
     ↓
@@ -383,6 +383,29 @@ Phase 1.6.5 — Multi-Tenant Security & Authorization Matrix
     ↓
 Phase 1.6.6 — Phase 1.6 Acceptance Gate
 ```
+
+---
+
+## 20.1 Subphase Execution Log: Phase 1.6.1 & 1.6.2 Completion
+
+### Phase 1.6.1 — ParentIdentity Domain Entities & Value Objects (COMPLETED)
+- **`PhoneNumber` Value Object (`packages/identity/src/domain/value-objects/phone-number.vo.ts`)**:
+  - Implements E.164 normalization, whitespace/formatting stripping, +91 default for 10-digit Indian numbers, and value equality comparison.
+  - Unit tests: `packages/identity/src/domain/value-objects/phone-number.vo.test.ts` (8/8 passing).
+- **`ParentIdentityEntity` Domain Entity (`packages/identity/src/domain/entities/parent-identity.entity.ts`)**:
+  - Implements framework-independent entity with canonical E.164 phone anchor, display `name`, `avatar`, and state machine `status` (`active` <-> `suspended` -> `deactivated` terminal state).
+  - Enforces zero tenant properties (`instituteId`).
+  - Unit tests: `packages/identity/src/domain/entities/parent-identity.entity.test.ts` (8/8 passing).
+
+### Phase 1.6.2 — ParentIdentity Repository & Persistence Layer (COMPLETED)
+- **`ParentIdentityRepository` Interface (`packages/identity/src/domain/repositories/parent-identity.repository.ts`)**:
+  - Defines `create`, `findById`, `findByPhone`, `existsByPhone`, `update`, and `delete`. Operates purely on domain objects without tenant parameters.
+- **Database Schema Migration (`infrastructure/database/prisma/migrations/20260811100000_add_parent_identity_fields`)**:
+  - Added `ParentIdentityStatus` enum, `name` (VarChar 255), `avatar` (Text), `status` (ParentIdentityStatus), and `@@index([status])` on `parent_identities`.
+  - Schema validated with `pnpm db:validate`, migration deployed to Postgres, and verified 100% drift-free with `pnpm db:drift:check`.
+- **`PrismaParentIdentityRepository` (`packages/identity/src/infrastructure/repositories/prisma-parent-identity.repository.ts`)**:
+  - Implements PostgreSQL persistence adapter, handling P2002 duplicate key constraint (`ConflictError`) and P2025 (`NotFoundError`).
+  - Integration test suite: `packages/identity/src/infrastructure/repositories/prisma-parent-identity.repository.integration.test.ts` (11/11 passing against real PostgreSQL database).
 
 ---
 

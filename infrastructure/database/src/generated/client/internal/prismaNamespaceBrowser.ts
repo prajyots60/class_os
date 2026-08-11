@@ -102,6 +102,9 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const ParentIdentityScalarFieldEnum = {
   id: 'id',
   phone: 'phone',
+  name: 'name',
+  avatar: 'avatar',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -393,10 +393,6 @@ export type ChildProfileUncheckedUpdateManyWithoutParentIdentityNestedInput = {
   deleteMany?: Prisma.ChildProfileScalarWhereInput | Prisma.ChildProfileScalarWhereInput[]
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type ChildProfileCreateNestedOneWithoutStudentLinksInput = {
   create?: Prisma.XOR<Prisma.ChildProfileCreateWithoutStudentLinksInput, Prisma.ChildProfileUncheckedCreateWithoutStudentLinksInput>
   connectOrCreate?: Prisma.ChildProfileCreateOrConnectWithoutStudentLinksInput

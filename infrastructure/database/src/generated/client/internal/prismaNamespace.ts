@@ -2708,6 +2708,9 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const ParentIdentityScalarFieldEnum = {
   id: 'id',
   phone: 'phone',
+  name: 'name',
+  avatar: 'avatar',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3176,6 +3179,20 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
  * Reference to a field of type 'String[]'
  */
 export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ParentIdentityStatus'
+ */
+export type EnumParentIdentityStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ParentIdentityStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ParentIdentityStatus[]'
+ */
+export type ListEnumParentIdentityStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ParentIdentityStatus[]'>
     
 
 

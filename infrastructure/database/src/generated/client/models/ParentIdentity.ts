@@ -27,6 +27,9 @@ export type AggregateParentIdentity = {
 export type ParentIdentityMinAggregateOutputType = {
   id: string | null
   phone: string | null
+  name: string | null
+  avatar: string | null
+  status: $Enums.ParentIdentityStatus | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -34,6 +37,9 @@ export type ParentIdentityMinAggregateOutputType = {
 export type ParentIdentityMaxAggregateOutputType = {
   id: string | null
   phone: string | null
+  name: string | null
+  avatar: string | null
+  status: $Enums.ParentIdentityStatus | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -41,6 +47,9 @@ export type ParentIdentityMaxAggregateOutputType = {
 export type ParentIdentityCountAggregateOutputType = {
   id: number
   phone: number
+  name: number
+  avatar: number
+  status: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -50,6 +59,9 @@ export type ParentIdentityCountAggregateOutputType = {
 export type ParentIdentityMinAggregateInputType = {
   id?: true
   phone?: true
+  name?: true
+  avatar?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -57,6 +69,9 @@ export type ParentIdentityMinAggregateInputType = {
 export type ParentIdentityMaxAggregateInputType = {
   id?: true
   phone?: true
+  name?: true
+  avatar?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -64,6 +79,9 @@ export type ParentIdentityMaxAggregateInputType = {
 export type ParentIdentityCountAggregateInputType = {
   id?: true
   phone?: true
+  name?: true
+  avatar?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -144,6 +162,9 @@ export type ParentIdentityGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 export type ParentIdentityGroupByOutputType = {
   id: string
   phone: string
+  name: string | null
+  avatar: string | null
+  status: $Enums.ParentIdentityStatus
   createdAt: Date
   updatedAt: Date
   _count: ParentIdentityCountAggregateOutputType | null
@@ -172,6 +193,9 @@ export type ParentIdentityWhereInput = {
   NOT?: Prisma.ParentIdentityWhereInput | Prisma.ParentIdentityWhereInput[]
   id?: Prisma.UuidFilter<"ParentIdentity"> | string
   phone?: Prisma.StringFilter<"ParentIdentity"> | string
+  name?: Prisma.StringNullableFilter<"ParentIdentity"> | string | null
+  avatar?: Prisma.StringNullableFilter<"ParentIdentity"> | string | null
+  status?: Prisma.EnumParentIdentityStatusFilter<"ParentIdentity"> | $Enums.ParentIdentityStatus
   createdAt?: Prisma.DateTimeFilter<"ParentIdentity"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ParentIdentity"> | Date | string
   memberships?: Prisma.InstituteMembershipListRelationFilter
@@ -181,6 +205,9 @@ export type ParentIdentityWhereInput = {
 export type ParentIdentityOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  name?: Prisma.SortOrderInput | Prisma.SortOrder
+  avatar?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   memberships?: Prisma.InstituteMembershipOrderByRelationAggregateInput
@@ -193,6 +220,9 @@ export type ParentIdentityWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ParentIdentityWhereInput | Prisma.ParentIdentityWhereInput[]
   OR?: Prisma.ParentIdentityWhereInput[]
   NOT?: Prisma.ParentIdentityWhereInput | Prisma.ParentIdentityWhereInput[]
+  name?: Prisma.StringNullableFilter<"ParentIdentity"> | string | null
+  avatar?: Prisma.StringNullableFilter<"ParentIdentity"> | string | null
+  status?: Prisma.EnumParentIdentityStatusFilter<"ParentIdentity"> | $Enums.ParentIdentityStatus
   createdAt?: Prisma.DateTimeFilter<"ParentIdentity"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ParentIdentity"> | Date | string
   memberships?: Prisma.InstituteMembershipListRelationFilter
@@ -202,6 +232,9 @@ export type ParentIdentityWhereUniqueInput = Prisma.AtLeast<{
 export type ParentIdentityOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  name?: Prisma.SortOrderInput | Prisma.SortOrder
+  avatar?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ParentIdentityCountOrderByAggregateInput
@@ -215,6 +248,9 @@ export type ParentIdentityScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ParentIdentityScalarWhereWithAggregatesInput | Prisma.ParentIdentityScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"ParentIdentity"> | string
   phone?: Prisma.StringWithAggregatesFilter<"ParentIdentity"> | string
+  name?: Prisma.StringNullableWithAggregatesFilter<"ParentIdentity"> | string | null
+  avatar?: Prisma.StringNullableWithAggregatesFilter<"ParentIdentity"> | string | null
+  status?: Prisma.EnumParentIdentityStatusWithAggregatesFilter<"ParentIdentity"> | $Enums.ParentIdentityStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ParentIdentity"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ParentIdentity"> | Date | string
 }
@@ -222,6 +258,9 @@ export type ParentIdentityScalarWhereWithAggregatesInput = {
 export type ParentIdentityCreateInput = {
   id?: string
   phone: string
+  name?: string | null
+  avatar?: string | null
+  status?: $Enums.ParentIdentityStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutParentIdentityInput
@@ -231,6 +270,9 @@ export type ParentIdentityCreateInput = {
 export type ParentIdentityUncheckedCreateInput = {
   id?: string
   phone: string
+  name?: string | null
+  avatar?: string | null
+  status?: $Enums.ParentIdentityStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutParentIdentityInput
@@ -240,6 +282,9 @@ export type ParentIdentityUncheckedCreateInput = {
 export type ParentIdentityUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumParentIdentityStatusFieldUpdateOperationsInput | $Enums.ParentIdentityStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutParentIdentityNestedInput
@@ -249,6 +294,9 @@ export type ParentIdentityUpdateInput = {
 export type ParentIdentityUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumParentIdentityStatusFieldUpdateOperationsInput | $Enums.ParentIdentityStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutParentIdentityNestedInput
@@ -258,6 +306,9 @@ export type ParentIdentityUncheckedUpdateInput = {
 export type ParentIdentityCreateManyInput = {
   id?: string
   phone: string
+  name?: string | null
+  avatar?: string | null
+  status?: $Enums.ParentIdentityStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -265,6 +316,9 @@ export type ParentIdentityCreateManyInput = {
 export type ParentIdentityUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumParentIdentityStatusFieldUpdateOperationsInput | $Enums.ParentIdentityStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -272,6 +326,9 @@ export type ParentIdentityUpdateManyMutationInput = {
 export type ParentIdentityUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumParentIdentityStatusFieldUpdateOperationsInput | $Enums.ParentIdentityStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -279,6 +336,9 @@ export type ParentIdentityUncheckedUpdateManyInput = {
 export type ParentIdentityCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  avatar?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -286,6 +346,9 @@ export type ParentIdentityCountOrderByAggregateInput = {
 export type ParentIdentityMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  avatar?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -293,6 +356,9 @@ export type ParentIdentityMaxOrderByAggregateInput = {
 export type ParentIdentityMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  avatar?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -304,6 +370,14 @@ export type ParentIdentityScalarRelationFilter = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type EnumParentIdentityStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ParentIdentityStatus
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -341,6 +415,9 @@ export type ParentIdentityUpdateOneRequiredWithoutChildProfilesNestedInput = {
 export type ParentIdentityCreateWithoutMembershipsInput = {
   id?: string
   phone: string
+  name?: string | null
+  avatar?: string | null
+  status?: $Enums.ParentIdentityStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   childProfiles?: Prisma.ChildProfileCreateNestedManyWithoutParentIdentityInput
@@ -349,6 +426,9 @@ export type ParentIdentityCreateWithoutMembershipsInput = {
 export type ParentIdentityUncheckedCreateWithoutMembershipsInput = {
   id?: string
   phone: string
+  name?: string | null
+  avatar?: string | null
+  status?: $Enums.ParentIdentityStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   childProfiles?: Prisma.ChildProfileUncheckedCreateNestedManyWithoutParentIdentityInput
@@ -373,6 +453,9 @@ export type ParentIdentityUpdateToOneWithWhereWithoutMembershipsInput = {
 export type ParentIdentityUpdateWithoutMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumParentIdentityStatusFieldUpdateOperationsInput | $Enums.ParentIdentityStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   childProfiles?: Prisma.ChildProfileUpdateManyWithoutParentIdentityNestedInput
@@ -381,6 +464,9 @@ export type ParentIdentityUpdateWithoutMembershipsInput = {
 export type ParentIdentityUncheckedUpdateWithoutMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumParentIdentityStatusFieldUpdateOperationsInput | $Enums.ParentIdentityStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   childProfiles?: Prisma.ChildProfileUncheckedUpdateManyWithoutParentIdentityNestedInput
@@ -389,6 +475,9 @@ export type ParentIdentityUncheckedUpdateWithoutMembershipsInput = {
 export type ParentIdentityCreateWithoutChildProfilesInput = {
   id?: string
   phone: string
+  name?: string | null
+  avatar?: string | null
+  status?: $Enums.ParentIdentityStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutParentIdentityInput
@@ -397,6 +486,9 @@ export type ParentIdentityCreateWithoutChildProfilesInput = {
 export type ParentIdentityUncheckedCreateWithoutChildProfilesInput = {
   id?: string
   phone: string
+  name?: string | null
+  avatar?: string | null
+  status?: $Enums.ParentIdentityStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutParentIdentityInput
@@ -421,6 +513,9 @@ export type ParentIdentityUpdateToOneWithWhereWithoutChildProfilesInput = {
 export type ParentIdentityUpdateWithoutChildProfilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumParentIdentityStatusFieldUpdateOperationsInput | $Enums.ParentIdentityStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.InstituteMembershipUpdateManyWithoutParentIdentityNestedInput
@@ -429,6 +524,9 @@ export type ParentIdentityUpdateWithoutChildProfilesInput = {
 export type ParentIdentityUncheckedUpdateWithoutChildProfilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumParentIdentityStatusFieldUpdateOperationsInput | $Enums.ParentIdentityStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutParentIdentityNestedInput
@@ -477,6 +575,9 @@ export type ParentIdentityCountOutputTypeCountChildProfilesArgs<ExtArgs extends 
 export type ParentIdentitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   phone?: boolean
+  name?: boolean
+  avatar?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   memberships?: boolean | Prisma.ParentIdentity$membershipsArgs<ExtArgs>
@@ -487,6 +588,9 @@ export type ParentIdentitySelect<ExtArgs extends runtime.Types.Extensions.Intern
 export type ParentIdentitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   phone?: boolean
+  name?: boolean
+  avatar?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["parentIdentity"]>
@@ -494,6 +598,9 @@ export type ParentIdentitySelectCreateManyAndReturn<ExtArgs extends runtime.Type
 export type ParentIdentitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   phone?: boolean
+  name?: boolean
+  avatar?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["parentIdentity"]>
@@ -501,11 +608,14 @@ export type ParentIdentitySelectUpdateManyAndReturn<ExtArgs extends runtime.Type
 export type ParentIdentitySelectScalar = {
   id?: boolean
   phone?: boolean
+  name?: boolean
+  avatar?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ParentIdentityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "phone" | "createdAt" | "updatedAt", ExtArgs["result"]["parentIdentity"]>
+export type ParentIdentityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "phone" | "name" | "avatar" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["parentIdentity"]>
 export type ParentIdentityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   memberships?: boolean | Prisma.ParentIdentity$membershipsArgs<ExtArgs>
   childProfiles?: boolean | Prisma.ParentIdentity$childProfilesArgs<ExtArgs>
@@ -523,6 +633,9 @@ export type $ParentIdentityPayload<ExtArgs extends runtime.Types.Extensions.Inte
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     phone: string
+    name: string | null
+    avatar: string | null
+    status: $Enums.ParentIdentityStatus
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["parentIdentity"]>
@@ -952,6 +1065,9 @@ export interface Prisma__ParentIdentityClient<T, Null = never, ExtArgs extends r
 export interface ParentIdentityFieldRefs {
   readonly id: Prisma.FieldRef<"ParentIdentity", 'String'>
   readonly phone: Prisma.FieldRef<"ParentIdentity", 'String'>
+  readonly name: Prisma.FieldRef<"ParentIdentity", 'String'>
+  readonly avatar: Prisma.FieldRef<"ParentIdentity", 'String'>
+  readonly status: Prisma.FieldRef<"ParentIdentity", 'ParentIdentityStatus'>
   readonly createdAt: Prisma.FieldRef<"ParentIdentity", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ParentIdentity", 'DateTime'>
 }

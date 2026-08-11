@@ -18,6 +18,15 @@ export const UserStatus = {
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
 
 
+export const ParentIdentityStatus = {
+  active: 'active',
+  suspended: 'suspended',
+  deactivated: 'deactivated'
+} as const
+
+export type ParentIdentityStatus = (typeof ParentIdentityStatus)[keyof typeof ParentIdentityStatus]
+
+
 export const InstituteStatus = {
   active: 'active',
   suspended: 'suspended',

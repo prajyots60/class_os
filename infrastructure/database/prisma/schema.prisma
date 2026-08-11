@@ -19,6 +19,12 @@ enum UserStatus {
   suspended
 }
 
+enum ParentIdentityStatus {
+  active
+  suspended
+  deactivated
+}
+
 enum InstituteStatus {
   active
   suspended
@@ -105,14 +111,18 @@ enum Relation {
 // ==========================================
 
 model ParentIdentity {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  phone     String   @unique @db.VarChar(20)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id        String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  phone     String               @unique @db.VarChar(20)
+  name      String?              @db.VarChar(255)
+  avatar    String?              @db.Text
+  status    ParentIdentityStatus @default(active)
+  createdAt DateTime             @default(now()) @map("created_at")
+  updatedAt DateTime             @updatedAt @map("updated_at")
 
   memberships   InstituteMembership[]
   childProfiles ChildProfile[]
 
+  @@index([status])
   @@map("parent_identities")
 }
 
