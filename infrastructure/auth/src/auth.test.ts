@@ -84,4 +84,12 @@ describe('Better Auth Foundation & Session Integration Suite', () => {
       /UNAUTHORIZED/,
     );
   });
+
+  it('verifies rate limit options configuration safety', () => {
+    expect(auth.options.rateLimit).toBeDefined();
+    expect(auth.options.rateLimit?.window).toBe(60);
+    expect(auth.options.rateLimit?.max).toBe(100);
+    expect(auth.options.rateLimit?.customRules).toHaveProperty('/sign-in/email');
+    expect(auth.options.rateLimit?.customRules).toHaveProperty('/sign-up/email');
+  });
 });

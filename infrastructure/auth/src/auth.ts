@@ -16,7 +16,10 @@ export const auth = betterAuth({
     requireEmailVerification: false,
   },
   rateLimit: {
-    enabled: process.env.NODE_ENV !== 'test' && process.env.DISABLE_AUTH_RATE_LIMIT !== 'true',
+    enabled:
+      serverConfig.NODE_ENV === 'production'
+        ? true
+        : process.env.NODE_ENV !== 'test' && process.env.DISABLE_AUTH_RATE_LIMIT !== 'true',
     window: 60, // 60s global window
     max: 100, // 100 requests per minute global baseline
     customRules: {

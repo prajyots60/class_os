@@ -76,8 +76,8 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
         ├── Phase 0.12.7 — Session & Route Guards ✅
         ├── Phase 0.12.8 — Authenticated Application Shell ✅
         ├── Phase 0.12.9 — Full Browser Journey Integration ✅
-        ├── Phase 0.12.10 — Security & UX Test Matrix (Next)
-        └── Phase 0.12.11 — Phase 0.12 Acceptance Gate
+        ├── Phase 0.12.10 — Security & UX Test Matrix ✅
+        └── Phase 0.12.11 — Phase 0.12 Acceptance Gate (Next)
                                                         ↓
                                                   PHASE 0 GATE (PASSED)
 
@@ -292,6 +292,12 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Canonical E2E Suite (`apps/web/e2e/full-browser-journey.spec.ts`)**: Built comprehensive Playwright automated suite covering Journeys A through F (unauthenticated → sign-up → onboarding → institute setup → tenant workspace → refresh persistence → sign-out → returning sign-in → no-tenant guard → existing tenant guard → auth page guards).
 - **Security & Boundary Hardening**: Verified callback URL sanitization (`https://evil.example.com` blocked), server session revocation, browser-side tenant isolation (User A vs User B data boundary), back-button cache protection, and mobile drawer accessibility (`< 768px`).
 - **Complete Test Verification**: 67/67 Playwright E2E tests passed; 129/129 unit/integration tests passed; 100% monorepo build, lint, typecheck, environment, database, auth, and observability checks passed cleanly across 13 packages.
+
+### ✅ Phase 0.12.10 — Security & UX Test Matrix (COMPLETED)
+
+- **Security & UX Hardening Suite (`apps/web/e2e/security-ux-matrix.spec.ts`)**: Built regression suite verifying double-submission button disabling, duplicate institute prevention under rapid enter clicks, protocol-relative / encoded callback URL phishing sanitization, zero error stack trace leakage in API responses, mobile viewport responsiveness (320px, 375px, 768px), and ARIA validation states.
+- **Production Rate-Limit Protection**: Enforced mandatory rate-limiting under `NODE_ENV === 'production'` in `infrastructure/auth/src/auth.ts` regardless of test environment bypass flags.
+- **Complete Test Verification**: 73/73 Playwright E2E tests passed; 130/130 unit/integration tests passed; 100% monorepo build, lint, typecheck, environment, database, auth, and observability checks passed cleanly across 13 packages.
 
 ## 4. Next Milestone Roadmap
 

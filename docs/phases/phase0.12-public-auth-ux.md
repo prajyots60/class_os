@@ -588,3 +588,29 @@ Phase 0.12.11 Phase 0.12 Acceptance Gate
    - Unit & Integration Suite: 129/129 tests passed across `@coaching-os/web` and monorepo packages.
    - Full Build, Lint, Typecheck: `pnpm env:check`, `pnpm db:validate`, `pnpm db:health`, `pnpm typecheck`, `pnpm lint`, `pnpm build` (100% clean across all 13 packages).
 
+---
+
+## 27. Phase 0.12.10 — Security & UX Test Matrix Completion
+
+**Status:** 🟢 **COMPLETED & VERIFIED**  
+**Code Commit:** `feat(web): harden security and ux test matrix (Phase 0.12.10)`  
+
+### Implementation Details:
+1. **Security & UX Hardening Suite (`apps/web/e2e/security-ux-matrix.spec.ts`)**:
+   - Implemented dedicated Playwright regression suite testing boundary conditions:
+     - Rapid double-clicking on `/sign-up` submit button disables button and executes exactly 1 registration attempt.
+     - Rapid double-clicking on `/onboarding` submit button disables button and prevents duplicate institute creation.
+     - Advanced encoded, backslash-escaped, protocol-relative callback URL phishing attacks remain strictly anchored on application origin.
+     - API error responses (`/api/onboarding/institute`) output canonical JSON DTOs with `x-request-id` and zero database / Prisma / stack trace leakage.
+     - Mobile viewports (320px, 375px, 768px) render without horizontal document scroll overflow (`scrollWidth === innerWidth`).
+     - Form controls expose explicit labels, `aria-invalid="true"` binding on error, and accessible field error messaging.
+2. **Production Rate-Limit Enforcement**:
+   - Hardened `infrastructure/auth/src/auth.ts` rate limit configuration to guarantee `enabled: true` under `NODE_ENV === 'production'`, preventing test bypass flags from disabling rate limits in production environments. Added unit verification in `auth.test.ts`.
+3. **Formal Security Matrix Specification**:
+   - Documented comprehensive 18-invariant security and UX test matrix in `docs/phases/phase0.12.10-security-ux-matrix.md`.
+4. **Full Monorepo Verification Results**:
+   - Playwright E2E Suite: 73/73 tests passed across 8 spec files.
+   - Unit & Integration Suite: 130/130 tests passed across all packages.
+   - Quality & Build Checks: `pnpm env:check`, `pnpm db:validate`, `pnpm db:health`, `pnpm typecheck`, `pnpm lint`, `pnpm build` (100% clean across 13 packages).
+
+
