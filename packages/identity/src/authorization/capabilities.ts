@@ -65,6 +65,12 @@ export const CAPABILITIES = {
   ANNOUNCEMENT_DELETE: 'announcement:delete',
   ANNOUNCEMENT_PUBLISH: 'announcement:publish',
   AUDIT_READ: 'audit:read',
+
+  // Parent CRM Management (Phase 1.7)
+  PARENT_READ: 'parent:read',
+  PARENT_CREATE: 'parent:create',
+  PARENT_UPDATE: 'parent:update',
+  PARENT_ARCHIVE: 'parent:archive',
 } as const;
 
 export type Capability = (typeof CAPABILITIES)[keyof typeof CAPABILITIES];
@@ -75,6 +81,7 @@ export type CapabilityResource =
   | 'branding'
   | 'staff'
   | 'student'
+  | 'parent'
   | 'academic'
   | 'attendance'
   | 'homework'
@@ -111,6 +118,7 @@ const ALL_RESOURCES_SET: ReadonlySet<string> = new Set([
   'branding',
   'staff',
   'student',
+  'parent',
   'academic',
   'attendance',
   'homework',

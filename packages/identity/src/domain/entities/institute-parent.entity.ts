@@ -149,6 +149,14 @@ export class InstituteParentEntity {
     this._updatedAt = new Date();
   }
 
+  public inactivate(): void {
+    this.changeStatus('inactive');
+  }
+
+  public activate(): void {
+    this.changeStatus('active');
+  }
+
   /**
    * Export domain state for DTO serialization.
    */

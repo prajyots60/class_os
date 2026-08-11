@@ -31,7 +31,7 @@ describe('Role → Capability Resolver Engine Suite', () => {
   });
 
   describe('Explicit Role Capability Sets (Matrix Tests)', () => {
-    it('Test 1 — Owner capabilities (All 49 capabilities)', () => {
+    it('Test 1 — Owner capabilities (All 53 capabilities)', () => {
       const ownerCaps = getCapabilitiesForRole('owner');
       const allCaps = Object.values(CAPABILITIES);
 
@@ -41,14 +41,17 @@ describe('Role → Capability Resolver Engine Suite', () => {
       }
     });
 
-    it('Test 2 — Teacher capabilities (Exact 27 capabilities)', () => {
+    it('Test 2 — Teacher capabilities (Exact 30 capabilities)', () => {
       const teacherCaps = getCapabilitiesForRole('teacher');
-      expect(teacherCaps.size).toBe(27);
+      expect(teacherCaps.size).toBe(30);
 
-      // Teacher possesses academic, attendance, homework, test, marks, announcement, institute:read
+      // Teacher possesses academic, attendance, homework, test, marks, announcement, institute:read, parent CRM (read, create, update)
       expect(teacherCaps.has(CAPABILITIES.INSTITUTE_READ)).toBe(true);
       expect(teacherCaps.has(CAPABILITIES.MARKS_PUBLISH)).toBe(true);
       expect(teacherCaps.has(CAPABILITIES.ATTENDANCE_MARK)).toBe(true);
+      expect(teacherCaps.has(CAPABILITIES.PARENT_READ)).toBe(true);
+      expect(teacherCaps.has(CAPABILITIES.PARENT_CREATE)).toBe(true);
+      expect(teacherCaps.has(CAPABILITIES.PARENT_UPDATE)).toBe(true);
 
       // Teacher MUST NOT possess staff management or billing capabilities
       expect(teacherCaps.has(CAPABILITIES.STAFF_INVITE)).toBe(false);
@@ -56,19 +59,21 @@ describe('Role → Capability Resolver Engine Suite', () => {
       expect(teacherCaps.has(CAPABILITIES.INSTITUTE_UPDATE)).toBe(false);
     });
 
-    it('Test 3 — Assistant capabilities (Exact 19 capabilities)', () => {
+    it('Test 3 — Assistant capabilities (Exact 20 capabilities)', () => {
       const assistantCaps = getCapabilitiesForRole('assistant');
-      expect(assistantCaps.size).toBe(19);
+      expect(assistantCaps.size).toBe(20);
 
-      // Assistant possesses staff:read, student:create, payment:record, receipt:issue
+      // Assistant possesses staff:read, student:create, payment:record, receipt:issue, parent:read
       expect(assistantCaps.has(CAPABILITIES.STAFF_READ)).toBe(true);
       expect(assistantCaps.has(CAPABILITIES.STUDENT_CREATE)).toBe(true);
       expect(assistantCaps.has(CAPABILITIES.PAYMENT_RECORD)).toBe(true);
+      expect(assistantCaps.has(CAPABILITIES.PARENT_READ)).toBe(true);
 
-      // Assistant MUST NOT possess marks publishing or staff role change
+      // Assistant MUST NOT possess marks publishing or staff role change or parent:create
       expect(assistantCaps.has(CAPABILITIES.MARKS_PUBLISH)).toBe(false);
       expect(assistantCaps.has(CAPABILITIES.STAFF_ROLE_CHANGE)).toBe(false);
       expect(assistantCaps.has(CAPABILITIES.INSTITUTE_ARCHIVE)).toBe(false);
+      expect(assistantCaps.has(CAPABILITIES.PARENT_CREATE)).toBe(false);
     });
 
     it('Test 4 — Parent capabilities (Exact 10 capabilities)', () => {
@@ -119,7 +124,7 @@ describe('Role → Capability Resolver Engine Suite', () => {
       expect(first.size).toBe(0);
 
       const second = getCapabilitiesForRole('teacher');
-      expect(second.size).toBe(27);
+      expect(second.size).toBe(30);
       expect(second.has(CAPABILITIES.ATTENDANCE_MARK)).toBe(true);
     });
 
