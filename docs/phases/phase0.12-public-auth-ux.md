@@ -518,9 +518,45 @@ Phase 0.12.11 Phase 0.12 Acceptance Gate
    - E2E tests: `apps/web/e2e/sign-in.spec.ts` (8/8 passed in 8.2s), verifying form rendering, field validation, invalid credentials error, password visibility toggle, full sign-in → `/onboarding` redirect flow, session redirect for authenticated users, payload security (sending ONLY `email` and `password`), and malicious callbackUrl rejection.
    - Full monorepo verification: `pnpm typecheck`, `pnpm lint`, `pnpm build`, `pnpm env:check`, `pnpm db:validate`, `pnpm db:health`, `pnpm verify:auth`, `pnpm verify:infra`, `pnpm verify:observability` (100% passed).
 
+---
 
+## 24. Phase 0.12.7 — Session & Route Guards Completion
 
+**Status:** 🟢 **COMPLETED & VERIFIED**  
+**Code Commit:** `c836c98` (`feat(web): phase 0.12.7 — server-side session & route guards`)  
 
+### Implementation Details:
+1. **No Middleware Decision**: Server Component route guards rather than Next.js middleware. Security chain: `Better Auth session → server identity → tenant membership → RBAC → domain operation`.
+2. **`auth-guards.ts`**: `requireAuthSession(callbackPath)` hard-redirects unauthenticated requests before HTML render. `resolveServerTenantContext(userId)` directly invokes domain use-cases without HTTP self-calls.
+3. **Route Security Matrix**: Protected `/dashboard` and `/onboarding` as async Server Components.
+4. **Testing Matrix**: Unit test suite `auth-guards.test.ts` (11 tests) and `sanitize-callback-url.test.ts` (22 tests). Playwright E2E suite `e2e/route-guards.spec.ts` (17 scenarios).
 
+---
 
+## 25. Phase 0.12.8 — Authenticated Application Shell Completion
 
+**Status:** 🟢 **COMPLETED & VERIFIED**  
+**Code Commit:** `Pending` (`feat(web): implement authenticated application shell (Phase 0.12.8)`)  
+
+### Implementation Details:
+1. **2-Level Layout Hierarchy (`apps/web/src/app/(app)/`)**:
+   - `app/(app)/layout.tsx`: Authenticated session guard (`requireAuthSession`). Enforces session authentication for all app routes without duplicating session calls.
+   - `app/(app)/onboarding/page.tsx`: Standalone setup page (`/onboarding`) rendered for authenticated users with no institute (`hasTenant: false`).
+   - `app/(app)/(workspace)/layout.tsx`: Workspace layout (`/dashboard`, etc.). Checks `resolveServerTenantContext`. If `hasTenant: false`, redirects to `/onboarding`. Otherwise wraps children in `<AppShell>`.
+2. **App Shell Feature Architecture (`apps/web/src/features/app-shell/`)**:
+   - `AppShell` (`components/app-shell.tsx`): Root presentation container rendering desktop sidebar, header, and main workspace content (`<main className="max-w-7xl">`).
+   - `AppSidebar` (`components/app-sidebar.tsx`): Desktop fixed sidebar (`w-64`) rendering `InstituteIdentity`, filtered navigation sections, and footer.
+   - `AppHeader` (`components/app-header.tsx`): Sticky top header (`h-16`) with mobile hamburger toggle, `Breadcrumbs`, and `UserMenu`.
+   - `MobileSidebar` (`components/mobile-sidebar.tsx`): Accessible slide-over drawer (< 768px viewports) with Escape key listener, backdrop overlay, focus management, ARIA attributes (`role="dialog"`, `aria-modal="true"`), and auto-close on route change.
+   - `InstituteIdentity` (`components/institute-identity.tsx`): Institute logo or deterministic 2-letter initials avatar badge, institute name, and role badge.
+   - `UserMenu` (`components/user-menu.tsx`): Dropdown menu displaying user name, email, role badge, profile/settings links (future/disabled), and functional `SignOutButton`.
+   - `SignOutButton` (`components/sign-out-button.tsx`): Client component calling `signOut()` from `@coaching-os/auth/client` with loading state and redirect to `/sign-in`.
+   - `Breadcrumbs` (`components/breadcrumbs.tsx`): Semantic navigation (`aria-label="Breadcrumb"`) with chevron separators and `aria-current="page"`.
+   - `PageHeader` (`components/page-header.tsx`): Reusable title, description, and action slots header for workspace pages.
+3. **Capability-Aware Navigation Architecture**:
+   - `navigation-config.ts`: Centralized navigation configuration grouped into Overview, Management, Academics, Finance, Communication sections. Items marked `isImplemented: false` render with clear "Coming Soon" badges without dead links.
+   - `navigation-visibility.ts`: `filterNavigationByRole(role)` filters sections/items using `getCapabilitiesForRole(role)` from `@coaching-os/identity`. Evaluated server-side in `(workspace)/layout.tsx`.
+4. **Testing & Verification**:
+   - Unit tests: `navigation.test.ts` (5 tests) and `app-shell.test.tsx` (2 tests). Total web unit tests: 129/129 passed.
+   - Playwright E2E suite: `apps/web/e2e/app-shell.spec.ts` (5 scenarios passed: desktop workspace shell, mobile drawer, tenant isolation, no-tenant redirect, sign-out).
+   - Full monorepo verification: `pnpm typecheck`, `pnpm lint`, `pnpm build`, `pnpm env:check`, `pnpm db:validate`, `pnpm db:health` (100% passed).
