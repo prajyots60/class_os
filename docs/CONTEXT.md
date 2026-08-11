@@ -55,7 +55,7 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
   ├── Phase 0.9  — Git & CI Pipelines                   ✅ COMPLETED
   ├── Phase 0.10 — Observability Setup                  ✅ COMPLETED
   ├── Phase 0.11 — Production Deployment               ✅ COMPLETED
-  └── Phase 0.12 — Public & Authentication UX          🚧 NOW ACTIVE
+  └── Phase 0.12 — Public & Authentication UX          ✅ COMPLETED & FROZEN
         ├── Phase 0.12.0 — Architecture & UX Contract Freeze 🟢 (Freeze)
         ├── Phase 0.12.1 — UI Foundation & Design System Audit ✅
         ├── Phase 0.12.2 — Public Landing Page 🟢 (FROZEN)
@@ -77,7 +77,7 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
         ├── Phase 0.12.8 — Authenticated Application Shell ✅
         ├── Phase 0.12.9 — Full Browser Journey Integration ✅
         ├── Phase 0.12.10 — Security & UX Test Matrix ✅
-        └── Phase 0.12.11 — Phase 0.12 Acceptance Gate (Next)
+        └── Phase 0.12.11 — Phase 0.12 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
                                                         ↓
                                                   PHASE 0 GATE (PASSED)
 
@@ -298,6 +298,16 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Security & UX Hardening Suite (`apps/web/e2e/security-ux-matrix.spec.ts`)**: Built regression suite verifying double-submission button disabling, duplicate institute prevention under rapid enter clicks, protocol-relative / encoded callback URL phishing sanitization, zero error stack trace leakage in API responses, mobile viewport responsiveness (320px, 375px, 768px), and ARIA validation states.
 - **Production Rate-Limit Protection**: Enforced mandatory rate-limiting under `NODE_ENV === 'production'` in `infrastructure/auth/src/auth.ts` regardless of test environment bypass flags.
 - **Complete Test Verification**: 73/73 Playwright E2E tests passed; 130/130 unit/integration tests passed; 100% monorepo build, lint, typecheck, environment, database, auth, and observability checks passed cleanly across 13 packages.
+
+### 🟢 Phase 0.12.11 — Phase 0.12 Acceptance Gate & Milestone Freeze (ACCEPTED & FROZEN)
+
+- **Independent Repository & Security Audit**: Audited route composition, Server Component auth/tenant guards, `sanitizeCallbackUrl()` open-redirect defense, clean client/server component separation, and production rate-limit enforcement. Zero architectural or security regressions found.
+- **Full Suite Verification (100% Passed)**:
+  - Playwright E2E Suite: 73/73 passed across 8 spec files.
+  - Unit & Integration Suite: 130/130 passed across monorepo.
+  - Typecheck, Lint & Build: 100% clean across all 13 packages.
+  - Infrastructure Checks: `pnpm env:check`, `pnpm db:validate`, `pnpm db:health`, `pnpm db:drift:check`, `pnpm verify:auth`, `pnpm verify:observability` passed 100%.
+- **Formal Decision**: **Phase 0.12 — Public & Authentication UX is formally ACCEPTED and FROZEN.**
 
 ## 4. Next Milestone Roadmap
 

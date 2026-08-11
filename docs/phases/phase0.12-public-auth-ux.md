@@ -613,4 +613,32 @@ Phase 0.12.11 Phase 0.12 Acceptance Gate
    - Unit & Integration Suite: 130/130 tests passed across all packages.
    - Quality & Build Checks: `pnpm env:check`, `pnpm db:validate`, `pnpm db:health`, `pnpm typecheck`, `pnpm lint`, `pnpm build` (100% clean across 13 packages).
 
+---
+
+## 28. Phase 0.12.11 — Phase 0.12 Acceptance Gate & Milestone Freeze
+
+**Status:** 🟢 **ACCEPTED & FROZEN**  
+**Date:** August 11, 2026  
+**Final Audit Decision:** **ACCEPTED & FROZEN**  
+
+### Formal Milestone Audit Summary:
+1. **Architectural Invariants & Boundaries**:
+   - **Authentication Authority**: Better Auth `1.6.26` handles user registration, session token generation, session cookies, and password verification.
+   - **Server-Authoritative Session & Tenant Guards**: Server Component routes (`/dashboard`, `/onboarding`) execute `requireAuthSession` and `resolveServerTenantContext` server-side before rendering any HTML content.
+   - **No Middleware**: Confirmed zero Next.js edge middleware. All tenant resolution and security boundaries exist close to the domain layer in Server Components.
+   - **Single Canonical Callback Sanitizer**: `sanitizeCallbackUrl()` in `apps/web/src/features/auth/utils/sanitize-callback-url.ts` is the single authoritative sanitizer preventing open redirects.
+   - **Clean Server/Client Boundaries**: Zero database or server identity packages (`@coaching-os/database`, `prisma`, `@coaching-os/identity` use cases) are imported in client components. Route pages in `app/` are thin composition wrappers under 30 lines.
+2. **Comprehensive Verification Matrix (100% Passed)**:
+   - **Playwright E2E Test Suite**: `73/73 passed` across 8 spec files (`full-browser-journey.spec.ts`, `security-ux-matrix.spec.ts`, `route-guards.spec.ts`, `onboarding.spec.ts`, `app-shell.spec.ts`, `sign-in.spec.ts`, `sign-up.spec.ts`, `smoke.spec.ts`).
+   - **Unit & Integration Suite**: `130/130 passed` across `@coaching-os/web` and monorepo packages.
+   - **Typecheck & Lint**: `0 errors, 0 warnings` across all 13 workspace packages (`pnpm typecheck`, `pnpm lint`).
+   - **Production Build**: `100% successful` (`pnpm build`). All route groups (`(marketing)`, `(auth)`, `(app)`) compiled successfully.
+   - **Database & Auth Infrastructure Checks**: `pnpm env:check`, `pnpm db:validate`, `pnpm db:health`, `pnpm db:drift:check`, `pnpm verify:auth`, `pnpm verify:observability` (100% passed).
+3. **Explicitly Deferred Items**:
+   - Phase 0.12.6 Password Recovery transactional email infrastructure (deferred to future production email integration).
+   - Phase 1 identity and academic domain modules.
+4. **Milestone Declaration**:
+   - **Phase 0.12 — Public & Authentication UX is formally ACCEPTED and FROZEN.** No further architecture or component modifications permitted in Phase 0.12.
+
+
 
