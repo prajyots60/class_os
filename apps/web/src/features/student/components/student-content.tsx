@@ -167,7 +167,15 @@ export function StudentContent() {
   }, [isContextLoading, accessDenied, canRead, search, admissionStatusFilter, statusFilter, page, limit]);
 
   useEffect(() => {
-    loadStudents();
+    let active = true;
+    Promise.resolve().then(() => {
+      if (active) {
+        loadStudents();
+      }
+    });
+    return () => {
+      active = false;
+    };
   }, [loadStudents]);
 
   // Success Message Auto-Dismiss

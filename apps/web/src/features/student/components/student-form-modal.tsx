@@ -41,8 +41,12 @@ export function StudentFormModal({
   // Validation Errors State
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
-  // Populate form on edit mode change
-  useEffect(() => {
+  const [prevStudent, setPrevStudent] = useState<StudentDTO | null | undefined>(undefined);
+  const [prevIsOpen, setPrevIsOpen] = useState<boolean>(false);
+
+  if (student !== prevStudent || isOpen !== prevIsOpen) {
+    setPrevStudent(student);
+    setPrevIsOpen(isOpen);
     if (student) {
       setAdmissionNumber(student.admissionNumber);
       setFirstName(student.firstName || '');
@@ -71,7 +75,7 @@ export function StudentFormModal({
       setPostalCode('');
     }
     setFieldErrors({});
-  }, [student, isOpen]);
+  }
 
   // Keyboard accessibility: Escape key listener
   useEffect(() => {
@@ -274,7 +278,7 @@ export function StudentFormModal({
                 <label className="block text-xs font-medium text-[hsl(var(--foreground))] mb-1">Gender</label>
                 <select
                   value={gender}
-                  onChange={(e) => setGender(e.target.value as any)}
+                  onChange={(e) => setGender(e.target.value as 'male' | 'female' | 'other' | 'prefer_not_to_say' | '')}
                   disabled={isSubmitting}
                   className="w-full h-9 px-3 text-xs rounded-md border border-[hsl(var(--input))] bg-[hsl(var(--background))] text-[hsl(var(--foreground))]"
                 >

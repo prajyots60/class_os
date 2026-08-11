@@ -24,11 +24,15 @@ export function StudentAdmissionModal({
   isSubmitting,
   error,
 }: StudentAdmissionModalProps) {
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
   const [admissionDate, setAdmissionDate] = useState(() => new Date().toISOString().split('T')[0]);
 
-  useEffect(() => {
-    setAdmissionDate(new Date().toISOString().split('T')[0]);
-  }, [isOpen]);
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
+    if (isOpen) {
+      setAdmissionDate(new Date().toISOString().split('T')[0]);
+    }
+  }
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
