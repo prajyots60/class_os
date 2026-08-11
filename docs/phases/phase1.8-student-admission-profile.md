@@ -1,6 +1,6 @@
 # Phase 1.8 — Student Admission & Profile Core
 
-- **Status**: 🟢 **Phase 1.8.0 – 1.8.7 COMPLETED & FROZEN**
+- **Status**: 🟢 **Phase 1.8 — COMPLETED, ACCEPTED & FROZEN**
 - **Date**: 2026-08-11
 - **Authors**: Senior Staff Architecture & Identity Team
 
@@ -288,7 +288,7 @@ Phase 1.8.6 — Student Security / Tenant E2E Matrix 🟢 (COMPLETED)
 Phase 1.8.7 — Student Staff UI / Admission Feature 🟢 (COMPLETED)
 Phase 1.8.8 — UX, Accessibility & Admission Workflow Testing 🟢 (COMPLETED)
     ↓
-Phase 1.8.9 — Phase 1.8 Acceptance Gate ⏳ NEXT
+Phase 1.8.9 — Phase 1.8 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
 ```
 
 ---
