@@ -29,6 +29,7 @@ export * from './application/use-cases/institute-parent.use-cases';
 export * from './presentation/validators/institute.validator';
 export * from './presentation/validators/membership.validator';
 export * from './presentation/validators/onboarding.validator';
+export * from './presentation/validators/institute-parent.validator';
 
 // Infrastructure Repositories
 export * from './infrastructure/repositories/prisma-institute.repository';

@@ -284,9 +284,9 @@ Phase 1.7.3 — InstituteParent Application Use Cases
 Phase 1.7.4 — ParentIdentity ↔ InstituteParent Linking & Authorization
     (Implement together)
     ↓
-Phase 1.7.5 — InstituteParent API Boundary & Validators
-Phase 1.7.6 — InstituteParent Security / Privacy E2E Matrix
-    (Implement together)
+Phase 1.7.5 — InstituteParent API Boundary & Validators ✅ COMPLETED
+Phase 1.7.6 — InstituteParent Security / Privacy E2E Matrix ✅ COMPLETED
+    (Implemented together)
     ↓
 Phase 1.7.7 — InstituteParent Staff UI / CRM Feature
 Phase 1.7.8 — UX, Accessibility & Tenant-Scoped Workflow Testing

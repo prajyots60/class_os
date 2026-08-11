@@ -18,6 +18,7 @@ export interface CreateInstituteParentProps {
   instituteId: string;
   parentIdentityId: string;
   notes?: string | null;
+  status?: InstituteParentStatus;
 }
 
 /**
@@ -68,7 +69,7 @@ export class InstituteParentEntity {
   }
 
   /**
-   * Factory method to create a new active InstituteParent CRM record.
+   * Factory method to create a new InstituteParent CRM record.
    */
   public static create(props: CreateInstituteParentProps): InstituteParentEntity {
     const now = new Date();
@@ -77,7 +78,7 @@ export class InstituteParentEntity {
       instituteId: props.instituteId,
       parentIdentityId: props.parentIdentityId,
       notes: props.notes,
-      status: 'active',
+      status: props.status || 'active',
       createdAt: now,
       updatedAt: now,
     });

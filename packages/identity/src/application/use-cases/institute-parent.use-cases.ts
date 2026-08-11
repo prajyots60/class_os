@@ -142,7 +142,7 @@ export class GetInstituteParentUseCase {
       entity.parentIdentityId,
     );
 
-    return toInstituteParentDTO(entity, parentIdentity);
+    return toInstituteParentDTO(entity, parentIdentity || undefined);
   }
 }
 
@@ -178,7 +178,7 @@ export class ListInstituteParentsUseCase {
         const parentIdentity = await this.parentIdentityRepository.findById(
           entity.parentIdentityId,
         );
-        return toInstituteParentDTO(entity, parentIdentity);
+        return toInstituteParentDTO(entity, parentIdentity || undefined);
       }),
     );
 
@@ -241,7 +241,7 @@ export class UpdateInstituteParentUseCase {
       updated.parentIdentityId,
     );
 
-    return toInstituteParentDTO(updated, parentIdentity);
+    return toInstituteParentDTO(updated, parentIdentity || undefined);
   }
 }
 
@@ -293,6 +293,6 @@ export class ArchiveInstituteParentUseCase {
       updated.parentIdentityId,
     );
 
-    return toInstituteParentDTO(updated, parentIdentity);
+    return toInstituteParentDTO(updated, parentIdentity || undefined);
   }
 }
