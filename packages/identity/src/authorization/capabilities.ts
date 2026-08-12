@@ -84,6 +84,24 @@ export const CAPABILITIES = {
   RELATIONSHIP_UPDATE: 'relationship:update',
   RELATIONSHIP_ARCHIVE: 'relationship:archive',
   RELATIONSHIP_PRIMARY: 'relationship:primary',
+
+  // Academic Hierarchy (Phase 1.10)
+  PROGRAM_READ: 'program:read',
+  PROGRAM_CREATE: 'program:create',
+  PROGRAM_UPDATE: 'program:update',
+  PROGRAM_ARCHIVE: 'program:archive',
+
+  SUBJECT_READ: 'subject:read',
+  SUBJECT_CREATE: 'subject:create',
+  SUBJECT_UPDATE: 'subject:update',
+  SUBJECT_ARCHIVE: 'subject:archive',
+
+  BATCH_READ: 'batch:read',
+  BATCH_CREATE: 'batch:create',
+  BATCH_UPDATE: 'batch:update',
+  BATCH_ARCHIVE: 'batch:archive',
+  BATCH_STATUS: 'batch:status',
+  BATCH_TEACHER: 'batch:teacher',
 } as const;
 
 export type Capability = (typeof CAPABILITIES)[keyof typeof CAPABILITIES];
@@ -97,6 +115,9 @@ export type CapabilityResource =
   | 'parent'
   | 'guardian'
   | 'relationship'
+  | 'program'
+  | 'subject'
+  | 'batch'
   | 'academic'
   | 'attendance'
   | 'homework'
@@ -124,7 +145,9 @@ export type CapabilityAction =
   | 'cancel'
   | 'record'
   | 'issue'
-  | 'primary';
+  | 'primary'
+  | 'status'
+  | 'teacher';
 
 const ALL_CAPABILITIES_SET: ReadonlySet<string> = new Set(Object.values(CAPABILITIES));
 
@@ -137,6 +160,9 @@ const ALL_RESOURCES_SET: ReadonlySet<string> = new Set([
   'parent',
   'guardian',
   'relationship',
+  'program',
+  'subject',
+  'batch',
   'academic',
   'attendance',
   'homework',
@@ -166,6 +192,8 @@ const ALL_ACTIONS_SET: ReadonlySet<string> = new Set([
   'record',
   'issue',
   'primary',
+  'status',
+  'teacher',
 ]);
 
 /**

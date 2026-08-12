@@ -38,6 +38,10 @@ export * from './domain/repositories/batch.repository';
 export * from './application/dto/parent-identity.dto';
 export * from './application/dto/institute-parent.dto';
 export * from './application/dto/student.dto';
+export * from './application/dto/program.dto';
+export * from './application/dto/subject.dto';
+export * from './application/dto/program-subject.dto';
+export * from './application/dto/batch.dto';
 export type {
   StudentGuardianSummaryDTO,
   ParentStudentSummaryDTO,
@@ -51,6 +55,10 @@ export * from './application/use-cases/parent-identity.use-cases';
 export * from './application/use-cases/institute-parent.use-cases';
 export * from './application/use-cases/student.use-cases';
 export * from './application/use-cases/institute-parent-student.use-cases';
+export * from './application/use-cases/program.use-cases';
+export * from './application/use-cases/subject.use-cases';
+export * from './application/use-cases/program-subject.use-cases';
+export * from './application/use-cases/batch.use-cases';
 
 // Presentation Validators
 export * from './presentation/validators/institute.validator';
@@ -59,6 +67,10 @@ export * from './presentation/validators/onboarding.validator';
 export * from './presentation/validators/institute-parent.validator';
 export * from './presentation/validators/student.validator';
 export * from './presentation/validators/institute-parent-student.validator';
+export * from './presentation/validators/program.validator';
+export * from './presentation/validators/subject.validator';
+export * from './presentation/validators/program-subject.validator';
+export * from './presentation/validators/batch.validator';
 
 // Infrastructure Repositories
 export * from './infrastructure/repositories/prisma-institute.repository';

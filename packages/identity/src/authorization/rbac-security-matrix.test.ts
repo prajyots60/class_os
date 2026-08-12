@@ -89,10 +89,10 @@ describe('Phase 1.3.7 — Security & RBAC Test Matrix', () => {
     });
 
     it('audit: exact capability count invariants per role', () => {
-      expect(ROLE_CAPABILITIES.owner.length).toBe(63);
-      expect(ROLE_CAPABILITIES.teacher.length).toBe(32);
-      expect(ROLE_CAPABILITIES.assistant.length).toBe(28);
-      expect(ROLE_CAPABILITIES.parent.length).toBe(10);
+      expect(ROLE_CAPABILITIES.owner.length).toBe(77);
+      expect(ROLE_CAPABILITIES.teacher.length).toBe(37);
+      expect(ROLE_CAPABILITIES.assistant.length).toBe(33);
+      expect(ROLE_CAPABILITIES.parent.length).toBe(13);
     });
   });
 
