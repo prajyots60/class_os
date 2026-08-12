@@ -164,6 +164,14 @@ PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
         ├── Phase 1.12.6 — Protected Identity API Integration / Staff Consumption ✅ COMPLETED
         ├── Phase 1.12.7 — API UX / Developer Experience / Documentation ✅ COMPLETED
         └── Phase 1.12.8 — Final Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
+  └── Phase 1.13 — Staff UI & Onboarding Workflows 🟢 IN PROGRESS
+        ├── Phase 1.13.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+        ├── Phase 1.13.1 — Staff Domain & Application Layer ✅ COMPLETED
+        ├── Phase 1.13.2 — Staff API & Validators ✅ COMPLETED
+        ├── Phase 1.13.3 — Staff Security & E2E Matrix ✅ COMPLETED
+        ├── Phase 1.13.4 — Staff Workspace UI Feature ✅ COMPLETED
+        ├── Phase 1.13.5 — UX, Accessibility & Workflow Testing ✅ COMPLETED
+        └── Phase 1.13.6 — Phase 1.13 Acceptance Gate & Freeze ⏳ NOT STARTED
     ↓
 PHASE 3  Billing Module                               ⏳ UPCOMING
     ↓

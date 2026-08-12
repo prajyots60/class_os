@@ -112,11 +112,16 @@ export const ROLE_CAPABILITIES: Readonly<Record<MembershipRole, readonly Capabil
  * If the role is unknown or invalid at runtime, returns an empty ReadonlySet (Deny by Default).
  */
 export function getCapabilitiesForRole(role: MembershipRole | string): ReadonlySet<Capability> {
-  if (typeof role !== 'string' || !(role in ROLE_CAPABILITIES)) {
+  if (typeof role !== 'string') {
     return new Set<Capability>();
   }
 
-  const capabilities = ROLE_CAPABILITIES[role as MembershipRole];
+  const normalized = role.toLowerCase();
+  if (!(normalized in ROLE_CAPABILITIES)) {
+    return new Set<Capability>();
+  }
+
+  const capabilities = ROLE_CAPABILITIES[normalized as MembershipRole];
   return new Set<Capability>(capabilities);
 }
 
@@ -127,10 +132,15 @@ export function roleHasCapability(
   role: MembershipRole | string,
   capability: Capability,
 ): boolean {
-  if (typeof role !== 'string' || !(role in ROLE_CAPABILITIES)) {
+  if (typeof role !== 'string') {
     return false;
   }
 
-  const capabilities = ROLE_CAPABILITIES[role as MembershipRole];
+  const normalized = role.toLowerCase();
+  if (!(normalized in ROLE_CAPABILITIES)) {
+    return false;
+  }
+
+  const capabilities = ROLE_CAPABILITIES[normalized as MembershipRole];
   return capabilities.includes(capability);
 }

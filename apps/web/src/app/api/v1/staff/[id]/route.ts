@@ -1,7 +1,7 @@
 /**
  * /api/v1/staff/[id] — Get or remove a staff membership
  */
-import { type NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server';
 import {
   GetStaffMembershipUseCase,
   RemoveStaffMemberUseCase,

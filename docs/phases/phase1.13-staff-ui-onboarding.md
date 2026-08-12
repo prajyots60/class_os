@@ -1,6 +1,6 @@
 # Phase 1.13 — Staff UI & Onboarding Workflows Specification
 
-- **Status**: 🟢 **Phase 1.13.0, 1.13.1, 1.13.2, 1.13.3 — COMPLETED**
+- **Status**: 🟢 **Phase 1.13.0, 1.13.1, 1.13.2, 1.13.3, 1.13.4, 1.13.5 — COMPLETED**
 - **Date**: 2026-08-12
 - **Authors**: Senior Staff Architecture & Identity Team
 - **Deciders**: Product & Engineering Core
@@ -18,6 +18,8 @@ It defines and implements:
 - **Membership Lifecycle Management**: Activation, suspension, and removal of staff memberships.
 - **Protected API Boundary & Validators**: `/api/v1/staff` RESTful HTTP endpoints with strict Zod presentation validation.
 - **Security Threat Matrix (STAFF-SEC-01..24)**: Adversarial security verification suite covering capability enforcement, tenant isolation, rate limiting, and DTO data privacy.
+- **Staff Workspace UI**: Production client feature module (`/staff`) with role/status filters, capability-gated actions, responsive desktop table, 375px mobile cards, loading skeletons, and accessible modal dialogs.
+- **UX, Accessibility & Workflow Matrix**: Automated Playwright E2E matrix proving staff management workflows, Escape key modal dismissals, focus traps, ARIA attributes, and cross-tenant isolation.
 
 ---
 
@@ -28,9 +30,9 @@ Phase 1.13.0 — Staff Management Architecture & Contract Freeze   🟢 ACCEPTED
 Phase 1.13.1 — Staff Management Domain & Application Layer       🟢 COMPLETED
 Phase 1.13.2 — Staff Management API & Validators                 🟢 COMPLETED
 Phase 1.13.3 — Staff Management Security & E2E Matrix            🟢 COMPLETED
+Phase 1.13.4 — Staff Workspace UI Feature                       🟢 COMPLETED
+Phase 1.13.5 — UX, Accessibility & Workflow Testing              🟢 COMPLETED
                  ↓
-Phase 1.13.4 — Staff Workspace UI Feature                       ⏳ NOT STARTED
-Phase 1.13.5 — UX, Accessibility & Workflow Testing              ⏳ NOT STARTED
 Phase 1.13.6 — Phase 1.13 Acceptance Gate & Freeze              ⏳ NOT STARTED
 ```
 
@@ -57,3 +59,4 @@ Phase 1.13.6 — Phase 1.13 Acceptance Gate & Freeze              ⏳ NOT STARTE
 2. **Capability Protection**: All operations enforce capability assertions (`staff:read`, `staff:invite`, `staff:update`, `staff:remove`, `staff:role_change`).
 3. **Self-Mutation Defense**: Users cannot alter their own role or remove their own active membership.
 4. **Data Privacy Boundary**: `StaffMembershipDTO` excludes sensitive fields (passwords, MFA keys, auth tokens).
+5. **Accessibility & Responsive Shell**: Modal dialogs conform to WAI-ARIA dialog patterns (Escape key dismissal, aria-modal, title ids) and list cards adapt seamlessly down to 375px viewports.

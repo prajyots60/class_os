@@ -103,6 +103,7 @@ apps/web/
 │   │   ├── institute-parent/     ← Tenant Parent CRM UI components & modals
 │   │   ├── institute-settings/   ← White-label settings & branding form UI components
 │   │   ├── onboarding/           ← Multi-step institute setup onboarding wizard
+│   │   ├── staff/                ← Staff management workspace components, table, card list & modals
 │   │   └── student/              ← Student admission & profile UI components & modals
 │   ├── lib/                      ← API clients, auth guards, fetch helpers
 │   ├── providers/                ← Global React context providers (Auth, Query, UI)

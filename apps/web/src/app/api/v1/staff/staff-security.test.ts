@@ -17,7 +17,6 @@ import { GET as staffListGET } from './route';
 import { POST as staffExplicitInvitePOST, GET as staffExplicitInviteGET } from './invite/route';
 import { GET as staffByIdGET, DELETE as staffByIdDELETE } from './[id]/route';
 import { PATCH as staffRolePATCH } from './[id]/role/route';
-import { POST as staffActivatePOST } from './[id]/activate/route';
 import { POST as staffSuspendPOST } from './[id]/suspend/route';
 import { POST as onboardPOST } from '../../onboarding/institute/route';
 
