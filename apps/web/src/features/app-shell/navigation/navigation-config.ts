@@ -47,6 +47,14 @@ export const APP_NAVIGATION_CONFIG: readonly NavigationSection[] = Object.freeze
         isImplemented: true,
       },
       {
+        id: 'enrollments',
+        label: 'Enrollments',
+        href: '/enrollments',
+        iconName: 'UserCheck',
+        capability: 'enrollment:read',
+        isImplemented: true,
+      },
+      {
         id: 'staff',
         label: 'Staff & Team',
         href: '/staff',
