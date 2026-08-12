@@ -66,8 +66,13 @@ coaching-os/
 apps/web/
 ├── e2e/                          ← Playwright End-to-End Test Suite
 │   ├── app.spec.ts               ← Health check & Baseline UI smoke tests
+│   ├── guardian-student-security.spec.ts ← Relationship API security & anti-spoofing matrix
+│   ├── guardian-student-workflow.spec.ts ← Staff Guardian/Student UI workflow & accessibility
+│   ├── institute-parent-security.spec.ts ← Parent CRM security test suite
 │   ├── onboarding.spec.ts        ← Institute Onboarding & Tenant Context flow suite
-│   └── rbac.spec.ts              ← Capability-based RBAC browser evaluation tests
+│   ├── rbac.spec.ts              ← Capability-based RBAC browser evaluation tests
+│   ├── student-security.spec.ts  ← Student admission security test suite
+│   └── student-workflow.spec.ts  ← Student admission workflow test suite
 ├── public/                       ← Static public assets (SVG icons, branding placeholders)
 ├── src/
 │   ├── app/                      ← Next.js 16 App Router structure
@@ -75,9 +80,11 @@ apps/web/
 │   │   │   ├── auth/             ← Better Auth catch-all route (`/api/auth/[...all]`)
 │   │   │   ├── dashboard/        ← Server tenant context handler (`GET /api/dashboard/context`)
 │   │   │   ├── health/           ← System baseline health endpoint (`GET /api/health`)
-│   │   │   ├── institute/        ← Tenant settings & parent CRM endpoints
-│   │   │   │   ├── parents/      ← InstituteParent API (`/api/institute/parents`, `/parents/link`)
-│   │   │   │   └── settings/     ← Institute settings API (`/api/institute/settings`)
+│   │   │   ├── institute/        ← Tenant settings, parents, students & guardian relationship endpoints
+│   │   │   │   ├── parent-student/← Relationship management API (`/api/institute/parent-student/[id]`)
+│   │   │   │   ├── parents/      ← InstituteParent API (`/api/institute/parents`, `/parents/[parentId]/students`)
+│   │   │   │   ├── settings/     ← Institute settings API (`/api/institute/settings`)
+│   │   │   │   └── students/     ← Student admission & guardians API (`/api/institute/students`, `/[studentId]/guardians`)
 │   │   │   └── onboarding/       ← Institute onboarding endpoint (`POST /api/onboarding/institute`)
 │   │   ├── dashboard/            ← Authenticated tenant dashboard pages & sub-views
 │   │   ├── onboarding/           ← Institute setup onboarding form page (`page.tsx`)
@@ -92,9 +99,11 @@ apps/web/
 │   │   ├── app-shell/            ← Header, Navigation sidebar, Tenant Context Banner
 │   │   ├── auth/                 ← Auth forms, login modals, session state components
 │   │   ├── dashboard/            ← Authenticated staff dashboard components
+│   │   ├── guardian/             ├── Staff Guardian management components, modals, badges, API client
 │   │   ├── institute-parent/     ← Tenant Parent CRM UI components & modals
 │   │   ├── institute-settings/   ← White-label settings & branding form UI components
-│   │   └── onboarding/           ← Multi-step institute setup onboarding wizard
+│   │   ├── onboarding/           ← Multi-step institute setup onboarding wizard
+│   │   └── student/              ← Student admission & profile UI components & modals
 │   ├── lib/                      ← API clients, auth guards, fetch helpers
 │   ├── providers/                ← Global React context providers (Auth, Query, UI)
 │   └── stores/                   ← Client-side state management stores (Zustand)
@@ -114,10 +123,12 @@ packages/identity/
 ├── src/
 │   ├── application/              ← Application DTOs & Use Cases
 │   │   ├── dto/
+│   │   │   ├── guardian-student-relationship.dto.ts ← Relationship DTOs & conversion helpers
 │   │   │   ├── institute-parent.dto.ts     ← InstituteParent DTO & conversion helper
 │   │   │   ├── parent-identity.dto.ts      ← ParentIdentity DTO & conversion helper
 │   │   │   └── student.dto.ts              ← Student DTO & conversion helper
 │   │   └── use-cases/
+│   │       ├── guardian-student-relationship/ ← Relationship linking, update, primary & archive use cases
 │   │       ├── institute.use-cases.ts      ← Institute CRUD & query orchestration
 │   │       ├── institute-parent.use-cases.ts← InstituteParent CRM orchestration
 │   │       ├── membership.use-cases.ts     ← Membership resolution & context builder
@@ -127,7 +138,7 @@ packages/identity/
 │   │       └── student.use-cases.ts        ← Student admission, lifecycle & profile use cases
 │   ├── authorization/            ← Capability-Based RBAC Engine
 │   │   ├── authorization-engine.ts         ← Dynamic capability evaluation & guards
-│   │   ├── capabilities.ts                 ← Capability taxonomy enum (53 capabilities)
+│   │   ├── capabilities.ts                 ← Capability taxonomy enum (58 capabilities)
 │   │   ├── resource-scope.ts               ← Resource filtering & parent/teacher scopes
 │   │   └── role-capabilities.ts            ← Role → Capability map (Owner, Assistant, Teacher, Parent)
 │   ├── domain/                   ← Framework-Independent Business Domain
@@ -135,16 +146,20 @@ packages/identity/
 │   │   │   ├── institute.entity.ts         ← Institute domain entity & status invariants
 │   │   │   ├── institute-membership.entity.ts ← Membership domain entity & role invariants
 │   │   │   ├── institute-parent.entity.ts  ← Tenant-scoped parent CRM entity
+│   │   │   ├── institute-parent-student.entity.ts ← Tenant-scoped guardian-student relationship entity
 │   │   │   ├── parent-identity.entity.ts   ← Platform-global parent identity entity
 │   │   │   └── student.entity.ts           ← Student learner aggregate & state machine
 │   │   ├── value-objects/
 │   │   │   ├── date-of-birth.vo.ts         ← DateOfBirth value object validation
+│   │   │   ├── guardian-relationship-status.vo.ts ← Relationship status VO (active, archived)
+│   │   │   ├── guardian-relationship-type.vo.ts   ← Relationship taxonomy VO (father, mother, etc.)
 │   │   │   └── phone-number.vo.ts          ← E.164 PhoneNumber value object validation
 │   │   └── repositories/
 │   │       ├── institute.repository.ts     ← Institute persistence interface
 │   │       ├── institute-membership.repository.ts ← Membership repository interface
 │   │       ├── institute-onboarding.repository.ts ← Atomic onboarding unit of work interface
 │   │       ├── institute-parent.repository.ts ← InstituteParent repository interface
+│   │       ├── institute-parent-student.repository.interface.ts ← Relationship repository interface
 │   │       ├── parent-identity.repository.ts  ← ParentIdentity repository interface
 │   │       └── student.repository.ts        ← Student repository interface
 │   ├── infrastructure/           ← Prisma Persistence Implementations
@@ -152,12 +167,14 @@ packages/identity/
 │   │       ├── prisma-institute.repository.ts ← PostgreSQL Institute repository
 │   │       ├── prisma-institute-membership.repository.ts ← PostgreSQL Membership repository
 │   │       ├── prisma-institute-parent.repository.ts    ← PostgreSQL InstituteParent repository
+│   │       ├── prisma-institute-parent-student.repository.ts ← PostgreSQL Relationship repository
 │   │       ├── prisma-onboard-institute.repository.ts    ← PostgreSQL $transaction atomic bootstrapper
 │   │       ├── prisma-parent-identity.repository.ts     ← PostgreSQL ParentIdentity repository
 │   │       ├── prisma-rbac-role-capability.repository.ts ← Role-capability resolver adapter
 │   │       └── prisma-student.repository.ts            ← PostgreSQL Student repository
 │   ├── presentation/             ← Presentation Validators
 │   │   └── validators/
+│   │       ├── guardian-student-relationship.validator.ts ← Relationship input schemas (Zod)
 │   │       ├── institute.validator.ts      ← Institute input schemas (Zod)
 │   │       ├── institute-parent.validator.ts← InstituteParent CRM schemas (Zod)
 │   │       ├── membership.validator.ts     ← Membership input schemas (Zod)
@@ -252,7 +269,8 @@ docs/
 │   ├── 0008-brand-identity-template-architecture.md
 │   ├── 0009-global-parent-identity-architecture.md
 │   ├── 0010-institute-parent-crm-architecture.md
-│   └── 0011-student-admission-profile-architecture.md
+│   ├── 0011-student-admission-profile-architecture.md
+│   └── 0012-guardian-student-relationship-architecture.md
 ├── phases/                       ← Authoritative Phase Contracts & Architecture Freezes
 │   ├── phase0.12-public-auth-ux.md
 │   ├── phase0.12.2-landing-page.md
@@ -264,7 +282,8 @@ docs/
 │   ├── phase1.6-global-parentidentity.md ← Phase 1.6 Global ParentIdentity Layer Freeze
 │   ├── phase1.6-security-matrix.md
 │   ├── phase1.7-instituteparent-crm.md  ← Phase 1.7 Tenant Parent CRM Layer Freeze
-│   └── phase1.8-student-admission-profile.md ← Phase 1.8 Student Admission & Profile Freeze
+│   ├── phase1.8-student-admission-profile.md ← Phase 1.8 Student Admission & Profile Freeze
+│   └── phase1.9-guardian-student-relationship.md ← Phase 1.9 Guardian & Student Relationship Layer Freeze
 ├── BACKLOG.md                    ← Product backlog & future phase items
 ├── CONTEXT.md                    ← Active milestone tracker & phase history
 ├── ENGINEERING_PLAYBOOK.md       ← Monorepo development guidelines & rules
