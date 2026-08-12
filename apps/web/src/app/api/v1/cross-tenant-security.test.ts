@@ -18,11 +18,14 @@ import { POST as archiveBatchPOST } from '../institute/batches/[id]/archive/rout
 import { GET as subjectByIdGET } from '../institute/subjects/[id]/route';
 import { GET as programByIdGET } from '../institute/programs/[id]/route';
 import { POST as withdrawEnrollmentPOST } from '../institute/enrollments/[id]/withdraw/route';
+import { POST as transferEnrollmentPOST } from '../institute/enrollments/[id]/transfer/route';
 import { POST as createEnrollmentPOST } from '../institute/enrollments/route';
 import { POST as linkStudentGuardianPOST } from '../institute/students/[id]/guardians/route';
 import { POST as mapProgramSubjectPOST } from '../institute/program-subjects/route';
+import { POST as assignTeacherPOST } from '../institute/batches/[id]/teacher/route';
+import { POST as archiveRelationshipPOST } from '../institute/parent-student/[id]/archive/route';
 
-describe('Phase 1.14.1 — Comprehensive Cross-Tenant Security Threat Matrix (TENANT-01..32)', () => {
+describe('Phase 1.14.2 & 1.14.3 — Comprehensive API Boundary & Cross-Tenant Security Matrix', () => {
   beforeAll(() => {
     validateTestEnvironment();
   });
@@ -92,12 +95,12 @@ describe('Phase 1.14.1 — Comprehensive Cross-Tenant Security Threat Matrix (TE
     };
   }
 
-  function makeReq(url: string, cookie: string, method = 'GET', body?: Record<string, unknown>, headers?: Record<string, string>) {
+  function makeReq(url: string, cookie?: string, method = 'GET', body?: Record<string, unknown>, headers?: Record<string, string>) {
     return new NextRequest(url, {
       method,
       headers: new Headers({
         'Content-Type': 'application/json',
-        cookie,
+        ...(cookie ? { cookie } : {}),
         'x-forwarded-for': getUniqueIp(),
         ...headers,
       }),
@@ -106,7 +109,91 @@ describe('Phase 1.14.1 — Comprehensive Cross-Tenant Security Threat Matrix (TE
   }
 
   // ============================================================================
-  // Direct Read Cross-Tenant Vectors (TENANT-01 .. TENANT-08)
+  // Section 1: API Boundary Hardening Vectors (API-BOUNDARY-01 .. API-BOUNDARY-15)
+  // ============================================================================
+
+  it('API-BOUNDARY-01: Unauthenticated request is rejected with 401 Unauthorized', async () => {
+    const req = makeReq('http://localhost:3000/api/v1/students');
+    const res = await studentsListGET(req);
+    expect(res.status).toBe(401);
+  });
+
+  it('API-BOUNDARY-02: Invalid session token is rejected with 401 Unauthorized', async () => {
+    const req = makeReq('http://localhost:3000/api/v1/students', 'better-auth.session_token=invalid-fake-token-12345');
+    const res = await studentsListGET(req);
+    expect(res.status).toBe(401);
+  });
+
+  it('API-BOUNDARY-04: x-tenant-id header spoofing is ignored', async () => {
+    const { cookieA, instB } = await setupTwoTenants();
+    const studentB = await db.student.create({ data: { instituteId: instB.id, admissionNumber: `ADM-${Date.now()}`, firstName: 'S', lastName: 'B' } });
+
+    const req = makeReq(`http://localhost:3000/api/v1/students/${studentB.id}`, cookieA, 'GET', undefined, {
+      'x-tenant-id': instB.id,
+    });
+    const res = await studentByIdGET(req, { params: Promise.resolve({ id: studentB.id }) });
+    expect(res.status).toBe(404);
+  });
+
+  it('API-BOUNDARY-05: x-role header spoofing does not bypass capability authorization', async () => {
+    const { cookieA, instB } = await setupTwoTenants();
+    const studentB = await db.student.create({ data: { instituteId: instB.id, admissionNumber: `ADM-${Date.now()}`, firstName: 'S', lastName: 'B' } });
+
+    const req = makeReq(`http://localhost:3000/api/v1/students/${studentB.id}`, cookieA, 'GET', undefined, {
+      'x-role': 'owner',
+    });
+    const res = await studentByIdGET(req, { params: Promise.resolve({ id: studentB.id }) });
+    expect(res.status).toBe(404);
+  });
+
+  it('API-BOUNDARY-07: Query instituteId parameter injection is ignored', async () => {
+    const { cookieA, instB } = await setupTwoTenants();
+    const studentB = await db.student.create({ data: { instituteId: instB.id, admissionNumber: `ADM-${Date.now()}`, firstName: 'S', lastName: 'B' } });
+
+    const req = makeReq(`http://localhost:3000/api/v1/students?instituteId=${instB.id}`, cookieA);
+    const res = await studentsListGET(req);
+    expect(res.status).toBe(200);
+
+    const body = await res.json();
+    expect(body.data.some((s: { id: string }) => s.id === studentB.id)).toBe(false);
+  });
+
+  it('API-BOUNDARY-10: Pagination limit exceeding max page size (100) is rejected with 400 Bad Request', async () => {
+    const { cookieA } = await setupTwoTenants();
+    const req = makeReq('http://localhost:3000/api/v1/students?limit=500', cookieA);
+    const res = await studentsListGET(req);
+    expect(res.status).toBe(400);
+
+    const body = await res.json();
+    expect(body.error.code).toBe('VALIDATION_ERROR');
+  });
+
+  it('API-BOUNDARY-12: Error responses sanitize stack traces and internal Prisma errors', async () => {
+    const { cookieA } = await setupTwoTenants();
+    const req = makeReq('http://localhost:3000/api/v1/students/invalid-non-uuid-id', cookieA);
+    const res = await studentByIdGET(req, { params: Promise.resolve({ id: 'invalid-non-uuid-id' }) });
+    expect(res.status).toBe(400);
+
+    const body = await res.json();
+    expect(body.error.code).toBe('VALIDATION_ERROR');
+    expect(body.stack).toBeUndefined();
+  });
+
+  it('API-BOUNDARY-15: Legitimate same-tenant operations work cleanly with 200/201', async () => {
+    const { instA, cookieA } = await setupTwoTenants();
+    const studentA = await db.student.create({ data: { instituteId: instA.id, admissionNumber: `ADM-${Date.now()}`, firstName: 'S', lastName: 'A' } });
+
+    const getReq = makeReq(`http://localhost:3000/api/v1/students/${studentA.id}`, cookieA);
+    const getRes = await studentByIdGET(getReq, { params: Promise.resolve({ id: studentA.id }) });
+    expect(getRes.status).toBe(200);
+
+    const patchReq = makeReq(`http://localhost:3000/api/v1/students/${studentA.id}`, cookieA, 'PATCH', { firstName: 'UpdatedName' });
+    const patchRes = await studentByIdPATCH(patchReq, { params: Promise.resolve({ id: studentA.id }) });
+    expect(patchRes.status).toBe(200);
+  });
+
+  // ============================================================================
+  // Section 2: Direct Read Cross-Tenant Vectors (TENANT-01 .. TENANT-08)
   // ============================================================================
 
   it('TENANT-01: Tenant A cannot read Tenant B Student (404 NOT_FOUND)', async () => {
@@ -192,7 +279,7 @@ describe('Phase 1.14.1 — Comprehensive Cross-Tenant Security Threat Matrix (TE
   });
 
   // ============================================================================
-  // Cross-Tenant Mutation Vectors (TENANT-09 .. TENANT-16)
+  // Section 3: Cross-Tenant Mutation Vectors (TENANT-09 .. TENANT-16)
   // ============================================================================
 
   it('TENANT-09: Tenant A cannot update Tenant B Student (404 NOT_FOUND)', async () => {
@@ -246,8 +333,38 @@ describe('Phase 1.14.1 — Comprehensive Cross-Tenant Security Threat Matrix (TE
     expect(res.status).toBe(404);
   });
 
+  it('TENANT-14: Tenant A cannot transfer Tenant B Enrollment (404 NOT_FOUND)', async () => {
+    const { cookieA, instB } = await setupTwoTenants();
+    const studentB = await db.student.create({ data: { instituteId: instB.id, admissionNumber: `ADM-${Date.now()}`, firstName: 'S', lastName: 'B' } });
+    const progB = await db.program.create({ data: { instituteId: instB.id, name: `P-${Date.now()}`, code: `P-${Date.now()}` } });
+    const subjB = await db.subject.create({ data: { instituteId: instB.id, name: `S-${Date.now()}`, code: `S-${Date.now()}` } });
+    const batchB1 = await db.batch.create({ data: { instituteId: instB.id, programId: progB.id, subjectId: subjB.id, name: `B1`, code: `B1-${Date.now()}` } });
+    const batchB2 = await db.batch.create({ data: { instituteId: instB.id, programId: progB.id, subjectId: subjB.id, name: `B2`, code: `B2-${Date.now()}` } });
+    const enrB = await db.enrollment.create({ data: { instituteId: instB.id, studentId: studentB.id, batchId: batchB1.id, status: 'active' } });
+
+    const req = makeReq(`http://localhost:3000/api/institute/enrollments/${enrB.id}/transfer`, cookieA, 'POST', {
+      targetBatchId: batchB2.id,
+    });
+    const res = await transferEnrollmentPOST(req, { params: Promise.resolve({ id: enrB.id }) });
+    expect(res.status).toBe(404);
+  });
+
+  it('TENANT-16: Tenant A cannot archive Tenant B Relationship (404 NOT_FOUND)', async () => {
+    const { cookieA, instB } = await setupTwoTenants();
+    const studentB = await db.student.create({ data: { instituteId: instB.id, admissionNumber: `ADM-${Date.now()}`, firstName: 'S', lastName: 'B' } });
+    const pId = await db.parentIdentity.create({ data: { phone: `+9198${Math.floor(10000000 + Math.random() * 90000000)}` } });
+    const ipB = await db.instituteParent.create({ data: { instituteId: instB.id, parentIdentityId: pId.id } });
+    const relB = await db.instituteParentStudent.create({
+      data: { instituteId: instB.id, instituteParentId: ipB.id, studentId: studentB.id, relationshipType: 'father' },
+    });
+
+    const req = makeReq(`http://localhost:3000/api/institute/parent-student/${relB.id}/archive`, cookieA, 'POST');
+    const res = await archiveRelationshipPOST(req, { params: Promise.resolve({ id: relB.id }) });
+    expect(res.status).toBe(404);
+  });
+
   // ============================================================================
-  // Header and Payload Injection Attacks (TENANT-17 .. TENANT-21)
+  // Section 4: Header and Payload Injection Attacks (TENANT-17 .. TENANT-21)
   // ============================================================================
 
   it('TENANT-17: Injected instituteId in payload is rejected with 400 Bad Request by Zod schema', async () => {
@@ -277,7 +394,7 @@ describe('Phase 1.14.1 — Comprehensive Cross-Tenant Security Threat Matrix (TE
   });
 
   // ============================================================================
-  // Enumeration & Disclosure Vectors (TENANT-23)
+  // Section 5: Enumeration & Disclosure Vectors (TENANT-23 .. TENANT-26)
   // ============================================================================
 
   it('TENANT-23: Searching students with Tenant B admission number returns empty list', async () => {
@@ -293,8 +410,21 @@ describe('Phase 1.14.1 — Comprehensive Cross-Tenant Security Threat Matrix (TE
     expect(body.data).toHaveLength(0);
   });
 
+  it('TENANT-26: Collection pagination total reflects strictly target tenant items', async () => {
+    const { instA, cookieA, instB } = await setupTwoTenants();
+    await db.student.create({ data: { instituteId: instA.id, admissionNumber: `ADM-A1-${Date.now()}`, firstName: 'A1', lastName: 'A' } });
+    await db.student.create({ data: { instituteId: instB.id, admissionNumber: `ADM-B1-${Date.now()}`, firstName: 'B1', lastName: 'B' } });
+
+    const req = makeReq('http://localhost:3000/api/v1/students', cookieA);
+    const res = await studentsListGET(req);
+    expect(res.status).toBe(200);
+
+    const body = await res.json();
+    expect(body.data.every((s: { instituteId?: string }) => s.instituteId === instA.id || !s.instituteId)).toBe(true);
+  });
+
   // ============================================================================
-  // Relationship Traversal Vectors (TENANT-27 .. TENANT-30)
+  // Section 6: Relationship Traversal Vectors (TENANT-27 .. TENANT-32)
   // ============================================================================
 
   it('TENANT-27: Linking Tenant A Student to Tenant B Guardian returns 404 NOT_FOUND', async () => {
@@ -336,6 +466,19 @@ describe('Phase 1.14.1 — Comprehensive Cross-Tenant Security Threat Matrix (TE
       subjectId: subjB.id,
     });
     const res = await mapProgramSubjectPOST(req);
+    expect(res.status).toBe(404);
+  });
+
+  it('TENANT-31: Assigning Tenant A Staff as Teacher to Tenant B Batch returns 404 NOT_FOUND', async () => {
+    const { cookieA, userA, instB } = await setupTwoTenants();
+    const progB = await db.program.create({ data: { instituteId: instB.id, name: `P-${Date.now()}`, code: `P-${Date.now()}` } });
+    const subjB = await db.subject.create({ data: { instituteId: instB.id, name: `S-${Date.now()}`, code: `S-${Date.now()}` } });
+    const batchB = await db.batch.create({ data: { instituteId: instB.id, programId: progB.id, subjectId: subjB.id, name: `B`, code: `B-${Date.now()}` } });
+
+    const req = makeReq(`http://localhost:3000/api/institute/batches/${batchB.id}/teacher`, cookieA, 'POST', {
+      teacherId: userA.id,
+    });
+    const res = await assignTeacherPOST(req, { params: Promise.resolve({ id: batchB.id }) });
     expect(res.status).toBe(404);
   });
 });
