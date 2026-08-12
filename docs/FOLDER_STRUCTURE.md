@@ -272,35 +272,13 @@ infrastructure/
 docs/
 ├── adr/                          ← Architecture Decision Records
 │   ├── 0001-monorepo-architecture.md
-│   ├── 0002-database-schema-reconciliation.md
-│   ├── 0003-async-workflow-engine-strategy.md
-│   ├── 0004-testing-database-strategy.md
-│   ├── 0005-ci-strategy.md
-│   ├── 0006-observability-strategy.md
-│   ├── 0007-production-deployment-strategy.md
-│   ├── 0008-brand-identity-template-architecture.md
-│   ├── 0009-global-parent-identity-architecture.md
-│   ├── 0010-institute-parent-crm-architecture.md
-│   ├── 0011-student-admission-profile-architecture.md
-│   ├── 0012-guardian-student-relationship-architecture.md
-│   ├── 0013-academic-hierarchy-architecture.md
-│   ├── 0014-student-enrollment-lifecycle-architecture.md
+│   ├── ...
 │   └── 0015-protected-identity-apis-architecture.md
+├── api/                          ← Public API Specifications
+│   └── protected-identity-api-v1.md← Canonical Protected Identity API v1 Specification
 ├── phases/                       ← Authoritative Phase Contracts & Architecture Freezes
 │   ├── phase0.12-public-auth-ux.md
-│   ├── phase0.12.2-landing-page.md
-│   ├── phase0.12.10-security-ux-matrix.md
-│   ├── phase1.md                 ← Phase 1.0 Architecture Freeze
-│   ├── phase1.3-rbac.md          ← Phase 1.3 Capability-Based RBAC Architecture Freeze
-│   ├── phase1.4-onboarding.md    ← Phase 1.4 Institute Onboarding Workflow Freeze
-│   ├── phase1.5-institute-settings-branding.md ← Phase 1.5 Settings & Branding Freeze
-│   ├── phase1.6-global-parentidentity.md ← Phase 1.6 Global ParentIdentity Layer Freeze
-│   ├── phase1.6-security-matrix.md
-│   ├── phase1.7-instituteparent-crm.md  ← Phase 1.7 Tenant Parent CRM Layer Freeze
-│   ├── phase1.8-student-admission-profile.md ← Phase 1.8 Student Admission & Profile Freeze
-│   ├── phase1.9-guardian-student-relationship.md ← Phase 1.9 Guardian & Student Relationship Layer Freeze
-│   ├── phase1.10-academic-hierarchy.md ← Phase 1.10 Academic Hierarchy Layer Freeze
-│   ├── phase1.11-student-enrollment.md ← Phase 1.11 Student Enrollment Lifecycle Freeze
+│   ├── ...
 │   └── phase1.12-protected-identity-apis.md ← Phase 1.12 Protected Identity APIs Freeze
 ├── BACKLOG.md                    ← Product backlog & future phase items
 ├── CONTEXT.md                    ← Active milestone tracker & phase history

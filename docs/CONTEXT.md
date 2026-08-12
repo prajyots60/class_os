@@ -154,16 +154,16 @@ PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
         ├── Phase 1.11.6 — Staff Enrollment UI ✅ COMPLETED
         ├── Phase 1.11.7 — UX, Accessibility & Workflow Testing ✅ COMPLETED
         └── Phase 1.11.8 — Phase 1.11 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
-  └── Phase 1.12 — Protected Identity APIs (`/api/v1/...`) 🟡 IN PROGRESS
+  └── Phase 1.12 — Protected Identity APIs (`/api/v1/...`) 🟢 ACCEPTED & FROZEN
         ├── Phase 1.12.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
         ├── Phase 1.12.1 — Protected Identity API Domain/Application Contracts ✅ COMPLETED
         ├── Phase 1.12.2 — API Infrastructure & Persistence Adapters ✅ COMPLETED
         ├── Phase 1.12.3 — API Boundary & Presentation Validators ✅ COMPLETED
         ├── Phase 1.12.4 — Authentication, Authorization & Tenant Isolation ✅ COMPLETED
-        ├── Phase 1.12.5 — Security & Adversarial E2E Audit ⏳ UPCOMING
-        ├── Phase 1.12.6 — Protected Identity API Integration / Staff Consumption ⏳ UPCOMING
-        ├── Phase 1.12.7 — API UX / Developer Experience / Documentation ⏳ UPCOMING
-        └── Phase 1.12.8 — Final Acceptance Gate & Freeze ⏳ UPCOMING
+        ├── Phase 1.12.5 — Security & Adversarial E2E Audit ✅ COMPLETED
+        ├── Phase 1.12.6 — Protected Identity API Integration / Staff Consumption ✅ COMPLETED
+        ├── Phase 1.12.7 — API UX / Developer Experience / Documentation ✅ COMPLETED
+        └── Phase 1.12.8 — Final Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
     ↓
 PHASE 3  Billing Module                               ⏳ UPCOMING
     ↓
@@ -473,12 +473,16 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **UX, Accessibility & Workflow Testing (Phase 1.11.7)**: Developed comprehensive Playwright E2E matrix (`enrollment-workflow.spec.ts`, 18/18 scenarios passed) verifying focus management, ARIA error attributes, Escape key dismissal, 375px mobile viewport rendering, batch transfers, status state transitions, and cross-tenant isolation boundaries.
 - **Acceptance Gate & Freeze (Phase 1.11.8)**: Verified complete pipeline (`env:check`, `db:validate`, `db:health`, `db:drift:check`, `verify:auth`, `verify:infra`, `verify:observability`, `lint`, `typecheck`, `test`, `build`, `test:e2e`). **Phase 1.11 formally ACCEPTED and FROZEN.**
 
-### 🟡 Phase 1.12 — Protected Identity APIs (`/api/v1/...`) (IN PROGRESS)
+### 🟢 Phase 1.12 — Protected Identity APIs (`/api/v1/...`) (ACCEPTED & FROZEN)
 
 - **Architecture & Contract Freeze (ADR-0015 & Phase 1.12.0)**: Established authoritative architecture and contract freeze for `/api/v1/...`. Defined distinct boundary separating internal staff UI routes (`/api/institute/...`) from protected versioned integration APIs (`/api/v1/...`). Enforced server-authoritative tenant resolution (`ResolveInstituteMembershipUseCase`), capability-based RBAC, path versioning, standardized JSON envelopes (`data`, `pagination`, `meta`), cursor-based pagination, rate-limiting policy (100 reads / 30 mutations per minute), error taxonomy (`UNAUTHENTICATED`, `FORBIDDEN`, `NOT_FOUND`, `VALIDATION_ERROR`, `CONFLICT`, `INVALID_STATE_TRANSITION`, `RATE_LIMITED`, `INTERNAL_ERROR`), PII redaction, and `IDENTITY-01` to `IDENTITY-24` security threat matrix. **Phase 1.12.0 ACCEPTED & FROZEN.**
 - **Application Contracts & Infrastructure Adapters (Phase 1.12.1 & 1.12.2)**: Established reusable application DTOs and filters (`StaffMembershipDTO`, `PaginatedResult<T>`, `PaginationOptions`, `StudentListFilter`, `GuardianListFilter`, `StaffListFilter`, `EnrollmentListFilter`) in `packages/identity`. Reused existing domain aggregates (`StudentEntity`, `InstituteParentEntity`, `InstituteParentStudentEntity`, `InstituteMembershipEntity`, `EnrollmentEntity`) and Prisma repositories (`PrismaStudentRepository`, `PrismaInstituteParentRepository`, `PrismaInstituteParentStudentRepository`, `PrismaInstituteMembershipRepository`, `PrismaEnrollmentRepository`). Enforced PII redaction and client bundle boundary safety (`@coaching-os/identity/client` type-only DTO exports). Unit tests added and verified (53 test files, 525 tests passing). **Phase 1.12.1 & 1.12.2 COMPLETED.**
 - **Presentation Boundary & Validators (Phase 1.12.3)**: Built strict Zod presentation schemas (`v1-validators.ts`) using `.strict()` for all `/api/v1` resources (`Student`, `Guardian`, `Staff`, `Enrollment`), explicitly blocking mass-assignment injection of sensitive identity fields (`instituteId`, `userId`, `role`, `membershipId`, `tenantId`). Implemented 10 Next.js route handlers across `/students`, `/students/[id]`, `/students/[id]/guardians`, `/guardians`, `/guardians/[id]`, `/guardians/[id]/students`, `/staff`, `/staff/[id]`, `/enrollments`, and `/enrollments/[id]`. Unit test suite (`v1-validators.test.ts`) verifies 60+ validation and security boundary scenarios. **Phase 1.12.3 COMPLETED.**
 - **Authentication, Authorization & Tenant Isolation (Phase 1.12.4)**: Implemented `rate-limiter.ts` providing in-memory token-bucket rate limiting (100 READ / 30 MUTATION per minute per `userId` key with dynamic `Retry-After` header) and `v1-guard.ts` providing server-authoritative context resolution (`withV1ReadGuard`, `withV1MutationGuard`), fail-closed 401/403 execution guards, 404 cross-tenant resource masking (preventing resource enumeration), `StaffMembershipDTO` PII redaction, and standardized JSON envelopes (`apiSuccess`, `apiCollection`, `handleV1Error`). Unit test suite (`rate-limiter.test.ts`) verifies bucket isolation and limit enforcement. **Phase 1.12.4 COMPLETED.**
+- **Security & Adversarial E2E Audit (Phase 1.12.5)**: Executed rigorous adversarial security audit verifying all 24 threat vectors (`IDENTITY-01` to `IDENTITY-24`) in `v1-security.test.ts` (24/24 passing). Hardened multi-dimensional pre-auth rate limiting (`user:<userId>:ip:<ip>`) and verified cross-tenant `404 NOT_FOUND` resource existence masking. **Phase 1.12.5 COMPLETED.**
+- **Staff Consumption Adapter & Client SDK (Phase 1.12.6)**: Built `V1IdentityApiClient` pure client SDK (`packages/identity/src/client/v1-identity-api-client.ts`) with typed namespaces (`students`, `guardians`, `staff`, `enrollments`) and `apps/web/src/lib/v1-api-client.ts` web workspace singleton. Verified unwrapping of ADR-0015 envelopes and `V1ApiError` normalization across SDK unit tests (`v1-identity-api-client.test.ts`) and web integration tests (`v1-api-client.test.ts`). **Phase 1.12.6 COMPLETED.**
+- **Developer Documentation & DX (Phase 1.12.7)**: Created canonical developer-facing API specification `docs/api/protected-identity-api-v1.md` documenting overview, authentication, envelopes, error taxonomy, cursor pagination, rate-limiting, tenant isolation, endpoint matrix, capability scoping, and `V1IdentityApiClient` SDK usage. **Phase 1.12.7 COMPLETED.**
+- **Final Acceptance Gate & Freeze (Phase 1.12.8)**: Verified 100% ADR-0015 compliance across architectural, security, RBAC, tenant isolation, rate-limit, privacy, SDK, DB integrity, and quality gates (`pnpm typecheck` 0 errors, `pnpm lint` 0 errors/warnings, `pnpm build` clean, 531 `@coaching-os/identity` tests + 351 `@coaching-os/web` tests passing). **Phase 1.12 formally ACCEPTED and FROZEN.**
 
 ## 4. Next Milestone Roadmap
 
@@ -577,16 +581,16 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.11.6:** Staff Enrollment UI 🟢 COMPLETED
     - **Phase 1.11.7:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
     - **Phase 1.11.8:** Phase 1.11 Acceptance Gate & Freeze 🟢 ACCEPTED & FROZEN
-  - **Phase 1.12:** Protected Identity APIs (`/api/v1/...`) 🟡 IN PROGRESS
+  - **Phase 1.12:** Protected Identity APIs (`/api/v1/...`) 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.12.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.12.1:** Protected Identity API Domain/Application Contracts 🟢 COMPLETED
     - **Phase 1.12.2:** API Infrastructure & Persistence Adapters 🟢 COMPLETED
     - **Phase 1.12.3:** API Boundary & Presentation Validators 🟢 COMPLETED
     - **Phase 1.12.4:** Authentication, Authorization & Tenant Isolation 🟢 COMPLETED
-    - **Phase 1.12.5:** Security & Adversarial E2E Audit ⏳ UPCOMING
-    - **Phase 1.12.6:** Protected Identity API Integration / Staff Consumption ⏳ UPCOMING
-    - **Phase 1.12.7:** API UX / Developer Experience / Documentation ⏳ UPCOMING
-    - **Phase 1.12.8:** Final Acceptance Gate & Freeze ⏳ UPCOMING
+    - **Phase 1.12.5:** Security & Adversarial E2E Audit 🟢 COMPLETED
+    - **Phase 1.12.6:** Protected Identity API Integration / Staff Consumption 🟢 COMPLETED
+    - **Phase 1.12.7:** API UX / Developer Experience / Documentation 🟢 COMPLETED
+    - **Phase 1.12.8:** Final Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
   - **Phase 1.13:** Staff UI & Onboarding Workflows
   - **Phase 1.14:** Multi-Tenant Cross-Tenant Access Security Hardening
   - **Phase 1.15:** Phase 1 Acceptance Gate

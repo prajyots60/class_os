@@ -1,6 +1,6 @@
 # Phase 1.12 — Protected Identity APIs (`/api/v1/...`) Specification
 
-- **Status**: 🟢 **Phase 1.12.0 FROZEN \| Phase 1.12.1, 1.12.2, 1.12.3 & 1.12.4 COMPLETED**
+- **Status**: 🟢 **Phase 1.12 ACCEPTED & FROZEN (All Subphases 1.12.0 through 1.12.8 COMPLETED)**
 - **Date**: 2026-08-12
 - **Authors**: Senior Staff Architecture & Identity Team
 - **Deciders**: Product & Engineering Core
@@ -177,8 +177,8 @@ Phase 1.12.4 — Authentication, Authorization & Tenant Isolation 🟢 (COMPLETE
 Phase 1.12.5 — Security & Adversarial E2E Audit 🟢 (COMPLETED)
 Phase 1.12.6 — Protected Identity API Integration / Staff Consumption 🟢 (COMPLETED)
     ↓
-Phase 1.12.7 — API UX / Developer Experience / Documentation ⏳ (UPCOMING)
-Phase 1.12.8 — Final Acceptance Gate & Freeze ⏳ (UPCOMING)
+Phase 1.12.7 — API UX / Developer Experience / Documentation 🟢 (COMPLETED)
+Phase 1.12.8 — Final Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
 ```
 
 ---
@@ -252,4 +252,32 @@ Phase 1.12.8 — Final Acceptance Gate & Freeze ⏳ (UPCOMING)
   - Created `packages/identity/src/application/dto/api-v1-response.dto.ts` for ADR-0015 response envelope unwrapping and `V1ApiError` normalization.
   - Created `apps/web/src/lib/v1-api-client.ts` singleton instance with `same-origin` credential forwarding for staff web application views.
   - Verified client consumption & error unwrapping with unit test suite (`v1-identity-api-client.test.ts`) and web integration test suite (`v1-api-client.test.ts`).
+
+### Phase 1.12.7 & 1.12.8 Final Acceptance Matrix (2026-08-12)
+
+- **Phase 1.12.7 Developer Documentation**:
+  - Created canonical developer specification `docs/api/protected-identity-api-v1.md`.
+  - Documented overview, authentication, envelopes, error taxonomy, pagination, rate-limiting, tenant isolation, capability scoping, and `V1IdentityApiClient` SDK reference.
+
+- **Phase 1.12.8 Formal Architectural Acceptance Matrix**:
+
+| Category | Status | Notes |
+| :--- | :---: | :--- |
+| **Architecture** | PASS | 100% ADR-0015 compliant. Thin adapters delegating to use-cases. |
+| **Domain/Application** | PASS | Application DTOs (`StudentDTO`, `StaffMembershipDTO`, etc.) reused without leaks. |
+| **API Boundary** | PASS | Standardized single & collection envelopes (`data`, `pagination`, `meta`). |
+| **Authentication** | PASS | Server-authoritative context via Better Auth session cookie / Bearer token. |
+| **Authorization** | PASS | Capability-based RBAC enforced via `AuthorizationEngine`. |
+| **Tenant Isolation** | PASS | Server-authoritative scoping. Cross-tenant access yields `404 NOT_FOUND`. |
+| **Security** | PASS | All 24 threat vectors (`IDENTITY-01` to `IDENTITY-24`) verified in `v1-security.test.ts`. |
+| **Rate Limiting** | PASS | Pre-auth token-bucket limiter (100 read / 30 mutation per min per `user:id:ip:ip`). |
+| **DTO Privacy** | PASS | Zero password/secret leakage. Sensitive user credentials redacted. |
+| **Client SDK** | PASS | `V1IdentityApiClient` pure client-safe export verified (`@coaching-os/identity/client`). |
+| **Documentation** | PASS | Canonical developer reference created at `docs/api/protected-identity-api-v1.md`. |
+| **Database** | PASS | Schema valid, 0 drift (`pnpm db:drift:check`), clean migration status. |
+| **Regression** | PASS | 531 `@coaching-os/identity` tests + 351 `@coaching-os/web` tests passing. |
+| **Quality Gates** | PASS | `pnpm typecheck` (0 errors), `pnpm lint` (0 errors/warnings), `pnpm build` (clean). |
+
+- **Freeze Rule Established**: All `/api/v1` contracts are formally **ACCEPTED & FROZEN**. Breaking changes require a future API version (`/api/v2`).
+
 
