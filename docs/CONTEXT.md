@@ -475,8 +475,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.9.4:** Guardian/Student Linking & Authorization ✅ COMPLETED
     - **Phase 1.9.5:** Relationship API Boundary & Validators ✅ COMPLETED
     - **Phase 1.9.6:** Relationship Security / Privacy E2E Matrix ✅ COMPLETED
-    - **Phase 1.9.7:** Staff Guardian/Relationship UI
-    - **Phase 1.9.8:** UX, Accessibility & Workflow Testing
+    - **Phase 1.9.7:** Staff Guardian/Relationship UI ✅ COMPLETED
+    - **Phase 1.9.8:** UX, Accessibility & Workflow Testing ✅ COMPLETED
     - **Phase 1.9.9:** Phase 1.9 Acceptance Gate
   - **Phase 1.10:** Academic Hierarchy (Programs, Subjects, Batches)
   - **Phase 1.11:** Student Enrollment Lifecycle

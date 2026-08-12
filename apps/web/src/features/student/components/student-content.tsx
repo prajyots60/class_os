@@ -39,11 +39,39 @@ function getRoleCapabilities(role: string): string[] {
   switch (role) {
     case 'owner':
     case 'admin':
-      return ['student:read', 'student:create', 'student:update', 'student:archive'];
+      return [
+        'student:read',
+        'student:create',
+        'student:update',
+        'student:archive',
+        'guardian:read',
+        'guardian:create',
+        'guardian:update',
+        'guardian:archive',
+        'guardian:primary',
+        'relationship:read',
+        'relationship:create',
+        'relationship:update',
+        'relationship:archive',
+        'relationship:primary',
+      ];
     case 'staff':
-      return ['student:read', 'student:create', 'student:update'];
+    case 'assistant':
+      return [
+        'student:read',
+        'student:create',
+        'student:update',
+        'guardian:read',
+        'guardian:create',
+        'guardian:update',
+        'guardian:primary',
+        'relationship:read',
+        'relationship:create',
+        'relationship:update',
+        'relationship:primary',
+      ];
     case 'teacher':
-      return ['student:read'];
+      return ['student:read', 'guardian:read', 'relationship:read'];
     default:
       return [];
   }
@@ -505,6 +533,7 @@ export function StudentContent() {
         isOpen={!!selectedStudentForDetails}
         onClose={() => setSelectedStudentForDetails(null)}
         student={selectedStudentForDetails}
+        userCapabilities={userCapabilities}
       />
 
       {/* Add / Edit Form Modal */}

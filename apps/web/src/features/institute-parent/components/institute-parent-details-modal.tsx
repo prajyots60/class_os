@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Button, Badge } from '@coaching-os/ui';
-import { X, Phone, ShieldCheck, Calendar, FileText, Building2 } from 'lucide-react';
+import { X, Phone, ShieldCheck, Calendar, FileText, Building2, GraduationCap } from 'lucide-react';
 import { InstituteParentStatusBadge } from './institute-parent-status-badge';
 import type { InstituteParentDTO } from '../types/institute-parent-ui.types';
+import { listParentStudents, GUARDIAN_RELATIONSHIP_LABELS, GuardianPrimaryBadge } from '../../guardian';
+import type { InstituteParentStudentDTO } from '../../guardian';
 
 export interface InstituteParentDetailsModalProps {
   parent: InstituteParentDTO | null;
@@ -14,9 +16,6 @@ export interface InstituteParentDetailsModalProps {
   canUpdate?: boolean;
 }
 
-/**
- * InstituteParentDetailsModal — accessible modal view displaying global identity vs tenant CRM boundary.
- */
 export function InstituteParentDetailsModal({
   parent,
   isOpen,
@@ -24,6 +23,9 @@ export function InstituteParentDetailsModal({
   onEdit,
   canUpdate = false,
 }: InstituteParentDetailsModalProps) {
+  const [linkedStudents, setLinkedStudents] = useState<InstituteParentStudentDTO[]>([]);
+  const [isLoadingStudents, setIsLoadingStudents] = useState(false);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
@@ -33,6 +35,22 @@ export function InstituteParentDetailsModal({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (isOpen && parent?.id) {
+      Promise.resolve().then(() => setIsLoadingStudents(true));
+      listParentStudents(parent.id)
+        .then((res) => {
+          if (res.data) {
+            setLinkedStudents(res.data.filter((item) => item.status !== 'archived'));
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          setIsLoadingStudents(false);
+        });
+    }
+  }, [isOpen, parent?.id]);
 
   if (!isOpen || !parent) return null;
 
@@ -144,6 +162,47 @@ export function InstituteParentDetailsModal({
               </div>
             </div>
           </div>
+        </Card>
+
+        {/* Section 3: Linked Students */}
+        <Card className="p-4 border-[hsl(var(--border))] bg-[hsl(var(--card))] space-y-3 shadow-sm" data-testid="parent-linked-students-card">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider text-[hsl(var(--foreground))]">
+              <GraduationCap className="h-4 w-4 text-[hsl(var(--primary))]" aria-hidden="true" />
+              <span>Linked Students ({linkedStudents.length})</span>
+            </div>
+          </div>
+
+          {isLoadingStudents ? (
+            <p className="text-xs text-[hsl(var(--muted-foreground))] italic">Loading linked students...</p>
+          ) : linkedStudents.length === 0 ? (
+            <p className="text-xs text-[hsl(var(--muted-foreground))] italic">No active students linked to this parent record.</p>
+          ) : (
+            <div className="space-y-2">
+              {linkedStudents.map((rel) => {
+                const relLabel = GUARDIAN_RELATIONSHIP_LABELS[rel.relationshipType] || rel.relationshipType;
+                const studentName = (rel as unknown as { studentName?: string }).studentName || `Student Record (${rel.studentId.substring(0, 8)})`;
+                const admNumber = (rel as unknown as { admissionNumber?: string }).admissionNumber;
+
+                return (
+                  <div
+                    key={rel.id}
+                    className="p-2.5 rounded-md border border-[hsl(var(--border))] bg-[hsl(var(--muted)/0.2)] flex items-center justify-between text-xs"
+                    data-testid={`parent-linked-student-item-${rel.id}`}
+                  >
+                    <div>
+                      <div className="font-semibold text-[hsl(var(--foreground))]">{studentName}</div>
+                      {admNumber && <div className="text-[11px] font-mono text-[hsl(var(--muted-foreground))]">{admNumber}</div>}
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-[11px] font-medium text-primary uppercase">{relLabel}</span>
+                      <GuardianPrimaryBadge isPrimary={rel.isPrimary} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </Card>
 
         {/* Modal Footer Actions */}
