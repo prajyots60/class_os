@@ -201,6 +201,15 @@ export class PrismaInstituteMembershipRepository implements InstituteMembershipR
     return null;
   }
 
+  public async findStaffById(instituteId: string, id: string): Promise<InstituteMembershipEntity | null> {
+    if (!instituteId || !id) return null;
+    const membership = await this.findById(id);
+    if (!membership || membership.instituteId !== instituteId) {
+      return null;
+    }
+    return membership;
+  }
+
   public async findByUserAndInstitute(
     userId: string,
     instituteId: string,

@@ -7,6 +7,7 @@ import type {
 export interface InstituteMembershipRepository {
   create(membership: InstituteMembershipEntity): Promise<InstituteMembershipEntity>;
   findById(id: string): Promise<InstituteMembershipEntity | null>;
+  findStaffById?(instituteId: string, id: string): Promise<InstituteMembershipEntity | null>;
   findByUserAndInstitute(
     userId: string,
     instituteId: string,

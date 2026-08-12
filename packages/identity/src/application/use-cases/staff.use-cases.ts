@@ -67,7 +67,15 @@ export class GetStaffMembershipUseCase {
       throw new NotFoundError('Staff membership ID cannot be empty');
     }
 
-    const membership = await this.repository.findById(query.id);
+    const targetInstituteId = query.tenantContext?.instituteId || query.tenantContextId;
+    let membership: InstituteMembershipEntity | null = null;
+
+    if (targetInstituteId && this.repository.findStaffById) {
+      membership = await this.repository.findStaffById(targetInstituteId, query.id);
+    } else {
+      membership = await this.repository.findById(query.id);
+    }
+
     if (!membership || !membership.isStaff) {
       throw new NotFoundError('Staff membership not found.');
     }
@@ -181,7 +189,7 @@ export class UpdateStaffRoleUseCase {
       requireCapability(command.tenantContext, CAPABILITIES.STAFF_ROLE_CHANGE);
 
       if (command.tenantContext.instituteId !== existing.instituteId) {
-        throw new AuthorizationError('Access denied to update staff role.');
+        throw new NotFoundError(`Staff membership with ID ${command.id} not found.`);
       }
 
       // Self-role escalation protection: Cannot update own role
@@ -194,7 +202,7 @@ export class UpdateStaffRoleUseCase {
         requireCapability(command.tenantContext, CAPABILITIES.INSTITUTE_UPDATE);
       }
     } else if (command.tenantContextId && command.tenantContextId !== existing.instituteId) {
-      throw new AuthorizationError('Access denied to update staff role.');
+      throw new NotFoundError(`Staff membership with ID ${command.id} not found.`);
     } else if (!command.tenantContext && !command.tenantContextId) {
       throw new AuthorizationError('Authentication session and tenant context are required.');
     }
@@ -241,7 +249,7 @@ export class ChangeStaffStatusUseCase {
       requireCapability(command.tenantContext, requiredCap);
 
       if (command.tenantContext.instituteId !== existing.instituteId) {
-        throw new AuthorizationError('Access denied to change staff status.');
+        throw new NotFoundError(`Staff membership with ID ${command.id} not found.`);
       }
 
       // Self-status mutation protection: Cannot suspend or remove own membership
@@ -249,7 +257,7 @@ export class ChangeStaffStatusUseCase {
         throw new AuthorizationError('Users cannot modify their own membership status.');
       }
     } else if (command.tenantContextId && command.tenantContextId !== existing.instituteId) {
-      throw new AuthorizationError('Access denied to change staff status.');
+      throw new NotFoundError(`Staff membership with ID ${command.id} not found.`);
     } else if (!command.tenantContext && !command.tenantContextId) {
       throw new AuthorizationError('Authentication session and tenant context are required.');
     }
@@ -291,7 +299,7 @@ export class RemoveStaffMemberUseCase {
       requireCapability(command.tenantContext, CAPABILITIES.STAFF_REMOVE);
 
       if (command.tenantContext.instituteId !== existing.instituteId) {
-        throw new AuthorizationError('Access denied to remove staff membership.');
+        throw new NotFoundError(`Staff membership with ID ${command.id} not found.`);
       }
 
       // Self-removal protection: Cannot remove own membership
@@ -299,7 +307,7 @@ export class RemoveStaffMemberUseCase {
         throw new AuthorizationError('Users cannot remove their own membership.');
       }
     } else if (command.tenantContextId && command.tenantContextId !== existing.instituteId) {
-      throw new AuthorizationError('Access denied to remove staff membership.');
+      throw new NotFoundError(`Staff membership with ID ${command.id} not found.`);
     } else if (!command.tenantContext && !command.tenantContextId) {
       throw new AuthorizationError('Authentication session and tenant context are required.');
     }

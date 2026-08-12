@@ -32,7 +32,9 @@ CoachingOS is a multi-tenant SaaS operating system built for founder-led coachin
 - **[ADR-0004: Testing Database & Isolation Strategy](file:///home/supra/Desktop/class_os/docs/adr/0004-testing-database-strategy.md)**
 - **[ADR-0005: GitHub Actions Continuous Integration Strategy](file:///home/supra/Desktop/class_os/docs/adr/0005-ci-strategy.md)**
 - **[ADR-0008: Brand Identity & Template Engine Architecture (Future Roadmap)](file:///home/supra/Desktop/class_os/docs/adr/0008-brand-identity-template-architecture.md)**
+- **[ADR-0017: Multi-Tenant Cross-Tenant Access Security Hardening](file:///home/supra/Desktop/class_os/docs/adr/0017-multi-tenant-cross-tenant-security-hardening.md)**
 - **[Phase 1 Domain & Architecture Contract](file:///home/supra/Desktop/class_os/docs/phases/phase1.md)**
+- **[Phase 1.14 Specification](file:///home/supra/Desktop/class_os/docs/phases/phase1.14-cross-tenant-security-hardening.md)**
 - **[Engineering Backlog](file:///home/supra/Desktop/class_os/docs/BACKLOG.md)**
 
 ---
@@ -617,5 +619,10 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.13.4:** Staff Workspace UI Feature 🟢 COMPLETED
     - **Phase 1.13.5:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
     - **Phase 1.13.6:** Phase 1.13 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
-  - **Phase 1.14:** Multi-Tenant Cross-Tenant Access Security Hardening
-  - **Phase 1.15:** Phase 1 Acceptance Gate
+  - **Phase 1.14:** Multi-Tenant Cross-Tenant Access Security Hardening 🟡 (IN PROGRESS)
+    - **Phase 1.14.0:** Security Architecture & Threat Model 🟢 COMPLETED
+    - **Phase 1.14.1:** Repository & Application Hardening 🟢 COMPLETED
+    - **Phase 1.14.2:** API Boundary Hardening ⏳ (NOT STARTED)
+    - **Phase 1.14.3:** Adversarial Security E2E Matrix ⏳ (NOT STARTED)
+    - **Phase 1.14.4:** Phase 1.14 Acceptance Gate & Freeze ⏳ (NOT STARTED)
+  - **Phase 1.15:** Phase 1 Acceptance Gate ⏳ (NOT STARTED)

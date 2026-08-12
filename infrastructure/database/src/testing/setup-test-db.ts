@@ -1,15 +1,20 @@
 import { execSync } from 'node:child_process';
+import path from 'node:path';
 import { validateTestEnvironment } from './test-db-guard';
 
 export function setupTestDatabase() {
   console.log('🌱 Setting up CoachingOS PostgreSQL Test Database...');
   const { testDatabaseUrl } = validateTestEnvironment();
 
+  const rootBin = path.resolve(__dirname, '../../../../node_modules/.pnpm/node_modules/.bin');
+  const pathEnv = `${rootBin}:${process.env.PATH}`;
+
   try {
-    // Run prisma db push against TEST_DATABASE_URL
-    execSync('npx prisma migrate deploy --config ./prisma.config.ts', {
+    const configPath = path.resolve(__dirname, '../../prisma.config.ts');
+    execSync(`prisma migrate deploy --config ${configPath}`, {
       env: {
         ...process.env,
+        PATH: pathEnv,
         DATABASE_URL: testDatabaseUrl,
       },
       stdio: 'inherit',
