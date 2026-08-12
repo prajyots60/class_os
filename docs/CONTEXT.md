@@ -84,7 +84,7 @@ PHASE 0 — ENGINEERING FOUNDATION                      ✅ COMPLETED
                                                         ↓
                                                   PHASE 0 GATE (PASSED)
 
-PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
+PHASE 1 — FOUNDATION & IDENTITY MODULE               🟢 ACCEPTED & FROZEN
   ├── Phase 1.0 — Identity Domain Contract Freeze       ✅ COMPLETED (FROZEN)
   ├── Phase 1.1 — Institute Tenant Core                 ✅ COMPLETED
   ├── Phase 1.2 — Users & Memberships                   ✅ COMPLETED
@@ -174,6 +174,15 @@ PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
         ├── Phase 1.13.4 — Staff Workspace UI Feature ✅ COMPLETED
         ├── Phase 1.13.5 — UX, Accessibility & Workflow Testing ✅ COMPLETED
         └── Phase 1.13.6 — Phase 1.13 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
+  └── Phase 1.14 — Multi-Tenant Cross-Tenant Security Hardening 🟢 COMPLETED & FROZEN
+        ├── Phase 1.14.0 — Security Architecture & Threat Model 🟢 (ACCEPTED & FROZEN)
+        ├── Phase 1.14.1 — Repository & Application Hardening 🟢 (ACCEPTED & FROZEN)
+        ├── Phase 1.14.2 — API Boundary Hardening 🟢 (ACCEPTED & FROZEN)
+        ├── Phase 1.14.3 — Adversarial Security E2E Matrix 🟢 (ACCEPTED & FROZEN)
+        └── Phase 1.14.4 — Phase 1.14 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
+  └── Phase 1.15 — Final Phase 1 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
+                                                        ↓
+                                                  PHASE 1 GATE (PASSED & FROZEN)
     ↓
 PHASE 3  Billing Module                               ⏳ UPCOMING
     ↓
@@ -625,4 +634,4 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.14.2:** API Boundary Hardening 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.14.3:** Adversarial Security E2E Matrix 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.14.4:** Phase 1.14 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
-  - **Phase 1.15:** Phase 1 Acceptance Gate ⏳ (NOT STARTED)
+  - **Phase 1.15:** Phase 1 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
