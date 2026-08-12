@@ -144,6 +144,16 @@ PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
         ├── Phase 1.10.6 — Staff Academic Workspace UI ✅ COMPLETED
         ├── Phase 1.10.7 — UX, Accessibility & Workflow Testing ✅ COMPLETED
         └── Phase 1.10.8 — Phase 1.10 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
+  └── Phase 1.11 — Student Enrollment Lifecycle 🟡 IN PROGRESS
+        ├── Phase 1.11.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+        ├── Phase 1.11.1 — Enrollment Domain Entity & Value Objects ⏳ UPCOMING
+        ├── Phase 1.11.2 — Repository & PostgreSQL Persistence ⏳ UPCOMING
+        ├── Phase 1.11.3 — Application Use Cases & Enrollment Lifecycle ⏳ UPCOMING
+        ├── Phase 1.11.4 — API Boundary & Presentation Validators ⏳ UPCOMING
+        ├── Phase 1.11.5 — Security & Tenant Isolation E2E Matrix ⏳ UPCOMING
+        ├── Phase 1.11.6 — Staff Enrollment UI ⏳ UPCOMING
+        ├── Phase 1.11.7 — UX, Accessibility & Workflow Testing ⏳ UPCOMING
+        └── Phase 1.11.8 — Phase 1.11 Acceptance Gate & Freeze ⏳ UPCOMING
     ↓
 PHASE 3  Billing Module                               ⏳ UPCOMING
     ↓
@@ -529,7 +539,16 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.10.6:** Staff Academic Workspace UI 🟢 COMPLETED
     - **Phase 1.10.7:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
     - **Phase 1.10.8:** Phase 1.10 Acceptance Gate & Freeze 🟢 ACCEPTED & FROZEN
-  - **Phase 1.11:** Student Enrollment Lifecycle
+  - **Phase 1.11:** Student Enrollment Lifecycle 🟡 (IN PROGRESS → 1.11.0 FROZEN)
+    - **Phase 1.11.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.11.1:** Enrollment Domain Entity & Value Objects ⏳ UPCOMING
+    - **Phase 1.11.2:** Repository & PostgreSQL Persistence Layer ⏳ UPCOMING
+    - **Phase 1.11.3:** Application Use Cases & Enrollment Lifecycle ⏳ UPCOMING
+    - **Phase 1.11.4:** API Boundary & Presentation Validators ⏳ UPCOMING
+    - **Phase 1.11.5:** Security & Tenant Isolation E2E Matrix ⏳ UPCOMING
+    - **Phase 1.11.6:** Staff Enrollment UI ⏳ UPCOMING
+    - **Phase 1.11.7:** UX, Accessibility & Workflow Testing ⏳ UPCOMING
+    - **Phase 1.11.8:** Phase 1.11 Acceptance Gate & Freeze ⏳ UPCOMING
   - **Phase 1.12:** Protected Identity APIs (`/api/v1/...`)
   - **Phase 1.13:** Staff UI & Onboarding Workflows
   - **Phase 1.14:** Multi-Tenant Cross-Tenant Access Security Hardening
