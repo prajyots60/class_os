@@ -94,8 +94,8 @@ test.describe('Phase 1.8.7 — Student Staff UI / Admission Feature Suite', () =
     await page.goto('/students');
 
     await expect(page.getByTestId('student-content')).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Students' })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Add Student/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Students', exact: true })).toBeVisible();
+    await expect(page.getByTestId('add-student-button')).toBeVisible();
 
     await context.close();
     await tenant.ctx.dispose();
