@@ -135,17 +135,14 @@
 
 ### STAFF-001 — MVP Staff Management & V2 Invitation System Strategy
 
-- **Status:** ℹ️ Strategic Product Decision (Phase 1.13 Post-Verification)
+- **Status:** ℹ️ Strategic Product Decision (Phase 1.13 Updated)
 - **Context & Architecture Decision:**
-  - **Phase 1.13 State:** The core staff management domain (`InstituteMembershipEntity`), capability-based RBAC engine (`staff:read`, `staff:invite`, `staff:role_change`, `staff:update`, `staff:remove`), protected REST APIs (`/api/v1/staff`), and `/staff` workspace UI are fully implemented, verified, and frozen (`998e1ae`).
-  - **Internal Identifier vs UX Presentation Boundary:**
-    - UUIDs (`userId`, `membershipId`, `instituteId`) remain strict internal database and domain implementation details.
-    - Raw UUID terms must never leak into human-facing UI or product nomenclature.
-  - **MVP Staff Flow ("Add Staff"):**
-    - Owner adds existing users internally via account lookup (`email` / `name` → resolve `User` → `userId` → create `InstituteMembership`).
-    - Exposing raw UUID inputs is an internal testing convenience, not a final product requirement.
-  - **Deferred V2 Invitation Lifecycle:**
-    - Full email-driven invitation workflows (`Invitation` aggregate with `id`, `instituteId`, `email`, `role`, `status`, `expiresAt`, `invitedBy`, `acceptedAt`, email token verification on login/signup, and explicit acceptance) are deferred until customer demand from multi-teacher institutes requires it.
+  - **Phase 1.13 State:** The core staff management domain (`InstituteMembershipEntity`), capability-based RBAC engine (`staff:read`, `staff:invite`, `staff:role_change`, `staff:update`, `staff:remove`), protected REST APIs (`/api/v1/staff`), and `/staff` workspace UI are fully implemented, verified, and frozen (`df349f6`).
+  - **Email Lookup for Staff Add/Invite:**
+    - The presentation layer (`StaffInviteModal`) and `/api/v1/staff/invite` endpoint support staff **email addresses** (`email` → resolve registered `User` → `userId` → create `InstituteMembership`).
+    - Raw UUID inputs are no longer required in the UI.
+  - **Deferred V2 Asynchronous Invitation Token System:**
+    - Full email-driven invitation workflows for non-registered users (`Invitation` aggregate with `id`, `instituteId`, `email`, `role`, `status`, `expiresAt`, `invitedBy`, `acceptedAt`, email token verification on login/signup, and explicit acceptance) are deferred until customer demand from multi-teacher institutes requires it.
     - Invitation tokens will never auto-grant access without authenticated email verification.
   - **Deferred V2 Fine-Grained Resource Permissions (Batch-Level RBAC):**
     - Scoping staff access to specific batches (`Teacher A → Batch 1`, `Teacher B → Batch 2`) is intentionally deferred to V2.
