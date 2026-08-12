@@ -16,7 +16,7 @@ interface BucketEntry {
 
 const store = new Map<string, BucketEntry>();
 
-function getBucket(key: string, _limit: number): BucketEntry {
+function getBucket(key: string): BucketEntry {
   const now = Date.now();
   let entry = store.get(key);
   if (!entry || now >= entry.resetAt) {
@@ -27,7 +27,7 @@ function getBucket(key: string, _limit: number): BucketEntry {
 }
 
 function incrementAndCheck(key: string, limit: number): { allowed: boolean; retryAfter: number } {
-  const entry = getBucket(key, limit);
+  const entry = getBucket(key);
   entry.count += 1;
   const remaining = limit - entry.count;
   const retryAfter = Math.ceil((entry.resetAt - Date.now()) / 1000);
@@ -39,10 +39,11 @@ function incrementAndCheck(key: string, limit: number): { allowed: boolean; retr
  * Never trusts client-supplied headers to bypass the limiter.
  */
 export function getRateLimitKey(req: Request, userId?: string): string {
-  if (userId) return `user:${userId}`;
-  // Derive IP from forwarded headers (read-only, cannot be trivially spoofed at LB level)
   const forwarded = req.headers.get('x-forwarded-for');
   const ip = forwarded ? forwarded.split(',')[0].trim() : 'unknown';
+  if (userId) {
+    return `user:${userId}:ip:${ip}`;
+  }
   return `ip:${ip}`;
 }
 

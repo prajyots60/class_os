@@ -161,7 +161,7 @@ export class GetInstituteMembershipUseCase {
     if (query.tenantContext) {
       requireCapability(query.tenantContext, CAPABILITIES.STAFF_READ);
       if (query.tenantContext.instituteId !== found.instituteId) {
-        throw new AuthorizationError('Access denied to requested membership.');
+        throw new NotFoundError('Institute membership not found.');
       }
     } else if (query.tenantContextId && query.tenantContextId !== found.instituteId) {
       throw new AuthorizationError('Access denied to requested membership.');

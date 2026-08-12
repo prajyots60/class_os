@@ -181,7 +181,7 @@ describe('Phase 1.3.7 — Security & RBAC Test Matrix', () => {
           id: 'mem_100',
           tenantContext: assistantCtx,
         }),
-      ).rejects.toThrow(AuthorizationError);
+      ).rejects.toThrow('Institute membership not found.');
     });
   });
 

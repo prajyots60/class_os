@@ -163,6 +163,7 @@ export async function withV1ReadGuard(
   handler: (ctx: TenantContext) => Promise<NextResponse>,
 ): Promise<NextResponse> {
   try {
+    assertReadRateLimit(req);
     const ctx = await resolveV1TenantContext(req);
     assertReadRateLimit(req, ctx.userId);
     return await handler(ctx);
@@ -180,6 +181,7 @@ export async function withV1MutationGuard(
   handler: (ctx: TenantContext) => Promise<NextResponse>,
 ): Promise<NextResponse> {
   try {
+    assertMutationRateLimit(req);
     const ctx = await resolveV1TenantContext(req);
     assertMutationRateLimit(req, ctx.userId);
     return await handler(ctx);

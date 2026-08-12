@@ -20,9 +20,9 @@ function makeReq(userId?: string, ip?: string): Request {
 }
 
 describe('getRateLimitKey', () => {
-  it('uses user: prefix when userId provided', () => {
+  it('uses user: prefix with IP when userId provided', () => {
     const req = makeReq();
-    expect(getRateLimitKey(req, 'usr-123')).toBe('user:usr-123');
+    expect(getRateLimitKey(req, 'usr-123')).toBe('user:usr-123:ip:unknown');
   });
 
   it('falls back to ip: prefix when no userId', () => {
