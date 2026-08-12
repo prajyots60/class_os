@@ -591,6 +591,13 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.12.6:** Protected Identity API Integration / Staff Consumption 🟢 COMPLETED
     - **Phase 1.12.7:** API UX / Developer Experience / Documentation 🟢 COMPLETED
     - **Phase 1.12.8:** Final Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
-  - **Phase 1.13:** Staff UI & Onboarding Workflows
+  - **Phase 1.13:** Staff UI & Onboarding Workflows 🟡 (IN PROGRESS)
+    - **Phase 1.13.0:** Staff Management Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.13.1:** Staff Management Domain & Application Layer 🟢 COMPLETED
+    - **Phase 1.13.2:** Staff Management API & Validators ⏳ UPCOMING
+    - **Phase 1.13.3:** Staff Management Security & E2E Matrix ⏳ UPCOMING
+    - **Phase 1.13.4:** Staff Workspace UI Feature ⏳ UPCOMING
+    - **Phase 1.13.5:** UX, Accessibility & Workflow Testing ⏳ UPCOMING
+    - **Phase 1.13.6:** Phase 1.13 Acceptance Gate & Freeze ⏳ UPCOMING
   - **Phase 1.14:** Multi-Tenant Cross-Tenant Access Security Hardening
   - **Phase 1.15:** Phase 1 Acceptance Gate
