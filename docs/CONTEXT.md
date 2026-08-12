@@ -134,7 +134,7 @@ PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
         ├── Phase 1.9.7 — Staff Guardian / Relationship UI ✅ COMPLETED
         ├── Phase 1.9.8 — UX, Accessibility & Workflow Testing ✅ COMPLETED
         └── Phase 1.9.9 — Phase 1.9 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
-  └── Phase 1.10 — Academic Hierarchy (Programs, Subjects, Batches) 🟡 IN PROGRESS
+  └── Phase 1.10 — Academic Hierarchy (Programs, Subjects, Batches) 🟢 COMPLETED & FROZEN
         ├── Phase 1.10.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
         ├── Phase 1.10.1 — Academic Hierarchy Domain Entities & Value Objects ✅ COMPLETED
         ├── Phase 1.10.2 — Repository & PostgreSQL Persistence Layer ✅ COMPLETED
@@ -143,7 +143,7 @@ PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
         ├── Phase 1.10.5 — Security & Tenant Isolation E2E Matrix ✅ COMPLETED
         ├── Phase 1.10.6 — Staff Academic Workspace UI ✅ COMPLETED
         ├── Phase 1.10.7 — UX, Accessibility & Workflow Testing ✅ COMPLETED
-        └── Phase 1.10.8 — Phase 1.10 Acceptance Gate & Freeze ⏳ UPCOMING
+        └── Phase 1.10.8 — Phase 1.10 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
     ↓
 PHASE 3  Billing Module                               ⏳ UPCOMING
     ↓
@@ -508,7 +508,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.9.7:** Staff Guardian/Relationship UI 🟢 COMPLETED
     - **Phase 1.9.8:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
     - **Phase 1.9.9:** Phase 1.9 Acceptance Gate 🟢 ACCEPTED & FROZEN
-  - **Phase 1.10:** Academic Hierarchy (Programs, Subjects, Batches) 🟡 (IN PROGRESS → 1.10.7 COMPLETED)
+  - **Phase 1.10:** Academic Hierarchy (Programs, Subjects, Batches) 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.10.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.10.1:** Academic Hierarchy Domain Entities & Value Objects 🟢 COMPLETED
     - **Phase 1.10.2:** Repository & PostgreSQL Persistence Layer 🟢 COMPLETED
@@ -517,7 +517,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.10.5:** Security & Tenant Isolation E2E Matrix 🟢 COMPLETED
     - **Phase 1.10.6:** Staff Academic Workspace UI 🟢 COMPLETED
     - **Phase 1.10.7:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
-    - **Phase 1.10.8:** Phase 1.10 Acceptance Gate & Freeze ⏳ UPCOMING
+    - **Phase 1.10.8:** Phase 1.10 Acceptance Gate & Freeze 🟢 ACCEPTED & FROZEN
   - **Phase 1.11:** Student Enrollment Lifecycle
   - **Phase 1.12:** Protected Identity APIs (`/api/v1/...`)
   - **Phase 1.13:** Staff UI & Onboarding Workflows

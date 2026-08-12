@@ -1,6 +1,6 @@
 # Phase 1.10 — Academic Hierarchy (Programs, Subjects, Batches) Specification
 
-- **Status**: 🟢 **Phase 1.10.0 — ACCEPTED & FROZEN**
+- **Status**: 🟢 **ACCEPTED & FROZEN** (Phase 1.10.8 Complete)
 - **Date**: 2026-08-12
 - **Authors**: Senior Staff Architecture & Identity Team
 - **Deciders**: Product & Engineering Core
@@ -495,8 +495,7 @@ Phase 1.10.4 — API Boundary & Validators              🟢 COMPLETED
 Phase 1.10.5 — Security & Tenant Isolation E2E Matrix  🟢 COMPLETED
 Phase 1.10.6 — Staff Academic Workspace UI            🟢 COMPLETED
 Phase 1.10.7 — UX, Accessibility & Workflow Testing    🟢 COMPLETED
-                 ↓
-Phase 1.10.8 — Phase 1.10 Acceptance Gate & Freeze
+Phase 1.10.8 — Phase 1.10 Acceptance Gate & Freeze    🟢 ACCEPTED & FROZEN
                  ↓
              PHASE 1.11
       Student Enrollment Lifecycle
