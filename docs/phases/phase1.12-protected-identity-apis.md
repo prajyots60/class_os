@@ -1,6 +1,6 @@
 # Phase 1.12 — Protected Identity APIs (`/api/v1/...`) Specification
 
-- **Status**: 🟢 **Phase 1.12.0 — ARCHITECTURE & CONTRACT FREEZE**
+- **Status**: 🟢 **Phase 1.12.0 FROZEN \| Phase 1.12.1 & 1.12.2 COMPLETED**
 - **Date**: 2026-08-12
 - **Authors**: Senior Staff Architecture & Identity Team
 - **Deciders**: Product & Engineering Core
@@ -168,8 +168,8 @@ The following domains are **EXPLICITLY EXCLUDED** from Phase 1.12:
 ```text
 Phase 1.12.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     ↓
-Phase 1.12.1 — Protected Identity API Domain/Application Contracts ⏳ (UPCOMING)
-Phase 1.12.2 — API Infrastructure & Persistence Adapters ⏳ (UPCOMING)
+Phase 1.12.1 — Protected Identity API Domain/Application Contracts 🟢 (COMPLETED)
+Phase 1.12.2 — API Infrastructure & Persistence Adapters 🟢 (COMPLETED)
     ↓
 Phase 1.12.3 — API Boundary & Presentation Validators ⏳ (UPCOMING)
 Phase 1.12.4 — Authentication, Authorization & Tenant Isolation ⏳ (UPCOMING)
@@ -180,3 +180,25 @@ Phase 1.12.6 — Protected Identity API Integration / Staff Consumption ⏳ (UPC
 Phase 1.12.7 — API UX / Developer Experience / Documentation ⏳ (UPCOMING)
 Phase 1.12.8 — Final Acceptance Gate & Freeze ⏳ (UPCOMING)
 ```
+
+---
+
+## 9. Implementation Progress Log
+
+### Phase 1.12.1 & 1.12.2 Implementation Summary (2026-08-12)
+- **Files Created**:
+  - `packages/identity/src/application/dto/membership.dto.ts` (`StaffMembershipDTO`, `toStaffMembershipDTO`)
+  - `packages/identity/src/application/dto/pagination.dto.ts` (`PaginatedResult<T>`, `PaginationOptions`, `StudentListFilter`, `GuardianListFilter`, `StaffListFilter`, `EnrollmentListFilter`)
+  - `packages/identity/src/application/dto/membership.dto.test.ts` (Unit testing for safe staff membership DTO & PII redaction)
+  - `packages/identity/src/application/dto/pagination.dto.test.ts` (Unit testing for pagination contracts and typed filters)
+- **Contracts & Repositories Reused**:
+  - Reused `StudentDTO` and `toStudentDTO` (`packages/identity/src/application/dto/student.dto.ts`)
+  - Reused `InstituteParentDTO` and `toInstituteParentDTO` (`packages/identity/src/application/dto/institute-parent.dto.ts`)
+  - Reused `InstituteParentStudentDTO` and `toInstituteParentStudentDTO` (`packages/identity/src/application/dto/institute-parent-student.dto.ts`)
+  - Reused `EnrollmentDTO` and `toEnrollmentDTO` (`packages/identity/src/application/dto/enrollment.dto.ts`)
+  - Reused `PrismaStudentRepository`, `PrismaInstituteParentRepository`, `PrismaInstituteParentStudentRepository`, `PrismaInstituteMembershipRepository`, and `PrismaEnrollmentRepository`.
+- **Client Bundle Safety**:
+  - Updated `packages/identity/src/client.ts` with type-only exports for `StaffMembershipDTO`, `EnrollmentDTO`, `PaginatedResult`, `PaginationOptions`, and filter interfaces. Verified zero leak of Prisma or server-only dependencies into client exports.
+- **Verification**:
+  - `@coaching-os/identity` test suite: 53 test files passed (525 total tests).
+

@@ -11,6 +11,16 @@ export type { SubjectDTO } from './application/dto/subject.dto';
 export type { ProgramSubjectDTO } from './application/dto/program-subject.dto';
 export type { BatchDTO } from './application/dto/batch.dto';
 export type BatchStatus = 'draft' | 'open' | 'running' | 'completed' | 'archived';
+export type { StaffMembershipDTO, StaffUserSummaryDTO } from './application/dto/membership.dto';
+export type { EnrollmentDTO, StudentEnrollmentSummaryDTO, BatchEnrollmentSummaryDTO } from './application/dto/enrollment.dto';
+export type {
+  PaginatedResult,
+  PaginationOptions,
+  StudentListFilter,
+  GuardianListFilter,
+  StaffListFilter,
+  EnrollmentListFilter,
+} from './application/dto/pagination.dto';
 export type {
   StudentGuardianSummaryDTO,
   ParentStudentSummaryDTO,

@@ -46,6 +46,8 @@ export * from './application/dto/subject.dto';
 export * from './application/dto/program-subject.dto';
 export * from './application/dto/batch.dto';
 export * from './application/dto/enrollment.dto';
+export * from './application/dto/membership.dto';
+export * from './application/dto/pagination.dto';
 export type {
   StudentGuardianSummaryDTO,
   ParentStudentSummaryDTO,
