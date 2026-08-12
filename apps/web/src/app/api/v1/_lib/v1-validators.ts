@@ -16,17 +16,16 @@ import { z } from 'zod';
 export const MAX_PAGE_SIZE = 100;
 export const DEFAULT_PAGE_SIZE = 25;
 
-export const paginationQuerySchema = z
-  .object({
-    cursor: z.string().optional(),
-    limit: z.coerce
-      .number()
-      .int()
-      .positive()
-      .max(MAX_PAGE_SIZE, `Page size cannot exceed ${MAX_PAGE_SIZE}`)
-      .optional()
-      .default(DEFAULT_PAGE_SIZE),
-  });
+export const paginationQuerySchema = z.object({
+  cursor: z.string().optional(),
+  limit: z.coerce
+    .number()
+    .int()
+    .positive()
+    .max(MAX_PAGE_SIZE, `Page size cannot exceed ${MAX_PAGE_SIZE}`)
+    .optional()
+    .default(DEFAULT_PAGE_SIZE),
+});
 
 export type PaginationQueryInput = z.infer<typeof paginationQuerySchema>;
 
@@ -37,6 +36,12 @@ export const uuidParamSchema = z.object({
 });
 
 export type UuidParamInput = z.infer<typeof uuidParamSchema>;
+
+export const staffParamSchema = z.object({
+  id: z.string().trim().min(1, 'Invalid staff membership ID format'),
+});
+
+export type StaffParamInput = z.infer<typeof staffParamSchema>;
 
 // ─── Students ─────────────────────────────────────────────────────────────────
 
@@ -87,10 +92,9 @@ export const v1UpdateStudentSchema = z
     postalCode: z.string().trim().max(20).nullable().optional(),
   })
   .strict()
-  .refine(
-    (data) => Object.values(data).some((v) => v !== undefined),
-    { message: 'At least one field must be provided to update' },
-  );
+  .refine((data) => Object.values(data).some((v) => v !== undefined), {
+    message: 'At least one field must be provided to update',
+  });
 
 export type V1UpdateStudentInput = z.infer<typeof v1UpdateStudentSchema>;
 
@@ -104,7 +108,13 @@ export const v1ListGuardiansQuerySchema = z
     search: z.string().trim().max(200).optional(),
     status: z.enum(['active', 'inactive']).optional(),
     cursor: z.string().optional(),
-    limit: z.coerce.number().int().positive().max(MAX_PAGE_SIZE).optional().default(DEFAULT_PAGE_SIZE),
+    limit: z.coerce
+      .number()
+      .int()
+      .positive()
+      .max(MAX_PAGE_SIZE)
+      .optional()
+      .default(DEFAULT_PAGE_SIZE),
   })
   .strict();
 
@@ -120,11 +130,46 @@ export const v1ListStaffQuerySchema = z
     role: z.enum(['owner', 'teacher', 'assistant']).optional(),
     status: z.enum(['active', 'suspended', 'removed']).optional(),
     cursor: z.string().optional(),
-    limit: z.coerce.number().int().positive().max(MAX_PAGE_SIZE).optional().default(DEFAULT_PAGE_SIZE),
+    limit: z.coerce
+      .number()
+      .int()
+      .positive()
+      .max(MAX_PAGE_SIZE)
+      .optional()
+      .default(DEFAULT_PAGE_SIZE),
   })
   .strict();
 
 export type V1ListStaffQueryInput = z.infer<typeof v1ListStaffQuerySchema>;
+
+/**
+ * POST /api/v1/staff/invite — Invite new staff member.
+ * Strictly rejects instituteId, membershipId, status, timestamps, or authorization overrides.
+ */
+export const v1InviteStaffSchema = z
+  .object({
+    userId: z.string().trim().min(1, 'User ID is required'),
+    role: z.enum(['owner', 'teacher', 'assistant'], {
+      message: 'Staff role must be owner, teacher, or assistant',
+    }),
+  })
+  .strict();
+
+export type V1InviteStaffInput = z.infer<typeof v1InviteStaffSchema>;
+
+/**
+ * PATCH /api/v1/staff/[id]/role — Update staff member role.
+ * Strictly rejects userId, instituteId, membershipId, status, timestamps, or authorization overrides.
+ */
+export const v1UpdateStaffRoleSchema = z
+  .object({
+    role: z.enum(['owner', 'teacher', 'assistant'], {
+      message: 'Staff role must be owner, teacher, or assistant',
+    }),
+  })
+  .strict();
+
+export type V1UpdateStaffRoleInput = z.infer<typeof v1UpdateStaffRoleSchema>;
 
 // ─── Enrollments ─────────────────────────────────────────────────────────────
 
@@ -140,7 +185,13 @@ export const v1ListEnrollmentsQuerySchema = z
       .enum(['pending', 'active', 'completed', 'withdrawn', 'transferred', 'cancelled'])
       .optional(),
     cursor: z.string().optional(),
-    limit: z.coerce.number().int().positive().max(MAX_PAGE_SIZE).optional().default(DEFAULT_PAGE_SIZE),
+    limit: z.coerce
+      .number()
+      .int()
+      .positive()
+      .max(MAX_PAGE_SIZE)
+      .optional()
+      .default(DEFAULT_PAGE_SIZE),
   })
   .strict();
 
