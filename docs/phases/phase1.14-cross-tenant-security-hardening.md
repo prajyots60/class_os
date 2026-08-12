@@ -1,6 +1,6 @@
 # Phase 1.14 — Multi-Tenant Cross-Tenant Access Security Hardening Specification
 
-- **Status**: 🟡 **IN PROGRESS (Phase 1.14.0 & 1.14.1 Active)**
+- **Status**: 🟡 **IN PROGRESS (Phase 1.14.0, 1.14.1, 1.14.2 & 1.14.3 COMPLETED)**
 - **Date**: 2026-08-12
 - **Authors**: Senior Staff Architecture & Security Team
 - **Deciders**: Product & Engineering Core
@@ -18,9 +18,9 @@ The primary objective is to prove and enforce the core multi-tenant security inv
 It defines and implements:
 - **Security Architecture & Threat Model (Phase 1.14.0)**: Authoritative architecture specification (ADR-0017), trust hierarchy, tenant-scoped resource matrix (11 core resources), and threat matrix (`TENANT-01` to `TENANT-32`).
 - **Repository & Application Hardening (Phase 1.14.1)**: Persistence-layer scoping enforcement (`where: { id, instituteId }`), relationship traversal cross-tenant verification, and cross-tenant integration test matrix.
-- **API Boundary Hardening (Phase 1.14.2)**: Presentation-layer validation and route-level error masking (Upcoming).
-- **Adversarial Security E2E Matrix (Phase 1.14.3)**: Comprehensive HTTP security test suite execution (Upcoming).
-- **Phase 1.14 Acceptance Gate & Freeze (Phase 1.14.4)**: Final security verification and phase freeze (Upcoming).
+- **API Boundary Hardening (Phase 1.14.2)**: Presentation-layer validation, route-level error masking, header spoofing protection, and bounded pagination.
+- **Adversarial Security E2E Matrix (Phase 1.14.3)**: Comprehensive HTTP security test suite execution covering `API-BOUNDARY-01..15` and `TENANT-01..32` (31/31 tests passing).
+- **Phase 1.14 Acceptance Gate & Freeze (Phase 1.14.4)**: Final security verification and phase freeze (Pending Authorization).
 
 ---
 
@@ -29,10 +29,10 @@ It defines and implements:
 ```text
 Phase 1.14.0 — Security Architecture & Threat Model                🟢 COMPLETED
 Phase 1.14.1 — Repository & Application Hardening                🟢 COMPLETED
+Phase 1.14.2 — API Boundary Hardening                            🟢 COMPLETED
+Phase 1.14.3 — Adversarial Security E2E Matrix                   🟢 COMPLETED
                  ↓
-Phase 1.14.2 — API Boundary Hardening                            ⏳ NOT STARTED
-Phase 1.14.3 — Adversarial Security E2E Matrix                   ⏳ NOT STARTED
-Phase 1.14.4 — Phase 1.14 Acceptance Gate & Freeze               ⏳ NOT STARTED
+Phase 1.14.4 — Phase 1.14 Acceptance Gate & Freeze               ⏳ PENDING AUTHORIZATION
 ```
 
 ---
