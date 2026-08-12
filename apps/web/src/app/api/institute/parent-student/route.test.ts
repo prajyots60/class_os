@@ -7,8 +7,8 @@ import {
   db,
 } from '@coaching-os/database';
 import { auth } from '@coaching-os/auth';
-import { GET as guardiansGET, POST as guardiansPOST, PUT as guardiansPUT, PATCH as guardiansPATCH, DELETE as guardiansDELETE } from '../students/[studentId]/guardians/route';
-import { GET as parentStudentsGET, POST as parentStudentsPOST } from '../parents/[parentId]/students/route';
+import { GET as guardiansGET, POST as guardiansPOST, PUT as guardiansPUT, PATCH as guardiansPATCH, DELETE as guardiansDELETE } from '../students/[id]/guardians/route';
+import { GET as parentStudentsGET, POST as parentStudentsPOST } from '../parents/[id]/students/route';
 import { GET as relGET, PATCH as relPATCH, POST as relPOST, PUT as relPUT } from './[id]/route';
 import { POST as primaryPOST, GET as primaryGET } from './[id]/primary/route';
 import { POST as archivePOST, GET as archiveGET } from './[id]/archive/route';
@@ -127,7 +127,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
       const req = new NextRequest('http://localhost:3000/api/institute/students/123e4567-e89b-12d3-a456-426614174000/guardians', {
         method: 'GET',
       });
-      const res = await guardiansGET(req, { params: Promise.resolve({ studentId: '123e4567-e89b-12d3-a456-426614174000' }) });
+      const res = await guardiansGET(req, { params: Promise.resolve({ id: '123e4567-e89b-12d3-a456-426614174000' }) });
       expect(res.status).toBe(401);
       const json = await res.json();
       expect(json.error.code).toBe('UNAUTHENTICATED');
@@ -142,7 +142,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
           relationshipType: 'father',
         }),
       });
-      const res = await guardiansPOST(req, { params: Promise.resolve({ studentId: '123e4567-e89b-12d3-a456-426614174000' }) });
+      const res = await guardiansPOST(req, { params: Promise.resolve({ id: '123e4567-e89b-12d3-a456-426614174000' }) });
       expect(res.status).toBe(401);
     });
 
@@ -150,7 +150,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
       const req = new NextRequest('http://localhost:3000/api/institute/parents/123e4567-e89b-12d3-a456-426614174000/students', {
         method: 'GET',
       });
-      const res = await parentStudentsGET(req, { params: Promise.resolve({ parentId: '123e4567-e89b-12d3-a456-426614174000' }) });
+      const res = await parentStudentsGET(req, { params: Promise.resolve({ id: '123e4567-e89b-12d3-a456-426614174000' }) });
       expect(res.status).toBe(401);
     });
 
@@ -232,7 +232,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
         headers: new Headers({ 'Content-Type': 'application/json', cookie: cookieHeader }),
         body: 'invalid-json-{',
       });
-      const res = await guardiansPOST(req, { params: Promise.resolve({ studentId: '123e4567-e89b-12d3-a456-426614174000' }) });
+      const res = await guardiansPOST(req, { params: Promise.resolve({ id: '123e4567-e89b-12d3-a456-426614174000' }) });
       expect(res.status).toBe(400);
       const json = await res.json();
       expect(json.error.code).toBe('VALIDATION_ERROR');
@@ -247,7 +247,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
         headers: new Headers({ 'Content-Type': 'application/json', cookie: cookieHeader }),
         body: JSON.stringify({ isPrimary: true }),
       });
-      const res = await guardiansPOST(req, { params: Promise.resolve({ studentId: '123e4567-e89b-12d3-a456-426614174000' }) });
+      const res = await guardiansPOST(req, { params: Promise.resolve({ id: '123e4567-e89b-12d3-a456-426614174000' }) });
       expect(res.status).toBe(400);
     });
 
@@ -267,7 +267,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
           deletedAt: null,
         }),
       });
-      const res = await guardiansPOST(req, { params: Promise.resolve({ studentId: '123e4567-e89b-12d3-a456-426614174000' }) });
+      const res = await guardiansPOST(req, { params: Promise.resolve({ id: '123e4567-e89b-12d3-a456-426614174000' }) });
       expect(res.status).toBe(400);
       const json = await res.json();
       expect(json.error.code).toBe('VALIDATION_ERROR');
@@ -285,7 +285,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
           relationshipType: 'alien_neighbor',
         }),
       });
-      const res = await guardiansPOST(req, { params: Promise.resolve({ studentId: '123e4567-e89b-12d3-a456-426614174000' }) });
+      const res = await guardiansPOST(req, { params: Promise.resolve({ id: '123e4567-e89b-12d3-a456-426614174000' }) });
       expect(res.status).toBe(400);
     });
 
@@ -297,7 +297,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
         method: 'GET',
         headers: new Headers({ cookie: cookieHeader }),
       });
-      const res = await guardiansGET(req, { params: Promise.resolve({ studentId: 'not-a-uuid' }) });
+      const res = await guardiansGET(req, { params: Promise.resolve({ id: 'not-a-uuid' }) });
       expect(res.status).toBe(400);
     });
   });
@@ -322,7 +322,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
           isPrimary: false,
         }),
       });
-      const createRes = await guardiansPOST(createReq, { params: Promise.resolve({ studentId: student.id }) });
+      const createRes = await guardiansPOST(createReq, { params: Promise.resolve({ id: student.id }) });
       expect(createRes.status).toBe(201);
       const createdRel = (await createRes.json()).data;
       expect(createdRel.id).toBeDefined();
@@ -348,7 +348,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
         method: 'GET',
         headers: new Headers({ cookie: cookieHeader }),
       });
-      const listGuardiansRes = await guardiansGET(listGuardiansReq, { params: Promise.resolve({ studentId: student.id }) });
+      const listGuardiansRes = await guardiansGET(listGuardiansReq, { params: Promise.resolve({ id: student.id }) });
       expect(listGuardiansRes.status).toBe(200);
       const guardiansList = (await listGuardiansRes.json()).data;
       expect(guardiansList).toHaveLength(1);
@@ -360,7 +360,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
         method: 'GET',
         headers: new Headers({ cookie: cookieHeader }),
       });
-      const listStudentsRes = await parentStudentsGET(listStudentsReq, { params: Promise.resolve({ parentId: parent.id }) });
+      const listStudentsRes = await parentStudentsGET(listStudentsReq, { params: Promise.resolve({ id: parent.id }) });
       expect(listStudentsRes.status).toBe(200);
       const studentsList = (await listStudentsRes.json()).data;
       expect(studentsList).toHaveLength(1);
@@ -413,7 +413,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
         headers: new Headers({ 'Content-Type': 'application/json', cookie: cookieHeader }),
         body: JSON.stringify({ instituteParentId: parent.id, relationshipType: 'father' }),
       });
-      const res1 = await guardiansPOST(req1, { params: Promise.resolve({ studentId: student.id }) });
+      const res1 = await guardiansPOST(req1, { params: Promise.resolve({ id: student.id }) });
       expect(res1.status).toBe(201);
 
       // Link 2 (Duplicate)
@@ -422,7 +422,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
         headers: new Headers({ 'Content-Type': 'application/json', cookie: cookieHeader }),
         body: JSON.stringify({ instituteParentId: parent.id, relationshipType: 'father' }),
       });
-      const res2 = await guardiansPOST(req2, { params: Promise.resolve({ studentId: student.id }) });
+      const res2 = await guardiansPOST(req2, { params: Promise.resolve({ id: student.id }) });
       expect(res2.status).toBe(409);
       const json2 = await res2.json();
       expect(json2.error.code).toBe('CONFLICT');
@@ -442,7 +442,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
         headers: new Headers({ 'Content-Type': 'application/json', cookie: cookieHeader }),
         body: JSON.stringify({ instituteParentId: parent1.id, relationshipType: 'father', isPrimary: true }),
       });
-      const res1 = await guardiansPOST(req1, { params: Promise.resolve({ studentId: student.id }) });
+      const res1 = await guardiansPOST(req1, { params: Promise.resolve({ id: student.id }) });
       const rel1 = (await res1.json()).data;
       expect(rel1.isPrimary).toBe(true);
 
@@ -452,7 +452,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
         headers: new Headers({ 'Content-Type': 'application/json', cookie: cookieHeader }),
         body: JSON.stringify({ instituteParentId: parent2.id, relationshipType: 'mother', isPrimary: false }),
       });
-      const res2 = await guardiansPOST(req2, { params: Promise.resolve({ studentId: student.id }) });
+      const res2 = await guardiansPOST(req2, { params: Promise.resolve({ id: student.id }) });
       const rel2 = (await res2.json()).data;
       expect(rel2.isPrimary).toBe(false);
 
@@ -485,7 +485,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
         headers: new Headers({ 'Content-Type': 'application/json', cookie: cookieHeader }),
         body: JSON.stringify({ instituteParentId: parent.id, relationshipType: 'father' }),
       });
-      const rel = (await (await guardiansPOST(reqCreate, { params: Promise.resolve({ studentId: student.id }) })).json()).data;
+      const rel = (await (await guardiansPOST(reqCreate, { params: Promise.resolve({ id: student.id }) })).json()).data;
 
       // Archive relationship
       const archiveReq = new NextRequest(`http://localhost:3000/api/institute/parent-student/${rel.id}/archive`, {
@@ -534,14 +534,14 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
         headers: new Headers({ 'Content-Type': 'application/json', cookie: cookieA }),
         body: JSON.stringify({ instituteParentId: parentA.id, relationshipType: 'father' }),
       });
-      const relA = (await (await guardiansPOST(reqLinkA, { params: Promise.resolve({ studentId: studentA.id }) })).json()).data;
+      const relA = (await (await guardiansPOST(reqLinkA, { params: Promise.resolve({ id: studentA.id }) })).json()).data;
 
       // 1. Inst B tries to GET studentA's guardians -> 404
       const reqCrossGuardians = new NextRequest(`http://localhost:3000/api/institute/students/${studentA.id}/guardians`, {
         method: 'GET',
         headers: new Headers({ cookie: cookieB }),
       });
-      const resCrossGuardians = await guardiansGET(reqCrossGuardians, { params: Promise.resolve({ studentId: studentA.id }) });
+      const resCrossGuardians = await guardiansGET(reqCrossGuardians, { params: Promise.resolve({ id: studentA.id }) });
       expect(resCrossGuardians.status).toBe(404);
 
       // 2. Inst B tries to GET parentA's students -> 404
@@ -549,7 +549,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
         method: 'GET',
         headers: new Headers({ cookie: cookieB }),
       });
-      const resCrossParentStudents = await parentStudentsGET(reqCrossParentStudents, { params: Promise.resolve({ parentId: parentA.id }) });
+      const resCrossParentStudents = await parentStudentsGET(reqCrossParentStudents, { params: Promise.resolve({ id: parentA.id }) });
       expect(resCrossParentStudents.status).toBe(404);
 
       // 3. Inst B tries to GET relA by ID -> 404
@@ -566,7 +566,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
         headers: new Headers({ 'Content-Type': 'application/json', cookie: cookieA }),
         body: JSON.stringify({ instituteParentId: parentA.id, relationshipType: 'father' }),
       });
-      const resMixedPair = await guardiansPOST(reqMixedPair, { params: Promise.resolve({ studentId: studentB.id }) });
+      const resMixedPair = await guardiansPOST(reqMixedPair, { params: Promise.resolve({ id: studentB.id }) });
       expect(resMixedPair.status).toBe(404);
     });
 
@@ -582,7 +582,7 @@ describe('API /api/institute/parent-student Security, Validation & Multi-Tenant 
         headers: new Headers({ 'Content-Type': 'application/json', cookie: cookieHeader }),
         body: JSON.stringify({ instituteParentId: parent.id, relationshipType: 'mother' }),
       });
-      const rel = (await (await guardiansPOST(reqCreate, { params: Promise.resolve({ studentId: student.id }) })).json()).data;
+      const rel = (await (await guardiansPOST(reqCreate, { params: Promise.resolve({ id: student.id }) })).json()).data;
 
       // Archive relationship
       const archiveReq = new NextRequest(`http://localhost:3000/api/institute/parent-student/${rel.id}/archive`, {

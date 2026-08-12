@@ -62,13 +62,12 @@ export const APP_NAVIGATION_CONFIG: readonly NavigationSection[] = Object.freeze
     label: 'Academics',
     items: [
       {
-        id: 'batches',
-        label: 'Batches & Schedules',
-        href: '/batches',
+        id: 'academic-hierarchy',
+        label: 'Academic Workspace',
+        href: '/academics',
         iconName: 'BookOpen',
-        capability: 'academic:read',
-        isImplemented: false,
-        badgeText: 'Soon',
+        capability: 'program:read',
+        isImplemented: true,
       },
       {
         id: 'attendance',

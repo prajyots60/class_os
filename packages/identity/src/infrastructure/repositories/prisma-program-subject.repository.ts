@@ -64,6 +64,17 @@ export class PrismaProgramSubjectRepository implements ProgramSubjectRepository 
     return this.toDomainEntity(record);
   }
 
+  public async listByInstituteId(instituteId: string): Promise<ProgramSubjectEntity[]> {
+    if (!instituteId) return [];
+
+    const records = await db.programSubject.findMany({
+      where: { instituteId },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    return records.map((record) => this.toDomainEntity(record));
+  }
+
   public async listByProgramId(
     instituteId: string,
     programId: string,

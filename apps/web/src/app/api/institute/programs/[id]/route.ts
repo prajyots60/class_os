@@ -1,16 +1,13 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getAuthenticatedSession } from '@coaching-os/auth';
 import {
-  ListStudentGuardiansUseCase,
-  CreateInstituteParentStudentUseCase,
+  GetProgramUseCase,
+  UpdateProgramUseCase,
   GetUserMembershipsUseCase,
   ResolveInstituteMembershipUseCase,
-  PrismaInstituteParentStudentRepository,
-  PrismaInstituteParentRepository,
-  PrismaStudentRepository,
+  PrismaProgramRepository,
   PrismaInstituteMembershipRepository,
-  studentGuardiansParamsSchema,
-  createInstituteParentStudentSchema,
+  updateProgramSchema,
 } from '@coaching-os/identity';
 import { AuthenticationError, ValidationError } from '@coaching-os/shared';
 import { getOrCreateRequestId, toErrorResponse } from '@coaching-os/observability';
@@ -42,38 +39,24 @@ async function resolveTenantContext(req: NextRequest) {
   });
 }
 
-async function getStudentId(
-  params: { studentId: string } | Promise<{ studentId: string }>,
-): Promise<string> {
-  const resolved = await params;
-  const parse = studentGuardiansParamsSchema.safeParse(resolved);
-  if (!parse.success) {
-    const fieldErrors = parse.error.flatten().fieldErrors;
-    throw new ValidationError('Invalid Student ID format.', fieldErrors);
-  }
-  return parse.data.studentId;
-}
-
 export async function GET(
   req: NextRequest,
-  props: { params: Promise<{ studentId: string }> },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const requestId = getOrCreateRequestId(req.headers);
+  const { id } = await params;
 
   try {
-    const studentId = await getStudentId(props.params);
     const tenantContext = await resolveTenantContext(req);
+    const programRepo = new PrismaProgramRepository();
+    const useCase = new GetProgramUseCase(programRepo);
 
-    const relRepo = new PrismaInstituteParentStudentRepository();
-    const studentRepo = new PrismaStudentRepository();
-    const useCase = new ListStudentGuardiansUseCase(relRepo, studentRepo);
-
-    const guardians = await useCase.execute(tenantContext, studentId);
+    const program = await useCase.execute(tenantContext, { id });
 
     return NextResponse.json(
       {
         success: true,
-        data: guardians,
+        data: program,
       },
       {
         status: 200,
@@ -88,14 +71,14 @@ export async function GET(
   }
 }
 
-export async function POST(
+export async function PATCH(
   req: NextRequest,
-  props: { params: Promise<{ studentId: string }> },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const requestId = getOrCreateRequestId(req.headers);
+  const { id } = await params;
 
   try {
-    const studentId = await getStudentId(props.params);
     const tenantContext = await resolveTenantContext(req);
 
     let rawBody: unknown;
@@ -105,31 +88,24 @@ export async function POST(
       throw new ValidationError('Malformed JSON payload.');
     }
 
-    const parseResult = createInstituteParentStudentSchema.safeParse(rawBody);
+    const parseResult = updateProgramSchema.safeParse(rawBody);
     if (!parseResult.success) {
       const fieldErrors = parseResult.error.flatten().fieldErrors;
-      throw new ValidationError('Invalid relationship creation payload.', fieldErrors);
+      throw new ValidationError('Invalid program update payload.', fieldErrors);
     }
 
-    const relRepo = new PrismaInstituteParentStudentRepository();
-    const parentRepo = new PrismaInstituteParentRepository();
-    const studentRepo = new PrismaStudentRepository();
-    const useCase = new CreateInstituteParentStudentUseCase(relRepo, parentRepo, studentRepo);
+    const programRepo = new PrismaProgramRepository();
+    const useCase = new UpdateProgramUseCase(programRepo);
 
-    const created = await useCase.execute(tenantContext, {
-      studentId,
-      instituteParentId: parseResult.data.instituteParentId,
-      relationshipType: parseResult.data.relationshipType,
-      isPrimary: parseResult.data.isPrimary,
-    });
+    const updated = await useCase.execute(tenantContext, { id, ...parseResult.data });
 
     return NextResponse.json(
       {
         success: true,
-        data: created,
+        data: updated,
       },
       {
-        status: 201,
+        status: 200,
         headers: {
           'x-request-id': requestId,
           'Cache-Control': 'no-store, max-age=0',
@@ -139,33 +115,4 @@ export async function POST(
   } catch (error) {
     return toErrorResponse(error, requestId);
   }
-}
-
-export async function PUT() {
-  return methodNotAllowedResponse(['GET', 'POST']);
-}
-
-export async function PATCH() {
-  return methodNotAllowedResponse(['GET', 'POST']);
-}
-
-export async function DELETE() {
-  return methodNotAllowedResponse(['GET', 'POST']);
-}
-
-function methodNotAllowedResponse(allowedMethods: string[]) {
-  return NextResponse.json(
-    {
-      error: {
-        code: 'VALIDATION_ERROR',
-        message: 'HTTP method not allowed.',
-      },
-    },
-    {
-      status: 405,
-      headers: {
-        Allow: allowedMethods.join(', '),
-      },
-    },
-  );
 }

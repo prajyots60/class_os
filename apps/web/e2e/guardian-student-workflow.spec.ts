@@ -116,17 +116,13 @@ test.describe('Phase 1.9.8 — Staff Guardian / Student Relationship UI & Workfl
 
     // Add session cookies to browser context
     await page.context().addCookies(tenant.cookies);
-    await page.goto('/dashboard/students');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/students');
+    await expect(page.getByTestId('student-content')).toBeVisible();
 
-    // Find student in list and open details modal
-    const viewBtn = page.locator(`[data-testid="view-student-btn-${student.id}"]`);
-    if (await viewBtn.isVisible()) {
-      await viewBtn.click();
-    } else {
-      // Fallback: click first view details button
-      await page.locator('[aria-label="View student details"]').first().click();
-    }
+    // Find student row and open details via View button
+    const viewBtn = page.getByTestId(`student-row-${student.id}`).getByRole('button', { name: /View/i });
+    await expect(viewBtn).toBeVisible();
+    await viewBtn.click();
 
     // REL-UI-01: Click Guardians tab
     const guardiansTab = page.locator('[data-testid="student-guardians-tab"]');
@@ -179,7 +175,7 @@ test.describe('Phase 1.9.8 — Staff Guardian / Student Relationship UI & Workfl
     });
     expect(dupRes.status()).toBe(409);
     const body = await dupRes.json();
-    expect(body.error.code).toBe('ALREADY_EXISTS');
+    expect(body.error.code).toBe('CONFLICT');
 
     await tenant.ctx.dispose();
   });
@@ -260,8 +256,8 @@ test.describe('Phase 1.9.8 — Staff Guardian / Student Relationship UI & Workfl
     await page.setViewportSize({ width: 375, height: 812 });
 
     await page.context().addCookies(tenant.cookies);
-    await page.goto('/dashboard/students');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/students');
+    await expect(page.getByTestId('student-content')).toBeVisible();
 
     // Verify main content container fits within 375px
     const bodyWidth = await page.evaluate(() => document.body.scrollWidth);

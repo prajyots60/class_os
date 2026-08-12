@@ -4,7 +4,7 @@
  * Strongly-typed definitions for the workspace navigation architecture.
  */
 
-import type { Capability } from '@coaching-os/identity';
+import type { Capability } from '@coaching-os/identity/client';
 
 export interface NavigationItem {
   id: string;

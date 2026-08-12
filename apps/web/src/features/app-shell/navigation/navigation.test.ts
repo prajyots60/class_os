@@ -52,7 +52,7 @@ describe('Navigation Architecture & Role Filtering Suite', () => {
 
     expect(parentItemIds).toContain('dashboard');
     expect(parentItemIds).toContain('students');
-    expect(parentItemIds).toContain('batches');
+    expect(parentItemIds).toContain('academic-hierarchy');
     expect(parentItemIds).toContain('attendance');
     expect(parentItemIds).toContain('tests');
     expect(parentItemIds).toContain('billing');

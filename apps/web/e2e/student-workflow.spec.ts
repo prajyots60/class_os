@@ -99,7 +99,7 @@ test.describe('Phase 1.8.8 + 1.8.9 — Student UX, Accessibility & Workflow Suit
     await page.goto('/students');
 
     await expect(page.getByTestId('student-content')).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Students' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Students', level: 1 })).toBeVisible();
     await expect(page.getByTestId('add-student-button')).toBeVisible();
 
     await context.close();

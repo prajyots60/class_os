@@ -2,7 +2,7 @@ import * as React from 'react';
 import { redirect } from 'next/navigation';
 import { requireAuthSession, resolveServerTenantContext } from '../../../lib/auth-guards';
 import { AppShell, filterNavigationByRole } from '../../../features/app-shell';
-import { getCapabilitiesForRole } from '@coaching-os/identity';
+import { getCapabilitiesForRole } from '@coaching-os/identity/client';
 
 /**
  * (app)/(workspace)/layout.tsx

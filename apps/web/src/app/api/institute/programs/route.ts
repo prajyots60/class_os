@@ -1,13 +1,13 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getAuthenticatedSession } from '@coaching-os/auth';
 import {
-  ListParentStudentsUseCase,
+  CreateProgramUseCase,
+  ListProgramsUseCase,
   GetUserMembershipsUseCase,
   ResolveInstituteMembershipUseCase,
-  PrismaInstituteParentStudentRepository,
-  PrismaInstituteParentRepository,
+  PrismaProgramRepository,
   PrismaInstituteMembershipRepository,
-  parentStudentsParamsSchema,
+  createProgramSchema,
 } from '@coaching-os/identity';
 import { AuthenticationError, ValidationError } from '@coaching-os/shared';
 import { getOrCreateRequestId, toErrorResponse } from '@coaching-os/observability';
@@ -39,38 +39,20 @@ async function resolveTenantContext(req: NextRequest) {
   });
 }
 
-async function getParentId(
-  params: { parentId: string } | Promise<{ parentId: string }>,
-): Promise<string> {
-  const resolved = await params;
-  const parse = parentStudentsParamsSchema.safeParse(resolved);
-  if (!parse.success) {
-    const fieldErrors = parse.error.flatten().fieldErrors;
-    throw new ValidationError('Invalid Parent ID format.', fieldErrors);
-  }
-  return parse.data.parentId;
-}
-
-export async function GET(
-  req: NextRequest,
-  props: { params: Promise<{ parentId: string }> },
-) {
+export async function GET(req: NextRequest) {
   const requestId = getOrCreateRequestId(req.headers);
 
   try {
-    const parentId = await getParentId(props.params);
     const tenantContext = await resolveTenantContext(req);
+    const programRepo = new PrismaProgramRepository();
+    const useCase = new ListProgramsUseCase(programRepo);
 
-    const relRepo = new PrismaInstituteParentStudentRepository();
-    const parentRepo = new PrismaInstituteParentRepository();
-    const useCase = new ListParentStudentsUseCase(relRepo, parentRepo);
-
-    const students = await useCase.execute(tenantContext, parentId);
+    const programs = await useCase.execute(tenantContext);
 
     return NextResponse.json(
       {
         success: true,
-        data: students,
+        data: programs,
       },
       {
         status: 200,
@@ -85,35 +67,44 @@ export async function GET(
   }
 }
 
-export async function POST() {
-  return methodNotAllowedResponse(['GET']);
-}
+export async function POST(req: NextRequest) {
+  const requestId = getOrCreateRequestId(req.headers);
 
-export async function PUT() {
-  return methodNotAllowedResponse(['GET']);
-}
+  try {
+    const tenantContext = await resolveTenantContext(req);
 
-export async function PATCH() {
-  return methodNotAllowedResponse(['GET']);
-}
+    let rawBody: unknown;
+    try {
+      rawBody = await req.json();
+    } catch {
+      throw new ValidationError('Malformed JSON payload.');
+    }
 
-export async function DELETE() {
-  return methodNotAllowedResponse(['GET']);
-}
+    const parseResult = createProgramSchema.safeParse(rawBody);
+    if (!parseResult.success) {
+      const fieldErrors = parseResult.error.flatten().fieldErrors;
+      throw new ValidationError('Invalid program creation payload.', fieldErrors);
+    }
 
-function methodNotAllowedResponse(allowedMethods: string[]) {
-  return NextResponse.json(
-    {
-      error: {
-        code: 'VALIDATION_ERROR',
-        message: 'HTTP method not allowed.',
+    const programRepo = new PrismaProgramRepository();
+    const useCase = new CreateProgramUseCase(programRepo);
+
+    const created = await useCase.execute(tenantContext, parseResult.data);
+
+    return NextResponse.json(
+      {
+        success: true,
+        data: created,
       },
-    },
-    {
-      status: 405,
-      headers: {
-        Allow: allowedMethods.join(', '),
+      {
+        status: 201,
+        headers: {
+          'x-request-id': requestId,
+          'Cache-Control': 'no-store, max-age=0',
+        },
       },
-    },
-  );
+    );
+  } catch (error) {
+    return toErrorResponse(error, requestId);
+  }
 }

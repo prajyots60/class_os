@@ -169,6 +169,10 @@ class InMemoryProgramSubjectRepo implements ProgramSubjectRepository {
     );
   }
 
+  public async listByInstituteId(instituteId: string): Promise<ProgramSubjectEntity[]> {
+    return this.mappings.filter((m) => m.instituteId === instituteId);
+  }
+
   public async listByProgramId(instituteId: string, programId: string): Promise<ProgramSubjectEntity[]> {
     return this.mappings.filter((m) => m.instituteId === instituteId && m.programId === programId);
   }

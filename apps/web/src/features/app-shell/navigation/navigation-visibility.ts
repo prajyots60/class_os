@@ -12,7 +12,7 @@
  *   All server endpoints and domain use cases MUST independently enforce authorization.
  */
 
-import { getCapabilitiesForRole, type Capability } from '@coaching-os/identity';
+import { getCapabilitiesForRole, type Capability } from '@coaching-os/identity/client';
 import { APP_NAVIGATION_CONFIG } from './navigation-config';
 import type { NavigationSection } from './navigation-types';
 
