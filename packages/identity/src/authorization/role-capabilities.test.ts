@@ -41,9 +41,9 @@ describe('Role → Capability Resolver Engine Suite', () => {
       }
     });
 
-    it('Test 2 — Teacher capabilities (Exact 37 capabilities)', () => {
+    it('Test 2 — Teacher capabilities (Exact 38 capabilities)', () => {
       const teacherCaps = getCapabilitiesForRole('teacher');
-      expect(teacherCaps.size).toBe(37);
+      expect(teacherCaps.size).toBe(38);
 
       // Teacher possesses academic, attendance, homework, test, marks, announcement, institute:read, parent CRM (read, create, update), guardian:read
       expect(teacherCaps.has(CAPABILITIES.INSTITUTE_READ)).toBe(true);
@@ -62,9 +62,9 @@ describe('Role → Capability Resolver Engine Suite', () => {
       expect(teacherCaps.has(CAPABILITIES.INSTITUTE_UPDATE)).toBe(false);
     });
 
-    it('Test 3 — Assistant capabilities (Exact 33 capabilities)', () => {
+    it('Test 3 — Assistant capabilities (Exact 37 capabilities)', () => {
       const assistantCaps = getCapabilitiesForRole('assistant');
-      expect(assistantCaps.size).toBe(33);
+      expect(assistantCaps.size).toBe(37);
 
       // Assistant possesses staff:read, student:create, payment:record, receipt:issue, parent:read, guardian (read, create, update, primary)
       expect(assistantCaps.has(CAPABILITIES.STAFF_READ)).toBe(true);
@@ -135,7 +135,7 @@ describe('Role → Capability Resolver Engine Suite', () => {
       expect(first.size).toBe(0);
 
       const second = getCapabilitiesForRole('teacher');
-      expect(second.size).toBe(37);
+      expect(second.size).toBe(38);
       expect(second.has(CAPABILITIES.ATTENDANCE_MARK)).toBe(true);
     });
 

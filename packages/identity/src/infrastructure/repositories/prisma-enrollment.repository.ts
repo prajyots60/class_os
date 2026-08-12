@@ -377,6 +377,257 @@ export class PrismaEnrollmentRepository implements EnrollmentRepository {
     }
   }
 
+  /**
+   * Persists a new Enrollment domain entity with pessimistic row-level locking on target Batch capacity.
+   */
+  public async createWithCapacityCheck(entity: EnrollmentEntity): Promise<EnrollmentEntity> {
+    return db.$transaction(async (tx) => {
+      const rawBatches = await tx.$queryRaw<Array<{ id: string; instituteId: string; capacity: number | null; status: string }>>`
+        SELECT id, institute_id as "instituteId", capacity, status
+        FROM batches
+        WHERE id = ${entity.batchId}::uuid AND institute_id = ${entity.instituteId}::uuid
+        FOR UPDATE
+      `;
+
+      if (rawBatches.length === 0) {
+        throw new NotFoundError(
+          `Target batch "${entity.batchId}" not found in institute "${entity.instituteId}".`,
+        );
+      }
+
+      const batch = rawBatches[0];
+      if (batch.status !== 'open' && batch.status !== 'running') {
+        throw new ValidationError(
+          `Target batch "${entity.batchId}" is in status "${batch.status}" and cannot accept enrollments.`,
+        );
+      }
+
+      const rawStudents = await tx.$queryRaw<Array<{ id: string; admissionStatus: string; status: string }>>`
+        SELECT id, admission_status as "admissionStatus", status
+        FROM students
+        WHERE id = ${entity.studentId}::uuid AND institute_id = ${entity.instituteId}::uuid
+      `;
+
+      if (rawStudents.length === 0) {
+        throw new NotFoundError(
+          `Target student "${entity.studentId}" not found in institute "${entity.instituteId}".`,
+        );
+      }
+
+      const student = rawStudents[0];
+      if (student.admissionStatus !== 'admitted') {
+        throw new ValidationError(
+          `Student "${entity.studentId}" has admission status "${student.admissionStatus}" and cannot be enrolled.`,
+        );
+      }
+
+      if (student.status !== 'active') {
+        throw new ValidationError(
+          `Student "${entity.studentId}" is in status "${student.status}" and cannot be enrolled.`,
+        );
+      }
+
+      const activeCount = await tx.enrollment.count({
+        where: {
+          instituteId: entity.instituteId,
+          studentId: entity.studentId,
+          batchId: entity.batchId,
+          status: { in: ['pending', 'active'] },
+          deletedAt: null,
+        },
+      });
+
+      if (activeCount > 0) {
+        throw new ConflictError(
+          `Student "${entity.studentId}" is already actively enrolled in batch "${entity.batchId}".`,
+        );
+      }
+
+      if (batch.capacity !== null) {
+        const currentCapacityCount = await tx.enrollment.count({
+          where: {
+            instituteId: entity.instituteId,
+            batchId: entity.batchId,
+            status: { in: ['pending', 'active'] },
+            deletedAt: null,
+          },
+        });
+
+        if (currentCapacityCount >= batch.capacity) {
+          throw new ConflictError(
+            `Target batch "${entity.batchId}" has reached its maximum capacity of ${batch.capacity}.`,
+          );
+        }
+      }
+
+      try {
+        const record = await tx.enrollment.create({
+          data: {
+            id: entity.id,
+            instituteId: entity.instituteId,
+            studentId: entity.studentId,
+            batchId: entity.batchId,
+            status: entity.status as EnrollmentStatus,
+            enrolledAt: entity.enrolledAt,
+            completedAt: entity.completedAt,
+            withdrawnAt: entity.withdrawnAt,
+            transferredAt: entity.transferredAt,
+            transferredToBatchId: entity.transferredToBatchId,
+            transferredToEnrollmentId: entity.transferredToEnrollmentId,
+            createdAt: entity.createdAt,
+            updatedAt: entity.updatedAt,
+            deletedAt: entity.deletedAt,
+          },
+        });
+
+        return this.toDomainEntity(record);
+      } catch (error: any) {
+        if (error?.code === 'P2002') {
+          throw new ConflictError(
+            `Student "${entity.studentId}" is already enrolled in batch "${entity.batchId}" in institute "${entity.instituteId}".`,
+          );
+        }
+        throw error;
+      }
+    });
+  }
+
+  /**
+   * Atomically transfers a student from source enrollment to a target batch.
+   */
+  public async transferWithCapacityCheck(params: {
+    sourceEnrollment: EnrollmentEntity;
+    targetBatchId: string;
+    destinationEnrollment: EnrollmentEntity;
+  }): Promise<{ source: EnrollmentEntity; destination: EnrollmentEntity }> {
+    const { sourceEnrollment, targetBatchId, destinationEnrollment } = params;
+
+    return db.$transaction(async (tx) => {
+      // 1. Lock Source Enrollment
+      const rawSourceEnrollments = await tx.$queryRaw<Array<{ id: string; status: string }>>`
+        SELECT id, status
+        FROM enrollments
+        WHERE id = ${sourceEnrollment.id}::uuid AND institute_id = ${sourceEnrollment.instituteId}::uuid
+        FOR UPDATE
+      `;
+
+      if (rawSourceEnrollments.length === 0) {
+        throw new NotFoundError(
+          `Source enrollment "${sourceEnrollment.id}" not found in institute "${sourceEnrollment.instituteId}".`,
+        );
+      }
+
+      const dbSourceEnrollment = rawSourceEnrollments[0];
+      if (dbSourceEnrollment.status !== 'active') {
+        throw new ValidationError(
+          `Source enrollment "${sourceEnrollment.id}" is in status "${dbSourceEnrollment.status}" and cannot be transferred.`,
+        );
+      }
+
+      // 2. Lock Target Batch
+      const rawTargetBatches = await tx.$queryRaw<Array<{ id: string; capacity: number | null; status: string }>>`
+        SELECT id, capacity, status
+        FROM batches
+        WHERE id = ${targetBatchId}::uuid AND institute_id = ${sourceEnrollment.instituteId}::uuid
+        FOR UPDATE
+      `;
+
+      if (rawTargetBatches.length === 0) {
+        throw new NotFoundError(
+          `Destination batch "${targetBatchId}" not found in institute "${sourceEnrollment.instituteId}".`,
+        );
+      }
+
+      const targetBatch = rawTargetBatches[0];
+      if (targetBatch.status !== 'open' && targetBatch.status !== 'running') {
+        throw new ValidationError(
+          `Destination batch "${targetBatchId}" is in status "${targetBatch.status}" and cannot accept transfer enrollments.`,
+        );
+      }
+
+      const rawStudents = await tx.$queryRaw<Array<{ id: string; admissionStatus: string; status: string }>>`
+        SELECT id, admission_status as "admissionStatus", status
+        FROM students
+        WHERE id = ${sourceEnrollment.studentId}::uuid AND institute_id = ${sourceEnrollment.instituteId}::uuid
+      `;
+
+      if (rawStudents.length === 0) {
+        throw new NotFoundError(
+          `Student "${sourceEnrollment.studentId}" not found in institute "${sourceEnrollment.instituteId}".`,
+        );
+      }
+
+      const student = rawStudents[0];
+      if (student.admissionStatus !== 'admitted' || student.status !== 'active') {
+        throw new ValidationError(
+          `Student "${sourceEnrollment.studentId}" is not eligible for transfer (admissionStatus=${student.admissionStatus}, status=${student.status}).`,
+        );
+      }
+
+      if (targetBatch.capacity !== null) {
+        const targetActiveCount = await tx.enrollment.count({
+          where: {
+            instituteId: sourceEnrollment.instituteId,
+            batchId: targetBatchId,
+            status: { in: ['pending', 'active'] },
+            deletedAt: null,
+          },
+        });
+
+        if (targetActiveCount >= targetBatch.capacity) {
+          throw new ConflictError(
+            `Destination batch "${targetBatchId}" has reached its maximum capacity of ${targetBatch.capacity}.`,
+          );
+        }
+      }
+
+      const destinationExisting = await tx.enrollment.count({
+        where: {
+          instituteId: sourceEnrollment.instituteId,
+          studentId: sourceEnrollment.studentId,
+          batchId: targetBatchId,
+          status: { in: ['pending', 'active'] },
+          deletedAt: null,
+        },
+      });
+
+      if (destinationExisting > 0) {
+        throw new ConflictError(
+          `Student "${sourceEnrollment.studentId}" is already actively enrolled in target batch "${targetBatchId}".`,
+        );
+      }
+
+      const destinationRecord = await tx.enrollment.create({
+        data: {
+          id: destinationEnrollment.id,
+          instituteId: destinationEnrollment.instituteId,
+          studentId: destinationEnrollment.studentId,
+          batchId: destinationEnrollment.batchId,
+          status: destinationEnrollment.status as EnrollmentStatus,
+          enrolledAt: destinationEnrollment.enrolledAt,
+          createdAt: destinationEnrollment.createdAt,
+          updatedAt: destinationEnrollment.updatedAt,
+        },
+      });
+
+      const sourceRecord = await tx.enrollment.update({
+        where: { id: sourceEnrollment.id },
+        data: {
+          status: sourceEnrollment.status as EnrollmentStatus,
+          transferredAt: sourceEnrollment.transferredAt,
+          transferredToBatchId: sourceEnrollment.transferredToBatchId,
+          transferredToEnrollmentId: sourceEnrollment.transferredToEnrollmentId,
+          updatedAt: sourceEnrollment.updatedAt,
+        },
+      });
+
+      return {
+        source: this.toDomainEntity(sourceRecord),
+        destination: this.toDomainEntity(destinationRecord),
+      };
+    });
+  }
+
   // ── Mapping Helper ─────────────────────────────────────────────────────────
 
   private toDomainEntity(record: {

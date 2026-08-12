@@ -520,4 +520,53 @@ describe('PrismaEnrollmentRepository Integration Suite', () => {
     expect(rejected).toHaveLength(1);
     expect((rejected[0] as PromiseRejectedResult).reason).toBeInstanceOf(ConflictError);
   });
+
+  it('ENROLLMENT-DB-20: transfer transaction guarantees strict all-or-nothing rollback on validation failure', async () => {
+    // Setup active enrollment in batchA1
+    const sourceEnrollment = EnrollmentEntity.create({
+      instituteId: instituteA_Id,
+      studentId: studentA1_Id,
+      batchId: batchA1_Id,
+      status: 'active',
+    });
+    await repository.create(sourceEnrollment);
+
+    // Set batchA2 capacity to 0 so transfer will fail
+    await db.batch.update({
+      where: { id: batchA2_Id },
+      data: { capacity: 0 },
+    });
+
+    const destinationEnrollment = EnrollmentEntity.create({
+      instituteId: instituteA_Id,
+      studentId: studentA1_Id,
+      batchId: batchA2_Id,
+      status: 'active',
+    });
+
+    sourceEnrollment.markTransferred(batchA2_Id, destinationEnrollment.id);
+
+    // Execution must reject due to capacity conflict
+    await expect(
+      repository.transferWithCapacityCheck({
+        sourceEnrollment,
+        targetBatchId: batchA2_Id,
+        destinationEnrollment,
+      }),
+    ).rejects.toThrow(ConflictError);
+
+    // Invariant Check 1: Source enrollment remains unchanged ('active') in database
+    const dbSource = await db.enrollment.findUnique({
+      where: { id: sourceEnrollment.id },
+    });
+    expect(dbSource?.status).toBe('active');
+    expect(dbSource?.transferredToBatchId).toBeNull();
+    expect(dbSource?.transferredToEnrollmentId).toBeNull();
+
+    // Invariant Check 2: Destination enrollment was NEVER created in database
+    const dbDestination = await db.enrollment.findUnique({
+      where: { id: destinationEnrollment.id },
+    });
+    expect(dbDestination).toBeNull();
+  });
 });

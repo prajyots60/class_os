@@ -93,4 +93,21 @@ export interface EnrollmentRepository {
    * Throws NotFoundError if record does not exist within the specified tenant.
    */
   update(enrollment: EnrollmentEntity): Promise<EnrollmentEntity>;
+
+  /**
+   * Persists a new Enrollment domain entity with pessimistic row-level locking on target Batch capacity.
+   * Throws ConflictError if capacity limit is reached or duplicate enrollment exists.
+   */
+  createWithCapacityCheck(enrollment: EnrollmentEntity): Promise<EnrollmentEntity>;
+
+  /**
+   * Atomically transfers a student from source enrollment to a target batch.
+   * Updates source enrollment to "transferred" state with target pointers and creates a new active target enrollment.
+   * Executed within a single database transaction with pessimistic row-level locking on target Batch capacity.
+   */
+  transferWithCapacityCheck(params: {
+    sourceEnrollment: EnrollmentEntity;
+    targetBatchId: string;
+    destinationEnrollment: EnrollmentEntity;
+  }): Promise<{ source: EnrollmentEntity; destination: EnrollmentEntity }>;
 }

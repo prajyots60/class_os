@@ -45,6 +45,7 @@ export * from './application/dto/program.dto';
 export * from './application/dto/subject.dto';
 export * from './application/dto/program-subject.dto';
 export * from './application/dto/batch.dto';
+export * from './application/dto/enrollment.dto';
 export type {
   StudentGuardianSummaryDTO,
   ParentStudentSummaryDTO,
@@ -62,6 +63,7 @@ export * from './application/use-cases/program.use-cases';
 export * from './application/use-cases/subject.use-cases';
 export * from './application/use-cases/program-subject.use-cases';
 export * from './application/use-cases/batch.use-cases';
+export * from './application/use-cases/enrollment.use-cases';
 
 // Presentation Validators
 export * from './presentation/validators/institute.validator';
@@ -74,6 +76,7 @@ export * from './presentation/validators/program.validator';
 export * from './presentation/validators/subject.validator';
 export * from './presentation/validators/program-subject.validator';
 export * from './presentation/validators/batch.validator';
+export * from './presentation/validators/enrollment.validator';
 
 // Infrastructure Repositories
 export * from './infrastructure/repositories/prisma-institute.repository';

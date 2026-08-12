@@ -102,6 +102,14 @@ export const CAPABILITIES = {
   BATCH_ARCHIVE: 'batch:archive',
   BATCH_STATUS: 'batch:status',
   BATCH_TEACHER: 'batch:teacher',
+
+  // Student Enrollment Lifecycle (Phase 1.11)
+  ENROLLMENT_READ: 'enrollment:read',
+  ENROLLMENT_CREATE: 'enrollment:create',
+  ENROLLMENT_UPDATE: 'enrollment:update',
+  ENROLLMENT_STATUS: 'enrollment:status',
+  ENROLLMENT_TRANSFER: 'enrollment:transfer',
+  ENROLLMENT_ARCHIVE: 'enrollment:archive',
 } as const;
 
 export type Capability = (typeof CAPABILITIES)[keyof typeof CAPABILITIES];
@@ -118,6 +126,7 @@ export type CapabilityResource =
   | 'program'
   | 'subject'
   | 'batch'
+  | 'enrollment'
   | 'academic'
   | 'attendance'
   | 'homework'
@@ -147,7 +156,8 @@ export type CapabilityAction =
   | 'issue'
   | 'primary'
   | 'status'
-  | 'teacher';
+  | 'teacher'
+  | 'transfer';
 
 const ALL_CAPABILITIES_SET: ReadonlySet<string> = new Set(Object.values(CAPABILITIES));
 
@@ -163,6 +173,7 @@ const ALL_RESOURCES_SET: ReadonlySet<string> = new Set([
   'program',
   'subject',
   'batch',
+  'enrollment',
   'academic',
   'attendance',
   'homework',
@@ -194,6 +205,7 @@ const ALL_ACTIONS_SET: ReadonlySet<string> = new Set([
   'primary',
   'status',
   'teacher',
+  'transfer',
 ]);
 
 /**
