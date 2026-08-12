@@ -127,6 +127,26 @@ export class InstituteMembershipEntity {
     return this._status === 'active';
   }
 
+  public get isStaff(): boolean {
+    return ['owner', 'teacher', 'assistant'].includes(this._role);
+  }
+
+  public get isOwner(): boolean {
+    return this._role === 'owner';
+  }
+
+  public get isTeacher(): boolean {
+    return this._role === 'teacher';
+  }
+
+  public get isAssistant(): boolean {
+    return this._role === 'assistant';
+  }
+
+  public get isParent(): boolean {
+    return this._role === 'parent';
+  }
+
   // Business Mutations
   public suspend(): void {
     if (this._status === 'removed') {

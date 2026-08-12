@@ -13,6 +13,10 @@ export interface InstituteMembershipRepository {
   ): Promise<InstituteMembershipEntity | null>;
   findByUserId(userId: string): Promise<InstituteMembershipEntity[]>;
   findByInstituteId(instituteId: string): Promise<InstituteMembershipEntity[]>;
+  findStaffByInstituteId?(
+    instituteId: string,
+    filters?: { role?: MembershipRole; status?: MembershipStatus },
+  ): Promise<InstituteMembershipEntity[]>;
   updateStatus(id: string, status: MembershipStatus): Promise<InstituteMembershipEntity>;
   updateRole(id: string, role: MembershipRole): Promise<InstituteMembershipEntity>;
   delete(id: string): Promise<void>;

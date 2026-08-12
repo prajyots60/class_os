@@ -371,6 +371,19 @@ export class PrismaInstituteMembershipRepository implements InstituteMembershipR
     return memberships;
   }
 
+  public async findStaffByInstituteId(
+    instituteId: string,
+    filters?: { role?: MembershipRole; status?: MembershipStatus },
+  ): Promise<InstituteMembershipEntity[]> {
+    const allMembers = await this.findByInstituteId(instituteId);
+    return allMembers.filter((m) => {
+      if (!m.isStaff) return false;
+      if (filters?.role && m.role !== filters.role) return false;
+      if (filters?.status && m.status !== filters.status) return false;
+      return true;
+    });
+  }
+
   public async updateStatus(
     id: string,
     status: MembershipStatus,

@@ -66,6 +66,7 @@ export * from './application/use-cases/subject.use-cases';
 export * from './application/use-cases/program-subject.use-cases';
 export * from './application/use-cases/batch.use-cases';
 export * from './application/use-cases/enrollment.use-cases';
+export * from './application/use-cases/staff.use-cases';
 
 // Presentation Validators
 export * from './presentation/validators/institute.validator';
