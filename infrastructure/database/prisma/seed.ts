@@ -86,26 +86,28 @@ export async function main() {
 
   // 4. Create Subjects & Batches
   const physics = await db.subject.upsert({
-    where: { instituteId_name: { instituteId: institute.id, name: 'Physics' } },
+    where: { subject_name_unique: { instituteId: institute.id, name: 'Physics' } },
     update: {},
     create: {
       instituteId: institute.id,
       name: 'Physics',
+      code: 'PHY-101',
     },
   });
 
   const maths = await db.subject.upsert({
-    where: { instituteId_name: { instituteId: institute.id, name: 'Mathematics' } },
+    where: { subject_name_unique: { instituteId: institute.id, name: 'Mathematics' } },
     update: {},
     create: {
       instituteId: institute.id,
       name: 'Mathematics',
+      code: 'MATH-101',
     },
   });
 
   const batchA = await db.batch.upsert({
     where: {
-      instituteId_subjectId_name: {
+      batch_subject_name_unique: {
         instituteId: institute.id,
         subjectId: physics.id,
         name: 'Morning Batch (11th NEET)',
@@ -116,8 +118,8 @@ export async function main() {
       id: '33333333-3333-4333-a333-333333333331',
       instituteId: institute.id,
       subjectId: physics.id,
-      teacherId: teacher.id,
       name: 'Morning Batch (11th NEET)',
+      code: 'BATCH-NEET-M',
       capacity: 30,
       status: 'running',
     },
@@ -125,7 +127,7 @@ export async function main() {
 
   const batchB = await db.batch.upsert({
     where: {
-      instituteId_subjectId_name: {
+      batch_subject_name_unique: {
         instituteId: institute.id,
         subjectId: maths.id,
         name: 'Evening Batch (11th JEE)',
@@ -136,8 +138,8 @@ export async function main() {
       id: '33333333-3333-4333-a333-333333333332',
       instituteId: institute.id,
       subjectId: maths.id,
-      teacherId: founder.id,
       name: 'Evening Batch (11th JEE)',
+      code: 'BATCH-JEE-E',
       capacity: 25,
       status: 'running',
     },

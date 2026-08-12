@@ -73,6 +73,24 @@ export const StudentGender = {
 export type StudentGender = (typeof StudentGender)[keyof typeof StudentGender]
 
 
+export const ProgramStatus = {
+  draft: 'draft',
+  active: 'active',
+  archived: 'archived'
+} as const
+
+export type ProgramStatus = (typeof ProgramStatus)[keyof typeof ProgramStatus]
+
+
+export const SubjectStatus = {
+  draft: 'draft',
+  active: 'active',
+  archived: 'archived'
+} as const
+
+export type SubjectStatus = (typeof SubjectStatus)[keyof typeof SubjectStatus]
+
+
 export const BatchStatus = {
   draft: 'draft',
   open: 'open',

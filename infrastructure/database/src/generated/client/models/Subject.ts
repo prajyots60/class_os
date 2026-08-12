@@ -27,8 +27,10 @@ export type AggregateSubject = {
 export type SubjectMinAggregateOutputType = {
   id: string | null
   instituteId: string | null
-  programId: string | null
   name: string | null
+  code: string | null
+  description: string | null
+  status: $Enums.SubjectStatus | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -37,8 +39,10 @@ export type SubjectMinAggregateOutputType = {
 export type SubjectMaxAggregateOutputType = {
   id: string | null
   instituteId: string | null
-  programId: string | null
   name: string | null
+  code: string | null
+  description: string | null
+  status: $Enums.SubjectStatus | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -47,8 +51,10 @@ export type SubjectMaxAggregateOutputType = {
 export type SubjectCountAggregateOutputType = {
   id: number
   instituteId: number
-  programId: number
   name: number
+  code: number
+  description: number
+  status: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -59,8 +65,10 @@ export type SubjectCountAggregateOutputType = {
 export type SubjectMinAggregateInputType = {
   id?: true
   instituteId?: true
-  programId?: true
   name?: true
+  code?: true
+  description?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -69,8 +77,10 @@ export type SubjectMinAggregateInputType = {
 export type SubjectMaxAggregateInputType = {
   id?: true
   instituteId?: true
-  programId?: true
   name?: true
+  code?: true
+  description?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -79,8 +89,10 @@ export type SubjectMaxAggregateInputType = {
 export type SubjectCountAggregateInputType = {
   id?: true
   instituteId?: true
-  programId?: true
   name?: true
+  code?: true
+  description?: true
+  status?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -162,8 +174,10 @@ export type SubjectGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type SubjectGroupByOutputType = {
   id: string
   instituteId: string
-  programId: string | null
   name: string
+  code: string
+  description: string | null
+  status: $Enums.SubjectStatus
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -193,51 +207,60 @@ export type SubjectWhereInput = {
   NOT?: Prisma.SubjectWhereInput | Prisma.SubjectWhereInput[]
   id?: Prisma.UuidFilter<"Subject"> | string
   instituteId?: Prisma.UuidFilter<"Subject"> | string
-  programId?: Prisma.UuidNullableFilter<"Subject"> | string | null
   name?: Prisma.StringFilter<"Subject"> | string
+  code?: Prisma.StringFilter<"Subject"> | string
+  description?: Prisma.StringNullableFilter<"Subject"> | string | null
+  status?: Prisma.EnumSubjectStatusFilter<"Subject"> | $Enums.SubjectStatus
   createdAt?: Prisma.DateTimeFilter<"Subject"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Subject"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Subject"> | Date | string | null
   institute?: Prisma.XOR<Prisma.InstituteScalarRelationFilter, Prisma.InstituteWhereInput>
-  program?: Prisma.XOR<Prisma.ProgramNullableScalarRelationFilter, Prisma.ProgramWhereInput> | null
+  programSubjects?: Prisma.ProgramSubjectListRelationFilter
   batches?: Prisma.BatchListRelationFilter
 }
 
 export type SubjectOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
-  programId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   institute?: Prisma.InstituteOrderByWithRelationInput
-  program?: Prisma.ProgramOrderByWithRelationInput
+  programSubjects?: Prisma.ProgramSubjectOrderByRelationAggregateInput
   batches?: Prisma.BatchOrderByRelationAggregateInput
 }
 
 export type SubjectWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  instituteId_name?: Prisma.SubjectInstituteIdNameCompoundUniqueInput
+  subject_code_unique?: Prisma.SubjectSubject_code_uniqueCompoundUniqueInput
+  subject_name_unique?: Prisma.SubjectSubject_name_uniqueCompoundUniqueInput
   AND?: Prisma.SubjectWhereInput | Prisma.SubjectWhereInput[]
   OR?: Prisma.SubjectWhereInput[]
   NOT?: Prisma.SubjectWhereInput | Prisma.SubjectWhereInput[]
   instituteId?: Prisma.UuidFilter<"Subject"> | string
-  programId?: Prisma.UuidNullableFilter<"Subject"> | string | null
   name?: Prisma.StringFilter<"Subject"> | string
+  code?: Prisma.StringFilter<"Subject"> | string
+  description?: Prisma.StringNullableFilter<"Subject"> | string | null
+  status?: Prisma.EnumSubjectStatusFilter<"Subject"> | $Enums.SubjectStatus
   createdAt?: Prisma.DateTimeFilter<"Subject"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Subject"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Subject"> | Date | string | null
   institute?: Prisma.XOR<Prisma.InstituteScalarRelationFilter, Prisma.InstituteWhereInput>
-  program?: Prisma.XOR<Prisma.ProgramNullableScalarRelationFilter, Prisma.ProgramWhereInput> | null
+  programSubjects?: Prisma.ProgramSubjectListRelationFilter
   batches?: Prisma.BatchListRelationFilter
-}, "id" | "instituteId_name">
+}, "id" | "subject_code_unique" | "subject_name_unique">
 
 export type SubjectOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
-  programId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -252,8 +275,10 @@ export type SubjectScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SubjectScalarWhereWithAggregatesInput | Prisma.SubjectScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"Subject"> | string
   instituteId?: Prisma.UuidWithAggregatesFilter<"Subject"> | string
-  programId?: Prisma.UuidNullableWithAggregatesFilter<"Subject"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"Subject"> | string
+  code?: Prisma.StringWithAggregatesFilter<"Subject"> | string
+  description?: Prisma.StringNullableWithAggregatesFilter<"Subject"> | string | null
+  status?: Prisma.EnumSubjectStatusWithAggregatesFilter<"Subject"> | $Enums.SubjectStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Subject"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Subject"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Subject"> | Date | string | null
@@ -262,52 +287,66 @@ export type SubjectScalarWhereWithAggregatesInput = {
 export type SubjectCreateInput = {
   id?: string
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.SubjectStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   institute: Prisma.InstituteCreateNestedOneWithoutSubjectsInput
-  program?: Prisma.ProgramCreateNestedOneWithoutSubjectsInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutSubjectInput
   batches?: Prisma.BatchCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUncheckedCreateInput = {
   id?: string
   instituteId: string
-  programId?: string | null
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.SubjectStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutSubjectInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumSubjectStatusFieldUpdateOperationsInput | $Enums.SubjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   institute?: Prisma.InstituteUpdateOneRequiredWithoutSubjectsNestedInput
-  program?: Prisma.ProgramUpdateOneWithoutSubjectsNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutSubjectNestedInput
   batches?: Prisma.BatchUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
-  programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumSubjectStatusFieldUpdateOperationsInput | $Enums.SubjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutSubjectNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectCreateManyInput = {
   id?: string
   instituteId: string
-  programId?: string | null
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.SubjectStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -316,6 +355,9 @@ export type SubjectCreateManyInput = {
 export type SubjectUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumSubjectStatusFieldUpdateOperationsInput | $Enums.SubjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -324,8 +366,10 @@ export type SubjectUpdateManyMutationInput = {
 export type SubjectUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
-  programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumSubjectStatusFieldUpdateOperationsInput | $Enums.SubjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -341,7 +385,12 @@ export type SubjectOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type SubjectInstituteIdNameCompoundUniqueInput = {
+export type SubjectSubject_code_uniqueCompoundUniqueInput = {
+  instituteId: string
+  code: string
+}
+
+export type SubjectSubject_name_uniqueCompoundUniqueInput = {
   instituteId: string
   name: string
 }
@@ -349,8 +398,10 @@ export type SubjectInstituteIdNameCompoundUniqueInput = {
 export type SubjectCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
-  programId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -359,8 +410,10 @@ export type SubjectCountOrderByAggregateInput = {
 export type SubjectMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
-  programId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -369,8 +422,10 @@ export type SubjectMaxOrderByAggregateInput = {
 export type SubjectMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
-  programId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -423,46 +478,22 @@ export type SubjectUncheckedUpdateManyWithoutInstituteNestedInput = {
   deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
 }
 
-export type SubjectCreateNestedManyWithoutProgramInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutProgramInput, Prisma.SubjectUncheckedCreateWithoutProgramInput> | Prisma.SubjectCreateWithoutProgramInput[] | Prisma.SubjectUncheckedCreateWithoutProgramInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutProgramInput | Prisma.SubjectCreateOrConnectWithoutProgramInput[]
-  createMany?: Prisma.SubjectCreateManyProgramInputEnvelope
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+export type EnumSubjectStatusFieldUpdateOperationsInput = {
+  set?: $Enums.SubjectStatus
 }
 
-export type SubjectUncheckedCreateNestedManyWithoutProgramInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutProgramInput, Prisma.SubjectUncheckedCreateWithoutProgramInput> | Prisma.SubjectCreateWithoutProgramInput[] | Prisma.SubjectUncheckedCreateWithoutProgramInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutProgramInput | Prisma.SubjectCreateOrConnectWithoutProgramInput[]
-  createMany?: Prisma.SubjectCreateManyProgramInputEnvelope
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
+export type SubjectCreateNestedOneWithoutProgramSubjectsInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutProgramSubjectsInput, Prisma.SubjectUncheckedCreateWithoutProgramSubjectsInput>
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutProgramSubjectsInput
+  connect?: Prisma.SubjectWhereUniqueInput
 }
 
-export type SubjectUpdateManyWithoutProgramNestedInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutProgramInput, Prisma.SubjectUncheckedCreateWithoutProgramInput> | Prisma.SubjectCreateWithoutProgramInput[] | Prisma.SubjectUncheckedCreateWithoutProgramInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutProgramInput | Prisma.SubjectCreateOrConnectWithoutProgramInput[]
-  upsert?: Prisma.SubjectUpsertWithWhereUniqueWithoutProgramInput | Prisma.SubjectUpsertWithWhereUniqueWithoutProgramInput[]
-  createMany?: Prisma.SubjectCreateManyProgramInputEnvelope
-  set?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  disconnect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  delete?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  update?: Prisma.SubjectUpdateWithWhereUniqueWithoutProgramInput | Prisma.SubjectUpdateWithWhereUniqueWithoutProgramInput[]
-  updateMany?: Prisma.SubjectUpdateManyWithWhereWithoutProgramInput | Prisma.SubjectUpdateManyWithWhereWithoutProgramInput[]
-  deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
-}
-
-export type SubjectUncheckedUpdateManyWithoutProgramNestedInput = {
-  create?: Prisma.XOR<Prisma.SubjectCreateWithoutProgramInput, Prisma.SubjectUncheckedCreateWithoutProgramInput> | Prisma.SubjectCreateWithoutProgramInput[] | Prisma.SubjectUncheckedCreateWithoutProgramInput[]
-  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutProgramInput | Prisma.SubjectCreateOrConnectWithoutProgramInput[]
-  upsert?: Prisma.SubjectUpsertWithWhereUniqueWithoutProgramInput | Prisma.SubjectUpsertWithWhereUniqueWithoutProgramInput[]
-  createMany?: Prisma.SubjectCreateManyProgramInputEnvelope
-  set?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  disconnect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  delete?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  connect?: Prisma.SubjectWhereUniqueInput | Prisma.SubjectWhereUniqueInput[]
-  update?: Prisma.SubjectUpdateWithWhereUniqueWithoutProgramInput | Prisma.SubjectUpdateWithWhereUniqueWithoutProgramInput[]
-  updateMany?: Prisma.SubjectUpdateManyWithWhereWithoutProgramInput | Prisma.SubjectUpdateManyWithWhereWithoutProgramInput[]
-  deleteMany?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
+export type SubjectUpdateOneRequiredWithoutProgramSubjectsNestedInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutProgramSubjectsInput, Prisma.SubjectUncheckedCreateWithoutProgramSubjectsInput>
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutProgramSubjectsInput
+  upsert?: Prisma.SubjectUpsertWithoutProgramSubjectsInput
+  connect?: Prisma.SubjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SubjectUpdateToOneWithWhereWithoutProgramSubjectsInput, Prisma.SubjectUpdateWithoutProgramSubjectsInput>, Prisma.SubjectUncheckedUpdateWithoutProgramSubjectsInput>
 }
 
 export type SubjectCreateNestedOneWithoutBatchesInput = {
@@ -482,20 +513,26 @@ export type SubjectUpdateOneRequiredWithoutBatchesNestedInput = {
 export type SubjectCreateWithoutInstituteInput = {
   id?: string
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.SubjectStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
-  program?: Prisma.ProgramCreateNestedOneWithoutSubjectsInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutSubjectInput
   batches?: Prisma.BatchCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUncheckedCreateWithoutInstituteInput = {
   id?: string
-  programId?: string | null
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.SubjectStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutSubjectInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutSubjectInput
 }
 
@@ -531,16 +568,21 @@ export type SubjectScalarWhereInput = {
   NOT?: Prisma.SubjectScalarWhereInput | Prisma.SubjectScalarWhereInput[]
   id?: Prisma.UuidFilter<"Subject"> | string
   instituteId?: Prisma.UuidFilter<"Subject"> | string
-  programId?: Prisma.UuidNullableFilter<"Subject"> | string | null
   name?: Prisma.StringFilter<"Subject"> | string
+  code?: Prisma.StringFilter<"Subject"> | string
+  description?: Prisma.StringNullableFilter<"Subject"> | string | null
+  status?: Prisma.EnumSubjectStatusFilter<"Subject"> | $Enums.SubjectStatus
   createdAt?: Prisma.DateTimeFilter<"Subject"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Subject"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Subject"> | Date | string | null
 }
 
-export type SubjectCreateWithoutProgramInput = {
+export type SubjectCreateWithoutProgramSubjectsInput = {
   id?: string
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.SubjectStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -548,60 +590,85 @@ export type SubjectCreateWithoutProgramInput = {
   batches?: Prisma.BatchCreateNestedManyWithoutSubjectInput
 }
 
-export type SubjectUncheckedCreateWithoutProgramInput = {
+export type SubjectUncheckedCreateWithoutProgramSubjectsInput = {
   id?: string
   instituteId: string
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.SubjectStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutSubjectInput
 }
 
-export type SubjectCreateOrConnectWithoutProgramInput = {
+export type SubjectCreateOrConnectWithoutProgramSubjectsInput = {
   where: Prisma.SubjectWhereUniqueInput
-  create: Prisma.XOR<Prisma.SubjectCreateWithoutProgramInput, Prisma.SubjectUncheckedCreateWithoutProgramInput>
+  create: Prisma.XOR<Prisma.SubjectCreateWithoutProgramSubjectsInput, Prisma.SubjectUncheckedCreateWithoutProgramSubjectsInput>
 }
 
-export type SubjectCreateManyProgramInputEnvelope = {
-  data: Prisma.SubjectCreateManyProgramInput | Prisma.SubjectCreateManyProgramInput[]
-  skipDuplicates?: boolean
+export type SubjectUpsertWithoutProgramSubjectsInput = {
+  update: Prisma.XOR<Prisma.SubjectUpdateWithoutProgramSubjectsInput, Prisma.SubjectUncheckedUpdateWithoutProgramSubjectsInput>
+  create: Prisma.XOR<Prisma.SubjectCreateWithoutProgramSubjectsInput, Prisma.SubjectUncheckedCreateWithoutProgramSubjectsInput>
+  where?: Prisma.SubjectWhereInput
 }
 
-export type SubjectUpsertWithWhereUniqueWithoutProgramInput = {
-  where: Prisma.SubjectWhereUniqueInput
-  update: Prisma.XOR<Prisma.SubjectUpdateWithoutProgramInput, Prisma.SubjectUncheckedUpdateWithoutProgramInput>
-  create: Prisma.XOR<Prisma.SubjectCreateWithoutProgramInput, Prisma.SubjectUncheckedCreateWithoutProgramInput>
+export type SubjectUpdateToOneWithWhereWithoutProgramSubjectsInput = {
+  where?: Prisma.SubjectWhereInput
+  data: Prisma.XOR<Prisma.SubjectUpdateWithoutProgramSubjectsInput, Prisma.SubjectUncheckedUpdateWithoutProgramSubjectsInput>
 }
 
-export type SubjectUpdateWithWhereUniqueWithoutProgramInput = {
-  where: Prisma.SubjectWhereUniqueInput
-  data: Prisma.XOR<Prisma.SubjectUpdateWithoutProgramInput, Prisma.SubjectUncheckedUpdateWithoutProgramInput>
+export type SubjectUpdateWithoutProgramSubjectsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumSubjectStatusFieldUpdateOperationsInput | $Enums.SubjectStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  institute?: Prisma.InstituteUpdateOneRequiredWithoutSubjectsNestedInput
+  batches?: Prisma.BatchUpdateManyWithoutSubjectNestedInput
 }
 
-export type SubjectUpdateManyWithWhereWithoutProgramInput = {
-  where: Prisma.SubjectScalarWhereInput
-  data: Prisma.XOR<Prisma.SubjectUpdateManyMutationInput, Prisma.SubjectUncheckedUpdateManyWithoutProgramInput>
+export type SubjectUncheckedUpdateWithoutProgramSubjectsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  instituteId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumSubjectStatusFieldUpdateOperationsInput | $Enums.SubjectStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batches?: Prisma.BatchUncheckedUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectCreateWithoutBatchesInput = {
   id?: string
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.SubjectStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   institute: Prisma.InstituteCreateNestedOneWithoutSubjectsInput
-  program?: Prisma.ProgramCreateNestedOneWithoutSubjectsInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUncheckedCreateWithoutBatchesInput = {
   id?: string
   instituteId: string
-  programId?: string | null
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.SubjectStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectCreateOrConnectWithoutBatchesInput = {
@@ -623,27 +690,35 @@ export type SubjectUpdateToOneWithWhereWithoutBatchesInput = {
 export type SubjectUpdateWithoutBatchesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumSubjectStatusFieldUpdateOperationsInput | $Enums.SubjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   institute?: Prisma.InstituteUpdateOneRequiredWithoutSubjectsNestedInput
-  program?: Prisma.ProgramUpdateOneWithoutSubjectsNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateWithoutBatchesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
-  programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumSubjectStatusFieldUpdateOperationsInput | $Enums.SubjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectCreateManyInstituteInput = {
   id?: string
-  programId?: string | null
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.SubjectStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -652,65 +727,35 @@ export type SubjectCreateManyInstituteInput = {
 export type SubjectUpdateWithoutInstituteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumSubjectStatusFieldUpdateOperationsInput | $Enums.SubjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  program?: Prisma.ProgramUpdateOneWithoutSubjectsNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutSubjectNestedInput
   batches?: Prisma.BatchUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateWithoutInstituteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumSubjectStatusFieldUpdateOperationsInput | $Enums.SubjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutSubjectNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateManyWithoutInstituteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-}
-
-export type SubjectCreateManyProgramInput = {
-  id?: string
-  instituteId: string
-  name: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-}
-
-export type SubjectUpdateWithoutProgramInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  institute?: Prisma.InstituteUpdateOneRequiredWithoutSubjectsNestedInput
-  batches?: Prisma.BatchUpdateManyWithoutSubjectNestedInput
-}
-
-export type SubjectUncheckedUpdateWithoutProgramInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  instituteId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  batches?: Prisma.BatchUncheckedUpdateManyWithoutSubjectNestedInput
-}
-
-export type SubjectUncheckedUpdateManyWithoutProgramInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  instituteId?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumSubjectStatusFieldUpdateOperationsInput | $Enums.SubjectStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -722,10 +767,12 @@ export type SubjectUncheckedUpdateManyWithoutProgramInput = {
  */
 
 export type SubjectCountOutputType = {
+  programSubjects: number
   batches: number
 }
 
 export type SubjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  programSubjects?: boolean | SubjectCountOutputTypeCountProgramSubjectsArgs
   batches?: boolean | SubjectCountOutputTypeCountBatchesArgs
 }
 
@@ -742,6 +789,13 @@ export type SubjectCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * SubjectCountOutputType without action
  */
+export type SubjectCountOutputTypeCountProgramSubjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProgramSubjectWhereInput
+}
+
+/**
+ * SubjectCountOutputType without action
+ */
 export type SubjectCountOutputTypeCountBatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.BatchWhereInput
 }
@@ -750,13 +804,15 @@ export type SubjectCountOutputTypeCountBatchesArgs<ExtArgs extends runtime.Types
 export type SubjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   instituteId?: boolean
-  programId?: boolean
   name?: boolean
+  code?: boolean
+  description?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
-  program?: boolean | Prisma.Subject$programArgs<ExtArgs>
+  programSubjects?: boolean | Prisma.Subject$programSubjectsArgs<ExtArgs>
   batches?: boolean | Prisma.Subject$batchesArgs<ExtArgs>
   _count?: boolean | Prisma.SubjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subject"]>
@@ -764,65 +820,69 @@ export type SubjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type SubjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   instituteId?: boolean
-  programId?: boolean
   name?: boolean
+  code?: boolean
+  description?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
-  program?: boolean | Prisma.Subject$programArgs<ExtArgs>
 }, ExtArgs["result"]["subject"]>
 
 export type SubjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   instituteId?: boolean
-  programId?: boolean
   name?: boolean
+  code?: boolean
+  description?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
-  program?: boolean | Prisma.Subject$programArgs<ExtArgs>
 }, ExtArgs["result"]["subject"]>
 
 export type SubjectSelectScalar = {
   id?: boolean
   instituteId?: boolean
-  programId?: boolean
   name?: boolean
+  code?: boolean
+  description?: boolean
+  status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type SubjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "instituteId" | "programId" | "name" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["subject"]>
+export type SubjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "instituteId" | "name" | "code" | "description" | "status" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["subject"]>
 export type SubjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
-  program?: boolean | Prisma.Subject$programArgs<ExtArgs>
+  programSubjects?: boolean | Prisma.Subject$programSubjectsArgs<ExtArgs>
   batches?: boolean | Prisma.Subject$batchesArgs<ExtArgs>
   _count?: boolean | Prisma.SubjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SubjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
-  program?: boolean | Prisma.Subject$programArgs<ExtArgs>
 }
 export type SubjectIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
-  program?: boolean | Prisma.Subject$programArgs<ExtArgs>
 }
 
 export type $SubjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Subject"
   objects: {
     institute: Prisma.$InstitutePayload<ExtArgs>
-    program: Prisma.$ProgramPayload<ExtArgs> | null
+    programSubjects: Prisma.$ProgramSubjectPayload<ExtArgs>[]
     batches: Prisma.$BatchPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     instituteId: string
-    programId: string | null
     name: string
+    code: string
+    description: string | null
+    status: $Enums.SubjectStatus
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -1221,7 +1281,7 @@ readonly fields: SubjectFieldRefs;
 export interface Prisma__SubjectClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   institute<T extends Prisma.InstituteDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InstituteDefaultArgs<ExtArgs>>): Prisma.Prisma__InstituteClient<runtime.Types.Result.GetResult<Prisma.$InstitutePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  program<T extends Prisma.Subject$programArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Subject$programArgs<ExtArgs>>): Prisma.Prisma__ProgramClient<runtime.Types.Result.GetResult<Prisma.$ProgramPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  programSubjects<T extends Prisma.Subject$programSubjectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Subject$programSubjectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgramSubjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   batches<T extends Prisma.Subject$batchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Subject$batchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1254,8 +1314,10 @@ export interface Prisma__SubjectClient<T, Null = never, ExtArgs extends runtime.
 export interface SubjectFieldRefs {
   readonly id: Prisma.FieldRef<"Subject", 'String'>
   readonly instituteId: Prisma.FieldRef<"Subject", 'String'>
-  readonly programId: Prisma.FieldRef<"Subject", 'String'>
   readonly name: Prisma.FieldRef<"Subject", 'String'>
+  readonly code: Prisma.FieldRef<"Subject", 'String'>
+  readonly description: Prisma.FieldRef<"Subject", 'String'>
+  readonly status: Prisma.FieldRef<"Subject", 'SubjectStatus'>
   readonly createdAt: Prisma.FieldRef<"Subject", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Subject", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Subject", 'DateTime'>
@@ -1660,22 +1722,27 @@ export type SubjectDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Subject.program
+ * Subject.programSubjects
  */
-export type Subject$programArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Subject$programSubjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Program
+   * Select specific fields to fetch from the ProgramSubject
    */
-  select?: Prisma.ProgramSelect<ExtArgs> | null
+  select?: Prisma.ProgramSubjectSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Program
+   * Omit specific fields from the ProgramSubject
    */
-  omit?: Prisma.ProgramOmit<ExtArgs> | null
+  omit?: Prisma.ProgramSubjectOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ProgramInclude<ExtArgs> | null
-  where?: Prisma.ProgramWhereInput
+  include?: Prisma.ProgramSubjectInclude<ExtArgs> | null
+  where?: Prisma.ProgramSubjectWhereInput
+  orderBy?: Prisma.ProgramSubjectOrderByWithRelationInput | Prisma.ProgramSubjectOrderByWithRelationInput[]
+  cursor?: Prisma.ProgramSubjectWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProgramSubjectScalarFieldEnum | Prisma.ProgramSubjectScalarFieldEnum[]
 }
 
 /**

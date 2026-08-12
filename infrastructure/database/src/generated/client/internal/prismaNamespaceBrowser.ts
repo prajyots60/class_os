@@ -65,6 +65,7 @@ export const ModelName = {
   Student: 'Student',
   Program: 'Program',
   Subject: 'Subject',
+  ProgramSubject: 'ProgramSubject',
   Batch: 'Batch',
   Enrollment: 'Enrollment',
   Schedule: 'Schedule',
@@ -283,7 +284,12 @@ export const ProgramScalarFieldEnum = {
   id: 'id',
   instituteId: 'instituteId',
   name: 'name',
-  createdAt: 'createdAt'
+  code: 'code',
+  description: 'description',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type ProgramScalarFieldEnum = (typeof ProgramScalarFieldEnum)[keyof typeof ProgramScalarFieldEnum]
@@ -292,8 +298,10 @@ export type ProgramScalarFieldEnum = (typeof ProgramScalarFieldEnum)[keyof typeo
 export const SubjectScalarFieldEnum = {
   id: 'id',
   instituteId: 'instituteId',
-  programId: 'programId',
   name: 'name',
+  code: 'code',
+  description: 'description',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -302,14 +310,29 @@ export const SubjectScalarFieldEnum = {
 export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeof SubjectScalarFieldEnum]
 
 
+export const ProgramSubjectScalarFieldEnum = {
+  id: 'id',
+  instituteId: 'instituteId',
+  programId: 'programId',
+  subjectId: 'subjectId',
+  createdAt: 'createdAt'
+} as const
+
+export type ProgramSubjectScalarFieldEnum = (typeof ProgramSubjectScalarFieldEnum)[keyof typeof ProgramSubjectScalarFieldEnum]
+
+
 export const BatchScalarFieldEnum = {
   id: 'id',
   instituteId: 'instituteId',
   subjectId: 'subjectId',
+  programId: 'programId',
   teacherId: 'teacherId',
   name: 'name',
+  code: 'code',
   capacity: 'capacity',
   status: 'status',
+  startDate: 'startDate',
+  endDate: 'endDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'

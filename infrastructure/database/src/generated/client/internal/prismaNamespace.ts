@@ -411,6 +411,7 @@ export const ModelName = {
   Student: 'Student',
   Program: 'Program',
   Subject: 'Subject',
+  ProgramSubject: 'ProgramSubject',
   Batch: 'Batch',
   Enrollment: 'Enrollment',
   Schedule: 'Schedule',
@@ -442,7 +443,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "parentIdentity" | "instituteMembership" | "childProfile" | "studentLink" | "institute" | "user" | "session" | "account" | "verification" | "instituteParent" | "instituteParentStudent" | "student" | "program" | "subject" | "batch" | "enrollment" | "schedule" | "batchSession" | "attendance" | "homework" | "test" | "marks" | "billingPlan" | "invoice" | "payment" | "receipt" | "announcement" | "settings" | "branding" | "auditLog"
+    modelProps: "parentIdentity" | "instituteMembership" | "childProfile" | "studentLink" | "institute" | "user" | "session" | "account" | "verification" | "instituteParent" | "instituteParentStudent" | "student" | "program" | "subject" | "programSubject" | "batch" | "enrollment" | "schedule" | "batchSession" | "attendance" | "homework" | "test" | "marks" | "billingPlan" | "invoice" | "payment" | "receipt" | "announcement" | "settings" | "branding" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1479,6 +1480,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.SubjectCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.SubjectCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProgramSubject: {
+      payload: Prisma.$ProgramSubjectPayload<ExtArgs>
+      fields: Prisma.ProgramSubjectFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProgramSubjectFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSubjectPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProgramSubjectFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSubjectPayload>
+        }
+        findFirst: {
+          args: Prisma.ProgramSubjectFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSubjectPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProgramSubjectFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSubjectPayload>
+        }
+        findMany: {
+          args: Prisma.ProgramSubjectFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSubjectPayload>[]
+        }
+        create: {
+          args: Prisma.ProgramSubjectCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSubjectPayload>
+        }
+        createMany: {
+          args: Prisma.ProgramSubjectCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProgramSubjectCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSubjectPayload>[]
+        }
+        delete: {
+          args: Prisma.ProgramSubjectDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSubjectPayload>
+        }
+        update: {
+          args: Prisma.ProgramSubjectUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSubjectPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProgramSubjectDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProgramSubjectUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProgramSubjectUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSubjectPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProgramSubjectUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSubjectPayload>
+        }
+        aggregate: {
+          args: Prisma.ProgramSubjectAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProgramSubject>
+        }
+        groupBy: {
+          args: Prisma.ProgramSubjectGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProgramSubjectGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProgramSubjectCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProgramSubjectCountAggregateOutputType> | number
         }
       }
     }
@@ -2889,7 +2964,12 @@ export const ProgramScalarFieldEnum = {
   id: 'id',
   instituteId: 'instituteId',
   name: 'name',
-  createdAt: 'createdAt'
+  code: 'code',
+  description: 'description',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type ProgramScalarFieldEnum = (typeof ProgramScalarFieldEnum)[keyof typeof ProgramScalarFieldEnum]
@@ -2898,8 +2978,10 @@ export type ProgramScalarFieldEnum = (typeof ProgramScalarFieldEnum)[keyof typeo
 export const SubjectScalarFieldEnum = {
   id: 'id',
   instituteId: 'instituteId',
-  programId: 'programId',
   name: 'name',
+  code: 'code',
+  description: 'description',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -2908,14 +2990,29 @@ export const SubjectScalarFieldEnum = {
 export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeof SubjectScalarFieldEnum]
 
 
+export const ProgramSubjectScalarFieldEnum = {
+  id: 'id',
+  instituteId: 'instituteId',
+  programId: 'programId',
+  subjectId: 'subjectId',
+  createdAt: 'createdAt'
+} as const
+
+export type ProgramSubjectScalarFieldEnum = (typeof ProgramSubjectScalarFieldEnum)[keyof typeof ProgramSubjectScalarFieldEnum]
+
+
 export const BatchScalarFieldEnum = {
   id: 'id',
   instituteId: 'instituteId',
   subjectId: 'subjectId',
+  programId: 'programId',
   teacherId: 'teacherId',
   name: 'name',
+  code: 'code',
   capacity: 'capacity',
   status: 'status',
+  startDate: 'startDate',
+  endDate: 'endDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -3347,6 +3444,34 @@ export type ListEnumStudentStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'ProgramStatus'
+ */
+export type EnumProgramStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProgramStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ProgramStatus[]'
+ */
+export type ListEnumProgramStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProgramStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SubjectStatus'
+ */
+export type EnumSubjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SubjectStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'SubjectStatus[]'
+ */
+export type ListEnumSubjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SubjectStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -3706,6 +3831,7 @@ export type GlobalOmitConfig = {
   student?: Prisma.StudentOmit
   program?: Prisma.ProgramOmit
   subject?: Prisma.SubjectOmit
+  programSubject?: Prisma.ProgramSubjectOmit
   batch?: Prisma.BatchOmit
   enrollment?: Prisma.EnrollmentOmit
   schedule?: Prisma.ScheduleOmit

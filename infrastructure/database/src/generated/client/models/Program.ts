@@ -28,21 +28,36 @@ export type ProgramMinAggregateOutputType = {
   id: string | null
   instituteId: string | null
   name: string | null
+  code: string | null
+  description: string | null
+  status: $Enums.ProgramStatus | null
   createdAt: Date | null
+  updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type ProgramMaxAggregateOutputType = {
   id: string | null
   instituteId: string | null
   name: string | null
+  code: string | null
+  description: string | null
+  status: $Enums.ProgramStatus | null
   createdAt: Date | null
+  updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type ProgramCountAggregateOutputType = {
   id: number
   instituteId: number
   name: number
+  code: number
+  description: number
+  status: number
   createdAt: number
+  updatedAt: number
+  deletedAt: number
   _all: number
 }
 
@@ -51,21 +66,36 @@ export type ProgramMinAggregateInputType = {
   id?: true
   instituteId?: true
   name?: true
+  code?: true
+  description?: true
+  status?: true
   createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
 }
 
 export type ProgramMaxAggregateInputType = {
   id?: true
   instituteId?: true
   name?: true
+  code?: true
+  description?: true
+  status?: true
   createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
 }
 
 export type ProgramCountAggregateInputType = {
   id?: true
   instituteId?: true
   name?: true
+  code?: true
+  description?: true
+  status?: true
   createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
   _all?: true
 }
 
@@ -145,7 +175,12 @@ export type ProgramGroupByOutputType = {
   id: string
   instituteId: string
   name: string
+  code: string
+  description: string | null
+  status: $Enums.ProgramStatus
   createdAt: Date
+  updatedAt: Date
+  deletedAt: Date | null
   _count: ProgramCountAggregateOutputType | null
   _min: ProgramMinAggregateOutputType | null
   _max: ProgramMaxAggregateOutputType | null
@@ -173,37 +208,62 @@ export type ProgramWhereInput = {
   id?: Prisma.UuidFilter<"Program"> | string
   instituteId?: Prisma.UuidFilter<"Program"> | string
   name?: Prisma.StringFilter<"Program"> | string
+  code?: Prisma.StringFilter<"Program"> | string
+  description?: Prisma.StringNullableFilter<"Program"> | string | null
+  status?: Prisma.EnumProgramStatusFilter<"Program"> | $Enums.ProgramStatus
   createdAt?: Prisma.DateTimeFilter<"Program"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Program"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Program"> | Date | string | null
   institute?: Prisma.XOR<Prisma.InstituteScalarRelationFilter, Prisma.InstituteWhereInput>
-  subjects?: Prisma.SubjectListRelationFilter
+  programSubjects?: Prisma.ProgramSubjectListRelationFilter
+  batches?: Prisma.BatchListRelationFilter
 }
 
 export type ProgramOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   institute?: Prisma.InstituteOrderByWithRelationInput
-  subjects?: Prisma.SubjectOrderByRelationAggregateInput
+  programSubjects?: Prisma.ProgramSubjectOrderByRelationAggregateInput
+  batches?: Prisma.BatchOrderByRelationAggregateInput
 }
 
 export type ProgramWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  program_code_unique?: Prisma.ProgramProgram_code_uniqueCompoundUniqueInput
+  program_name_unique?: Prisma.ProgramProgram_name_uniqueCompoundUniqueInput
   AND?: Prisma.ProgramWhereInput | Prisma.ProgramWhereInput[]
   OR?: Prisma.ProgramWhereInput[]
   NOT?: Prisma.ProgramWhereInput | Prisma.ProgramWhereInput[]
   instituteId?: Prisma.UuidFilter<"Program"> | string
   name?: Prisma.StringFilter<"Program"> | string
+  code?: Prisma.StringFilter<"Program"> | string
+  description?: Prisma.StringNullableFilter<"Program"> | string | null
+  status?: Prisma.EnumProgramStatusFilter<"Program"> | $Enums.ProgramStatus
   createdAt?: Prisma.DateTimeFilter<"Program"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Program"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Program"> | Date | string | null
   institute?: Prisma.XOR<Prisma.InstituteScalarRelationFilter, Prisma.InstituteWhereInput>
-  subjects?: Prisma.SubjectListRelationFilter
-}, "id">
+  programSubjects?: Prisma.ProgramSubjectListRelationFilter
+  batches?: Prisma.BatchListRelationFilter
+}, "id" | "program_code_unique" | "program_name_unique">
 
 export type ProgramOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ProgramCountOrderByAggregateInput
   _max?: Prisma.ProgramMaxOrderByAggregateInput
   _min?: Prisma.ProgramMinOrderByAggregateInput
@@ -216,59 +276,103 @@ export type ProgramScalarWhereWithAggregatesInput = {
   id?: Prisma.UuidWithAggregatesFilter<"Program"> | string
   instituteId?: Prisma.UuidWithAggregatesFilter<"Program"> | string
   name?: Prisma.StringWithAggregatesFilter<"Program"> | string
+  code?: Prisma.StringWithAggregatesFilter<"Program"> | string
+  description?: Prisma.StringNullableWithAggregatesFilter<"Program"> | string | null
+  status?: Prisma.EnumProgramStatusWithAggregatesFilter<"Program"> | $Enums.ProgramStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Program"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Program"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Program"> | Date | string | null
 }
 
 export type ProgramCreateInput = {
   id?: string
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.ProgramStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   institute: Prisma.InstituteCreateNestedOneWithoutProgramsInput
-  subjects?: Prisma.SubjectCreateNestedManyWithoutProgramInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutProgramInput
+  batches?: Prisma.BatchCreateNestedManyWithoutProgramInput
 }
 
 export type ProgramUncheckedCreateInput = {
   id?: string
   instituteId: string
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.ProgramStatus
   createdAt?: Date | string
-  subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutProgramInput
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutProgramInput
+  batches?: Prisma.BatchUncheckedCreateNestedManyWithoutProgramInput
 }
 
 export type ProgramUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProgramStatusFieldUpdateOperationsInput | $Enums.ProgramStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   institute?: Prisma.InstituteUpdateOneRequiredWithoutProgramsNestedInput
-  subjects?: Prisma.SubjectUpdateManyWithoutProgramNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutProgramNestedInput
+  batches?: Prisma.BatchUpdateManyWithoutProgramNestedInput
 }
 
 export type ProgramUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProgramStatusFieldUpdateOperationsInput | $Enums.ProgramStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  subjects?: Prisma.SubjectUncheckedUpdateManyWithoutProgramNestedInput
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutProgramNestedInput
+  batches?: Prisma.BatchUncheckedUpdateManyWithoutProgramNestedInput
 }
 
 export type ProgramCreateManyInput = {
   id?: string
   instituteId: string
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.ProgramStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type ProgramUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProgramStatusFieldUpdateOperationsInput | $Enums.ProgramStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ProgramUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProgramStatusFieldUpdateOperationsInput | $Enums.ProgramStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ProgramListRelationFilter = {
@@ -281,25 +385,55 @@ export type ProgramOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type ProgramProgram_code_uniqueCompoundUniqueInput = {
+  instituteId: string
+  code: string
+}
+
+export type ProgramProgram_name_uniqueCompoundUniqueInput = {
+  instituteId: string
+  name: string
+}
+
 export type ProgramCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type ProgramMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type ProgramMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
+}
+
+export type ProgramScalarRelationFilter = {
+  is?: Prisma.ProgramWhereInput
+  isNot?: Prisma.ProgramWhereInput
 }
 
 export type ProgramNullableScalarRelationFilter = {
@@ -349,34 +483,64 @@ export type ProgramUncheckedUpdateManyWithoutInstituteNestedInput = {
   deleteMany?: Prisma.ProgramScalarWhereInput | Prisma.ProgramScalarWhereInput[]
 }
 
-export type ProgramCreateNestedOneWithoutSubjectsInput = {
-  create?: Prisma.XOR<Prisma.ProgramCreateWithoutSubjectsInput, Prisma.ProgramUncheckedCreateWithoutSubjectsInput>
-  connectOrCreate?: Prisma.ProgramCreateOrConnectWithoutSubjectsInput
+export type EnumProgramStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ProgramStatus
+}
+
+export type ProgramCreateNestedOneWithoutProgramSubjectsInput = {
+  create?: Prisma.XOR<Prisma.ProgramCreateWithoutProgramSubjectsInput, Prisma.ProgramUncheckedCreateWithoutProgramSubjectsInput>
+  connectOrCreate?: Prisma.ProgramCreateOrConnectWithoutProgramSubjectsInput
   connect?: Prisma.ProgramWhereUniqueInput
 }
 
-export type ProgramUpdateOneWithoutSubjectsNestedInput = {
-  create?: Prisma.XOR<Prisma.ProgramCreateWithoutSubjectsInput, Prisma.ProgramUncheckedCreateWithoutSubjectsInput>
-  connectOrCreate?: Prisma.ProgramCreateOrConnectWithoutSubjectsInput
-  upsert?: Prisma.ProgramUpsertWithoutSubjectsInput
+export type ProgramUpdateOneRequiredWithoutProgramSubjectsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProgramCreateWithoutProgramSubjectsInput, Prisma.ProgramUncheckedCreateWithoutProgramSubjectsInput>
+  connectOrCreate?: Prisma.ProgramCreateOrConnectWithoutProgramSubjectsInput
+  upsert?: Prisma.ProgramUpsertWithoutProgramSubjectsInput
+  connect?: Prisma.ProgramWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProgramUpdateToOneWithWhereWithoutProgramSubjectsInput, Prisma.ProgramUpdateWithoutProgramSubjectsInput>, Prisma.ProgramUncheckedUpdateWithoutProgramSubjectsInput>
+}
+
+export type ProgramCreateNestedOneWithoutBatchesInput = {
+  create?: Prisma.XOR<Prisma.ProgramCreateWithoutBatchesInput, Prisma.ProgramUncheckedCreateWithoutBatchesInput>
+  connectOrCreate?: Prisma.ProgramCreateOrConnectWithoutBatchesInput
+  connect?: Prisma.ProgramWhereUniqueInput
+}
+
+export type ProgramUpdateOneWithoutBatchesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProgramCreateWithoutBatchesInput, Prisma.ProgramUncheckedCreateWithoutBatchesInput>
+  connectOrCreate?: Prisma.ProgramCreateOrConnectWithoutBatchesInput
+  upsert?: Prisma.ProgramUpsertWithoutBatchesInput
   disconnect?: Prisma.ProgramWhereInput | boolean
   delete?: Prisma.ProgramWhereInput | boolean
   connect?: Prisma.ProgramWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ProgramUpdateToOneWithWhereWithoutSubjectsInput, Prisma.ProgramUpdateWithoutSubjectsInput>, Prisma.ProgramUncheckedUpdateWithoutSubjectsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProgramUpdateToOneWithWhereWithoutBatchesInput, Prisma.ProgramUpdateWithoutBatchesInput>, Prisma.ProgramUncheckedUpdateWithoutBatchesInput>
 }
 
 export type ProgramCreateWithoutInstituteInput = {
   id?: string
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.ProgramStatus
   createdAt?: Date | string
-  subjects?: Prisma.SubjectCreateNestedManyWithoutProgramInput
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutProgramInput
+  batches?: Prisma.BatchCreateNestedManyWithoutProgramInput
 }
 
 export type ProgramUncheckedCreateWithoutInstituteInput = {
   id?: string
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.ProgramStatus
   createdAt?: Date | string
-  subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutProgramInput
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutProgramInput
+  batches?: Prisma.BatchUncheckedCreateNestedManyWithoutProgramInput
 }
 
 export type ProgramCreateOrConnectWithoutInstituteInput = {
@@ -412,77 +576,196 @@ export type ProgramScalarWhereInput = {
   id?: Prisma.UuidFilter<"Program"> | string
   instituteId?: Prisma.UuidFilter<"Program"> | string
   name?: Prisma.StringFilter<"Program"> | string
+  code?: Prisma.StringFilter<"Program"> | string
+  description?: Prisma.StringNullableFilter<"Program"> | string | null
+  status?: Prisma.EnumProgramStatusFilter<"Program"> | $Enums.ProgramStatus
   createdAt?: Prisma.DateTimeFilter<"Program"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Program"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Program"> | Date | string | null
 }
 
-export type ProgramCreateWithoutSubjectsInput = {
+export type ProgramCreateWithoutProgramSubjectsInput = {
   id?: string
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.ProgramStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   institute: Prisma.InstituteCreateNestedOneWithoutProgramsInput
+  batches?: Prisma.BatchCreateNestedManyWithoutProgramInput
 }
 
-export type ProgramUncheckedCreateWithoutSubjectsInput = {
+export type ProgramUncheckedCreateWithoutProgramSubjectsInput = {
   id?: string
   instituteId: string
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.ProgramStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  batches?: Prisma.BatchUncheckedCreateNestedManyWithoutProgramInput
 }
 
-export type ProgramCreateOrConnectWithoutSubjectsInput = {
+export type ProgramCreateOrConnectWithoutProgramSubjectsInput = {
   where: Prisma.ProgramWhereUniqueInput
-  create: Prisma.XOR<Prisma.ProgramCreateWithoutSubjectsInput, Prisma.ProgramUncheckedCreateWithoutSubjectsInput>
+  create: Prisma.XOR<Prisma.ProgramCreateWithoutProgramSubjectsInput, Prisma.ProgramUncheckedCreateWithoutProgramSubjectsInput>
 }
 
-export type ProgramUpsertWithoutSubjectsInput = {
-  update: Prisma.XOR<Prisma.ProgramUpdateWithoutSubjectsInput, Prisma.ProgramUncheckedUpdateWithoutSubjectsInput>
-  create: Prisma.XOR<Prisma.ProgramCreateWithoutSubjectsInput, Prisma.ProgramUncheckedCreateWithoutSubjectsInput>
+export type ProgramUpsertWithoutProgramSubjectsInput = {
+  update: Prisma.XOR<Prisma.ProgramUpdateWithoutProgramSubjectsInput, Prisma.ProgramUncheckedUpdateWithoutProgramSubjectsInput>
+  create: Prisma.XOR<Prisma.ProgramCreateWithoutProgramSubjectsInput, Prisma.ProgramUncheckedCreateWithoutProgramSubjectsInput>
   where?: Prisma.ProgramWhereInput
 }
 
-export type ProgramUpdateToOneWithWhereWithoutSubjectsInput = {
+export type ProgramUpdateToOneWithWhereWithoutProgramSubjectsInput = {
   where?: Prisma.ProgramWhereInput
-  data: Prisma.XOR<Prisma.ProgramUpdateWithoutSubjectsInput, Prisma.ProgramUncheckedUpdateWithoutSubjectsInput>
+  data: Prisma.XOR<Prisma.ProgramUpdateWithoutProgramSubjectsInput, Prisma.ProgramUncheckedUpdateWithoutProgramSubjectsInput>
 }
 
-export type ProgramUpdateWithoutSubjectsInput = {
+export type ProgramUpdateWithoutProgramSubjectsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProgramStatusFieldUpdateOperationsInput | $Enums.ProgramStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   institute?: Prisma.InstituteUpdateOneRequiredWithoutProgramsNestedInput
+  batches?: Prisma.BatchUpdateManyWithoutProgramNestedInput
 }
 
-export type ProgramUncheckedUpdateWithoutSubjectsInput = {
+export type ProgramUncheckedUpdateWithoutProgramSubjectsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProgramStatusFieldUpdateOperationsInput | $Enums.ProgramStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batches?: Prisma.BatchUncheckedUpdateManyWithoutProgramNestedInput
+}
+
+export type ProgramCreateWithoutBatchesInput = {
+  id?: string
+  name: string
+  code: string
+  description?: string | null
+  status?: $Enums.ProgramStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  institute: Prisma.InstituteCreateNestedOneWithoutProgramsInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutProgramInput
+}
+
+export type ProgramUncheckedCreateWithoutBatchesInput = {
+  id?: string
+  instituteId: string
+  name: string
+  code: string
+  description?: string | null
+  status?: $Enums.ProgramStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutProgramInput
+}
+
+export type ProgramCreateOrConnectWithoutBatchesInput = {
+  where: Prisma.ProgramWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProgramCreateWithoutBatchesInput, Prisma.ProgramUncheckedCreateWithoutBatchesInput>
+}
+
+export type ProgramUpsertWithoutBatchesInput = {
+  update: Prisma.XOR<Prisma.ProgramUpdateWithoutBatchesInput, Prisma.ProgramUncheckedUpdateWithoutBatchesInput>
+  create: Prisma.XOR<Prisma.ProgramCreateWithoutBatchesInput, Prisma.ProgramUncheckedCreateWithoutBatchesInput>
+  where?: Prisma.ProgramWhereInput
+}
+
+export type ProgramUpdateToOneWithWhereWithoutBatchesInput = {
+  where?: Prisma.ProgramWhereInput
+  data: Prisma.XOR<Prisma.ProgramUpdateWithoutBatchesInput, Prisma.ProgramUncheckedUpdateWithoutBatchesInput>
+}
+
+export type ProgramUpdateWithoutBatchesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProgramStatusFieldUpdateOperationsInput | $Enums.ProgramStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  institute?: Prisma.InstituteUpdateOneRequiredWithoutProgramsNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutProgramNestedInput
+}
+
+export type ProgramUncheckedUpdateWithoutBatchesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  instituteId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProgramStatusFieldUpdateOperationsInput | $Enums.ProgramStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutProgramNestedInput
 }
 
 export type ProgramCreateManyInstituteInput = {
   id?: string
   name: string
+  code: string
+  description?: string | null
+  status?: $Enums.ProgramStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type ProgramUpdateWithoutInstituteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProgramStatusFieldUpdateOperationsInput | $Enums.ProgramStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  subjects?: Prisma.SubjectUpdateManyWithoutProgramNestedInput
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutProgramNestedInput
+  batches?: Prisma.BatchUpdateManyWithoutProgramNestedInput
 }
 
 export type ProgramUncheckedUpdateWithoutInstituteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProgramStatusFieldUpdateOperationsInput | $Enums.ProgramStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  subjects?: Prisma.SubjectUncheckedUpdateManyWithoutProgramNestedInput
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutProgramNestedInput
+  batches?: Prisma.BatchUncheckedUpdateManyWithoutProgramNestedInput
 }
 
 export type ProgramUncheckedUpdateManyWithoutInstituteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProgramStatusFieldUpdateOperationsInput | $Enums.ProgramStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -491,11 +774,13 @@ export type ProgramUncheckedUpdateManyWithoutInstituteInput = {
  */
 
 export type ProgramCountOutputType = {
-  subjects: number
+  programSubjects: number
+  batches: number
 }
 
 export type ProgramCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  subjects?: boolean | ProgramCountOutputTypeCountSubjectsArgs
+  programSubjects?: boolean | ProgramCountOutputTypeCountProgramSubjectsArgs
+  batches?: boolean | ProgramCountOutputTypeCountBatchesArgs
 }
 
 /**
@@ -511,8 +796,15 @@ export type ProgramCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * ProgramCountOutputType without action
  */
-export type ProgramCountOutputTypeCountSubjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SubjectWhereInput
+export type ProgramCountOutputTypeCountProgramSubjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProgramSubjectWhereInput
+}
+
+/**
+ * ProgramCountOutputType without action
+ */
+export type ProgramCountOutputTypeCountBatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BatchWhereInput
 }
 
 
@@ -520,9 +812,15 @@ export type ProgramSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   instituteId?: boolean
   name?: boolean
+  code?: boolean
+  description?: boolean
+  status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
-  subjects?: boolean | Prisma.Program$subjectsArgs<ExtArgs>
+  programSubjects?: boolean | Prisma.Program$programSubjectsArgs<ExtArgs>
+  batches?: boolean | Prisma.Program$batchesArgs<ExtArgs>
   _count?: boolean | Prisma.ProgramCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["program"]>
 
@@ -530,7 +828,12 @@ export type ProgramSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   instituteId?: boolean
   name?: boolean
+  code?: boolean
+  description?: boolean
+  status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["program"]>
 
@@ -538,7 +841,12 @@ export type ProgramSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   instituteId?: boolean
   name?: boolean
+  code?: boolean
+  description?: boolean
+  status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["program"]>
 
@@ -546,13 +854,19 @@ export type ProgramSelectScalar = {
   id?: boolean
   instituteId?: boolean
   name?: boolean
+  code?: boolean
+  description?: boolean
+  status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
 }
 
-export type ProgramOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "instituteId" | "name" | "createdAt", ExtArgs["result"]["program"]>
+export type ProgramOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "instituteId" | "name" | "code" | "description" | "status" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["program"]>
 export type ProgramInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
-  subjects?: boolean | Prisma.Program$subjectsArgs<ExtArgs>
+  programSubjects?: boolean | Prisma.Program$programSubjectsArgs<ExtArgs>
+  batches?: boolean | Prisma.Program$batchesArgs<ExtArgs>
   _count?: boolean | Prisma.ProgramCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProgramIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -566,13 +880,19 @@ export type $ProgramPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Program"
   objects: {
     institute: Prisma.$InstitutePayload<ExtArgs>
-    subjects: Prisma.$SubjectPayload<ExtArgs>[]
+    programSubjects: Prisma.$ProgramSubjectPayload<ExtArgs>[]
+    batches: Prisma.$BatchPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     instituteId: string
     name: string
+    code: string
+    description: string | null
+    status: $Enums.ProgramStatus
     createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
   }, ExtArgs["result"]["program"]>
   composites: {}
 }
@@ -968,7 +1288,8 @@ readonly fields: ProgramFieldRefs;
 export interface Prisma__ProgramClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   institute<T extends Prisma.InstituteDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InstituteDefaultArgs<ExtArgs>>): Prisma.Prisma__InstituteClient<runtime.Types.Result.GetResult<Prisma.$InstitutePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  subjects<T extends Prisma.Program$subjectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Program$subjectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  programSubjects<T extends Prisma.Program$programSubjectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Program$programSubjectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgramSubjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  batches<T extends Prisma.Program$batchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Program$batchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1001,7 +1322,12 @@ export interface ProgramFieldRefs {
   readonly id: Prisma.FieldRef<"Program", 'String'>
   readonly instituteId: Prisma.FieldRef<"Program", 'String'>
   readonly name: Prisma.FieldRef<"Program", 'String'>
+  readonly code: Prisma.FieldRef<"Program", 'String'>
+  readonly description: Prisma.FieldRef<"Program", 'String'>
+  readonly status: Prisma.FieldRef<"Program", 'ProgramStatus'>
   readonly createdAt: Prisma.FieldRef<"Program", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Program", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Program", 'DateTime'>
 }
     
 
@@ -1403,27 +1729,51 @@ export type ProgramDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Program.subjects
+ * Program.programSubjects
  */
-export type Program$subjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Program$programSubjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Subject
+   * Select specific fields to fetch from the ProgramSubject
    */
-  select?: Prisma.SubjectSelect<ExtArgs> | null
+  select?: Prisma.ProgramSubjectSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Subject
+   * Omit specific fields from the ProgramSubject
    */
-  omit?: Prisma.SubjectOmit<ExtArgs> | null
+  omit?: Prisma.ProgramSubjectOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.SubjectInclude<ExtArgs> | null
-  where?: Prisma.SubjectWhereInput
-  orderBy?: Prisma.SubjectOrderByWithRelationInput | Prisma.SubjectOrderByWithRelationInput[]
-  cursor?: Prisma.SubjectWhereUniqueInput
+  include?: Prisma.ProgramSubjectInclude<ExtArgs> | null
+  where?: Prisma.ProgramSubjectWhereInput
+  orderBy?: Prisma.ProgramSubjectOrderByWithRelationInput | Prisma.ProgramSubjectOrderByWithRelationInput[]
+  cursor?: Prisma.ProgramSubjectWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.SubjectScalarFieldEnum | Prisma.SubjectScalarFieldEnum[]
+  distinct?: Prisma.ProgramSubjectScalarFieldEnum | Prisma.ProgramSubjectScalarFieldEnum[]
+}
+
+/**
+ * Program.batches
+ */
+export type Program$batchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Batch
+   */
+  select?: Prisma.BatchSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Batch
+   */
+  omit?: Prisma.BatchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BatchInclude<ExtArgs> | null
+  where?: Prisma.BatchWhereInput
+  orderBy?: Prisma.BatchOrderByWithRelationInput | Prisma.BatchOrderByWithRelationInput[]
+  cursor?: Prisma.BatchWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BatchScalarFieldEnum | Prisma.BatchScalarFieldEnum[]
 }
 
 /**

@@ -235,6 +235,7 @@ export type InstituteWhereInput = {
   students?: Prisma.StudentListRelationFilter
   programs?: Prisma.ProgramListRelationFilter
   subjects?: Prisma.SubjectListRelationFilter
+  programSubjects?: Prisma.ProgramSubjectListRelationFilter
   batches?: Prisma.BatchListRelationFilter
   batchSessions?: Prisma.BatchSessionListRelationFilter
   enrollments?: Prisma.EnrollmentListRelationFilter
@@ -269,6 +270,7 @@ export type InstituteOrderByWithRelationInput = {
   students?: Prisma.StudentOrderByRelationAggregateInput
   programs?: Prisma.ProgramOrderByRelationAggregateInput
   subjects?: Prisma.SubjectOrderByRelationAggregateInput
+  programSubjects?: Prisma.ProgramSubjectOrderByRelationAggregateInput
   batches?: Prisma.BatchOrderByRelationAggregateInput
   batchSessions?: Prisma.BatchSessionOrderByRelationAggregateInput
   enrollments?: Prisma.EnrollmentOrderByRelationAggregateInput
@@ -306,6 +308,7 @@ export type InstituteWhereUniqueInput = Prisma.AtLeast<{
   students?: Prisma.StudentListRelationFilter
   programs?: Prisma.ProgramListRelationFilter
   subjects?: Prisma.SubjectListRelationFilter
+  programSubjects?: Prisma.ProgramSubjectListRelationFilter
   batches?: Prisma.BatchListRelationFilter
   batchSessions?: Prisma.BatchSessionListRelationFilter
   enrollments?: Prisma.EnrollmentListRelationFilter
@@ -374,6 +377,7 @@ export type InstituteCreateInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -408,6 +412,7 @@ export type InstituteUncheckedCreateInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -442,6 +447,7 @@ export type InstituteUpdateInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -476,6 +482,7 @@ export type InstituteUncheckedUpdateInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -705,6 +712,20 @@ export type InstituteUpdateOneRequiredWithoutSubjectsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InstituteUpdateToOneWithWhereWithoutSubjectsInput, Prisma.InstituteUpdateWithoutSubjectsInput>, Prisma.InstituteUncheckedUpdateWithoutSubjectsInput>
 }
 
+export type InstituteCreateNestedOneWithoutProgramSubjectsInput = {
+  create?: Prisma.XOR<Prisma.InstituteCreateWithoutProgramSubjectsInput, Prisma.InstituteUncheckedCreateWithoutProgramSubjectsInput>
+  connectOrCreate?: Prisma.InstituteCreateOrConnectWithoutProgramSubjectsInput
+  connect?: Prisma.InstituteWhereUniqueInput
+}
+
+export type InstituteUpdateOneRequiredWithoutProgramSubjectsNestedInput = {
+  create?: Prisma.XOR<Prisma.InstituteCreateWithoutProgramSubjectsInput, Prisma.InstituteUncheckedCreateWithoutProgramSubjectsInput>
+  connectOrCreate?: Prisma.InstituteCreateOrConnectWithoutProgramSubjectsInput
+  upsert?: Prisma.InstituteUpsertWithoutProgramSubjectsInput
+  connect?: Prisma.InstituteWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InstituteUpdateToOneWithWhereWithoutProgramSubjectsInput, Prisma.InstituteUpdateWithoutProgramSubjectsInput>, Prisma.InstituteUncheckedUpdateWithoutProgramSubjectsInput>
+}
+
 export type InstituteCreateNestedOneWithoutBatchesInput = {
   create?: Prisma.XOR<Prisma.InstituteCreateWithoutBatchesInput, Prisma.InstituteUncheckedCreateWithoutBatchesInput>
   connectOrCreate?: Prisma.InstituteCreateOrConnectWithoutBatchesInput
@@ -890,6 +911,7 @@ export type InstituteCreateWithoutMembershipsInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -923,6 +945,7 @@ export type InstituteUncheckedCreateWithoutMembershipsInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -972,6 +995,7 @@ export type InstituteUpdateWithoutMembershipsInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -1005,6 +1029,7 @@ export type InstituteUncheckedUpdateWithoutMembershipsInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -1038,6 +1063,7 @@ export type InstituteCreateWithoutStudentLinksInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -1071,6 +1097,7 @@ export type InstituteUncheckedCreateWithoutStudentLinksInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -1120,6 +1147,7 @@ export type InstituteUpdateWithoutStudentLinksInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -1153,6 +1181,7 @@ export type InstituteUncheckedUpdateWithoutStudentLinksInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -1185,6 +1214,7 @@ export type InstituteCreateWithoutUsersInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -1218,6 +1248,7 @@ export type InstituteUncheckedCreateWithoutUsersInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -1267,6 +1298,7 @@ export type InstituteUpdateWithoutUsersInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -1300,6 +1332,7 @@ export type InstituteUncheckedUpdateWithoutUsersInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -1333,6 +1366,7 @@ export type InstituteCreateWithoutInstituteParentsInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -1366,6 +1400,7 @@ export type InstituteUncheckedCreateWithoutInstituteParentsInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -1415,6 +1450,7 @@ export type InstituteUpdateWithoutInstituteParentsInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -1448,6 +1484,7 @@ export type InstituteUncheckedUpdateWithoutInstituteParentsInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -1482,6 +1519,7 @@ export type InstituteCreateWithoutInstituteParentStudentsInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -1515,6 +1553,7 @@ export type InstituteUncheckedCreateWithoutInstituteParentStudentsInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -1564,6 +1603,7 @@ export type InstituteUpdateWithoutInstituteParentStudentsInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -1597,6 +1637,7 @@ export type InstituteUncheckedUpdateWithoutInstituteParentStudentsInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -1629,6 +1670,7 @@ export type InstituteCreateWithoutStudentsInput = {
   instituteParents?: Prisma.InstituteParentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -1662,6 +1704,7 @@ export type InstituteUncheckedCreateWithoutStudentsInput = {
   instituteParents?: Prisma.InstituteParentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -1711,6 +1754,7 @@ export type InstituteUpdateWithoutStudentsInput = {
   instituteParents?: Prisma.InstituteParentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -1744,6 +1788,7 @@ export type InstituteUncheckedUpdateWithoutStudentsInput = {
   instituteParents?: Prisma.InstituteParentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -1777,6 +1822,7 @@ export type InstituteCreateWithoutProgramsInput = {
   instituteParents?: Prisma.InstituteParentCreateNestedManyWithoutInstituteInput
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -1810,6 +1856,7 @@ export type InstituteUncheckedCreateWithoutProgramsInput = {
   instituteParents?: Prisma.InstituteParentUncheckedCreateNestedManyWithoutInstituteInput
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -1859,6 +1906,7 @@ export type InstituteUpdateWithoutProgramsInput = {
   instituteParents?: Prisma.InstituteParentUpdateManyWithoutInstituteNestedInput
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -1892,6 +1940,7 @@ export type InstituteUncheckedUpdateWithoutProgramsInput = {
   instituteParents?: Prisma.InstituteParentUncheckedUpdateManyWithoutInstituteNestedInput
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -1925,6 +1974,7 @@ export type InstituteCreateWithoutSubjectsInput = {
   instituteParents?: Prisma.InstituteParentCreateNestedManyWithoutInstituteInput
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -1958,6 +2008,7 @@ export type InstituteUncheckedCreateWithoutSubjectsInput = {
   instituteParents?: Prisma.InstituteParentUncheckedCreateNestedManyWithoutInstituteInput
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -2007,6 +2058,7 @@ export type InstituteUpdateWithoutSubjectsInput = {
   instituteParents?: Prisma.InstituteParentUpdateManyWithoutInstituteNestedInput
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -2040,6 +2092,159 @@ export type InstituteUncheckedUpdateWithoutSubjectsInput = {
   instituteParents?: Prisma.InstituteParentUncheckedUpdateManyWithoutInstituteNestedInput
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
+  batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
+  enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
+  attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutInstituteNestedInput
+  homework?: Prisma.HomeworkUncheckedUpdateManyWithoutInstituteNestedInput
+  tests?: Prisma.TestUncheckedUpdateManyWithoutInstituteNestedInput
+  marks?: Prisma.MarksUncheckedUpdateManyWithoutInstituteNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutInstituteNestedInput
+  announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutInstituteNestedInput
+  settings?: Prisma.SettingsUncheckedUpdateOneWithoutInstituteNestedInput
+  branding?: Prisma.BrandingUncheckedUpdateOneWithoutInstituteNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutInstituteNestedInput
+  memberships?: Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteNestedInput
+  studentLinks?: Prisma.StudentLinkUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedUpdateManyWithoutInstituteNestedInput
+}
+
+export type InstituteCreateWithoutProgramSubjectsInput = {
+  id?: string
+  name: string
+  slug: string
+  phone: string
+  email: string
+  logoUrl?: string | null
+  primaryColor?: string | null
+  timezone?: string
+  status?: $Enums.InstituteStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutInstituteInput
+  instituteParents?: Prisma.InstituteParentCreateNestedManyWithoutInstituteInput
+  students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
+  programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
+  subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
+  batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
+  enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
+  attendance?: Prisma.AttendanceCreateNestedManyWithoutInstituteInput
+  homework?: Prisma.HomeworkCreateNestedManyWithoutInstituteInput
+  tests?: Prisma.TestCreateNestedManyWithoutInstituteInput
+  marks?: Prisma.MarksCreateNestedManyWithoutInstituteInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutInstituteInput
+  announcements?: Prisma.AnnouncementCreateNestedManyWithoutInstituteInput
+  settings?: Prisma.SettingsCreateNestedOneWithoutInstituteInput
+  branding?: Prisma.BrandingCreateNestedOneWithoutInstituteInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutInstituteInput
+  memberships?: Prisma.InstituteMembershipCreateNestedManyWithoutInstituteInput
+  studentLinks?: Prisma.StudentLinkCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentCreateNestedManyWithoutInstituteInput
+}
+
+export type InstituteUncheckedCreateWithoutProgramSubjectsInput = {
+  id?: string
+  name: string
+  slug: string
+  phone: string
+  email: string
+  logoUrl?: string | null
+  primaryColor?: string | null
+  timezone?: string
+  status?: $Enums.InstituteStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParents?: Prisma.InstituteParentUncheckedCreateNestedManyWithoutInstituteInput
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
+  programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
+  subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
+  batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
+  enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
+  attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutInstituteInput
+  homework?: Prisma.HomeworkUncheckedCreateNestedManyWithoutInstituteInput
+  tests?: Prisma.TestUncheckedCreateNestedManyWithoutInstituteInput
+  marks?: Prisma.MarksUncheckedCreateNestedManyWithoutInstituteInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutInstituteInput
+  announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutInstituteInput
+  settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutInstituteInput
+  branding?: Prisma.BrandingUncheckedCreateNestedOneWithoutInstituteInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutInstituteInput
+  memberships?: Prisma.InstituteMembershipUncheckedCreateNestedManyWithoutInstituteInput
+  studentLinks?: Prisma.StudentLinkUncheckedCreateNestedManyWithoutInstituteInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUncheckedCreateNestedManyWithoutInstituteInput
+}
+
+export type InstituteCreateOrConnectWithoutProgramSubjectsInput = {
+  where: Prisma.InstituteWhereUniqueInput
+  create: Prisma.XOR<Prisma.InstituteCreateWithoutProgramSubjectsInput, Prisma.InstituteUncheckedCreateWithoutProgramSubjectsInput>
+}
+
+export type InstituteUpsertWithoutProgramSubjectsInput = {
+  update: Prisma.XOR<Prisma.InstituteUpdateWithoutProgramSubjectsInput, Prisma.InstituteUncheckedUpdateWithoutProgramSubjectsInput>
+  create: Prisma.XOR<Prisma.InstituteCreateWithoutProgramSubjectsInput, Prisma.InstituteUncheckedCreateWithoutProgramSubjectsInput>
+  where?: Prisma.InstituteWhereInput
+}
+
+export type InstituteUpdateToOneWithWhereWithoutProgramSubjectsInput = {
+  where?: Prisma.InstituteWhereInput
+  data: Prisma.XOR<Prisma.InstituteUpdateWithoutProgramSubjectsInput, Prisma.InstituteUncheckedUpdateWithoutProgramSubjectsInput>
+}
+
+export type InstituteUpdateWithoutProgramSubjectsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInstituteStatusFieldUpdateOperationsInput | $Enums.InstituteStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutInstituteNestedInput
+  instituteParents?: Prisma.InstituteParentUpdateManyWithoutInstituteNestedInput
+  students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
+  programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
+  subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
+  batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
+  enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
+  attendance?: Prisma.AttendanceUpdateManyWithoutInstituteNestedInput
+  homework?: Prisma.HomeworkUpdateManyWithoutInstituteNestedInput
+  tests?: Prisma.TestUpdateManyWithoutInstituteNestedInput
+  marks?: Prisma.MarksUpdateManyWithoutInstituteNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutInstituteNestedInput
+  announcements?: Prisma.AnnouncementUpdateManyWithoutInstituteNestedInput
+  settings?: Prisma.SettingsUpdateOneWithoutInstituteNestedInput
+  branding?: Prisma.BrandingUpdateOneWithoutInstituteNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutInstituteNestedInput
+  memberships?: Prisma.InstituteMembershipUpdateManyWithoutInstituteNestedInput
+  studentLinks?: Prisma.StudentLinkUpdateManyWithoutInstituteNestedInput
+  instituteParentStudents?: Prisma.InstituteParentStudentUpdateManyWithoutInstituteNestedInput
+}
+
+export type InstituteUncheckedUpdateWithoutProgramSubjectsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  primaryColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInstituteStatusFieldUpdateOperationsInput | $Enums.InstituteStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutInstituteNestedInput
+  instituteParents?: Prisma.InstituteParentUncheckedUpdateManyWithoutInstituteNestedInput
+  students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
+  programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
+  subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -2074,6 +2279,7 @@ export type InstituteCreateWithoutBatchesInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
   attendance?: Prisma.AttendanceCreateNestedManyWithoutInstituteInput
@@ -2107,6 +2313,7 @@ export type InstituteUncheckedCreateWithoutBatchesInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
   attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutInstituteInput
@@ -2156,6 +2363,7 @@ export type InstituteUpdateWithoutBatchesInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
   attendance?: Prisma.AttendanceUpdateManyWithoutInstituteNestedInput
@@ -2189,6 +2397,7 @@ export type InstituteUncheckedUpdateWithoutBatchesInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
   attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutInstituteNestedInput
@@ -2222,6 +2431,7 @@ export type InstituteCreateWithoutEnrollmentsInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   attendance?: Prisma.AttendanceCreateNestedManyWithoutInstituteInput
@@ -2255,6 +2465,7 @@ export type InstituteUncheckedCreateWithoutEnrollmentsInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutInstituteInput
@@ -2304,6 +2515,7 @@ export type InstituteUpdateWithoutEnrollmentsInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   attendance?: Prisma.AttendanceUpdateManyWithoutInstituteNestedInput
@@ -2337,6 +2549,7 @@ export type InstituteUncheckedUpdateWithoutEnrollmentsInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutInstituteNestedInput
@@ -2370,6 +2583,7 @@ export type InstituteCreateWithoutBatchSessionsInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
   attendance?: Prisma.AttendanceCreateNestedManyWithoutInstituteInput
@@ -2403,6 +2617,7 @@ export type InstituteUncheckedCreateWithoutBatchSessionsInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
   attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutInstituteInput
@@ -2452,6 +2667,7 @@ export type InstituteUpdateWithoutBatchSessionsInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
   attendance?: Prisma.AttendanceUpdateManyWithoutInstituteNestedInput
@@ -2485,6 +2701,7 @@ export type InstituteUncheckedUpdateWithoutBatchSessionsInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
   attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutInstituteNestedInput
@@ -2518,6 +2735,7 @@ export type InstituteCreateWithoutAttendanceInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -2551,6 +2769,7 @@ export type InstituteUncheckedCreateWithoutAttendanceInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -2600,6 +2819,7 @@ export type InstituteUpdateWithoutAttendanceInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -2633,6 +2853,7 @@ export type InstituteUncheckedUpdateWithoutAttendanceInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -2666,6 +2887,7 @@ export type InstituteCreateWithoutHomeworkInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -2699,6 +2921,7 @@ export type InstituteUncheckedCreateWithoutHomeworkInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -2748,6 +2971,7 @@ export type InstituteUpdateWithoutHomeworkInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -2781,6 +3005,7 @@ export type InstituteUncheckedUpdateWithoutHomeworkInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -2814,6 +3039,7 @@ export type InstituteCreateWithoutTestsInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -2847,6 +3073,7 @@ export type InstituteUncheckedCreateWithoutTestsInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -2896,6 +3123,7 @@ export type InstituteUpdateWithoutTestsInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -2929,6 +3157,7 @@ export type InstituteUncheckedUpdateWithoutTestsInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -2962,6 +3191,7 @@ export type InstituteCreateWithoutMarksInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -2995,6 +3225,7 @@ export type InstituteUncheckedCreateWithoutMarksInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -3044,6 +3275,7 @@ export type InstituteUpdateWithoutMarksInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -3077,6 +3309,7 @@ export type InstituteUncheckedUpdateWithoutMarksInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -3110,6 +3343,7 @@ export type InstituteCreateWithoutReceiptsInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -3143,6 +3377,7 @@ export type InstituteUncheckedCreateWithoutReceiptsInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -3192,6 +3427,7 @@ export type InstituteUpdateWithoutReceiptsInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -3225,6 +3461,7 @@ export type InstituteUncheckedUpdateWithoutReceiptsInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -3258,6 +3495,7 @@ export type InstituteCreateWithoutAnnouncementsInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -3291,6 +3529,7 @@ export type InstituteUncheckedCreateWithoutAnnouncementsInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -3340,6 +3579,7 @@ export type InstituteUpdateWithoutAnnouncementsInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -3373,6 +3613,7 @@ export type InstituteUncheckedUpdateWithoutAnnouncementsInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -3406,6 +3647,7 @@ export type InstituteCreateWithoutSettingsInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -3439,6 +3681,7 @@ export type InstituteUncheckedCreateWithoutSettingsInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -3488,6 +3731,7 @@ export type InstituteUpdateWithoutSettingsInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -3521,6 +3765,7 @@ export type InstituteUncheckedUpdateWithoutSettingsInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -3554,6 +3799,7 @@ export type InstituteCreateWithoutBrandingInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -3587,6 +3833,7 @@ export type InstituteUncheckedCreateWithoutBrandingInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -3636,6 +3883,7 @@ export type InstituteUpdateWithoutBrandingInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -3669,6 +3917,7 @@ export type InstituteUncheckedUpdateWithoutBrandingInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -3702,6 +3951,7 @@ export type InstituteCreateWithoutAuditLogsInput = {
   students?: Prisma.StudentCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutInstituteInput
@@ -3735,6 +3985,7 @@ export type InstituteUncheckedCreateWithoutAuditLogsInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutInstituteInput
   programs?: Prisma.ProgramUncheckedCreateNestedManyWithoutInstituteInput
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutInstituteInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedCreateNestedManyWithoutInstituteInput
   batches?: Prisma.BatchUncheckedCreateNestedManyWithoutInstituteInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutInstituteInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutInstituteInput
@@ -3784,6 +4035,7 @@ export type InstituteUpdateWithoutAuditLogsInput = {
   students?: Prisma.StudentUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutInstituteNestedInput
@@ -3817,6 +4069,7 @@ export type InstituteUncheckedUpdateWithoutAuditLogsInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutInstituteNestedInput
   programs?: Prisma.ProgramUncheckedUpdateManyWithoutInstituteNestedInput
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutInstituteNestedInput
+  programSubjects?: Prisma.ProgramSubjectUncheckedUpdateManyWithoutInstituteNestedInput
   batches?: Prisma.BatchUncheckedUpdateManyWithoutInstituteNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutInstituteNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutInstituteNestedInput
@@ -3844,6 +4097,7 @@ export type InstituteCountOutputType = {
   students: number
   programs: number
   subjects: number
+  programSubjects: number
   batches: number
   batchSessions: number
   enrollments: number
@@ -3865,6 +4119,7 @@ export type InstituteCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   students?: boolean | InstituteCountOutputTypeCountStudentsArgs
   programs?: boolean | InstituteCountOutputTypeCountProgramsArgs
   subjects?: boolean | InstituteCountOutputTypeCountSubjectsArgs
+  programSubjects?: boolean | InstituteCountOutputTypeCountProgramSubjectsArgs
   batches?: boolean | InstituteCountOutputTypeCountBatchesArgs
   batchSessions?: boolean | InstituteCountOutputTypeCountBatchSessionsArgs
   enrollments?: boolean | InstituteCountOutputTypeCountEnrollmentsArgs
@@ -3923,6 +4178,13 @@ export type InstituteCountOutputTypeCountProgramsArgs<ExtArgs extends runtime.Ty
  */
 export type InstituteCountOutputTypeCountSubjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.SubjectWhereInput
+}
+
+/**
+ * InstituteCountOutputType without action
+ */
+export type InstituteCountOutputTypeCountProgramSubjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProgramSubjectWhereInput
 }
 
 /**
@@ -4034,6 +4296,7 @@ export type InstituteSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   students?: boolean | Prisma.Institute$studentsArgs<ExtArgs>
   programs?: boolean | Prisma.Institute$programsArgs<ExtArgs>
   subjects?: boolean | Prisma.Institute$subjectsArgs<ExtArgs>
+  programSubjects?: boolean | Prisma.Institute$programSubjectsArgs<ExtArgs>
   batches?: boolean | Prisma.Institute$batchesArgs<ExtArgs>
   batchSessions?: boolean | Prisma.Institute$batchSessionsArgs<ExtArgs>
   enrollments?: boolean | Prisma.Institute$enrollmentsArgs<ExtArgs>
@@ -4101,6 +4364,7 @@ export type InstituteInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   students?: boolean | Prisma.Institute$studentsArgs<ExtArgs>
   programs?: boolean | Prisma.Institute$programsArgs<ExtArgs>
   subjects?: boolean | Prisma.Institute$subjectsArgs<ExtArgs>
+  programSubjects?: boolean | Prisma.Institute$programSubjectsArgs<ExtArgs>
   batches?: boolean | Prisma.Institute$batchesArgs<ExtArgs>
   batchSessions?: boolean | Prisma.Institute$batchSessionsArgs<ExtArgs>
   enrollments?: boolean | Prisma.Institute$enrollmentsArgs<ExtArgs>
@@ -4129,6 +4393,7 @@ export type $InstitutePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     students: Prisma.$StudentPayload<ExtArgs>[]
     programs: Prisma.$ProgramPayload<ExtArgs>[]
     subjects: Prisma.$SubjectPayload<ExtArgs>[]
+    programSubjects: Prisma.$ProgramSubjectPayload<ExtArgs>[]
     batches: Prisma.$BatchPayload<ExtArgs>[]
     batchSessions: Prisma.$BatchSessionPayload<ExtArgs>[]
     enrollments: Prisma.$EnrollmentPayload<ExtArgs>[]
@@ -4556,6 +4821,7 @@ export interface Prisma__InstituteClient<T, Null = never, ExtArgs extends runtim
   students<T extends Prisma.Institute$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institute$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   programs<T extends Prisma.Institute$programsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institute$programsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgramPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   subjects<T extends Prisma.Institute$subjectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institute$subjectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  programSubjects<T extends Prisma.Institute$programSubjectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institute$programSubjectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgramSubjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   batches<T extends Prisma.Institute$batchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institute$batchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   batchSessions<T extends Prisma.Institute$batchSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institute$batchSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BatchSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   enrollments<T extends Prisma.Institute$enrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institute$enrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5121,6 +5387,30 @@ export type Institute$subjectsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.SubjectScalarFieldEnum | Prisma.SubjectScalarFieldEnum[]
+}
+
+/**
+ * Institute.programSubjects
+ */
+export type Institute$programSubjectsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProgramSubject
+   */
+  select?: Prisma.ProgramSubjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProgramSubject
+   */
+  omit?: Prisma.ProgramSubjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProgramSubjectInclude<ExtArgs> | null
+  where?: Prisma.ProgramSubjectWhereInput
+  orderBy?: Prisma.ProgramSubjectOrderByWithRelationInput | Prisma.ProgramSubjectOrderByWithRelationInput[]
+  cursor?: Prisma.ProgramSubjectWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProgramSubjectScalarFieldEnum | Prisma.ProgramSubjectScalarFieldEnum[]
 }
 
 /**

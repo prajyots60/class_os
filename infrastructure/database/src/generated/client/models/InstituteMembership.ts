@@ -177,6 +177,7 @@ export type InstituteMembershipWhereInput = {
   parentIdentity?: Prisma.XOR<Prisma.ParentIdentityScalarRelationFilter, Prisma.ParentIdentityWhereInput>
   institute?: Prisma.XOR<Prisma.InstituteScalarRelationFilter, Prisma.InstituteWhereInput>
   instituteParent?: Prisma.XOR<Prisma.InstituteParentScalarRelationFilter, Prisma.InstituteParentWhereInput>
+  assignedBatches?: Prisma.BatchListRelationFilter
 }
 
 export type InstituteMembershipOrderByWithRelationInput = {
@@ -187,6 +188,7 @@ export type InstituteMembershipOrderByWithRelationInput = {
   parentIdentity?: Prisma.ParentIdentityOrderByWithRelationInput
   institute?: Prisma.InstituteOrderByWithRelationInput
   instituteParent?: Prisma.InstituteParentOrderByWithRelationInput
+  assignedBatches?: Prisma.BatchOrderByRelationAggregateInput
 }
 
 export type InstituteMembershipWhereUniqueInput = Prisma.AtLeast<{
@@ -201,6 +203,7 @@ export type InstituteMembershipWhereUniqueInput = Prisma.AtLeast<{
   parentIdentity?: Prisma.XOR<Prisma.ParentIdentityScalarRelationFilter, Prisma.ParentIdentityWhereInput>
   institute?: Prisma.XOR<Prisma.InstituteScalarRelationFilter, Prisma.InstituteWhereInput>
   instituteParent?: Prisma.XOR<Prisma.InstituteParentScalarRelationFilter, Prisma.InstituteParentWhereInput>
+  assignedBatches?: Prisma.BatchListRelationFilter
 }, "id" | "parentIdentityId_instituteId">
 
 export type InstituteMembershipOrderByWithAggregationInput = {
@@ -228,6 +231,7 @@ export type InstituteMembershipCreateInput = {
   parentIdentity: Prisma.ParentIdentityCreateNestedOneWithoutMembershipsInput
   institute: Prisma.InstituteCreateNestedOneWithoutMembershipsInput
   instituteParent: Prisma.InstituteParentCreateNestedOneWithoutMembershipsInput
+  assignedBatches?: Prisma.BatchCreateNestedManyWithoutTeacherInput
 }
 
 export type InstituteMembershipUncheckedCreateInput = {
@@ -235,6 +239,7 @@ export type InstituteMembershipUncheckedCreateInput = {
   parentIdentityId: string
   instituteId: string
   instituteParentId: string
+  assignedBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutTeacherInput
 }
 
 export type InstituteMembershipUpdateInput = {
@@ -242,6 +247,7 @@ export type InstituteMembershipUpdateInput = {
   parentIdentity?: Prisma.ParentIdentityUpdateOneRequiredWithoutMembershipsNestedInput
   institute?: Prisma.InstituteUpdateOneRequiredWithoutMembershipsNestedInput
   instituteParent?: Prisma.InstituteParentUpdateOneRequiredWithoutMembershipsNestedInput
+  assignedBatches?: Prisma.BatchUpdateManyWithoutTeacherNestedInput
 }
 
 export type InstituteMembershipUncheckedUpdateInput = {
@@ -249,6 +255,7 @@ export type InstituteMembershipUncheckedUpdateInput = {
   parentIdentityId?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
   instituteParentId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedBatches?: Prisma.BatchUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
 export type InstituteMembershipCreateManyInput = {
@@ -303,6 +310,11 @@ export type InstituteMembershipMinOrderByAggregateInput = {
   parentIdentityId?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
   instituteParentId?: Prisma.SortOrder
+}
+
+export type InstituteMembershipNullableScalarRelationFilter = {
+  is?: Prisma.InstituteMembershipWhereInput | null
+  isNot?: Prisma.InstituteMembershipWhereInput | null
 }
 
 export type InstituteMembershipCreateNestedManyWithoutParentIdentityInput = {
@@ -431,16 +443,34 @@ export type InstituteMembershipUncheckedUpdateManyWithoutInstituteParentNestedIn
   deleteMany?: Prisma.InstituteMembershipScalarWhereInput | Prisma.InstituteMembershipScalarWhereInput[]
 }
 
+export type InstituteMembershipCreateNestedOneWithoutAssignedBatchesInput = {
+  create?: Prisma.XOR<Prisma.InstituteMembershipCreateWithoutAssignedBatchesInput, Prisma.InstituteMembershipUncheckedCreateWithoutAssignedBatchesInput>
+  connectOrCreate?: Prisma.InstituteMembershipCreateOrConnectWithoutAssignedBatchesInput
+  connect?: Prisma.InstituteMembershipWhereUniqueInput
+}
+
+export type InstituteMembershipUpdateOneWithoutAssignedBatchesNestedInput = {
+  create?: Prisma.XOR<Prisma.InstituteMembershipCreateWithoutAssignedBatchesInput, Prisma.InstituteMembershipUncheckedCreateWithoutAssignedBatchesInput>
+  connectOrCreate?: Prisma.InstituteMembershipCreateOrConnectWithoutAssignedBatchesInput
+  upsert?: Prisma.InstituteMembershipUpsertWithoutAssignedBatchesInput
+  disconnect?: Prisma.InstituteMembershipWhereInput | boolean
+  delete?: Prisma.InstituteMembershipWhereInput | boolean
+  connect?: Prisma.InstituteMembershipWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InstituteMembershipUpdateToOneWithWhereWithoutAssignedBatchesInput, Prisma.InstituteMembershipUpdateWithoutAssignedBatchesInput>, Prisma.InstituteMembershipUncheckedUpdateWithoutAssignedBatchesInput>
+}
+
 export type InstituteMembershipCreateWithoutParentIdentityInput = {
   id?: string
   institute: Prisma.InstituteCreateNestedOneWithoutMembershipsInput
   instituteParent: Prisma.InstituteParentCreateNestedOneWithoutMembershipsInput
+  assignedBatches?: Prisma.BatchCreateNestedManyWithoutTeacherInput
 }
 
 export type InstituteMembershipUncheckedCreateWithoutParentIdentityInput = {
   id?: string
   instituteId: string
   instituteParentId: string
+  assignedBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutTeacherInput
 }
 
 export type InstituteMembershipCreateOrConnectWithoutParentIdentityInput = {
@@ -483,12 +513,14 @@ export type InstituteMembershipCreateWithoutInstituteInput = {
   id?: string
   parentIdentity: Prisma.ParentIdentityCreateNestedOneWithoutMembershipsInput
   instituteParent: Prisma.InstituteParentCreateNestedOneWithoutMembershipsInput
+  assignedBatches?: Prisma.BatchCreateNestedManyWithoutTeacherInput
 }
 
 export type InstituteMembershipUncheckedCreateWithoutInstituteInput = {
   id?: string
   parentIdentityId: string
   instituteParentId: string
+  assignedBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutTeacherInput
 }
 
 export type InstituteMembershipCreateOrConnectWithoutInstituteInput = {
@@ -521,12 +553,14 @@ export type InstituteMembershipCreateWithoutInstituteParentInput = {
   id?: string
   parentIdentity: Prisma.ParentIdentityCreateNestedOneWithoutMembershipsInput
   institute: Prisma.InstituteCreateNestedOneWithoutMembershipsInput
+  assignedBatches?: Prisma.BatchCreateNestedManyWithoutTeacherInput
 }
 
 export type InstituteMembershipUncheckedCreateWithoutInstituteParentInput = {
   id?: string
   parentIdentityId: string
   instituteId: string
+  assignedBatches?: Prisma.BatchUncheckedCreateNestedManyWithoutTeacherInput
 }
 
 export type InstituteMembershipCreateOrConnectWithoutInstituteParentInput = {
@@ -555,6 +589,50 @@ export type InstituteMembershipUpdateManyWithWhereWithoutInstituteParentInput = 
   data: Prisma.XOR<Prisma.InstituteMembershipUpdateManyMutationInput, Prisma.InstituteMembershipUncheckedUpdateManyWithoutInstituteParentInput>
 }
 
+export type InstituteMembershipCreateWithoutAssignedBatchesInput = {
+  id?: string
+  parentIdentity: Prisma.ParentIdentityCreateNestedOneWithoutMembershipsInput
+  institute: Prisma.InstituteCreateNestedOneWithoutMembershipsInput
+  instituteParent: Prisma.InstituteParentCreateNestedOneWithoutMembershipsInput
+}
+
+export type InstituteMembershipUncheckedCreateWithoutAssignedBatchesInput = {
+  id?: string
+  parentIdentityId: string
+  instituteId: string
+  instituteParentId: string
+}
+
+export type InstituteMembershipCreateOrConnectWithoutAssignedBatchesInput = {
+  where: Prisma.InstituteMembershipWhereUniqueInput
+  create: Prisma.XOR<Prisma.InstituteMembershipCreateWithoutAssignedBatchesInput, Prisma.InstituteMembershipUncheckedCreateWithoutAssignedBatchesInput>
+}
+
+export type InstituteMembershipUpsertWithoutAssignedBatchesInput = {
+  update: Prisma.XOR<Prisma.InstituteMembershipUpdateWithoutAssignedBatchesInput, Prisma.InstituteMembershipUncheckedUpdateWithoutAssignedBatchesInput>
+  create: Prisma.XOR<Prisma.InstituteMembershipCreateWithoutAssignedBatchesInput, Prisma.InstituteMembershipUncheckedCreateWithoutAssignedBatchesInput>
+  where?: Prisma.InstituteMembershipWhereInput
+}
+
+export type InstituteMembershipUpdateToOneWithWhereWithoutAssignedBatchesInput = {
+  where?: Prisma.InstituteMembershipWhereInput
+  data: Prisma.XOR<Prisma.InstituteMembershipUpdateWithoutAssignedBatchesInput, Prisma.InstituteMembershipUncheckedUpdateWithoutAssignedBatchesInput>
+}
+
+export type InstituteMembershipUpdateWithoutAssignedBatchesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  parentIdentity?: Prisma.ParentIdentityUpdateOneRequiredWithoutMembershipsNestedInput
+  institute?: Prisma.InstituteUpdateOneRequiredWithoutMembershipsNestedInput
+  instituteParent?: Prisma.InstituteParentUpdateOneRequiredWithoutMembershipsNestedInput
+}
+
+export type InstituteMembershipUncheckedUpdateWithoutAssignedBatchesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  parentIdentityId?: Prisma.StringFieldUpdateOperationsInput | string
+  instituteId?: Prisma.StringFieldUpdateOperationsInput | string
+  instituteParentId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
 export type InstituteMembershipCreateManyParentIdentityInput = {
   id?: string
   instituteId: string
@@ -565,12 +643,14 @@ export type InstituteMembershipUpdateWithoutParentIdentityInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   institute?: Prisma.InstituteUpdateOneRequiredWithoutMembershipsNestedInput
   instituteParent?: Prisma.InstituteParentUpdateOneRequiredWithoutMembershipsNestedInput
+  assignedBatches?: Prisma.BatchUpdateManyWithoutTeacherNestedInput
 }
 
 export type InstituteMembershipUncheckedUpdateWithoutParentIdentityInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
   instituteParentId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedBatches?: Prisma.BatchUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
 export type InstituteMembershipUncheckedUpdateManyWithoutParentIdentityInput = {
@@ -589,12 +669,14 @@ export type InstituteMembershipUpdateWithoutInstituteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   parentIdentity?: Prisma.ParentIdentityUpdateOneRequiredWithoutMembershipsNestedInput
   instituteParent?: Prisma.InstituteParentUpdateOneRequiredWithoutMembershipsNestedInput
+  assignedBatches?: Prisma.BatchUpdateManyWithoutTeacherNestedInput
 }
 
 export type InstituteMembershipUncheckedUpdateWithoutInstituteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   parentIdentityId?: Prisma.StringFieldUpdateOperationsInput | string
   instituteParentId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedBatches?: Prisma.BatchUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
 export type InstituteMembershipUncheckedUpdateManyWithoutInstituteInput = {
@@ -613,12 +695,14 @@ export type InstituteMembershipUpdateWithoutInstituteParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   parentIdentity?: Prisma.ParentIdentityUpdateOneRequiredWithoutMembershipsNestedInput
   institute?: Prisma.InstituteUpdateOneRequiredWithoutMembershipsNestedInput
+  assignedBatches?: Prisma.BatchUpdateManyWithoutTeacherNestedInput
 }
 
 export type InstituteMembershipUncheckedUpdateWithoutInstituteParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   parentIdentityId?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
+  assignedBatches?: Prisma.BatchUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
 export type InstituteMembershipUncheckedUpdateManyWithoutInstituteParentInput = {
@@ -627,6 +711,35 @@ export type InstituteMembershipUncheckedUpdateManyWithoutInstituteParentInput = 
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
+
+/**
+ * Count Type InstituteMembershipCountOutputType
+ */
+
+export type InstituteMembershipCountOutputType = {
+  assignedBatches: number
+}
+
+export type InstituteMembershipCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  assignedBatches?: boolean | InstituteMembershipCountOutputTypeCountAssignedBatchesArgs
+}
+
+/**
+ * InstituteMembershipCountOutputType without action
+ */
+export type InstituteMembershipCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InstituteMembershipCountOutputType
+   */
+  select?: Prisma.InstituteMembershipCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * InstituteMembershipCountOutputType without action
+ */
+export type InstituteMembershipCountOutputTypeCountAssignedBatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BatchWhereInput
+}
 
 
 export type InstituteMembershipSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -637,6 +750,8 @@ export type InstituteMembershipSelect<ExtArgs extends runtime.Types.Extensions.I
   parentIdentity?: boolean | Prisma.ParentIdentityDefaultArgs<ExtArgs>
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
   instituteParent?: boolean | Prisma.InstituteParentDefaultArgs<ExtArgs>
+  assignedBatches?: boolean | Prisma.InstituteMembership$assignedBatchesArgs<ExtArgs>
+  _count?: boolean | Prisma.InstituteMembershipCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["instituteMembership"]>
 
 export type InstituteMembershipSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -671,6 +786,8 @@ export type InstituteMembershipInclude<ExtArgs extends runtime.Types.Extensions.
   parentIdentity?: boolean | Prisma.ParentIdentityDefaultArgs<ExtArgs>
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
   instituteParent?: boolean | Prisma.InstituteParentDefaultArgs<ExtArgs>
+  assignedBatches?: boolean | Prisma.InstituteMembership$assignedBatchesArgs<ExtArgs>
+  _count?: boolean | Prisma.InstituteMembershipCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InstituteMembershipIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parentIdentity?: boolean | Prisma.ParentIdentityDefaultArgs<ExtArgs>
@@ -689,6 +806,7 @@ export type $InstituteMembershipPayload<ExtArgs extends runtime.Types.Extensions
     parentIdentity: Prisma.$ParentIdentityPayload<ExtArgs>
     institute: Prisma.$InstitutePayload<ExtArgs>
     instituteParent: Prisma.$InstituteParentPayload<ExtArgs>
+    assignedBatches: Prisma.$BatchPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1092,6 +1210,7 @@ export interface Prisma__InstituteMembershipClient<T, Null = never, ExtArgs exte
   parentIdentity<T extends Prisma.ParentIdentityDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ParentIdentityDefaultArgs<ExtArgs>>): Prisma.Prisma__ParentIdentityClient<runtime.Types.Result.GetResult<Prisma.$ParentIdentityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   institute<T extends Prisma.InstituteDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InstituteDefaultArgs<ExtArgs>>): Prisma.Prisma__InstituteClient<runtime.Types.Result.GetResult<Prisma.$InstitutePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   instituteParent<T extends Prisma.InstituteParentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InstituteParentDefaultArgs<ExtArgs>>): Prisma.Prisma__InstituteParentClient<runtime.Types.Result.GetResult<Prisma.$InstituteParentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  assignedBatches<T extends Prisma.InstituteMembership$assignedBatchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InstituteMembership$assignedBatchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1523,6 +1642,30 @@ export type InstituteMembershipDeleteManyArgs<ExtArgs extends runtime.Types.Exte
    * Limit how many InstituteMemberships to delete.
    */
   limit?: number
+}
+
+/**
+ * InstituteMembership.assignedBatches
+ */
+export type InstituteMembership$assignedBatchesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Batch
+   */
+  select?: Prisma.BatchSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Batch
+   */
+  omit?: Prisma.BatchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BatchInclude<ExtArgs> | null
+  where?: Prisma.BatchWhereInput
+  orderBy?: Prisma.BatchOrderByWithRelationInput | Prisma.BatchOrderByWithRelationInput[]
+  cursor?: Prisma.BatchWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BatchScalarFieldEnum | Prisma.BatchScalarFieldEnum[]
 }
 
 /**

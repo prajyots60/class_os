@@ -119,13 +119,14 @@ export async function createTestStudent(
 
 export async function createTestSubject(
   instituteId: string,
-  overrides: Partial<{ name: string }> = {},
+  overrides: Partial<{ name: string; code?: string }> = {},
 ) {
   const uniqueId = crypto.randomUUID().substring(0, 8);
   return db.subject.create({
     data: {
       instituteId,
       name: overrides.name || `Subject ${uniqueId}`,
+      code: overrides.code || `SUBJ-${uniqueId.toUpperCase()}`,
     },
   });
 }
@@ -133,7 +134,7 @@ export async function createTestSubject(
 export async function createTestBatch(
   instituteId: string,
   subjectId?: string,
-  overrides: Partial<{ name: string }> = {},
+  overrides: Partial<{ name: string; code?: string }> = {},
 ) {
   const uniqueId = crypto.randomUUID().substring(0, 8);
   let resolvedSubjectId = subjectId;
@@ -148,6 +149,7 @@ export async function createTestBatch(
       instituteId,
       subjectId: resolvedSubjectId,
       name: overrides.name || `Batch ${uniqueId}`,
+      code: overrides.code || `BATCH-${uniqueId.toUpperCase()}`,
       status: 'open',
     },
   });

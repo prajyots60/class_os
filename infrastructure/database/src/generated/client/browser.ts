@@ -88,6 +88,11 @@ export type Program = Prisma.ProgramModel
  */
 export type Subject = Prisma.SubjectModel
 /**
+ * Model ProgramSubject
+ * 
+ */
+export type ProgramSubject = Prisma.ProgramSubjectModel
+/**
  * Model Batch
  * 
  */

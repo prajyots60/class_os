@@ -143,27 +143,39 @@ packages/identity/
 │   │   └── role-capabilities.ts            ← Role → Capability map (Owner, Assistant, Teacher, Parent)
 │   ├── domain/                   ← Framework-Independent Business Domain
 │   │   ├── entities/
+│   │   │   ├── batch.entity.ts             ← Batch aggregate & state machine (Phase 1.11 isolated)
 │   │   │   ├── institute.entity.ts         ← Institute domain entity & status invariants
 │   │   │   ├── institute-membership.entity.ts ← Membership domain entity & role invariants
 │   │   │   ├── institute-parent.entity.ts  ← Tenant-scoped parent CRM entity
 │   │   │   ├── institute-parent-student.entity.ts ← Tenant-scoped guardian-student relationship entity
 │   │   │   ├── parent-identity.entity.ts   ← Platform-global parent identity entity
-│   │   │   └── student.entity.ts           ← Student learner aggregate & state machine
+│   │   │   ├── program.entity.ts           ← Program aggregate offering
+│   │   │   ├── program-subject.entity.ts   ← Program ↔ Subject relationship aggregate
+│   │   │   ├── student.entity.ts           ← Student learner aggregate & state machine
+│   │   │   └── subject.entity.ts           ← Option B independent subject aggregate
 │   │   ├── value-objects/
+│   │   │   ├── batch-code.vo.ts            ← BatchCode value object validation
 │   │   │   ├── date-of-birth.vo.ts         ← DateOfBirth value object validation
 │   │   │   ├── guardian-relationship-status.vo.ts ← Relationship status VO (active, archived)
 │   │   │   ├── guardian-relationship-type.vo.ts   ← Relationship taxonomy VO (father, mother, etc.)
-│   │   │   └── phone-number.vo.ts          ← E.164 PhoneNumber value object validation
+│   │   │   ├── phone-number.vo.ts          ← E.164 PhoneNumber value object validation
+│   │   │   ├── program-code.vo.ts          ← ProgramCode value object validation
+│   │   │   └── subject-code.vo.ts          ← SubjectCode value object validation
 │   │   └── repositories/
+│   │       ├── batch.repository.ts         ← Batch repository interface
 │   │       ├── institute.repository.ts     ← Institute persistence interface
 │   │       ├── institute-membership.repository.ts ← Membership repository interface
 │   │       ├── institute-onboarding.repository.ts ← Atomic onboarding unit of work interface
 │   │       ├── institute-parent.repository.ts ← InstituteParent repository interface
 │   │       ├── institute-parent-student.repository.interface.ts ← Relationship repository interface
 │   │       ├── parent-identity.repository.ts  ← ParentIdentity repository interface
-│   │       └── student.repository.ts        ← Student repository interface
+│   │       ├── program.repository.ts       ← Program repository interface
+│   │       ├── program-subject.repository.ts ← ProgramSubject repository interface
+│   │       ├── student.repository.ts        ← Student repository interface
+│   │       └── subject.repository.ts        ← Subject repository interface
 │   ├── infrastructure/           ← Prisma Persistence Implementations
 │   │   └── repositories/
+│   │       ├── prisma-batch.repository.ts  ← PostgreSQL Batch repository
 │   │       ├── prisma-institute.repository.ts ← PostgreSQL Institute repository
 │   │       ├── prisma-institute-membership.repository.ts ← PostgreSQL Membership repository
 │   │       ├── prisma-institute-parent.repository.ts    ← PostgreSQL InstituteParent repository
