@@ -452,7 +452,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **UX, Accessibility & Workflow Testing (Phase 1.10.7)**: Conducted Playwright E2E workflow & regression suite (`academic-workflow.spec.ts`, 58/58 passed across all 6 monorepo E2E specs) verifying focus management, ARIA error attributes, Escape key dismissal, 375px mobile viewport rendering, and state transition integrity.
 - **Acceptance Gate & Freeze (Phase 1.10.8)**: Verified complete build pipeline (`env:check`, `db:validate`, `db:health`, `db:drift:check`, `verify:auth`, `verify:infra`, `verify:observability`, `lint`, `typecheck`, `test`, `build`, `test:e2e`). **Phase 1.10 formally ACCEPTED and FROZEN.**
 
-### 🟡 Phase 1.11 — Student Enrollment Lifecycle (IN PROGRESS → 1.11.7 COMPLETE)
+### 🟢 Phase 1.11 — Student Enrollment Lifecycle (ACCEPTED & FROZEN)
 
 - **Architecture & Domain Boundary (ADR-0014 & Phase 1.11.0)**: Defined the tenant-scoped student enrollment aggregate (`Enrollment`) bridging admitted students into active academic teaching batches with strict status lifecycle transitions (`pending` → `active` → `completed` / `withdrawn` / `cancelled`, soft `archived`). Enforced database composite uniqueness `UNIQUE(instituteId, studentId, batchId) WHERE status IN ('pending', 'active')` and pessimistic locking capacity validation.
 - **Domain Entity & Persistence (Phase 1.11.1 & 1.11.2)**: Implemented `EnrollmentEntity` with state machine transition guards and `PrismaEnrollmentRepository` with pessimistic row-level locking capacity checks and atomic batch transfer creation (`transferToBatch`).
@@ -461,6 +461,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Security & Multi-Tenant E2E Matrix (Phase 1.11.5)**: Developed Vitest security suite (`enrollment-security.test.ts`) and route test coverage verifying unauthenticated 401 guards, multi-tenant 404 barriers for cross-tenant lookups, duplicate active enrollment 409 conflict protection, and role-based access boundaries.
 - **Staff Enrollment UI (Phase 1.11.6)**: Built responsive, accessible staff Student Enrollment workspace (`/enrollments`) with desktop table and mobile card views, dynamic capability-driven lifecycle controls, status badge indicators, header search & filters, and accessible dialog modals for Add Enrollment, View Details, Batch Transfer, and Confirmation Dialogs.
 - **UX, Accessibility & Workflow Testing (Phase 1.11.7)**: Developed comprehensive Playwright E2E matrix (`enrollment-workflow.spec.ts`, 18/18 scenarios passed) verifying focus management, ARIA error attributes, Escape key dismissal, 375px mobile viewport rendering, batch transfers, status state transitions, and cross-tenant isolation boundaries.
+- **Acceptance Gate & Freeze (Phase 1.11.8)**: Verified complete pipeline (`env:check`, `db:validate`, `db:health`, `db:drift:check`, `verify:auth`, `verify:infra`, `verify:observability`, `lint`, `typecheck`, `test`, `build`, `test:e2e`). **Phase 1.11 formally ACCEPTED and FROZEN.**
 
 ## 4. Next Milestone Roadmap
 
@@ -549,7 +550,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.10.6:** Staff Academic Workspace UI 🟢 COMPLETED
     - **Phase 1.10.7:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
     - **Phase 1.10.8:** Phase 1.10 Acceptance Gate & Freeze 🟢 ACCEPTED & FROZEN
-  - **Phase 1.11:** Student Enrollment Lifecycle 🟡 (IN PROGRESS → 1.11.7 COMPLETE)
+  - **Phase 1.11:** Student Enrollment Lifecycle 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.11.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.11.1:** Enrollment Domain Entity & Value Objects 🟢 COMPLETED
     - **Phase 1.11.2:** Repository & PostgreSQL Persistence Layer 🟢 COMPLETED
@@ -558,7 +559,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.11.5:** Security & Tenant Isolation E2E Matrix 🟢 COMPLETED
     - **Phase 1.11.6:** Staff Enrollment UI 🟢 COMPLETED
     - **Phase 1.11.7:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
-    - **Phase 1.11.8:** Phase 1.11 Acceptance Gate & Freeze ⏳ UPCOMING
+    - **Phase 1.11.8:** Phase 1.11 Acceptance Gate & Freeze 🟢 ACCEPTED & FROZEN
   - **Phase 1.12:** Protected Identity APIs (`/api/v1/...`)
   - **Phase 1.13:** Staff UI & Onboarding Workflows
   - **Phase 1.14:** Multi-Tenant Cross-Tenant Access Security Hardening

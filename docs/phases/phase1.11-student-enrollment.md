@@ -1,6 +1,6 @@
 # Phase 1.11 — Student Enrollment Lifecycle Specification
 
-- **Status**: 🟢 **Phase 1.11.0 — ACCEPTED & FROZEN**
+- **Status**: 🟢 **Phase 1.11 — ACCEPTED & FROZEN**
 - **Date**: 2026-08-12
 - **Authors**: Senior Staff Architecture & Identity Team
 - **Deciders**: Product & Engineering Core
@@ -231,8 +231,8 @@ Phase 1.11.3 — Application Use Cases & Enrollment Lifecycle 🟢 (COMPLETE)
 Phase 1.11.4 — API Boundary & Presentation Validators 🟢 (COMPLETE)
     ↓
 Phase 1.11.5 — Security / Tenant Isolation E2E Matrix 🟢 (COMPLETE)
-Phase 1.11.6 — Staff Enrollment UI ⏳ (UPCOMING)
+Phase 1.11.6 — Staff Enrollment UI 🟢 (COMPLETE)
     ↓
-Phase 1.11.7 — UX / Accessibility / Workflow Testing ⏳ (UPCOMING)
-Phase 1.11.8 — Phase 1.11 Acceptance Gate ⏳ (UPCOMING)
+Phase 1.11.7 — UX / Accessibility / Workflow Testing 🟢 (COMPLETE)
+Phase 1.11.8 — Phase 1.11 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
 ```
