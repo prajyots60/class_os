@@ -123,8 +123,17 @@ PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
         ├── Phase 1.8.7 — Student Staff UI / Admission Feature ✅ COMPLETED
         ├── Phase 1.8.8 — UX, Accessibility & Admission Workflow Testing ✅ COMPLETED
         └── Phase 1.8.9 — Phase 1.8 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
-  └── Phase 1.9 — Guardian / Student Relationship Layer 🟡 IN PROGRESS
-        └── Phase 1.9.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+  └── Phase 1.9 — Guardian / Student Relationship Layer 🟢 COMPLETED & FROZEN
+        ├── Phase 1.9.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+        ├── Phase 1.9.1 — Relationship Domain Entity & Value Objects ✅ COMPLETED
+        ├── Phase 1.9.2 — Relationship Repository & PostgreSQL Persistence Layer ✅ COMPLETED
+        ├── Phase 1.9.3 — Relationship Application Use Cases ✅ COMPLETED
+        ├── Phase 1.9.4 — Guardian/Student Linking & Authorization ✅ COMPLETED
+        ├── Phase 1.9.5 — Relationship API Boundary & Validators ✅ COMPLETED
+        ├── Phase 1.9.6 — Relationship Security / Privacy E2E Matrix ✅ COMPLETED
+        ├── Phase 1.9.7 — Staff Guardian / Relationship UI ✅ COMPLETED
+        ├── Phase 1.9.8 — UX, Accessibility & Workflow Testing ✅ COMPLETED
+        └── Phase 1.9.9 — Phase 1.9 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
     ↓
 PHASE 3  Billing Module                               ⏳ UPCOMING
     ↓
@@ -400,6 +409,17 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Staff UI & CRM Feature (Phase 1.8.7)**: Built responsive, accessible staff Student workspace (`/students`) with table and mobile card views, dynamic capability-driven controls, header filters (search, admission status, standing status), and interactive dialog modals for Create, Edit, View Details, and State Transitions.
 - **UX & Accessibility Audit (Phase 1.8.8)**: Conducted 20-scenario Playwright E2E audit suite (`student-workflow.spec.ts`) verifying focus management, ARIA error attributes, Escape key dismissal, 375px mobile viewport rendering, and state transition integrity.
 - **Acceptance Gate (Phase 1.8.9)**: Verified complete build pipeline (`lint`, `typecheck`, `test`, `build`, `test:e2e`). **Phase 1.8 formally ACCEPTED and FROZEN.**
+
+### 🟢 Phase 1.9 — Guardian & Student Relationship Layer (ACCEPTED & FROZEN)
+
+- **Architecture & Domain Boundary (ADR-0012 & Phase 1.9.0)**: Defined the first-class tenant aggregate `InstituteParentStudent` establishing bidirectional relationships between tenant-local `InstituteParent` CRM records and `Student` aggregates. Enforced PostgreSQL partial unique constraint `(instituteId, studentId) WHERE is_primary = true AND status = 'active'` ensuring single primary guardian invariant per student.
+- **Domain Entity & Persistence (Phase 1.9.1 & 1.9.2)**: Implemented `InstituteParentStudentEntity` with value objects `GuardianRelationshipType` (father, mother, guardian, stepfather, stepmother, grandparent, sibling, other) and `GuardianRelationshipStatus` (active, archived), and built `PrismaInstituteParentStudentRepository` enforcing strict tenant-scoping across all query and mutation paths.
+- **Application Use Cases & Security (Phase 1.9.3 & 1.9.4)**: Implemented `LinkGuardianToStudentUseCase`, `UpdateGuardianRelationshipUseCase`, `SetPrimaryGuardianUseCase`, `ArchiveGuardianRelationshipUseCase`, `ListStudentGuardiansUseCase`, and `ListParentStudentsUseCase`. Registered capabilities (`guardian:read`, `guardian:create`, `guardian:update`, `guardian:archive`, `guardian:primary`) into capability registry (58 total capabilities).
+- **API Boundary & Validators (Phase 1.9.5)**: Built Next.js App Router handlers (`/api/institute/parent-student/[id]`, `/api/institute/parent-student/[id]/primary`, `/api/institute/parent-student/[id]/archive`, `/api/institute/students/[studentId]/guardians`, and `/api/institute/parents/[parentId]/students`) with strict Zod validators, HTTP 405 method guards, and identity spoofing rejection.
+- **Security E2E Matrix (Phase 1.9.6)**: Built Playwright E2E security suite (`guardian-student-security.spec.ts`) verifying unauthenticated 401 guards, tenant-safe 404 barriers, duplicate link 409 conflict responses, header/query parameter spoofing defenses, and anti-recursion DTO boundaries.
+- **Staff UI & Feature Components (Phase 1.9.7)**: Built responsive, accessible staff UI components in `apps/web/src/features/guardian/` (`StudentGuardiansList`, `AddGuardianModal`, `EditGuardianModal`, `PrimaryReplacementModal`, `ArchiveGuardianModal`, `GuardianPrimaryBadge`, `GuardianRelationshipStatusBadge`). Integrated bidirectional links into `StudentDetailsModal` and `InstituteParentDetailsModal`.
+- **UX & Accessibility Testing (Phase 1.9.8)**: Implemented Playwright E2E workflow suite (`guardian-student-workflow.spec.ts`, scenarios `REL-UI-01` through `20`) verifying keyboard navigation, focus restoration, ARIA attributes, Escape key handling, 375px mobile responsiveness, and primary replacement confirmation dialogues.
+- **Acceptance Gate & Freeze (Phase 1.9.9)**: Verified complete pipeline (`env:check`, `db:validate`, `db:health`, `db:drift:check`, `verify:auth`, `verify:infra`, `verify:observability`, `lint`, `typecheck`, `test`, `build`, `test:e2e`). **Phase 1.9 formally ACCEPTED and FROZEN.**
 
 ## 4. Next Milestone Roadmap
 
