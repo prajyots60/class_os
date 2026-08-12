@@ -148,12 +148,17 @@ export type V1ListStaffQueryInput = z.infer<typeof v1ListStaffQuerySchema>;
  */
 export const v1InviteStaffSchema = z
   .object({
-    userId: z.string().trim().min(1, 'User ID is required'),
+    email: z.string().trim().email('Invalid email address format').optional(),
+    userId: z.string().trim().optional(),
     role: z.enum(['owner', 'teacher', 'assistant'], {
       message: 'Staff role must be owner, teacher, or assistant',
     }),
   })
-  .strict();
+  .strict()
+  .refine((data) => Boolean(data.email || data.userId), {
+    message: 'Either email or userId must be provided.',
+    path: ['email'],
+  });
 
 export type V1InviteStaffInput = z.infer<typeof v1InviteStaffSchema>;
 

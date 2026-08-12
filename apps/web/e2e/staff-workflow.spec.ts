@@ -138,7 +138,7 @@ test.describe('Phase 1.13.4 & Phase 1.13.5 — Staff Workspace UI & Workflow Mat
     await tenant.ctx.dispose();
   });
 
-  test('STAFF-UI-05: Invite staff workflow with invalid user ID returns safe error', async ({ browser, playwright }) => {
+  test('STAFF-UI-05: Invite staff workflow with invalid email returns safe error', async ({ browser, playwright }) => {
     const tenant = await createTenantSession(playwright, 'ui05');
     const context = await browser.newContext({
       baseURL: tenant.baseURL,
@@ -150,7 +150,7 @@ test.describe('Phase 1.13.4 & Phase 1.13.5 — Staff Workspace UI & Workflow Mat
     await expect(page.locator('[data-testid="staff-invite-button"]')).toBeVisible({ timeout: 15000 });
 
     await page.locator('[data-testid="staff-invite-button"]').click();
-    await page.locator('[data-testid="staff-invite-user-id-input"]').fill('00000000-0000-4000-a000-000000000099');
+    await page.locator('[data-testid="staff-invite-user-id-input"]').fill('nonexistent_staff_email_999@test.com');
     await page.locator('[data-testid="staff-invite-submit-button"]').click();
 
     await expect(page.locator('[data-testid="staff-invite-error"]')).toBeVisible({ timeout: 15000 });

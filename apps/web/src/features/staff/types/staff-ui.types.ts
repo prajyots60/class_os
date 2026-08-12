@@ -63,7 +63,8 @@ export interface ApiActionResponse {
 }
 
 export interface InviteStaffFormValues {
-  userId: string;
+  email?: string;
+  userId?: string;
   role: StaffRole;
 }
 

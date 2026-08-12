@@ -33,14 +33,16 @@ export function StaffInviteModal({ isOpen, onClose, onInvite }: StaffInviteModal
     e.preventDefault();
     setErrorMsg(null);
 
-    if (!userId.trim()) {
-      setErrorMsg('User ID is required.');
+    const val = userId.trim();
+    if (!val) {
+      setErrorMsg('Staff email address or User ID is required.');
       return;
     }
 
     setIsSubmitting(true);
     try {
-      const res = await onInvite({ userId: userId.trim(), role });
+      const payload = val.includes('@') ? { email: val, role } : { userId: val, role };
+      const res = await onInvite(payload);
       if (res.success) {
         setUserId('');
         setRole('teacher');
@@ -80,7 +82,7 @@ export function StaffInviteModal({ isOpen, onClose, onInvite }: StaffInviteModal
             Invite Staff Member
           </h2>
           <p className="text-xs text-muted-foreground mt-1">
-            Assign a staff role (`owner`, `teacher`, `assistant`) to a user in your institute.
+            Assign a staff role (`owner`, `teacher`, `assistant`) to a registered user.
           </p>
         </div>
 
@@ -93,10 +95,10 @@ export function StaffInviteModal({ isOpen, onClose, onInvite }: StaffInviteModal
           )}
 
           <div className="space-y-1.5">
-            <Label htmlFor="staff-user-id">User ID *</Label>
+            <Label htmlFor="staff-user-id">Staff Email Address or User ID *</Label>
             <Input
               id="staff-user-id"
-              placeholder="Enter exact User UUID..."
+              placeholder="e.g. teacher@example.com"
               value={userId}
               onChange={(e) => setUserId(e.target.value)}
               disabled={isSubmitting}
