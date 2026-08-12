@@ -164,14 +164,14 @@ PHASE 1 — IDENTITY MODULE                             🚧 NOW ACTIVE
         ├── Phase 1.12.6 — Protected Identity API Integration / Staff Consumption ✅ COMPLETED
         ├── Phase 1.12.7 — API UX / Developer Experience / Documentation ✅ COMPLETED
         └── Phase 1.12.8 — Final Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
-  └── Phase 1.13 — Staff UI & Onboarding Workflows 🟢 IN PROGRESS
+  └── Phase 1.13 — Staff UI & Onboarding Workflows 🟢 COMPLETED & FROZEN
         ├── Phase 1.13.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
         ├── Phase 1.13.1 — Staff Domain & Application Layer ✅ COMPLETED
         ├── Phase 1.13.2 — Staff API & Validators ✅ COMPLETED
         ├── Phase 1.13.3 — Staff Security & E2E Matrix ✅ COMPLETED
         ├── Phase 1.13.4 — Staff Workspace UI Feature ✅ COMPLETED
         ├── Phase 1.13.5 — UX, Accessibility & Workflow Testing ✅ COMPLETED
-        └── Phase 1.13.6 — Phase 1.13 Acceptance Gate & Freeze ⏳ NOT STARTED
+        └── Phase 1.13.6 — Phase 1.13 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
     ↓
 PHASE 3  Billing Module                               ⏳ UPCOMING
     ↓
@@ -492,7 +492,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Developer Documentation & DX (Phase 1.12.7)**: Created canonical developer-facing API specification `docs/api/protected-identity-api-v1.md` documenting overview, authentication, envelopes, error taxonomy, cursor pagination, rate-limiting, tenant isolation, endpoint matrix, capability scoping, and `V1IdentityApiClient` SDK usage. **Phase 1.12.7 COMPLETED.**
 - **Final Acceptance Gate & Freeze (Phase 1.12.8)**: Verified 100% ADR-0015 compliance across architectural, security, RBAC, tenant isolation, rate-limit, privacy, SDK, DB integrity, and quality gates (`pnpm typecheck` 0 errors, `pnpm lint` 0 errors/warnings, `pnpm build` clean, 531 `@coaching-os/identity` tests + 351 `@coaching-os/web` tests passing). **Phase 1.12 formally ACCEPTED and FROZEN.**
 
-### 🟡 Phase 1.13 — Staff UI & Onboarding Workflows (IN PROGRESS)
+### 🟢 Phase 1.13 — Staff UI & Onboarding Workflows (ACCEPTED & FROZEN)
 
 - **Architecture & Contract Freeze (ADR-0016 & Phase 1.13.0)**: Established authoritative architecture freeze for Staff Management & Staff Onboarding Workflow. Defined `InstituteMembershipEntity` staff aggregate, capability assertions (`staff:read`, `staff:invite`, `staff:update`, `staff:remove`, `staff:role_change`), self-mutation defense rules, and `STAFF-SEC-01..24` threat matrix. **Phase 1.13.0 ACCEPTED & FROZEN.**
 - **Staff Domain & Application Layer (Phase 1.13.1)**: Implemented domain entity methods (`updateRole`, `activate`, `suspend`, `remove`), PostgreSQL repository adapter (`PrismaInstituteMembershipRepository`), and 6 application use cases (`ListStaffMembershipsUseCase`, `GetStaffMembershipUseCase`, `InviteStaffMemberUseCase`, `UpdateStaffRoleUseCase`, `SuspendStaffMemberUseCase`, `RemoveStaffMemberUseCase`). Covered by 545 passing unit tests. **Phase 1.13.1 COMPLETED.**
@@ -500,6 +500,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Staff Security Threat Matrix (Phase 1.13.3)**: Built `staff-security.test.ts` verifying all 24 security threat vectors (`STAFF-SEC-01..24` - unauthenticated block, RBAC capability enforcement, tenant isolation, rate limiting, self-demotion prevention, PII redaction). 24/24 threat tests passing cleanly. **Phase 1.13.3 COMPLETED.**
 - **Staff Workspace UI Feature (Phase 1.13.4)**: Built responsive client workspace (`/staff`) in `apps/web/src/features/staff/` featuring role/status filters, real-time search, registered email address resolution, desktop table, 375px mobile card view, loading skeleton, empty state, toast notifications, and 5 interactive modal dialogs (Invite, Details, Role Change, Status Change, Remove). Fixed React 19 infinite re-render loop across modal state synchronization. **Phase 1.13.4 COMPLETED.**
 - **UX, Accessibility & Workflow Matrix (Phase 1.13.5)**: Implemented automated Playwright E2E suites (`staff-workflow.spec.ts` & `staff-accessibility.spec.ts`, 10/10 scenarios passed) proving end-to-end multi-tenant staff management, WAI-ARIA `role="dialog"` modal semantics, Escape key dismissal, focus trap management, explicit filter `aria-label` attributes, and 375px mobile viewport rendering without horizontal scroll overflow. **Phase 1.13.5 COMPLETED.**
+- **Final Acceptance Gate & Freeze (Phase 1.13.6)**: Verified 100% ADR-0016 compliance across domain, RBAC, tenant isolation, security (`STAFF-SEC-01..24`), Playwright E2E matrix, accessibility, mobile layout, DB integrity, and quality gates (`pnpm typecheck` 0 errors, `pnpm lint` 0 errors/warnings, `pnpm build` clean, 87 unit tests + 10 E2E tests passing). **Phase 1.13 formally ACCEPTED and FROZEN.**
 
 ## 4. Next Milestone Roadmap
 
@@ -608,13 +609,13 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.12.6:** Protected Identity API Integration / Staff Consumption 🟢 COMPLETED
     - **Phase 1.12.7:** API UX / Developer Experience / Documentation 🟢 COMPLETED
     - **Phase 1.12.8:** Final Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
-  - **Phase 1.13:** Staff UI & Onboarding Workflows 🟡 (IN PROGRESS)
+  - **Phase 1.13:** Staff UI & Onboarding Workflows 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.13.0:** Staff Management Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     - **Phase 1.13.1:** Staff Management Domain & Application Layer 🟢 COMPLETED
     - **Phase 1.13.2:** Staff Management API & Validators 🟢 COMPLETED
     - **Phase 1.13.3:** Staff Management Security & E2E Matrix 🟢 COMPLETED
     - **Phase 1.13.4:** Staff Workspace UI Feature 🟢 COMPLETED
     - **Phase 1.13.5:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
-    - **Phase 1.13.6:** Phase 1.13 Acceptance Gate & Freeze ⏳ NOT STARTED
+    - **Phase 1.13.6:** Phase 1.13 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
   - **Phase 1.14:** Multi-Tenant Cross-Tenant Access Security Hardening
   - **Phase 1.15:** Phase 1 Acceptance Gate

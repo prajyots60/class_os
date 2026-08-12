@@ -11,11 +11,11 @@ async function registerUserWithRetry(
   user: { email: string; password: string; name: string },
 ) {
   let attempts = 0;
-  while (attempts < 6) {
+  while (attempts < 10) {
     const res = await ctx.post('/api/auth/sign-up/email', { data: user });
     if (res.status() === 429) {
       attempts++;
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 3500));
       continue;
     }
     return res;
