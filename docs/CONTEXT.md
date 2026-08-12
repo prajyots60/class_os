@@ -467,17 +467,17 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.8.6:** Student Security / Tenant E2E Matrix ✅ COMPLETED
     - **Phase 1.8.7:** Student Staff UI / Admission Feature ✅ COMPLETED
     - **Phase 1.8.8:** UX, Accessibility & Admission Workflow Testing ✅ COMPLETED
-  - **Phase 1.9:** Guardian & Student Links 🟡 (IN PROGRESS)
+  - **Phase 1.9:** Guardian & Student Links 🟢 (COMPLETED & FROZEN)
     - **Phase 1.9.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.9.1:** Relationship Domain Entity & Value Objects ✅ COMPLETED
-    - **Phase 1.9.2:** Relationship Repository & PostgreSQL Persistence ✅ COMPLETED
-    - **Phase 1.9.3:** Relationship Application Use Cases ✅ COMPLETED
-    - **Phase 1.9.4:** Guardian/Student Linking & Authorization ✅ COMPLETED
-    - **Phase 1.9.5:** Relationship API Boundary & Validators ✅ COMPLETED
-    - **Phase 1.9.6:** Relationship Security / Privacy E2E Matrix ✅ COMPLETED
-    - **Phase 1.9.7:** Staff Guardian/Relationship UI ✅ COMPLETED
-    - **Phase 1.9.8:** UX, Accessibility & Workflow Testing ✅ COMPLETED
-    - **Phase 1.9.9:** Phase 1.9 Acceptance Gate
+    - **Phase 1.9.1:** Relationship Domain Entity & Value Objects 🟢 COMPLETED
+    - **Phase 1.9.2:** Relationship Repository & PostgreSQL Persistence 🟢 COMPLETED
+    - **Phase 1.9.3:** Relationship Application Use Cases 🟢 COMPLETED
+    - **Phase 1.9.4:** Guardian/Student Linking & Authorization 🟢 COMPLETED
+    - **Phase 1.9.5:** Relationship API Boundary & Validators 🟢 COMPLETED
+    - **Phase 1.9.6:** Relationship Security / Privacy E2E Matrix 🟢 COMPLETED
+    - **Phase 1.9.7:** Staff Guardian/Relationship UI 🟢 COMPLETED
+    - **Phase 1.9.8:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
+    - **Phase 1.9.9:** Phase 1.9 Acceptance Gate 🟢 ACCEPTED & FROZEN
   - **Phase 1.10:** Academic Hierarchy (Programs, Subjects, Batches)
   - **Phase 1.11:** Student Enrollment Lifecycle
   - **Phase 1.12:** Protected Identity APIs (`/api/v1/...`)
