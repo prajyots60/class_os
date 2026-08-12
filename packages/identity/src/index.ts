@@ -14,6 +14,7 @@ export * from './domain/entities/program.entity';
 export * from './domain/entities/subject.entity';
 export * from './domain/entities/program-subject.entity';
 export * from './domain/entities/batch.entity';
+export * from './domain/entities/enrollment.entity';
 
 export * from './domain/value-objects/phone-number.vo';
 export * from './domain/value-objects/date-of-birth.vo';
@@ -21,6 +22,7 @@ export * from './domain/value-objects/guardian-relationship-type.vo';
 export * from './domain/value-objects/program-code.vo';
 export * from './domain/value-objects/subject-code.vo';
 export * from './domain/value-objects/batch-code.vo';
+export * from './domain/value-objects/enrollment-status.vo';
 
 export * from './domain/repositories/institute.repository';
 export * from './domain/repositories/institute-membership.repository';
@@ -33,6 +35,7 @@ export * from './domain/repositories/program.repository';
 export * from './domain/repositories/subject.repository';
 export * from './domain/repositories/program-subject.repository';
 export * from './domain/repositories/batch.repository';
+export * from './domain/repositories/enrollment.repository';
 
 // Application Use Cases
 export * from './application/dto/parent-identity.dto';
