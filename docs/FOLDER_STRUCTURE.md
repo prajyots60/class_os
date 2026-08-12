@@ -270,7 +270,8 @@ docs/
 │   ├── 0009-global-parent-identity-architecture.md
 │   ├── 0010-institute-parent-crm-architecture.md
 │   ├── 0011-student-admission-profile-architecture.md
-│   └── 0012-guardian-student-relationship-architecture.md
+│   ├── 0012-guardian-student-relationship-architecture.md
+│   └── 0013-academic-hierarchy-architecture.md
 ├── phases/                       ← Authoritative Phase Contracts & Architecture Freezes
 │   ├── phase0.12-public-auth-ux.md
 │   ├── phase0.12.2-landing-page.md
@@ -283,7 +284,8 @@ docs/
 │   ├── phase1.6-security-matrix.md
 │   ├── phase1.7-instituteparent-crm.md  ← Phase 1.7 Tenant Parent CRM Layer Freeze
 │   ├── phase1.8-student-admission-profile.md ← Phase 1.8 Student Admission & Profile Freeze
-│   └── phase1.9-guardian-student-relationship.md ← Phase 1.9 Guardian & Student Relationship Layer Freeze
+│   ├── phase1.9-guardian-student-relationship.md ← Phase 1.9 Guardian & Student Relationship Layer Freeze
+│   └── phase1.10-academic-hierarchy.md ← Phase 1.10 Academic Hierarchy Layer Freeze
 ├── BACKLOG.md                    ← Product backlog & future phase items
 ├── CONTEXT.md                    ← Active milestone tracker & phase history
 ├── ENGINEERING_PLAYBOOK.md       ← Monorepo development guidelines & rules
