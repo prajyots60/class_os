@@ -284,7 +284,8 @@ docs/
 │   ├── 0011-student-admission-profile-architecture.md
 │   ├── 0012-guardian-student-relationship-architecture.md
 │   ├── 0013-academic-hierarchy-architecture.md
-│   └── 0014-student-enrollment-lifecycle-architecture.md
+│   ├── 0014-student-enrollment-lifecycle-architecture.md
+│   └── 0015-protected-identity-apis-architecture.md
 ├── phases/                       ← Authoritative Phase Contracts & Architecture Freezes
 │   ├── phase0.12-public-auth-ux.md
 │   ├── phase0.12.2-landing-page.md
@@ -299,7 +300,8 @@ docs/
 │   ├── phase1.8-student-admission-profile.md ← Phase 1.8 Student Admission & Profile Freeze
 │   ├── phase1.9-guardian-student-relationship.md ← Phase 1.9 Guardian & Student Relationship Layer Freeze
 │   ├── phase1.10-academic-hierarchy.md ← Phase 1.10 Academic Hierarchy Layer Freeze
-│   └── phase1.11-student-enrollment.md ← Phase 1.11 Student Enrollment Lifecycle Freeze
+│   ├── phase1.11-student-enrollment.md ← Phase 1.11 Student Enrollment Lifecycle Freeze
+│   └── phase1.12-protected-identity-apis.md ← Phase 1.12 Protected Identity APIs Freeze
 ├── BACKLOG.md                    ← Product backlog & future phase items
 ├── CONTEXT.md                    ← Active milestone tracker & phase history
 ├── ENGINEERING_PLAYBOOK.md       ← Monorepo development guidelines & rules

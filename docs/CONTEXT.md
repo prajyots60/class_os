@@ -463,6 +463,10 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **UX, Accessibility & Workflow Testing (Phase 1.11.7)**: Developed comprehensive Playwright E2E matrix (`enrollment-workflow.spec.ts`, 18/18 scenarios passed) verifying focus management, ARIA error attributes, Escape key dismissal, 375px mobile viewport rendering, batch transfers, status state transitions, and cross-tenant isolation boundaries.
 - **Acceptance Gate & Freeze (Phase 1.11.8)**: Verified complete pipeline (`env:check`, `db:validate`, `db:health`, `db:drift:check`, `verify:auth`, `verify:infra`, `verify:observability`, `lint`, `typecheck`, `test`, `build`, `test:e2e`). **Phase 1.11 formally ACCEPTED and FROZEN.**
 
+### 🟡 Phase 1.12 — Protected Identity APIs (`/api/v1/...`) (IN PROGRESS → 1.12.0 FROZEN)
+
+- **Architecture & Contract Freeze (ADR-0015 & Phase 1.12.0)**: Established authoritative architecture and contract freeze for `/api/v1/...`. Defined distinct boundary separating internal staff UI routes (`/api/institute/...`) from protected versioned integration APIs (`/api/v1/...`). Enforced server-authoritative tenant resolution (`ResolveInstituteMembershipUseCase`), capability-based RBAC, path versioning, standardized JSON envelopes (`data`, `pagination`, `meta`), cursor-based pagination, rate-limiting policy (100 reads / 30 mutations per minute), error taxonomy (`UNAUTHENTICATED`, `FORBIDDEN`, `NOT_FOUND`, `VALIDATION_ERROR`, `CONFLICT`, `INVALID_STATE_TRANSITION`, `RATE_LIMITED`, `INTERNAL_ERROR`), PII redaction, and `IDENTITY-01` to `IDENTITY-24` security threat matrix. **Phase 1.12.0 ACCEPTED & FROZEN.**
+
 ## 4. Next Milestone Roadmap
 
 
@@ -560,7 +564,16 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 1.11.6:** Staff Enrollment UI 🟢 COMPLETED
     - **Phase 1.11.7:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
     - **Phase 1.11.8:** Phase 1.11 Acceptance Gate & Freeze 🟢 ACCEPTED & FROZEN
-  - **Phase 1.12:** Protected Identity APIs (`/api/v1/...`)
+  - **Phase 1.12:** Protected Identity APIs (`/api/v1/...`) 🟡 (IN PROGRESS → 1.12.0 FROZEN)
+    - **Phase 1.12.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.12.1:** Protected Identity API Domain/Application Contracts ⏳ UPCOMING
+    - **Phase 1.12.2:** API Infrastructure & Persistence Adapters ⏳ UPCOMING
+    - **Phase 1.12.3:** API Boundary & Presentation Validators ⏳ UPCOMING
+    - **Phase 1.12.4:** Authentication, Authorization & Tenant Isolation ⏳ UPCOMING
+    - **Phase 1.12.5:** Security & Adversarial E2E Audit ⏳ UPCOMING
+    - **Phase 1.12.6:** Protected Identity API Integration / Staff Consumption ⏳ UPCOMING
+    - **Phase 1.12.7:** API UX / Developer Experience / Documentation ⏳ UPCOMING
+    - **Phase 1.12.8:** Final Acceptance Gate & Freeze ⏳ UPCOMING
   - **Phase 1.13:** Staff UI & Onboarding Workflows
   - **Phase 1.14:** Multi-Tenant Cross-Tenant Access Security Hardening
   - **Phase 1.15:** Phase 1 Acceptance Gate
