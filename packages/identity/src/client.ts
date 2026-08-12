@@ -26,6 +26,10 @@ export type {
   ParentStudentSummaryDTO,
 } from './application/dto/institute-parent-student.dto';
 
+// Protected API v1 Client SDK Exports
+export * from './application/dto/api-v1-response.dto';
+export * from './client/v1-identity-api-client';
+
 // Validators
 export * from './presentation/validators/institute.validator';
 export * from './presentation/validators/membership.validator';

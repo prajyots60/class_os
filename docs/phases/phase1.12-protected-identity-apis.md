@@ -174,8 +174,8 @@ Phase 1.12.2 — API Infrastructure & Persistence Adapters 🟢 (COMPLETED)
 Phase 1.12.3 — API Boundary & Presentation Validators 🟢 (COMPLETED)
 Phase 1.12.4 — Authentication, Authorization & Tenant Isolation 🟢 (COMPLETED)
     ↓
-Phase 1.12.5 — Security & Adversarial E2E Audit ⏳ (UPCOMING)
-Phase 1.12.6 — Protected Identity API Integration / Staff Consumption ⏳ (UPCOMING)
+Phase 1.12.5 — Security & Adversarial E2E Audit 🟢 (COMPLETED)
+Phase 1.12.6 — Protected Identity API Integration / Staff Consumption 🟢 (COMPLETED)
     ↓
 Phase 1.12.7 — API UX / Developer Experience / Documentation ⏳ (UPCOMING)
 Phase 1.12.8 — Final Acceptance Gate & Freeze ⏳ (UPCOMING)
@@ -238,3 +238,18 @@ Phase 1.12.8 — Final Acceptance Gate & Freeze ⏳ (UPCOMING)
   - TypeCheck: 13/13 packages ✅
   - Lint: 0 errors ✅
   - Build: all 10 `/api/v1/*` routes compiled as dynamic server routes ✅
+
+### Phase 1.12.5 & 1.12.6 Implementation Summary (2026-08-12)
+
+- **Phase 1.12.5 Security Audit Execution (`v1-security.test.ts`)**:
+  - Validated 24/24 threat vectors (`IDENTITY-01` through `IDENTITY-24`) defined in ADR-0015.
+  - Hardened pre-auth rate-limiting assertions in `withV1ReadGuard` and `withV1MutationGuard` to protect DB connection pools.
+  - Configured multi-dimensional rate-limiter bucket keys (`user:<userId>:ip:<ip>`).
+  - Standardized cross-tenant lookup error shapes (`404 NOT_FOUND`) to prevent ID enumeration.
+
+- **Phase 1.12.6 Staff Integration Adapter (`V1IdentityApiClient`)**:
+  - Created `packages/identity/src/client/v1-identity-api-client.ts` client SDK adapter with typed namespaces (`students`, `guardians`, `staff`, `enrollments`).
+  - Created `packages/identity/src/application/dto/api-v1-response.dto.ts` for ADR-0015 response envelope unwrapping and `V1ApiError` normalization.
+  - Created `apps/web/src/lib/v1-api-client.ts` singleton instance with `same-origin` credential forwarding for staff web application views.
+  - Verified client consumption & error unwrapping with unit test suite (`v1-identity-api-client.test.ts`) and web integration test suite (`v1-api-client.test.ts`).
+
