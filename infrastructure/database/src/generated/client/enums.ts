@@ -106,6 +106,8 @@ export const EnrollmentStatus = {
   pending: 'pending',
   active: 'active',
   completed: 'completed',
+  withdrawn: 'withdrawn',
+  transferred: 'transferred',
   cancelled: 'cancelled'
 } as const
 

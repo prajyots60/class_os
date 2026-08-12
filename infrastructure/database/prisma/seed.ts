@@ -259,7 +259,7 @@ export async function main() {
       instituteId: institute.id,
       studentId: student1.id,
       batchId: batchA.id,
-      joinedOn: new Date('2025-04-01'),
+      enrolledAt: new Date('2025-04-01'),
       status: 'active',
     },
   });
@@ -272,7 +272,7 @@ export async function main() {
       instituteId: institute.id,
       studentId: student1.id,
       batchId: batchB.id,
-      joinedOn: new Date('2025-04-01'),
+      enrolledAt: new Date('2025-04-01'),
       status: 'active',
     },
   });
@@ -285,7 +285,7 @@ export async function main() {
       instituteId: institute.id,
       studentId: student2.id,
       batchId: batchA.id,
-      joinedOn: new Date('2025-04-01'),
+      enrolledAt: new Date('2025-04-01'),
       status: 'active',
     },
   });

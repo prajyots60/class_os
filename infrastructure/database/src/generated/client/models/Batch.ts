@@ -295,6 +295,7 @@ export type BatchWhereInput = {
   schedules?: Prisma.ScheduleListRelationFilter
   batchSessions?: Prisma.BatchSessionListRelationFilter
   enrollments?: Prisma.EnrollmentListRelationFilter
+  transferredEnrollments?: Prisma.EnrollmentListRelationFilter
   homework?: Prisma.HomeworkListRelationFilter
   tests?: Prisma.TestListRelationFilter
   announcements?: Prisma.AnnouncementListRelationFilter
@@ -322,6 +323,7 @@ export type BatchOrderByWithRelationInput = {
   schedules?: Prisma.ScheduleOrderByRelationAggregateInput
   batchSessions?: Prisma.BatchSessionOrderByRelationAggregateInput
   enrollments?: Prisma.EnrollmentOrderByRelationAggregateInput
+  transferredEnrollments?: Prisma.EnrollmentOrderByRelationAggregateInput
   homework?: Prisma.HomeworkOrderByRelationAggregateInput
   tests?: Prisma.TestOrderByRelationAggregateInput
   announcements?: Prisma.AnnouncementOrderByRelationAggregateInput
@@ -354,6 +356,7 @@ export type BatchWhereUniqueInput = Prisma.AtLeast<{
   schedules?: Prisma.ScheduleListRelationFilter
   batchSessions?: Prisma.BatchSessionListRelationFilter
   enrollments?: Prisma.EnrollmentListRelationFilter
+  transferredEnrollments?: Prisma.EnrollmentListRelationFilter
   homework?: Prisma.HomeworkListRelationFilter
   tests?: Prisma.TestListRelationFilter
   announcements?: Prisma.AnnouncementListRelationFilter
@@ -419,6 +422,7 @@ export type BatchCreateInput = {
   schedules?: Prisma.ScheduleCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutBatchInput
@@ -442,6 +446,7 @@ export type BatchUncheckedCreateInput = {
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkUncheckedCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestUncheckedCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutBatchInput
@@ -465,6 +470,7 @@ export type BatchUpdateInput = {
   schedules?: Prisma.ScheduleUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutBatchNestedInput
@@ -488,6 +494,7 @@ export type BatchUncheckedUpdateInput = {
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUncheckedUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUncheckedUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutBatchNestedInput
@@ -816,12 +823,28 @@ export type BatchCreateNestedOneWithoutEnrollmentsInput = {
   connect?: Prisma.BatchWhereUniqueInput
 }
 
+export type BatchCreateNestedOneWithoutTransferredEnrollmentsInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutTransferredEnrollmentsInput, Prisma.BatchUncheckedCreateWithoutTransferredEnrollmentsInput>
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutTransferredEnrollmentsInput
+  connect?: Prisma.BatchWhereUniqueInput
+}
+
 export type BatchUpdateOneRequiredWithoutEnrollmentsNestedInput = {
   create?: Prisma.XOR<Prisma.BatchCreateWithoutEnrollmentsInput, Prisma.BatchUncheckedCreateWithoutEnrollmentsInput>
   connectOrCreate?: Prisma.BatchCreateOrConnectWithoutEnrollmentsInput
   upsert?: Prisma.BatchUpsertWithoutEnrollmentsInput
   connect?: Prisma.BatchWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.BatchUpdateToOneWithWhereWithoutEnrollmentsInput, Prisma.BatchUpdateWithoutEnrollmentsInput>, Prisma.BatchUncheckedUpdateWithoutEnrollmentsInput>
+}
+
+export type BatchUpdateOneWithoutTransferredEnrollmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.BatchCreateWithoutTransferredEnrollmentsInput, Prisma.BatchUncheckedCreateWithoutTransferredEnrollmentsInput>
+  connectOrCreate?: Prisma.BatchCreateOrConnectWithoutTransferredEnrollmentsInput
+  upsert?: Prisma.BatchUpsertWithoutTransferredEnrollmentsInput
+  disconnect?: Prisma.BatchWhereInput | boolean
+  delete?: Prisma.BatchWhereInput | boolean
+  connect?: Prisma.BatchWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BatchUpdateToOneWithWhereWithoutTransferredEnrollmentsInput, Prisma.BatchUpdateWithoutTransferredEnrollmentsInput>, Prisma.BatchUncheckedUpdateWithoutTransferredEnrollmentsInput>
 }
 
 export type BatchCreateNestedOneWithoutSchedulesInput = {
@@ -913,6 +936,7 @@ export type BatchCreateWithoutTeacherInput = {
   schedules?: Prisma.ScheduleCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutBatchInput
@@ -935,6 +959,7 @@ export type BatchUncheckedCreateWithoutTeacherInput = {
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkUncheckedCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestUncheckedCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutBatchInput
@@ -1003,6 +1028,7 @@ export type BatchCreateWithoutInstituteInput = {
   schedules?: Prisma.ScheduleCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutBatchInput
@@ -1025,6 +1051,7 @@ export type BatchUncheckedCreateWithoutInstituteInput = {
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkUncheckedCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestUncheckedCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutBatchInput
@@ -1073,6 +1100,7 @@ export type BatchCreateWithoutProgramInput = {
   schedules?: Prisma.ScheduleCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutBatchInput
@@ -1095,6 +1123,7 @@ export type BatchUncheckedCreateWithoutProgramInput = {
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkUncheckedCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestUncheckedCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutBatchInput
@@ -1143,6 +1172,7 @@ export type BatchCreateWithoutSubjectInput = {
   schedules?: Prisma.ScheduleCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutBatchInput
@@ -1165,6 +1195,7 @@ export type BatchUncheckedCreateWithoutSubjectInput = {
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkUncheckedCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestUncheckedCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutBatchInput
@@ -1213,6 +1244,7 @@ export type BatchCreateWithoutEnrollmentsInput = {
   teacher?: Prisma.InstituteMembershipCreateNestedOneWithoutAssignedBatchesInput
   schedules?: Prisma.ScheduleCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutBatchInput
@@ -1235,6 +1267,7 @@ export type BatchUncheckedCreateWithoutEnrollmentsInput = {
   deletedAt?: Date | string | null
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkUncheckedCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestUncheckedCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutBatchInput
@@ -1243,6 +1276,57 @@ export type BatchUncheckedCreateWithoutEnrollmentsInput = {
 export type BatchCreateOrConnectWithoutEnrollmentsInput = {
   where: Prisma.BatchWhereUniqueInput
   create: Prisma.XOR<Prisma.BatchCreateWithoutEnrollmentsInput, Prisma.BatchUncheckedCreateWithoutEnrollmentsInput>
+}
+
+export type BatchCreateWithoutTransferredEnrollmentsInput = {
+  id?: string
+  name: string
+  code: string
+  capacity?: number | null
+  status?: $Enums.BatchStatus
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  institute: Prisma.InstituteCreateNestedOneWithoutBatchesInput
+  subject: Prisma.SubjectCreateNestedOneWithoutBatchesInput
+  program?: Prisma.ProgramCreateNestedOneWithoutBatchesInput
+  teacher?: Prisma.InstituteMembershipCreateNestedOneWithoutAssignedBatchesInput
+  schedules?: Prisma.ScheduleCreateNestedManyWithoutBatchInput
+  batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutBatchInput
+  enrollments?: Prisma.EnrollmentCreateNestedManyWithoutBatchInput
+  homework?: Prisma.HomeworkCreateNestedManyWithoutBatchInput
+  tests?: Prisma.TestCreateNestedManyWithoutBatchInput
+  announcements?: Prisma.AnnouncementCreateNestedManyWithoutBatchInput
+}
+
+export type BatchUncheckedCreateWithoutTransferredEnrollmentsInput = {
+  id?: string
+  instituteId: string
+  subjectId: string
+  programId?: string | null
+  teacherId?: string | null
+  name: string
+  code: string
+  capacity?: number | null
+  status?: $Enums.BatchStatus
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutBatchInput
+  batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutBatchInput
+  enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutBatchInput
+  homework?: Prisma.HomeworkUncheckedCreateNestedManyWithoutBatchInput
+  tests?: Prisma.TestUncheckedCreateNestedManyWithoutBatchInput
+  announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutBatchInput
+}
+
+export type BatchCreateOrConnectWithoutTransferredEnrollmentsInput = {
+  where: Prisma.BatchWhereUniqueInput
+  create: Prisma.XOR<Prisma.BatchCreateWithoutTransferredEnrollmentsInput, Prisma.BatchUncheckedCreateWithoutTransferredEnrollmentsInput>
 }
 
 export type BatchUpsertWithoutEnrollmentsInput = {
@@ -1273,6 +1357,7 @@ export type BatchUpdateWithoutEnrollmentsInput = {
   teacher?: Prisma.InstituteMembershipUpdateOneWithoutAssignedBatchesNestedInput
   schedules?: Prisma.ScheduleUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutBatchNestedInput
@@ -1295,6 +1380,64 @@ export type BatchUncheckedUpdateWithoutEnrollmentsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToBatchNestedInput
+  homework?: Prisma.HomeworkUncheckedUpdateManyWithoutBatchNestedInput
+  tests?: Prisma.TestUncheckedUpdateManyWithoutBatchNestedInput
+  announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutBatchNestedInput
+}
+
+export type BatchUpsertWithoutTransferredEnrollmentsInput = {
+  update: Prisma.XOR<Prisma.BatchUpdateWithoutTransferredEnrollmentsInput, Prisma.BatchUncheckedUpdateWithoutTransferredEnrollmentsInput>
+  create: Prisma.XOR<Prisma.BatchCreateWithoutTransferredEnrollmentsInput, Prisma.BatchUncheckedCreateWithoutTransferredEnrollmentsInput>
+  where?: Prisma.BatchWhereInput
+}
+
+export type BatchUpdateToOneWithWhereWithoutTransferredEnrollmentsInput = {
+  where?: Prisma.BatchWhereInput
+  data: Prisma.XOR<Prisma.BatchUpdateWithoutTransferredEnrollmentsInput, Prisma.BatchUncheckedUpdateWithoutTransferredEnrollmentsInput>
+}
+
+export type BatchUpdateWithoutTransferredEnrollmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  institute?: Prisma.InstituteUpdateOneRequiredWithoutBatchesNestedInput
+  subject?: Prisma.SubjectUpdateOneRequiredWithoutBatchesNestedInput
+  program?: Prisma.ProgramUpdateOneWithoutBatchesNestedInput
+  teacher?: Prisma.InstituteMembershipUpdateOneWithoutAssignedBatchesNestedInput
+  schedules?: Prisma.ScheduleUpdateManyWithoutBatchNestedInput
+  batchSessions?: Prisma.BatchSessionUpdateManyWithoutBatchNestedInput
+  enrollments?: Prisma.EnrollmentUpdateManyWithoutBatchNestedInput
+  homework?: Prisma.HomeworkUpdateManyWithoutBatchNestedInput
+  tests?: Prisma.TestUpdateManyWithoutBatchNestedInput
+  announcements?: Prisma.AnnouncementUpdateManyWithoutBatchNestedInput
+}
+
+export type BatchUncheckedUpdateWithoutTransferredEnrollmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  instituteId?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  programId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  capacity?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumBatchStatusFieldUpdateOperationsInput | $Enums.BatchStatus
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutBatchNestedInput
+  batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutBatchNestedInput
+  enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutBatchNestedInput
   homework?: Prisma.HomeworkUncheckedUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUncheckedUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutBatchNestedInput
@@ -1317,6 +1460,7 @@ export type BatchCreateWithoutSchedulesInput = {
   teacher?: Prisma.InstituteMembershipCreateNestedOneWithoutAssignedBatchesInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutBatchInput
@@ -1339,6 +1483,7 @@ export type BatchUncheckedCreateWithoutSchedulesInput = {
   deletedAt?: Date | string | null
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkUncheckedCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestUncheckedCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutBatchInput
@@ -1377,6 +1522,7 @@ export type BatchUpdateWithoutSchedulesInput = {
   teacher?: Prisma.InstituteMembershipUpdateOneWithoutAssignedBatchesNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutBatchNestedInput
@@ -1399,6 +1545,7 @@ export type BatchUncheckedUpdateWithoutSchedulesInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUncheckedUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUncheckedUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutBatchNestedInput
@@ -1421,6 +1568,7 @@ export type BatchCreateWithoutBatchSessionsInput = {
   teacher?: Prisma.InstituteMembershipCreateNestedOneWithoutAssignedBatchesInput
   schedules?: Prisma.ScheduleCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutBatchInput
@@ -1443,6 +1591,7 @@ export type BatchUncheckedCreateWithoutBatchSessionsInput = {
   deletedAt?: Date | string | null
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkUncheckedCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestUncheckedCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutBatchInput
@@ -1481,6 +1630,7 @@ export type BatchUpdateWithoutBatchSessionsInput = {
   teacher?: Prisma.InstituteMembershipUpdateOneWithoutAssignedBatchesNestedInput
   schedules?: Prisma.ScheduleUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutBatchNestedInput
@@ -1503,6 +1653,7 @@ export type BatchUncheckedUpdateWithoutBatchSessionsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUncheckedUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUncheckedUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutBatchNestedInput
@@ -1526,6 +1677,7 @@ export type BatchCreateWithoutHomeworkInput = {
   schedules?: Prisma.ScheduleCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToBatchInput
   tests?: Prisma.TestCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutBatchInput
 }
@@ -1548,6 +1700,7 @@ export type BatchUncheckedCreateWithoutHomeworkInput = {
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToBatchInput
   tests?: Prisma.TestUncheckedCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutBatchInput
 }
@@ -1586,6 +1739,7 @@ export type BatchUpdateWithoutHomeworkInput = {
   schedules?: Prisma.ScheduleUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToBatchNestedInput
   tests?: Prisma.TestUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutBatchNestedInput
 }
@@ -1608,6 +1762,7 @@ export type BatchUncheckedUpdateWithoutHomeworkInput = {
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToBatchNestedInput
   tests?: Prisma.TestUncheckedUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutBatchNestedInput
 }
@@ -1630,6 +1785,7 @@ export type BatchCreateWithoutTestsInput = {
   schedules?: Prisma.ScheduleCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutBatchInput
 }
@@ -1652,6 +1808,7 @@ export type BatchUncheckedCreateWithoutTestsInput = {
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkUncheckedCreateNestedManyWithoutBatchInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutBatchInput
 }
@@ -1690,6 +1847,7 @@ export type BatchUpdateWithoutTestsInput = {
   schedules?: Prisma.ScheduleUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutBatchNestedInput
 }
@@ -1712,6 +1870,7 @@ export type BatchUncheckedUpdateWithoutTestsInput = {
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUncheckedUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutBatchNestedInput
 }
@@ -1734,6 +1893,7 @@ export type BatchCreateWithoutAnnouncementsInput = {
   schedules?: Prisma.ScheduleCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestCreateNestedManyWithoutBatchInput
 }
@@ -1756,6 +1916,7 @@ export type BatchUncheckedCreateWithoutAnnouncementsInput = {
   schedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutBatchInput
   batchSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutBatchInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutBatchInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToBatchInput
   homework?: Prisma.HomeworkUncheckedCreateNestedManyWithoutBatchInput
   tests?: Prisma.TestUncheckedCreateNestedManyWithoutBatchInput
 }
@@ -1794,6 +1955,7 @@ export type BatchUpdateWithoutAnnouncementsInput = {
   schedules?: Prisma.ScheduleUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUpdateManyWithoutBatchNestedInput
 }
@@ -1816,6 +1978,7 @@ export type BatchUncheckedUpdateWithoutAnnouncementsInput = {
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUncheckedUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUncheckedUpdateManyWithoutBatchNestedInput
 }
@@ -1853,6 +2016,7 @@ export type BatchUpdateWithoutTeacherInput = {
   schedules?: Prisma.ScheduleUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutBatchNestedInput
@@ -1875,6 +2039,7 @@ export type BatchUncheckedUpdateWithoutTeacherInput = {
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUncheckedUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUncheckedUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutBatchNestedInput
@@ -1929,6 +2094,7 @@ export type BatchUpdateWithoutInstituteInput = {
   schedules?: Prisma.ScheduleUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutBatchNestedInput
@@ -1951,6 +2117,7 @@ export type BatchUncheckedUpdateWithoutInstituteInput = {
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUncheckedUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUncheckedUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutBatchNestedInput
@@ -2005,6 +2172,7 @@ export type BatchUpdateWithoutProgramInput = {
   schedules?: Prisma.ScheduleUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutBatchNestedInput
@@ -2027,6 +2195,7 @@ export type BatchUncheckedUpdateWithoutProgramInput = {
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUncheckedUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUncheckedUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutBatchNestedInput
@@ -2081,6 +2250,7 @@ export type BatchUpdateWithoutSubjectInput = {
   schedules?: Prisma.ScheduleUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutBatchNestedInput
@@ -2103,6 +2273,7 @@ export type BatchUncheckedUpdateWithoutSubjectInput = {
   schedules?: Prisma.ScheduleUncheckedUpdateManyWithoutBatchNestedInput
   batchSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutBatchNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutBatchNestedInput
+  transferredEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToBatchNestedInput
   homework?: Prisma.HomeworkUncheckedUpdateManyWithoutBatchNestedInput
   tests?: Prisma.TestUncheckedUpdateManyWithoutBatchNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutBatchNestedInput
@@ -2133,6 +2304,7 @@ export type BatchCountOutputType = {
   schedules: number
   batchSessions: number
   enrollments: number
+  transferredEnrollments: number
   homework: number
   tests: number
   announcements: number
@@ -2142,6 +2314,7 @@ export type BatchCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   schedules?: boolean | BatchCountOutputTypeCountSchedulesArgs
   batchSessions?: boolean | BatchCountOutputTypeCountBatchSessionsArgs
   enrollments?: boolean | BatchCountOutputTypeCountEnrollmentsArgs
+  transferredEnrollments?: boolean | BatchCountOutputTypeCountTransferredEnrollmentsArgs
   homework?: boolean | BatchCountOutputTypeCountHomeworkArgs
   tests?: boolean | BatchCountOutputTypeCountTestsArgs
   announcements?: boolean | BatchCountOutputTypeCountAnnouncementsArgs
@@ -2175,6 +2348,13 @@ export type BatchCountOutputTypeCountBatchSessionsArgs<ExtArgs extends runtime.T
  * BatchCountOutputType without action
  */
 export type BatchCountOutputTypeCountEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EnrollmentWhereInput
+}
+
+/**
+ * BatchCountOutputType without action
+ */
+export type BatchCountOutputTypeCountTransferredEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.EnrollmentWhereInput
 }
 
@@ -2222,6 +2402,7 @@ export type BatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   schedules?: boolean | Prisma.Batch$schedulesArgs<ExtArgs>
   batchSessions?: boolean | Prisma.Batch$batchSessionsArgs<ExtArgs>
   enrollments?: boolean | Prisma.Batch$enrollmentsArgs<ExtArgs>
+  transferredEnrollments?: boolean | Prisma.Batch$transferredEnrollmentsArgs<ExtArgs>
   homework?: boolean | Prisma.Batch$homeworkArgs<ExtArgs>
   tests?: boolean | Prisma.Batch$testsArgs<ExtArgs>
   announcements?: boolean | Prisma.Batch$announcementsArgs<ExtArgs>
@@ -2296,6 +2477,7 @@ export type BatchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   schedules?: boolean | Prisma.Batch$schedulesArgs<ExtArgs>
   batchSessions?: boolean | Prisma.Batch$batchSessionsArgs<ExtArgs>
   enrollments?: boolean | Prisma.Batch$enrollmentsArgs<ExtArgs>
+  transferredEnrollments?: boolean | Prisma.Batch$transferredEnrollmentsArgs<ExtArgs>
   homework?: boolean | Prisma.Batch$homeworkArgs<ExtArgs>
   tests?: boolean | Prisma.Batch$testsArgs<ExtArgs>
   announcements?: boolean | Prisma.Batch$announcementsArgs<ExtArgs>
@@ -2324,6 +2506,7 @@ export type $BatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     schedules: Prisma.$SchedulePayload<ExtArgs>[]
     batchSessions: Prisma.$BatchSessionPayload<ExtArgs>[]
     enrollments: Prisma.$EnrollmentPayload<ExtArgs>[]
+    transferredEnrollments: Prisma.$EnrollmentPayload<ExtArgs>[]
     homework: Prisma.$HomeworkPayload<ExtArgs>[]
     tests: Prisma.$TestPayload<ExtArgs>[]
     announcements: Prisma.$AnnouncementPayload<ExtArgs>[]
@@ -2744,6 +2927,7 @@ export interface Prisma__BatchClient<T, Null = never, ExtArgs extends runtime.Ty
   schedules<T extends Prisma.Batch$schedulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$schedulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   batchSessions<T extends Prisma.Batch$batchSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$batchSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BatchSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   enrollments<T extends Prisma.Batch$enrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$enrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  transferredEnrollments<T extends Prisma.Batch$transferredEnrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$transferredEnrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   homework<T extends Prisma.Batch$homeworkArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$homeworkArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HomeworkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tests<T extends Prisma.Batch$testsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$testsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   announcements<T extends Prisma.Batch$announcementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Batch$announcementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AnnouncementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3280,6 +3464,30 @@ export type Batch$batchSessionsArgs<ExtArgs extends runtime.Types.Extensions.Int
  * Batch.enrollments
  */
 export type Batch$enrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Enrollment
+   */
+  select?: Prisma.EnrollmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Enrollment
+   */
+  omit?: Prisma.EnrollmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EnrollmentInclude<ExtArgs> | null
+  where?: Prisma.EnrollmentWhereInput
+  orderBy?: Prisma.EnrollmentOrderByWithRelationInput | Prisma.EnrollmentOrderByWithRelationInput[]
+  cursor?: Prisma.EnrollmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EnrollmentScalarFieldEnum | Prisma.EnrollmentScalarFieldEnum[]
+}
+
+/**
+ * Batch.transferredEnrollments
+ */
+export type Batch$transferredEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Enrollment
    */

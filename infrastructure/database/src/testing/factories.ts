@@ -174,7 +174,7 @@ export async function createTestEnrollment(
       instituteId: instId,
       studentId,
       batchId,
-      joinedOn: new Date(),
+      enrolledAt: new Date(),
       status: overrides.status || 'active',
     },
   });

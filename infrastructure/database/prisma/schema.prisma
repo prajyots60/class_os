@@ -80,6 +80,8 @@ enum EnrollmentStatus {
   pending
   active
   completed
+  withdrawn
+  transferred
   cancelled
 }
 
@@ -491,7 +493,8 @@ model Batch {
   teacher       InstituteMembership? @relation(fields: [teacherId], references: [id], onDelete: SetNull)
   schedules     Schedule[]
   batchSessions BatchSession[]
-  enrollments   Enrollment[]
+  enrollments            Enrollment[]
+  transferredEnrollments Enrollment[] @relation("TransferredToBatch")
   homework      Homework[]
   tests         Test[]
   announcements Announcement[]
@@ -506,28 +509,35 @@ model Batch {
 }
 
 model Enrollment {
-  id            String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  instituteId   String           @map("institute_id") @db.Uuid
-  studentId     String           @map("student_id") @db.Uuid
-  batchId       String           @map("batch_id") @db.Uuid
-  joinedOn      DateTime         @map("joined_on") @db.Date
-  status        EnrollmentStatus @default(pending)
-  discountType  DiscountType?    @map("discount_type")
-  discountValue Decimal?         @map("discount_value") @db.Decimal(10, 2)
-  createdAt     DateTime         @default(now()) @map("created_at")
-  updatedAt     DateTime         @updatedAt @map("updated_at")
-  deletedAt     DateTime?        @map("deleted_at")
+  id                        String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId               String           @map("institute_id") @db.Uuid
+  studentId                 String           @map("student_id") @db.Uuid
+  batchId                   String           @map("batch_id") @db.Uuid
+  status                    EnrollmentStatus @default(pending)
+  enrolledAt                DateTime         @default(now()) @map("enrolled_at")
+  completedAt               DateTime?        @map("completed_at")
+  withdrawnAt               DateTime?        @map("withdrawn_at")
+  transferredAt             DateTime?        @map("transferred_at")
+  transferredToBatchId      String?          @map("transferred_to_batch_id") @db.Uuid
+  transferredToEnrollmentId String?          @map("transferred_to_enrollment_id") @db.Uuid
+  createdAt                 DateTime         @default(now()) @map("created_at")
+  updatedAt                 DateTime         @updatedAt @map("updated_at")
+  deletedAt                 DateTime?        @map("deleted_at")
 
-  institute    Institute     @relation(fields: [instituteId], references: [id], onDelete: Cascade)
-  student      Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  batch        Batch         @relation(fields: [batchId], references: [id], onDelete: Cascade)
-  attendance   Attendance[]
-  marks        Marks[]
-  billingPlans BillingPlan[]
+  institute               Institute    @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  student                 Student      @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  batch                   Batch        @relation(fields: [batchId], references: [id], onDelete: Restrict)
+  transferredToBatch      Batch?       @relation("TransferredToBatch", fields: [transferredToBatchId], references: [id], onDelete: SetNull)
+  transferredToEnrollment Enrollment?  @relation("TransferredToEnrollment", fields: [transferredToEnrollmentId], references: [id], onDelete: SetNull)
+  previousEnrollments     Enrollment[] @relation("TransferredToEnrollment")
+  attendance              Attendance[]
+  marks                   Marks[]
+  billingPlans            BillingPlan[]
 
+  @@unique([instituteId, studentId, batchId], name: "enrollment_student_batch_unique", map: "enrollment_student_batch_unique")
   @@index([instituteId, status])
-  @@index([studentId])
-  @@index([batchId])
+  @@index([instituteId, studentId])
+  @@index([instituteId, batchId])
   @@map("enrollments")
 }
 

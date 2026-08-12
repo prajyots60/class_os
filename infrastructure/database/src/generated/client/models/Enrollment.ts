@@ -20,18 +20,8 @@ export type EnrollmentModel = runtime.Types.Result.DefaultSelection<Prisma.$Enro
 
 export type AggregateEnrollment = {
   _count: EnrollmentCountAggregateOutputType | null
-  _avg: EnrollmentAvgAggregateOutputType | null
-  _sum: EnrollmentSumAggregateOutputType | null
   _min: EnrollmentMinAggregateOutputType | null
   _max: EnrollmentMaxAggregateOutputType | null
-}
-
-export type EnrollmentAvgAggregateOutputType = {
-  discountValue: runtime.Decimal | null
-}
-
-export type EnrollmentSumAggregateOutputType = {
-  discountValue: runtime.Decimal | null
 }
 
 export type EnrollmentMinAggregateOutputType = {
@@ -39,10 +29,13 @@ export type EnrollmentMinAggregateOutputType = {
   instituteId: string | null
   studentId: string | null
   batchId: string | null
-  joinedOn: Date | null
   status: $Enums.EnrollmentStatus | null
-  discountType: $Enums.DiscountType | null
-  discountValue: runtime.Decimal | null
+  enrolledAt: Date | null
+  completedAt: Date | null
+  withdrawnAt: Date | null
+  transferredAt: Date | null
+  transferredToBatchId: string | null
+  transferredToEnrollmentId: string | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -53,10 +46,13 @@ export type EnrollmentMaxAggregateOutputType = {
   instituteId: string | null
   studentId: string | null
   batchId: string | null
-  joinedOn: Date | null
   status: $Enums.EnrollmentStatus | null
-  discountType: $Enums.DiscountType | null
-  discountValue: runtime.Decimal | null
+  enrolledAt: Date | null
+  completedAt: Date | null
+  withdrawnAt: Date | null
+  transferredAt: Date | null
+  transferredToBatchId: string | null
+  transferredToEnrollmentId: string | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -67,10 +63,13 @@ export type EnrollmentCountAggregateOutputType = {
   instituteId: number
   studentId: number
   batchId: number
-  joinedOn: number
   status: number
-  discountType: number
-  discountValue: number
+  enrolledAt: number
+  completedAt: number
+  withdrawnAt: number
+  transferredAt: number
+  transferredToBatchId: number
+  transferredToEnrollmentId: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -78,23 +77,18 @@ export type EnrollmentCountAggregateOutputType = {
 }
 
 
-export type EnrollmentAvgAggregateInputType = {
-  discountValue?: true
-}
-
-export type EnrollmentSumAggregateInputType = {
-  discountValue?: true
-}
-
 export type EnrollmentMinAggregateInputType = {
   id?: true
   instituteId?: true
   studentId?: true
   batchId?: true
-  joinedOn?: true
   status?: true
-  discountType?: true
-  discountValue?: true
+  enrolledAt?: true
+  completedAt?: true
+  withdrawnAt?: true
+  transferredAt?: true
+  transferredToBatchId?: true
+  transferredToEnrollmentId?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -105,10 +99,13 @@ export type EnrollmentMaxAggregateInputType = {
   instituteId?: true
   studentId?: true
   batchId?: true
-  joinedOn?: true
   status?: true
-  discountType?: true
-  discountValue?: true
+  enrolledAt?: true
+  completedAt?: true
+  withdrawnAt?: true
+  transferredAt?: true
+  transferredToBatchId?: true
+  transferredToEnrollmentId?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -119,10 +116,13 @@ export type EnrollmentCountAggregateInputType = {
   instituteId?: true
   studentId?: true
   batchId?: true
-  joinedOn?: true
   status?: true
-  discountType?: true
-  discountValue?: true
+  enrolledAt?: true
+  completedAt?: true
+  withdrawnAt?: true
+  transferredAt?: true
+  transferredToBatchId?: true
+  transferredToEnrollmentId?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -167,18 +167,6 @@ export type EnrollmentAggregateArgs<ExtArgs extends runtime.Types.Extensions.Int
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Select which fields to average
-  **/
-  _avg?: EnrollmentAvgAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
-   * Select which fields to sum
-  **/
-  _sum?: EnrollmentSumAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
    * Select which fields to find the minimum value
   **/
   _min?: EnrollmentMinAggregateInputType
@@ -209,8 +197,6 @@ export type EnrollmentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   _count?: EnrollmentCountAggregateInputType | true
-  _avg?: EnrollmentAvgAggregateInputType
-  _sum?: EnrollmentSumAggregateInputType
   _min?: EnrollmentMinAggregateInputType
   _max?: EnrollmentMaxAggregateInputType
 }
@@ -220,16 +206,17 @@ export type EnrollmentGroupByOutputType = {
   instituteId: string
   studentId: string
   batchId: string
-  joinedOn: Date
   status: $Enums.EnrollmentStatus
-  discountType: $Enums.DiscountType | null
-  discountValue: runtime.Decimal | null
+  enrolledAt: Date
+  completedAt: Date | null
+  withdrawnAt: Date | null
+  transferredAt: Date | null
+  transferredToBatchId: string | null
+  transferredToEnrollmentId: string | null
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
   _count: EnrollmentCountAggregateOutputType | null
-  _avg: EnrollmentAvgAggregateOutputType | null
-  _sum: EnrollmentSumAggregateOutputType | null
   _min: EnrollmentMinAggregateOutputType | null
   _max: EnrollmentMaxAggregateOutputType | null
 }
@@ -257,16 +244,22 @@ export type EnrollmentWhereInput = {
   instituteId?: Prisma.UuidFilter<"Enrollment"> | string
   studentId?: Prisma.UuidFilter<"Enrollment"> | string
   batchId?: Prisma.UuidFilter<"Enrollment"> | string
-  joinedOn?: Prisma.DateTimeFilter<"Enrollment"> | Date | string
   status?: Prisma.EnumEnrollmentStatusFilter<"Enrollment"> | $Enums.EnrollmentStatus
-  discountType?: Prisma.EnumDiscountTypeNullableFilter<"Enrollment"> | $Enums.DiscountType | null
-  discountValue?: Prisma.DecimalNullableFilter<"Enrollment"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFilter<"Enrollment"> | Date | string
+  completedAt?: Prisma.DateTimeNullableFilter<"Enrollment"> | Date | string | null
+  withdrawnAt?: Prisma.DateTimeNullableFilter<"Enrollment"> | Date | string | null
+  transferredAt?: Prisma.DateTimeNullableFilter<"Enrollment"> | Date | string | null
+  transferredToBatchId?: Prisma.UuidNullableFilter<"Enrollment"> | string | null
+  transferredToEnrollmentId?: Prisma.UuidNullableFilter<"Enrollment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Enrollment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Enrollment"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Enrollment"> | Date | string | null
   institute?: Prisma.XOR<Prisma.InstituteScalarRelationFilter, Prisma.InstituteWhereInput>
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   batch?: Prisma.XOR<Prisma.BatchScalarRelationFilter, Prisma.BatchWhereInput>
+  transferredToBatch?: Prisma.XOR<Prisma.BatchNullableScalarRelationFilter, Prisma.BatchWhereInput> | null
+  transferredToEnrollment?: Prisma.XOR<Prisma.EnrollmentNullableScalarRelationFilter, Prisma.EnrollmentWhereInput> | null
+  previousEnrollments?: Prisma.EnrollmentListRelationFilter
   attendance?: Prisma.AttendanceListRelationFilter
   marks?: Prisma.MarksListRelationFilter
   billingPlans?: Prisma.BillingPlanListRelationFilter
@@ -277,16 +270,22 @@ export type EnrollmentOrderByWithRelationInput = {
   instituteId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   batchId?: Prisma.SortOrder
-  joinedOn?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  discountType?: Prisma.SortOrderInput | Prisma.SortOrder
-  discountValue?: Prisma.SortOrderInput | Prisma.SortOrder
+  enrolledAt?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  withdrawnAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferredToBatchId?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferredToEnrollmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   institute?: Prisma.InstituteOrderByWithRelationInput
   student?: Prisma.StudentOrderByWithRelationInput
   batch?: Prisma.BatchOrderByWithRelationInput
+  transferredToBatch?: Prisma.BatchOrderByWithRelationInput
+  transferredToEnrollment?: Prisma.EnrollmentOrderByWithRelationInput
+  previousEnrollments?: Prisma.EnrollmentOrderByRelationAggregateInput
   attendance?: Prisma.AttendanceOrderByRelationAggregateInput
   marks?: Prisma.MarksOrderByRelationAggregateInput
   billingPlans?: Prisma.BillingPlanOrderByRelationAggregateInput
@@ -294,44 +293,52 @@ export type EnrollmentOrderByWithRelationInput = {
 
 export type EnrollmentWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  enrollment_student_batch_unique?: Prisma.EnrollmentEnrollment_student_batch_uniqueCompoundUniqueInput
   AND?: Prisma.EnrollmentWhereInput | Prisma.EnrollmentWhereInput[]
   OR?: Prisma.EnrollmentWhereInput[]
   NOT?: Prisma.EnrollmentWhereInput | Prisma.EnrollmentWhereInput[]
   instituteId?: Prisma.UuidFilter<"Enrollment"> | string
   studentId?: Prisma.UuidFilter<"Enrollment"> | string
   batchId?: Prisma.UuidFilter<"Enrollment"> | string
-  joinedOn?: Prisma.DateTimeFilter<"Enrollment"> | Date | string
   status?: Prisma.EnumEnrollmentStatusFilter<"Enrollment"> | $Enums.EnrollmentStatus
-  discountType?: Prisma.EnumDiscountTypeNullableFilter<"Enrollment"> | $Enums.DiscountType | null
-  discountValue?: Prisma.DecimalNullableFilter<"Enrollment"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFilter<"Enrollment"> | Date | string
+  completedAt?: Prisma.DateTimeNullableFilter<"Enrollment"> | Date | string | null
+  withdrawnAt?: Prisma.DateTimeNullableFilter<"Enrollment"> | Date | string | null
+  transferredAt?: Prisma.DateTimeNullableFilter<"Enrollment"> | Date | string | null
+  transferredToBatchId?: Prisma.UuidNullableFilter<"Enrollment"> | string | null
+  transferredToEnrollmentId?: Prisma.UuidNullableFilter<"Enrollment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Enrollment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Enrollment"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Enrollment"> | Date | string | null
   institute?: Prisma.XOR<Prisma.InstituteScalarRelationFilter, Prisma.InstituteWhereInput>
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   batch?: Prisma.XOR<Prisma.BatchScalarRelationFilter, Prisma.BatchWhereInput>
+  transferredToBatch?: Prisma.XOR<Prisma.BatchNullableScalarRelationFilter, Prisma.BatchWhereInput> | null
+  transferredToEnrollment?: Prisma.XOR<Prisma.EnrollmentNullableScalarRelationFilter, Prisma.EnrollmentWhereInput> | null
+  previousEnrollments?: Prisma.EnrollmentListRelationFilter
   attendance?: Prisma.AttendanceListRelationFilter
   marks?: Prisma.MarksListRelationFilter
   billingPlans?: Prisma.BillingPlanListRelationFilter
-}, "id">
+}, "id" | "enrollment_student_batch_unique">
 
 export type EnrollmentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   batchId?: Prisma.SortOrder
-  joinedOn?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  discountType?: Prisma.SortOrderInput | Prisma.SortOrder
-  discountValue?: Prisma.SortOrderInput | Prisma.SortOrder
+  enrolledAt?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  withdrawnAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferredAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferredToBatchId?: Prisma.SortOrderInput | Prisma.SortOrder
+  transferredToEnrollmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.EnrollmentCountOrderByAggregateInput
-  _avg?: Prisma.EnrollmentAvgOrderByAggregateInput
   _max?: Prisma.EnrollmentMaxOrderByAggregateInput
   _min?: Prisma.EnrollmentMinOrderByAggregateInput
-  _sum?: Prisma.EnrollmentSumOrderByAggregateInput
 }
 
 export type EnrollmentScalarWhereWithAggregatesInput = {
@@ -342,10 +349,13 @@ export type EnrollmentScalarWhereWithAggregatesInput = {
   instituteId?: Prisma.UuidWithAggregatesFilter<"Enrollment"> | string
   studentId?: Prisma.UuidWithAggregatesFilter<"Enrollment"> | string
   batchId?: Prisma.UuidWithAggregatesFilter<"Enrollment"> | string
-  joinedOn?: Prisma.DateTimeWithAggregatesFilter<"Enrollment"> | Date | string
   status?: Prisma.EnumEnrollmentStatusWithAggregatesFilter<"Enrollment"> | $Enums.EnrollmentStatus
-  discountType?: Prisma.EnumDiscountTypeNullableWithAggregatesFilter<"Enrollment"> | $Enums.DiscountType | null
-  discountValue?: Prisma.DecimalNullableWithAggregatesFilter<"Enrollment"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeWithAggregatesFilter<"Enrollment"> | Date | string
+  completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Enrollment"> | Date | string | null
+  withdrawnAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Enrollment"> | Date | string | null
+  transferredAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Enrollment"> | Date | string | null
+  transferredToBatchId?: Prisma.UuidNullableWithAggregatesFilter<"Enrollment"> | string | null
+  transferredToEnrollmentId?: Prisma.UuidNullableWithAggregatesFilter<"Enrollment"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Enrollment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Enrollment"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Enrollment"> | Date | string | null
@@ -353,16 +363,20 @@ export type EnrollmentScalarWhereWithAggregatesInput = {
 
 export type EnrollmentCreateInput = {
   id?: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   institute: Prisma.InstituteCreateNestedOneWithoutEnrollmentsInput
   student: Prisma.StudentCreateNestedOneWithoutEnrollmentsInput
   batch: Prisma.BatchCreateNestedOneWithoutEnrollmentsInput
+  transferredToBatch?: Prisma.BatchCreateNestedOneWithoutTransferredEnrollmentsInput
+  transferredToEnrollment?: Prisma.EnrollmentCreateNestedOneWithoutPreviousEnrollmentsInput
+  previousEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToEnrollmentInput
   attendance?: Prisma.AttendanceCreateNestedManyWithoutEnrollmentInput
   marks?: Prisma.MarksCreateNestedManyWithoutEnrollmentInput
   billingPlans?: Prisma.BillingPlanCreateNestedManyWithoutEnrollmentInput
@@ -373,13 +387,17 @@ export type EnrollmentUncheckedCreateInput = {
   instituteId: string
   studentId: string
   batchId: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToBatchId?: string | null
+  transferredToEnrollmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToEnrollmentInput
   attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutEnrollmentInput
   marks?: Prisma.MarksUncheckedCreateNestedManyWithoutEnrollmentInput
   billingPlans?: Prisma.BillingPlanUncheckedCreateNestedManyWithoutEnrollmentInput
@@ -387,16 +405,20 @@ export type EnrollmentUncheckedCreateInput = {
 
 export type EnrollmentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   institute?: Prisma.InstituteUpdateOneRequiredWithoutEnrollmentsNestedInput
   student?: Prisma.StudentUpdateOneRequiredWithoutEnrollmentsNestedInput
   batch?: Prisma.BatchUpdateOneRequiredWithoutEnrollmentsNestedInput
+  transferredToBatch?: Prisma.BatchUpdateOneWithoutTransferredEnrollmentsNestedInput
+  transferredToEnrollment?: Prisma.EnrollmentUpdateOneWithoutPreviousEnrollmentsNestedInput
+  previousEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToEnrollmentNestedInput
   attendance?: Prisma.AttendanceUpdateManyWithoutEnrollmentNestedInput
   marks?: Prisma.MarksUpdateManyWithoutEnrollmentNestedInput
   billingPlans?: Prisma.BillingPlanUpdateManyWithoutEnrollmentNestedInput
@@ -407,13 +429,17 @@ export type EnrollmentUncheckedUpdateInput = {
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferredToEnrollmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToEnrollmentNestedInput
   attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutEnrollmentNestedInput
   marks?: Prisma.MarksUncheckedUpdateManyWithoutEnrollmentNestedInput
   billingPlans?: Prisma.BillingPlanUncheckedUpdateManyWithoutEnrollmentNestedInput
@@ -424,10 +450,13 @@ export type EnrollmentCreateManyInput = {
   instituteId: string
   studentId: string
   batchId: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToBatchId?: string | null
+  transferredToEnrollmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -435,10 +464,11 @@ export type EnrollmentCreateManyInput = {
 
 export type EnrollmentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -449,10 +479,13 @@ export type EnrollmentUncheckedUpdateManyInput = {
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferredToEnrollmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -468,22 +501,32 @@ export type EnrollmentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type EnrollmentNullableScalarRelationFilter = {
+  is?: Prisma.EnrollmentWhereInput | null
+  isNot?: Prisma.EnrollmentWhereInput | null
+}
+
+export type EnrollmentEnrollment_student_batch_uniqueCompoundUniqueInput = {
+  instituteId: string
+  studentId: string
+  batchId: string
+}
+
 export type EnrollmentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   instituteId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   batchId?: Prisma.SortOrder
-  joinedOn?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  discountType?: Prisma.SortOrder
-  discountValue?: Prisma.SortOrder
+  enrolledAt?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
+  withdrawnAt?: Prisma.SortOrder
+  transferredAt?: Prisma.SortOrder
+  transferredToBatchId?: Prisma.SortOrder
+  transferredToEnrollmentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
-}
-
-export type EnrollmentAvgOrderByAggregateInput = {
-  discountValue?: Prisma.SortOrder
 }
 
 export type EnrollmentMaxOrderByAggregateInput = {
@@ -491,10 +534,13 @@ export type EnrollmentMaxOrderByAggregateInput = {
   instituteId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   batchId?: Prisma.SortOrder
-  joinedOn?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  discountType?: Prisma.SortOrder
-  discountValue?: Prisma.SortOrder
+  enrolledAt?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
+  withdrawnAt?: Prisma.SortOrder
+  transferredAt?: Prisma.SortOrder
+  transferredToBatchId?: Prisma.SortOrder
+  transferredToEnrollmentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -505,17 +551,16 @@ export type EnrollmentMinOrderByAggregateInput = {
   instituteId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   batchId?: Prisma.SortOrder
-  joinedOn?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  discountType?: Prisma.SortOrder
-  discountValue?: Prisma.SortOrder
+  enrolledAt?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
+  withdrawnAt?: Prisma.SortOrder
+  transferredAt?: Prisma.SortOrder
+  transferredToBatchId?: Prisma.SortOrder
+  transferredToEnrollmentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
-}
-
-export type EnrollmentSumOrderByAggregateInput = {
-  discountValue?: Prisma.SortOrder
 }
 
 export type EnrollmentScalarRelationFilter = {
@@ -614,10 +659,24 @@ export type EnrollmentCreateNestedManyWithoutBatchInput = {
   connect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
 }
 
+export type EnrollmentCreateNestedManyWithoutTransferredToBatchInput = {
+  create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutTransferredToBatchInput, Prisma.EnrollmentUncheckedCreateWithoutTransferredToBatchInput> | Prisma.EnrollmentCreateWithoutTransferredToBatchInput[] | Prisma.EnrollmentUncheckedCreateWithoutTransferredToBatchInput[]
+  connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutTransferredToBatchInput | Prisma.EnrollmentCreateOrConnectWithoutTransferredToBatchInput[]
+  createMany?: Prisma.EnrollmentCreateManyTransferredToBatchInputEnvelope
+  connect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+}
+
 export type EnrollmentUncheckedCreateNestedManyWithoutBatchInput = {
   create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutBatchInput, Prisma.EnrollmentUncheckedCreateWithoutBatchInput> | Prisma.EnrollmentCreateWithoutBatchInput[] | Prisma.EnrollmentUncheckedCreateWithoutBatchInput[]
   connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutBatchInput | Prisma.EnrollmentCreateOrConnectWithoutBatchInput[]
   createMany?: Prisma.EnrollmentCreateManyBatchInputEnvelope
+  connect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+}
+
+export type EnrollmentUncheckedCreateNestedManyWithoutTransferredToBatchInput = {
+  create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutTransferredToBatchInput, Prisma.EnrollmentUncheckedCreateWithoutTransferredToBatchInput> | Prisma.EnrollmentCreateWithoutTransferredToBatchInput[] | Prisma.EnrollmentUncheckedCreateWithoutTransferredToBatchInput[]
+  connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutTransferredToBatchInput | Prisma.EnrollmentCreateOrConnectWithoutTransferredToBatchInput[]
+  createMany?: Prisma.EnrollmentCreateManyTransferredToBatchInputEnvelope
   connect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
 }
 
@@ -635,6 +694,20 @@ export type EnrollmentUpdateManyWithoutBatchNestedInput = {
   deleteMany?: Prisma.EnrollmentScalarWhereInput | Prisma.EnrollmentScalarWhereInput[]
 }
 
+export type EnrollmentUpdateManyWithoutTransferredToBatchNestedInput = {
+  create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutTransferredToBatchInput, Prisma.EnrollmentUncheckedCreateWithoutTransferredToBatchInput> | Prisma.EnrollmentCreateWithoutTransferredToBatchInput[] | Prisma.EnrollmentUncheckedCreateWithoutTransferredToBatchInput[]
+  connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutTransferredToBatchInput | Prisma.EnrollmentCreateOrConnectWithoutTransferredToBatchInput[]
+  upsert?: Prisma.EnrollmentUpsertWithWhereUniqueWithoutTransferredToBatchInput | Prisma.EnrollmentUpsertWithWhereUniqueWithoutTransferredToBatchInput[]
+  createMany?: Prisma.EnrollmentCreateManyTransferredToBatchInputEnvelope
+  set?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  disconnect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  delete?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  connect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  update?: Prisma.EnrollmentUpdateWithWhereUniqueWithoutTransferredToBatchInput | Prisma.EnrollmentUpdateWithWhereUniqueWithoutTransferredToBatchInput[]
+  updateMany?: Prisma.EnrollmentUpdateManyWithWhereWithoutTransferredToBatchInput | Prisma.EnrollmentUpdateManyWithWhereWithoutTransferredToBatchInput[]
+  deleteMany?: Prisma.EnrollmentScalarWhereInput | Prisma.EnrollmentScalarWhereInput[]
+}
+
 export type EnrollmentUncheckedUpdateManyWithoutBatchNestedInput = {
   create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutBatchInput, Prisma.EnrollmentUncheckedCreateWithoutBatchInput> | Prisma.EnrollmentCreateWithoutBatchInput[] | Prisma.EnrollmentUncheckedCreateWithoutBatchInput[]
   connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutBatchInput | Prisma.EnrollmentCreateOrConnectWithoutBatchInput[]
@@ -649,20 +722,80 @@ export type EnrollmentUncheckedUpdateManyWithoutBatchNestedInput = {
   deleteMany?: Prisma.EnrollmentScalarWhereInput | Prisma.EnrollmentScalarWhereInput[]
 }
 
+export type EnrollmentUncheckedUpdateManyWithoutTransferredToBatchNestedInput = {
+  create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutTransferredToBatchInput, Prisma.EnrollmentUncheckedCreateWithoutTransferredToBatchInput> | Prisma.EnrollmentCreateWithoutTransferredToBatchInput[] | Prisma.EnrollmentUncheckedCreateWithoutTransferredToBatchInput[]
+  connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutTransferredToBatchInput | Prisma.EnrollmentCreateOrConnectWithoutTransferredToBatchInput[]
+  upsert?: Prisma.EnrollmentUpsertWithWhereUniqueWithoutTransferredToBatchInput | Prisma.EnrollmentUpsertWithWhereUniqueWithoutTransferredToBatchInput[]
+  createMany?: Prisma.EnrollmentCreateManyTransferredToBatchInputEnvelope
+  set?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  disconnect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  delete?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  connect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  update?: Prisma.EnrollmentUpdateWithWhereUniqueWithoutTransferredToBatchInput | Prisma.EnrollmentUpdateWithWhereUniqueWithoutTransferredToBatchInput[]
+  updateMany?: Prisma.EnrollmentUpdateManyWithWhereWithoutTransferredToBatchInput | Prisma.EnrollmentUpdateManyWithWhereWithoutTransferredToBatchInput[]
+  deleteMany?: Prisma.EnrollmentScalarWhereInput | Prisma.EnrollmentScalarWhereInput[]
+}
+
+export type EnrollmentCreateNestedOneWithoutPreviousEnrollmentsInput = {
+  create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutPreviousEnrollmentsInput, Prisma.EnrollmentUncheckedCreateWithoutPreviousEnrollmentsInput>
+  connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutPreviousEnrollmentsInput
+  connect?: Prisma.EnrollmentWhereUniqueInput
+}
+
+export type EnrollmentCreateNestedManyWithoutTransferredToEnrollmentInput = {
+  create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutTransferredToEnrollmentInput, Prisma.EnrollmentUncheckedCreateWithoutTransferredToEnrollmentInput> | Prisma.EnrollmentCreateWithoutTransferredToEnrollmentInput[] | Prisma.EnrollmentUncheckedCreateWithoutTransferredToEnrollmentInput[]
+  connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutTransferredToEnrollmentInput | Prisma.EnrollmentCreateOrConnectWithoutTransferredToEnrollmentInput[]
+  createMany?: Prisma.EnrollmentCreateManyTransferredToEnrollmentInputEnvelope
+  connect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+}
+
+export type EnrollmentUncheckedCreateNestedManyWithoutTransferredToEnrollmentInput = {
+  create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutTransferredToEnrollmentInput, Prisma.EnrollmentUncheckedCreateWithoutTransferredToEnrollmentInput> | Prisma.EnrollmentCreateWithoutTransferredToEnrollmentInput[] | Prisma.EnrollmentUncheckedCreateWithoutTransferredToEnrollmentInput[]
+  connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutTransferredToEnrollmentInput | Prisma.EnrollmentCreateOrConnectWithoutTransferredToEnrollmentInput[]
+  createMany?: Prisma.EnrollmentCreateManyTransferredToEnrollmentInputEnvelope
+  connect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+}
+
 export type EnumEnrollmentStatusFieldUpdateOperationsInput = {
   set?: $Enums.EnrollmentStatus
 }
 
-export type NullableEnumDiscountTypeFieldUpdateOperationsInput = {
-  set?: $Enums.DiscountType | null
+export type EnrollmentUpdateOneWithoutPreviousEnrollmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutPreviousEnrollmentsInput, Prisma.EnrollmentUncheckedCreateWithoutPreviousEnrollmentsInput>
+  connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutPreviousEnrollmentsInput
+  upsert?: Prisma.EnrollmentUpsertWithoutPreviousEnrollmentsInput
+  disconnect?: Prisma.EnrollmentWhereInput | boolean
+  delete?: Prisma.EnrollmentWhereInput | boolean
+  connect?: Prisma.EnrollmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EnrollmentUpdateToOneWithWhereWithoutPreviousEnrollmentsInput, Prisma.EnrollmentUpdateWithoutPreviousEnrollmentsInput>, Prisma.EnrollmentUncheckedUpdateWithoutPreviousEnrollmentsInput>
 }
 
-export type NullableDecimalFieldUpdateOperationsInput = {
-  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+export type EnrollmentUpdateManyWithoutTransferredToEnrollmentNestedInput = {
+  create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutTransferredToEnrollmentInput, Prisma.EnrollmentUncheckedCreateWithoutTransferredToEnrollmentInput> | Prisma.EnrollmentCreateWithoutTransferredToEnrollmentInput[] | Prisma.EnrollmentUncheckedCreateWithoutTransferredToEnrollmentInput[]
+  connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutTransferredToEnrollmentInput | Prisma.EnrollmentCreateOrConnectWithoutTransferredToEnrollmentInput[]
+  upsert?: Prisma.EnrollmentUpsertWithWhereUniqueWithoutTransferredToEnrollmentInput | Prisma.EnrollmentUpsertWithWhereUniqueWithoutTransferredToEnrollmentInput[]
+  createMany?: Prisma.EnrollmentCreateManyTransferredToEnrollmentInputEnvelope
+  set?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  disconnect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  delete?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  connect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  update?: Prisma.EnrollmentUpdateWithWhereUniqueWithoutTransferredToEnrollmentInput | Prisma.EnrollmentUpdateWithWhereUniqueWithoutTransferredToEnrollmentInput[]
+  updateMany?: Prisma.EnrollmentUpdateManyWithWhereWithoutTransferredToEnrollmentInput | Prisma.EnrollmentUpdateManyWithWhereWithoutTransferredToEnrollmentInput[]
+  deleteMany?: Prisma.EnrollmentScalarWhereInput | Prisma.EnrollmentScalarWhereInput[]
+}
+
+export type EnrollmentUncheckedUpdateManyWithoutTransferredToEnrollmentNestedInput = {
+  create?: Prisma.XOR<Prisma.EnrollmentCreateWithoutTransferredToEnrollmentInput, Prisma.EnrollmentUncheckedCreateWithoutTransferredToEnrollmentInput> | Prisma.EnrollmentCreateWithoutTransferredToEnrollmentInput[] | Prisma.EnrollmentUncheckedCreateWithoutTransferredToEnrollmentInput[]
+  connectOrCreate?: Prisma.EnrollmentCreateOrConnectWithoutTransferredToEnrollmentInput | Prisma.EnrollmentCreateOrConnectWithoutTransferredToEnrollmentInput[]
+  upsert?: Prisma.EnrollmentUpsertWithWhereUniqueWithoutTransferredToEnrollmentInput | Prisma.EnrollmentUpsertWithWhereUniqueWithoutTransferredToEnrollmentInput[]
+  createMany?: Prisma.EnrollmentCreateManyTransferredToEnrollmentInputEnvelope
+  set?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  disconnect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  delete?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  connect?: Prisma.EnrollmentWhereUniqueInput | Prisma.EnrollmentWhereUniqueInput[]
+  update?: Prisma.EnrollmentUpdateWithWhereUniqueWithoutTransferredToEnrollmentInput | Prisma.EnrollmentUpdateWithWhereUniqueWithoutTransferredToEnrollmentInput[]
+  updateMany?: Prisma.EnrollmentUpdateManyWithWhereWithoutTransferredToEnrollmentInput | Prisma.EnrollmentUpdateManyWithWhereWithoutTransferredToEnrollmentInput[]
+  deleteMany?: Prisma.EnrollmentScalarWhereInput | Prisma.EnrollmentScalarWhereInput[]
 }
 
 export type EnrollmentCreateNestedOneWithoutAttendanceInput = {
@@ -709,15 +842,19 @@ export type EnrollmentUpdateOneRequiredWithoutBillingPlansNestedInput = {
 
 export type EnrollmentCreateWithoutInstituteInput = {
   id?: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   student: Prisma.StudentCreateNestedOneWithoutEnrollmentsInput
   batch: Prisma.BatchCreateNestedOneWithoutEnrollmentsInput
+  transferredToBatch?: Prisma.BatchCreateNestedOneWithoutTransferredEnrollmentsInput
+  transferredToEnrollment?: Prisma.EnrollmentCreateNestedOneWithoutPreviousEnrollmentsInput
+  previousEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToEnrollmentInput
   attendance?: Prisma.AttendanceCreateNestedManyWithoutEnrollmentInput
   marks?: Prisma.MarksCreateNestedManyWithoutEnrollmentInput
   billingPlans?: Prisma.BillingPlanCreateNestedManyWithoutEnrollmentInput
@@ -727,13 +864,17 @@ export type EnrollmentUncheckedCreateWithoutInstituteInput = {
   id?: string
   studentId: string
   batchId: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToBatchId?: string | null
+  transferredToEnrollmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToEnrollmentInput
   attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutEnrollmentInput
   marks?: Prisma.MarksUncheckedCreateNestedManyWithoutEnrollmentInput
   billingPlans?: Prisma.BillingPlanUncheckedCreateNestedManyWithoutEnrollmentInput
@@ -773,10 +914,13 @@ export type EnrollmentScalarWhereInput = {
   instituteId?: Prisma.UuidFilter<"Enrollment"> | string
   studentId?: Prisma.UuidFilter<"Enrollment"> | string
   batchId?: Prisma.UuidFilter<"Enrollment"> | string
-  joinedOn?: Prisma.DateTimeFilter<"Enrollment"> | Date | string
   status?: Prisma.EnumEnrollmentStatusFilter<"Enrollment"> | $Enums.EnrollmentStatus
-  discountType?: Prisma.EnumDiscountTypeNullableFilter<"Enrollment"> | $Enums.DiscountType | null
-  discountValue?: Prisma.DecimalNullableFilter<"Enrollment"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFilter<"Enrollment"> | Date | string
+  completedAt?: Prisma.DateTimeNullableFilter<"Enrollment"> | Date | string | null
+  withdrawnAt?: Prisma.DateTimeNullableFilter<"Enrollment"> | Date | string | null
+  transferredAt?: Prisma.DateTimeNullableFilter<"Enrollment"> | Date | string | null
+  transferredToBatchId?: Prisma.UuidNullableFilter<"Enrollment"> | string | null
+  transferredToEnrollmentId?: Prisma.UuidNullableFilter<"Enrollment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Enrollment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Enrollment"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Enrollment"> | Date | string | null
@@ -784,15 +928,19 @@ export type EnrollmentScalarWhereInput = {
 
 export type EnrollmentCreateWithoutStudentInput = {
   id?: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   institute: Prisma.InstituteCreateNestedOneWithoutEnrollmentsInput
   batch: Prisma.BatchCreateNestedOneWithoutEnrollmentsInput
+  transferredToBatch?: Prisma.BatchCreateNestedOneWithoutTransferredEnrollmentsInput
+  transferredToEnrollment?: Prisma.EnrollmentCreateNestedOneWithoutPreviousEnrollmentsInput
+  previousEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToEnrollmentInput
   attendance?: Prisma.AttendanceCreateNestedManyWithoutEnrollmentInput
   marks?: Prisma.MarksCreateNestedManyWithoutEnrollmentInput
   billingPlans?: Prisma.BillingPlanCreateNestedManyWithoutEnrollmentInput
@@ -802,13 +950,17 @@ export type EnrollmentUncheckedCreateWithoutStudentInput = {
   id?: string
   instituteId: string
   batchId: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToBatchId?: string | null
+  transferredToEnrollmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToEnrollmentInput
   attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutEnrollmentInput
   marks?: Prisma.MarksUncheckedCreateNestedManyWithoutEnrollmentInput
   billingPlans?: Prisma.BillingPlanUncheckedCreateNestedManyWithoutEnrollmentInput
@@ -842,15 +994,19 @@ export type EnrollmentUpdateManyWithWhereWithoutStudentInput = {
 
 export type EnrollmentCreateWithoutBatchInput = {
   id?: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   institute: Prisma.InstituteCreateNestedOneWithoutEnrollmentsInput
   student: Prisma.StudentCreateNestedOneWithoutEnrollmentsInput
+  transferredToBatch?: Prisma.BatchCreateNestedOneWithoutTransferredEnrollmentsInput
+  transferredToEnrollment?: Prisma.EnrollmentCreateNestedOneWithoutPreviousEnrollmentsInput
+  previousEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToEnrollmentInput
   attendance?: Prisma.AttendanceCreateNestedManyWithoutEnrollmentInput
   marks?: Prisma.MarksCreateNestedManyWithoutEnrollmentInput
   billingPlans?: Prisma.BillingPlanCreateNestedManyWithoutEnrollmentInput
@@ -860,13 +1016,17 @@ export type EnrollmentUncheckedCreateWithoutBatchInput = {
   id?: string
   instituteId: string
   studentId: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToBatchId?: string | null
+  transferredToEnrollmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToEnrollmentInput
   attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutEnrollmentInput
   marks?: Prisma.MarksUncheckedCreateNestedManyWithoutEnrollmentInput
   billingPlans?: Prisma.BillingPlanUncheckedCreateNestedManyWithoutEnrollmentInput
@@ -879,6 +1039,56 @@ export type EnrollmentCreateOrConnectWithoutBatchInput = {
 
 export type EnrollmentCreateManyBatchInputEnvelope = {
   data: Prisma.EnrollmentCreateManyBatchInput | Prisma.EnrollmentCreateManyBatchInput[]
+  skipDuplicates?: boolean
+}
+
+export type EnrollmentCreateWithoutTransferredToBatchInput = {
+  id?: string
+  status?: $Enums.EnrollmentStatus
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  institute: Prisma.InstituteCreateNestedOneWithoutEnrollmentsInput
+  student: Prisma.StudentCreateNestedOneWithoutEnrollmentsInput
+  batch: Prisma.BatchCreateNestedOneWithoutEnrollmentsInput
+  transferredToEnrollment?: Prisma.EnrollmentCreateNestedOneWithoutPreviousEnrollmentsInput
+  previousEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToEnrollmentInput
+  attendance?: Prisma.AttendanceCreateNestedManyWithoutEnrollmentInput
+  marks?: Prisma.MarksCreateNestedManyWithoutEnrollmentInput
+  billingPlans?: Prisma.BillingPlanCreateNestedManyWithoutEnrollmentInput
+}
+
+export type EnrollmentUncheckedCreateWithoutTransferredToBatchInput = {
+  id?: string
+  instituteId: string
+  studentId: string
+  batchId: string
+  status?: $Enums.EnrollmentStatus
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToEnrollmentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToEnrollmentInput
+  attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutEnrollmentInput
+  marks?: Prisma.MarksUncheckedCreateNestedManyWithoutEnrollmentInput
+  billingPlans?: Prisma.BillingPlanUncheckedCreateNestedManyWithoutEnrollmentInput
+}
+
+export type EnrollmentCreateOrConnectWithoutTransferredToBatchInput = {
+  where: Prisma.EnrollmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.EnrollmentCreateWithoutTransferredToBatchInput, Prisma.EnrollmentUncheckedCreateWithoutTransferredToBatchInput>
+}
+
+export type EnrollmentCreateManyTransferredToBatchInputEnvelope = {
+  data: Prisma.EnrollmentCreateManyTransferredToBatchInput | Prisma.EnrollmentCreateManyTransferredToBatchInput[]
   skipDuplicates?: boolean
 }
 
@@ -898,18 +1108,200 @@ export type EnrollmentUpdateManyWithWhereWithoutBatchInput = {
   data: Prisma.XOR<Prisma.EnrollmentUpdateManyMutationInput, Prisma.EnrollmentUncheckedUpdateManyWithoutBatchInput>
 }
 
-export type EnrollmentCreateWithoutAttendanceInput = {
+export type EnrollmentUpsertWithWhereUniqueWithoutTransferredToBatchInput = {
+  where: Prisma.EnrollmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.EnrollmentUpdateWithoutTransferredToBatchInput, Prisma.EnrollmentUncheckedUpdateWithoutTransferredToBatchInput>
+  create: Prisma.XOR<Prisma.EnrollmentCreateWithoutTransferredToBatchInput, Prisma.EnrollmentUncheckedCreateWithoutTransferredToBatchInput>
+}
+
+export type EnrollmentUpdateWithWhereUniqueWithoutTransferredToBatchInput = {
+  where: Prisma.EnrollmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.EnrollmentUpdateWithoutTransferredToBatchInput, Prisma.EnrollmentUncheckedUpdateWithoutTransferredToBatchInput>
+}
+
+export type EnrollmentUpdateManyWithWhereWithoutTransferredToBatchInput = {
+  where: Prisma.EnrollmentScalarWhereInput
+  data: Prisma.XOR<Prisma.EnrollmentUpdateManyMutationInput, Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToBatchInput>
+}
+
+export type EnrollmentCreateWithoutPreviousEnrollmentsInput = {
   id?: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   institute: Prisma.InstituteCreateNestedOneWithoutEnrollmentsInput
   student: Prisma.StudentCreateNestedOneWithoutEnrollmentsInput
   batch: Prisma.BatchCreateNestedOneWithoutEnrollmentsInput
+  transferredToBatch?: Prisma.BatchCreateNestedOneWithoutTransferredEnrollmentsInput
+  transferredToEnrollment?: Prisma.EnrollmentCreateNestedOneWithoutPreviousEnrollmentsInput
+  attendance?: Prisma.AttendanceCreateNestedManyWithoutEnrollmentInput
+  marks?: Prisma.MarksCreateNestedManyWithoutEnrollmentInput
+  billingPlans?: Prisma.BillingPlanCreateNestedManyWithoutEnrollmentInput
+}
+
+export type EnrollmentUncheckedCreateWithoutPreviousEnrollmentsInput = {
+  id?: string
+  instituteId: string
+  studentId: string
+  batchId: string
+  status?: $Enums.EnrollmentStatus
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToBatchId?: string | null
+  transferredToEnrollmentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutEnrollmentInput
+  marks?: Prisma.MarksUncheckedCreateNestedManyWithoutEnrollmentInput
+  billingPlans?: Prisma.BillingPlanUncheckedCreateNestedManyWithoutEnrollmentInput
+}
+
+export type EnrollmentCreateOrConnectWithoutPreviousEnrollmentsInput = {
+  where: Prisma.EnrollmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.EnrollmentCreateWithoutPreviousEnrollmentsInput, Prisma.EnrollmentUncheckedCreateWithoutPreviousEnrollmentsInput>
+}
+
+export type EnrollmentCreateWithoutTransferredToEnrollmentInput = {
+  id?: string
+  status?: $Enums.EnrollmentStatus
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  institute: Prisma.InstituteCreateNestedOneWithoutEnrollmentsInput
+  student: Prisma.StudentCreateNestedOneWithoutEnrollmentsInput
+  batch: Prisma.BatchCreateNestedOneWithoutEnrollmentsInput
+  transferredToBatch?: Prisma.BatchCreateNestedOneWithoutTransferredEnrollmentsInput
+  previousEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToEnrollmentInput
+  attendance?: Prisma.AttendanceCreateNestedManyWithoutEnrollmentInput
+  marks?: Prisma.MarksCreateNestedManyWithoutEnrollmentInput
+  billingPlans?: Prisma.BillingPlanCreateNestedManyWithoutEnrollmentInput
+}
+
+export type EnrollmentUncheckedCreateWithoutTransferredToEnrollmentInput = {
+  id?: string
+  instituteId: string
+  studentId: string
+  batchId: string
+  status?: $Enums.EnrollmentStatus
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToBatchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToEnrollmentInput
+  attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutEnrollmentInput
+  marks?: Prisma.MarksUncheckedCreateNestedManyWithoutEnrollmentInput
+  billingPlans?: Prisma.BillingPlanUncheckedCreateNestedManyWithoutEnrollmentInput
+}
+
+export type EnrollmentCreateOrConnectWithoutTransferredToEnrollmentInput = {
+  where: Prisma.EnrollmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.EnrollmentCreateWithoutTransferredToEnrollmentInput, Prisma.EnrollmentUncheckedCreateWithoutTransferredToEnrollmentInput>
+}
+
+export type EnrollmentCreateManyTransferredToEnrollmentInputEnvelope = {
+  data: Prisma.EnrollmentCreateManyTransferredToEnrollmentInput | Prisma.EnrollmentCreateManyTransferredToEnrollmentInput[]
+  skipDuplicates?: boolean
+}
+
+export type EnrollmentUpsertWithoutPreviousEnrollmentsInput = {
+  update: Prisma.XOR<Prisma.EnrollmentUpdateWithoutPreviousEnrollmentsInput, Prisma.EnrollmentUncheckedUpdateWithoutPreviousEnrollmentsInput>
+  create: Prisma.XOR<Prisma.EnrollmentCreateWithoutPreviousEnrollmentsInput, Prisma.EnrollmentUncheckedCreateWithoutPreviousEnrollmentsInput>
+  where?: Prisma.EnrollmentWhereInput
+}
+
+export type EnrollmentUpdateToOneWithWhereWithoutPreviousEnrollmentsInput = {
+  where?: Prisma.EnrollmentWhereInput
+  data: Prisma.XOR<Prisma.EnrollmentUpdateWithoutPreviousEnrollmentsInput, Prisma.EnrollmentUncheckedUpdateWithoutPreviousEnrollmentsInput>
+}
+
+export type EnrollmentUpdateWithoutPreviousEnrollmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  institute?: Prisma.InstituteUpdateOneRequiredWithoutEnrollmentsNestedInput
+  student?: Prisma.StudentUpdateOneRequiredWithoutEnrollmentsNestedInput
+  batch?: Prisma.BatchUpdateOneRequiredWithoutEnrollmentsNestedInput
+  transferredToBatch?: Prisma.BatchUpdateOneWithoutTransferredEnrollmentsNestedInput
+  transferredToEnrollment?: Prisma.EnrollmentUpdateOneWithoutPreviousEnrollmentsNestedInput
+  attendance?: Prisma.AttendanceUpdateManyWithoutEnrollmentNestedInput
+  marks?: Prisma.MarksUpdateManyWithoutEnrollmentNestedInput
+  billingPlans?: Prisma.BillingPlanUpdateManyWithoutEnrollmentNestedInput
+}
+
+export type EnrollmentUncheckedUpdateWithoutPreviousEnrollmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  instituteId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  batchId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferredToEnrollmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutEnrollmentNestedInput
+  marks?: Prisma.MarksUncheckedUpdateManyWithoutEnrollmentNestedInput
+  billingPlans?: Prisma.BillingPlanUncheckedUpdateManyWithoutEnrollmentNestedInput
+}
+
+export type EnrollmentUpsertWithWhereUniqueWithoutTransferredToEnrollmentInput = {
+  where: Prisma.EnrollmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.EnrollmentUpdateWithoutTransferredToEnrollmentInput, Prisma.EnrollmentUncheckedUpdateWithoutTransferredToEnrollmentInput>
+  create: Prisma.XOR<Prisma.EnrollmentCreateWithoutTransferredToEnrollmentInput, Prisma.EnrollmentUncheckedCreateWithoutTransferredToEnrollmentInput>
+}
+
+export type EnrollmentUpdateWithWhereUniqueWithoutTransferredToEnrollmentInput = {
+  where: Prisma.EnrollmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.EnrollmentUpdateWithoutTransferredToEnrollmentInput, Prisma.EnrollmentUncheckedUpdateWithoutTransferredToEnrollmentInput>
+}
+
+export type EnrollmentUpdateManyWithWhereWithoutTransferredToEnrollmentInput = {
+  where: Prisma.EnrollmentScalarWhereInput
+  data: Prisma.XOR<Prisma.EnrollmentUpdateManyMutationInput, Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToEnrollmentInput>
+}
+
+export type EnrollmentCreateWithoutAttendanceInput = {
+  id?: string
+  status?: $Enums.EnrollmentStatus
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  institute: Prisma.InstituteCreateNestedOneWithoutEnrollmentsInput
+  student: Prisma.StudentCreateNestedOneWithoutEnrollmentsInput
+  batch: Prisma.BatchCreateNestedOneWithoutEnrollmentsInput
+  transferredToBatch?: Prisma.BatchCreateNestedOneWithoutTransferredEnrollmentsInput
+  transferredToEnrollment?: Prisma.EnrollmentCreateNestedOneWithoutPreviousEnrollmentsInput
+  previousEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToEnrollmentInput
   marks?: Prisma.MarksCreateNestedManyWithoutEnrollmentInput
   billingPlans?: Prisma.BillingPlanCreateNestedManyWithoutEnrollmentInput
 }
@@ -919,13 +1311,17 @@ export type EnrollmentUncheckedCreateWithoutAttendanceInput = {
   instituteId: string
   studentId: string
   batchId: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToBatchId?: string | null
+  transferredToEnrollmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToEnrollmentInput
   marks?: Prisma.MarksUncheckedCreateNestedManyWithoutEnrollmentInput
   billingPlans?: Prisma.BillingPlanUncheckedCreateNestedManyWithoutEnrollmentInput
 }
@@ -948,16 +1344,20 @@ export type EnrollmentUpdateToOneWithWhereWithoutAttendanceInput = {
 
 export type EnrollmentUpdateWithoutAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   institute?: Prisma.InstituteUpdateOneRequiredWithoutEnrollmentsNestedInput
   student?: Prisma.StudentUpdateOneRequiredWithoutEnrollmentsNestedInput
   batch?: Prisma.BatchUpdateOneRequiredWithoutEnrollmentsNestedInput
+  transferredToBatch?: Prisma.BatchUpdateOneWithoutTransferredEnrollmentsNestedInput
+  transferredToEnrollment?: Prisma.EnrollmentUpdateOneWithoutPreviousEnrollmentsNestedInput
+  previousEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToEnrollmentNestedInput
   marks?: Prisma.MarksUpdateManyWithoutEnrollmentNestedInput
   billingPlans?: Prisma.BillingPlanUpdateManyWithoutEnrollmentNestedInput
 }
@@ -967,29 +1367,37 @@ export type EnrollmentUncheckedUpdateWithoutAttendanceInput = {
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferredToEnrollmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToEnrollmentNestedInput
   marks?: Prisma.MarksUncheckedUpdateManyWithoutEnrollmentNestedInput
   billingPlans?: Prisma.BillingPlanUncheckedUpdateManyWithoutEnrollmentNestedInput
 }
 
 export type EnrollmentCreateWithoutMarksInput = {
   id?: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   institute: Prisma.InstituteCreateNestedOneWithoutEnrollmentsInput
   student: Prisma.StudentCreateNestedOneWithoutEnrollmentsInput
   batch: Prisma.BatchCreateNestedOneWithoutEnrollmentsInput
+  transferredToBatch?: Prisma.BatchCreateNestedOneWithoutTransferredEnrollmentsInput
+  transferredToEnrollment?: Prisma.EnrollmentCreateNestedOneWithoutPreviousEnrollmentsInput
+  previousEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToEnrollmentInput
   attendance?: Prisma.AttendanceCreateNestedManyWithoutEnrollmentInput
   billingPlans?: Prisma.BillingPlanCreateNestedManyWithoutEnrollmentInput
 }
@@ -999,13 +1407,17 @@ export type EnrollmentUncheckedCreateWithoutMarksInput = {
   instituteId: string
   studentId: string
   batchId: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToBatchId?: string | null
+  transferredToEnrollmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToEnrollmentInput
   attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutEnrollmentInput
   billingPlans?: Prisma.BillingPlanUncheckedCreateNestedManyWithoutEnrollmentInput
 }
@@ -1028,16 +1440,20 @@ export type EnrollmentUpdateToOneWithWhereWithoutMarksInput = {
 
 export type EnrollmentUpdateWithoutMarksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   institute?: Prisma.InstituteUpdateOneRequiredWithoutEnrollmentsNestedInput
   student?: Prisma.StudentUpdateOneRequiredWithoutEnrollmentsNestedInput
   batch?: Prisma.BatchUpdateOneRequiredWithoutEnrollmentsNestedInput
+  transferredToBatch?: Prisma.BatchUpdateOneWithoutTransferredEnrollmentsNestedInput
+  transferredToEnrollment?: Prisma.EnrollmentUpdateOneWithoutPreviousEnrollmentsNestedInput
+  previousEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToEnrollmentNestedInput
   attendance?: Prisma.AttendanceUpdateManyWithoutEnrollmentNestedInput
   billingPlans?: Prisma.BillingPlanUpdateManyWithoutEnrollmentNestedInput
 }
@@ -1047,29 +1463,37 @@ export type EnrollmentUncheckedUpdateWithoutMarksInput = {
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferredToEnrollmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToEnrollmentNestedInput
   attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutEnrollmentNestedInput
   billingPlans?: Prisma.BillingPlanUncheckedUpdateManyWithoutEnrollmentNestedInput
 }
 
 export type EnrollmentCreateWithoutBillingPlansInput = {
   id?: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   institute: Prisma.InstituteCreateNestedOneWithoutEnrollmentsInput
   student: Prisma.StudentCreateNestedOneWithoutEnrollmentsInput
   batch: Prisma.BatchCreateNestedOneWithoutEnrollmentsInput
+  transferredToBatch?: Prisma.BatchCreateNestedOneWithoutTransferredEnrollmentsInput
+  transferredToEnrollment?: Prisma.EnrollmentCreateNestedOneWithoutPreviousEnrollmentsInput
+  previousEnrollments?: Prisma.EnrollmentCreateNestedManyWithoutTransferredToEnrollmentInput
   attendance?: Prisma.AttendanceCreateNestedManyWithoutEnrollmentInput
   marks?: Prisma.MarksCreateNestedManyWithoutEnrollmentInput
 }
@@ -1079,13 +1503,17 @@ export type EnrollmentUncheckedCreateWithoutBillingPlansInput = {
   instituteId: string
   studentId: string
   batchId: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToBatchId?: string | null
+  transferredToEnrollmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutTransferredToEnrollmentInput
   attendance?: Prisma.AttendanceUncheckedCreateNestedManyWithoutEnrollmentInput
   marks?: Prisma.MarksUncheckedCreateNestedManyWithoutEnrollmentInput
 }
@@ -1108,16 +1536,20 @@ export type EnrollmentUpdateToOneWithWhereWithoutBillingPlansInput = {
 
 export type EnrollmentUpdateWithoutBillingPlansInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   institute?: Prisma.InstituteUpdateOneRequiredWithoutEnrollmentsNestedInput
   student?: Prisma.StudentUpdateOneRequiredWithoutEnrollmentsNestedInput
   batch?: Prisma.BatchUpdateOneRequiredWithoutEnrollmentsNestedInput
+  transferredToBatch?: Prisma.BatchUpdateOneWithoutTransferredEnrollmentsNestedInput
+  transferredToEnrollment?: Prisma.EnrollmentUpdateOneWithoutPreviousEnrollmentsNestedInput
+  previousEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToEnrollmentNestedInput
   attendance?: Prisma.AttendanceUpdateManyWithoutEnrollmentNestedInput
   marks?: Prisma.MarksUpdateManyWithoutEnrollmentNestedInput
 }
@@ -1127,13 +1559,17 @@ export type EnrollmentUncheckedUpdateWithoutBillingPlansInput = {
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferredToEnrollmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToEnrollmentNestedInput
   attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutEnrollmentNestedInput
   marks?: Prisma.MarksUncheckedUpdateManyWithoutEnrollmentNestedInput
 }
@@ -1142,10 +1578,13 @@ export type EnrollmentCreateManyInstituteInput = {
   id?: string
   studentId: string
   batchId: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToBatchId?: string | null
+  transferredToEnrollmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1153,15 +1592,19 @@ export type EnrollmentCreateManyInstituteInput = {
 
 export type EnrollmentUpdateWithoutInstituteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   student?: Prisma.StudentUpdateOneRequiredWithoutEnrollmentsNestedInput
   batch?: Prisma.BatchUpdateOneRequiredWithoutEnrollmentsNestedInput
+  transferredToBatch?: Prisma.BatchUpdateOneWithoutTransferredEnrollmentsNestedInput
+  transferredToEnrollment?: Prisma.EnrollmentUpdateOneWithoutPreviousEnrollmentsNestedInput
+  previousEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToEnrollmentNestedInput
   attendance?: Prisma.AttendanceUpdateManyWithoutEnrollmentNestedInput
   marks?: Prisma.MarksUpdateManyWithoutEnrollmentNestedInput
   billingPlans?: Prisma.BillingPlanUpdateManyWithoutEnrollmentNestedInput
@@ -1171,13 +1614,17 @@ export type EnrollmentUncheckedUpdateWithoutInstituteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferredToEnrollmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToEnrollmentNestedInput
   attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutEnrollmentNestedInput
   marks?: Prisma.MarksUncheckedUpdateManyWithoutEnrollmentNestedInput
   billingPlans?: Prisma.BillingPlanUncheckedUpdateManyWithoutEnrollmentNestedInput
@@ -1187,10 +1634,13 @@ export type EnrollmentUncheckedUpdateManyWithoutInstituteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferredToEnrollmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1200,10 +1650,13 @@ export type EnrollmentCreateManyStudentInput = {
   id?: string
   instituteId: string
   batchId: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToBatchId?: string | null
+  transferredToEnrollmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1211,15 +1664,19 @@ export type EnrollmentCreateManyStudentInput = {
 
 export type EnrollmentUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   institute?: Prisma.InstituteUpdateOneRequiredWithoutEnrollmentsNestedInput
   batch?: Prisma.BatchUpdateOneRequiredWithoutEnrollmentsNestedInput
+  transferredToBatch?: Prisma.BatchUpdateOneWithoutTransferredEnrollmentsNestedInput
+  transferredToEnrollment?: Prisma.EnrollmentUpdateOneWithoutPreviousEnrollmentsNestedInput
+  previousEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToEnrollmentNestedInput
   attendance?: Prisma.AttendanceUpdateManyWithoutEnrollmentNestedInput
   marks?: Prisma.MarksUpdateManyWithoutEnrollmentNestedInput
   billingPlans?: Prisma.BillingPlanUpdateManyWithoutEnrollmentNestedInput
@@ -1229,13 +1686,17 @@ export type EnrollmentUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferredToEnrollmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToEnrollmentNestedInput
   attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutEnrollmentNestedInput
   marks?: Prisma.MarksUncheckedUpdateManyWithoutEnrollmentNestedInput
   billingPlans?: Prisma.BillingPlanUncheckedUpdateManyWithoutEnrollmentNestedInput
@@ -1245,10 +1706,13 @@ export type EnrollmentUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
   batchId?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferredToEnrollmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1258,10 +1722,29 @@ export type EnrollmentCreateManyBatchInput = {
   id?: string
   instituteId: string
   studentId: string
-  joinedOn: Date | string
   status?: $Enums.EnrollmentStatus
-  discountType?: $Enums.DiscountType | null
-  discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToBatchId?: string | null
+  transferredToEnrollmentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type EnrollmentCreateManyTransferredToBatchInput = {
+  id?: string
+  instituteId: string
+  studentId: string
+  batchId: string
+  status?: $Enums.EnrollmentStatus
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToEnrollmentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1269,15 +1752,19 @@ export type EnrollmentCreateManyBatchInput = {
 
 export type EnrollmentUpdateWithoutBatchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   institute?: Prisma.InstituteUpdateOneRequiredWithoutEnrollmentsNestedInput
   student?: Prisma.StudentUpdateOneRequiredWithoutEnrollmentsNestedInput
+  transferredToBatch?: Prisma.BatchUpdateOneWithoutTransferredEnrollmentsNestedInput
+  transferredToEnrollment?: Prisma.EnrollmentUpdateOneWithoutPreviousEnrollmentsNestedInput
+  previousEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToEnrollmentNestedInput
   attendance?: Prisma.AttendanceUpdateManyWithoutEnrollmentNestedInput
   marks?: Prisma.MarksUpdateManyWithoutEnrollmentNestedInput
   billingPlans?: Prisma.BillingPlanUpdateManyWithoutEnrollmentNestedInput
@@ -1287,13 +1774,17 @@ export type EnrollmentUncheckedUpdateWithoutBatchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferredToEnrollmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToEnrollmentNestedInput
   attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutEnrollmentNestedInput
   marks?: Prisma.MarksUncheckedUpdateManyWithoutEnrollmentNestedInput
   billingPlans?: Prisma.BillingPlanUncheckedUpdateManyWithoutEnrollmentNestedInput
@@ -1303,10 +1794,141 @@ export type EnrollmentUncheckedUpdateManyWithoutBatchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   instituteId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  joinedOn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
-  discountType?: Prisma.NullableEnumDiscountTypeFieldUpdateOperationsInput | $Enums.DiscountType | null
-  discountValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferredToEnrollmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type EnrollmentUpdateWithoutTransferredToBatchInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  institute?: Prisma.InstituteUpdateOneRequiredWithoutEnrollmentsNestedInput
+  student?: Prisma.StudentUpdateOneRequiredWithoutEnrollmentsNestedInput
+  batch?: Prisma.BatchUpdateOneRequiredWithoutEnrollmentsNestedInput
+  transferredToEnrollment?: Prisma.EnrollmentUpdateOneWithoutPreviousEnrollmentsNestedInput
+  previousEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToEnrollmentNestedInput
+  attendance?: Prisma.AttendanceUpdateManyWithoutEnrollmentNestedInput
+  marks?: Prisma.MarksUpdateManyWithoutEnrollmentNestedInput
+  billingPlans?: Prisma.BillingPlanUpdateManyWithoutEnrollmentNestedInput
+}
+
+export type EnrollmentUncheckedUpdateWithoutTransferredToBatchInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  instituteId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  batchId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToEnrollmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToEnrollmentNestedInput
+  attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutEnrollmentNestedInput
+  marks?: Prisma.MarksUncheckedUpdateManyWithoutEnrollmentNestedInput
+  billingPlans?: Prisma.BillingPlanUncheckedUpdateManyWithoutEnrollmentNestedInput
+}
+
+export type EnrollmentUncheckedUpdateManyWithoutTransferredToBatchInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  instituteId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  batchId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToEnrollmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type EnrollmentCreateManyTransferredToEnrollmentInput = {
+  id?: string
+  instituteId: string
+  studentId: string
+  batchId: string
+  status?: $Enums.EnrollmentStatus
+  enrolledAt?: Date | string
+  completedAt?: Date | string | null
+  withdrawnAt?: Date | string | null
+  transferredAt?: Date | string | null
+  transferredToBatchId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type EnrollmentUpdateWithoutTransferredToEnrollmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  institute?: Prisma.InstituteUpdateOneRequiredWithoutEnrollmentsNestedInput
+  student?: Prisma.StudentUpdateOneRequiredWithoutEnrollmentsNestedInput
+  batch?: Prisma.BatchUpdateOneRequiredWithoutEnrollmentsNestedInput
+  transferredToBatch?: Prisma.BatchUpdateOneWithoutTransferredEnrollmentsNestedInput
+  previousEnrollments?: Prisma.EnrollmentUpdateManyWithoutTransferredToEnrollmentNestedInput
+  attendance?: Prisma.AttendanceUpdateManyWithoutEnrollmentNestedInput
+  marks?: Prisma.MarksUpdateManyWithoutEnrollmentNestedInput
+  billingPlans?: Prisma.BillingPlanUpdateManyWithoutEnrollmentNestedInput
+}
+
+export type EnrollmentUncheckedUpdateWithoutTransferredToEnrollmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  instituteId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  batchId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  previousEnrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutTransferredToEnrollmentNestedInput
+  attendance?: Prisma.AttendanceUncheckedUpdateManyWithoutEnrollmentNestedInput
+  marks?: Prisma.MarksUncheckedUpdateManyWithoutEnrollmentNestedInput
+  billingPlans?: Prisma.BillingPlanUncheckedUpdateManyWithoutEnrollmentNestedInput
+}
+
+export type EnrollmentUncheckedUpdateManyWithoutTransferredToEnrollmentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  instituteId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  batchId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
+  enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  withdrawnAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  transferredToBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1318,12 +1940,14 @@ export type EnrollmentUncheckedUpdateManyWithoutBatchInput = {
  */
 
 export type EnrollmentCountOutputType = {
+  previousEnrollments: number
   attendance: number
   marks: number
   billingPlans: number
 }
 
 export type EnrollmentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  previousEnrollments?: boolean | EnrollmentCountOutputTypeCountPreviousEnrollmentsArgs
   attendance?: boolean | EnrollmentCountOutputTypeCountAttendanceArgs
   marks?: boolean | EnrollmentCountOutputTypeCountMarksArgs
   billingPlans?: boolean | EnrollmentCountOutputTypeCountBillingPlansArgs
@@ -1337,6 +1961,13 @@ export type EnrollmentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.E
    * Select specific fields to fetch from the EnrollmentCountOutputType
    */
   select?: Prisma.EnrollmentCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * EnrollmentCountOutputType without action
+ */
+export type EnrollmentCountOutputTypeCountPreviousEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EnrollmentWhereInput
 }
 
 /**
@@ -1366,16 +1997,22 @@ export type EnrollmentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   instituteId?: boolean
   studentId?: boolean
   batchId?: boolean
-  joinedOn?: boolean
   status?: boolean
-  discountType?: boolean
-  discountValue?: boolean
+  enrolledAt?: boolean
+  completedAt?: boolean
+  withdrawnAt?: boolean
+  transferredAt?: boolean
+  transferredToBatchId?: boolean
+  transferredToEnrollmentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
+  transferredToBatch?: boolean | Prisma.Enrollment$transferredToBatchArgs<ExtArgs>
+  transferredToEnrollment?: boolean | Prisma.Enrollment$transferredToEnrollmentArgs<ExtArgs>
+  previousEnrollments?: boolean | Prisma.Enrollment$previousEnrollmentsArgs<ExtArgs>
   attendance?: boolean | Prisma.Enrollment$attendanceArgs<ExtArgs>
   marks?: boolean | Prisma.Enrollment$marksArgs<ExtArgs>
   billingPlans?: boolean | Prisma.Enrollment$billingPlansArgs<ExtArgs>
@@ -1387,16 +2024,21 @@ export type EnrollmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   instituteId?: boolean
   studentId?: boolean
   batchId?: boolean
-  joinedOn?: boolean
   status?: boolean
-  discountType?: boolean
-  discountValue?: boolean
+  enrolledAt?: boolean
+  completedAt?: boolean
+  withdrawnAt?: boolean
+  transferredAt?: boolean
+  transferredToBatchId?: boolean
+  transferredToEnrollmentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
+  transferredToBatch?: boolean | Prisma.Enrollment$transferredToBatchArgs<ExtArgs>
+  transferredToEnrollment?: boolean | Prisma.Enrollment$transferredToEnrollmentArgs<ExtArgs>
 }, ExtArgs["result"]["enrollment"]>
 
 export type EnrollmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1404,16 +2046,21 @@ export type EnrollmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   instituteId?: boolean
   studentId?: boolean
   batchId?: boolean
-  joinedOn?: boolean
   status?: boolean
-  discountType?: boolean
-  discountValue?: boolean
+  enrolledAt?: boolean
+  completedAt?: boolean
+  withdrawnAt?: boolean
+  transferredAt?: boolean
+  transferredToBatchId?: boolean
+  transferredToEnrollmentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
+  transferredToBatch?: boolean | Prisma.Enrollment$transferredToBatchArgs<ExtArgs>
+  transferredToEnrollment?: boolean | Prisma.Enrollment$transferredToEnrollmentArgs<ExtArgs>
 }, ExtArgs["result"]["enrollment"]>
 
 export type EnrollmentSelectScalar = {
@@ -1421,20 +2068,26 @@ export type EnrollmentSelectScalar = {
   instituteId?: boolean
   studentId?: boolean
   batchId?: boolean
-  joinedOn?: boolean
   status?: boolean
-  discountType?: boolean
-  discountValue?: boolean
+  enrolledAt?: boolean
+  completedAt?: boolean
+  withdrawnAt?: boolean
+  transferredAt?: boolean
+  transferredToBatchId?: boolean
+  transferredToEnrollmentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type EnrollmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "instituteId" | "studentId" | "batchId" | "joinedOn" | "status" | "discountType" | "discountValue" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["enrollment"]>
+export type EnrollmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "instituteId" | "studentId" | "batchId" | "status" | "enrolledAt" | "completedAt" | "withdrawnAt" | "transferredAt" | "transferredToBatchId" | "transferredToEnrollmentId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["enrollment"]>
 export type EnrollmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
+  transferredToBatch?: boolean | Prisma.Enrollment$transferredToBatchArgs<ExtArgs>
+  transferredToEnrollment?: boolean | Prisma.Enrollment$transferredToEnrollmentArgs<ExtArgs>
+  previousEnrollments?: boolean | Prisma.Enrollment$previousEnrollmentsArgs<ExtArgs>
   attendance?: boolean | Prisma.Enrollment$attendanceArgs<ExtArgs>
   marks?: boolean | Prisma.Enrollment$marksArgs<ExtArgs>
   billingPlans?: boolean | Prisma.Enrollment$billingPlansArgs<ExtArgs>
@@ -1444,11 +2097,15 @@ export type EnrollmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.E
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
+  transferredToBatch?: boolean | Prisma.Enrollment$transferredToBatchArgs<ExtArgs>
+  transferredToEnrollment?: boolean | Prisma.Enrollment$transferredToEnrollmentArgs<ExtArgs>
 }
 export type EnrollmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   institute?: boolean | Prisma.InstituteDefaultArgs<ExtArgs>
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   batch?: boolean | Prisma.BatchDefaultArgs<ExtArgs>
+  transferredToBatch?: boolean | Prisma.Enrollment$transferredToBatchArgs<ExtArgs>
+  transferredToEnrollment?: boolean | Prisma.Enrollment$transferredToEnrollmentArgs<ExtArgs>
 }
 
 export type $EnrollmentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1457,6 +2114,9 @@ export type $EnrollmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
     institute: Prisma.$InstitutePayload<ExtArgs>
     student: Prisma.$StudentPayload<ExtArgs>
     batch: Prisma.$BatchPayload<ExtArgs>
+    transferredToBatch: Prisma.$BatchPayload<ExtArgs> | null
+    transferredToEnrollment: Prisma.$EnrollmentPayload<ExtArgs> | null
+    previousEnrollments: Prisma.$EnrollmentPayload<ExtArgs>[]
     attendance: Prisma.$AttendancePayload<ExtArgs>[]
     marks: Prisma.$MarksPayload<ExtArgs>[]
     billingPlans: Prisma.$BillingPlanPayload<ExtArgs>[]
@@ -1466,10 +2126,13 @@ export type $EnrollmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
     instituteId: string
     studentId: string
     batchId: string
-    joinedOn: Date
     status: $Enums.EnrollmentStatus
-    discountType: $Enums.DiscountType | null
-    discountValue: runtime.Decimal | null
+    enrolledAt: Date
+    completedAt: Date | null
+    withdrawnAt: Date | null
+    transferredAt: Date | null
+    transferredToBatchId: string | null
+    transferredToEnrollmentId: string | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -1870,6 +2533,9 @@ export interface Prisma__EnrollmentClient<T, Null = never, ExtArgs extends runti
   institute<T extends Prisma.InstituteDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InstituteDefaultArgs<ExtArgs>>): Prisma.Prisma__InstituteClient<runtime.Types.Result.GetResult<Prisma.$InstitutePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   student<T extends Prisma.StudentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentDefaultArgs<ExtArgs>>): Prisma.Prisma__StudentClient<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   batch<T extends Prisma.BatchDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BatchDefaultArgs<ExtArgs>>): Prisma.Prisma__BatchClient<runtime.Types.Result.GetResult<Prisma.$BatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  transferredToBatch<T extends Prisma.Enrollment$transferredToBatchArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Enrollment$transferredToBatchArgs<ExtArgs>>): Prisma.Prisma__BatchClient<runtime.Types.Result.GetResult<Prisma.$BatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  transferredToEnrollment<T extends Prisma.Enrollment$transferredToEnrollmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Enrollment$transferredToEnrollmentArgs<ExtArgs>>): Prisma.Prisma__EnrollmentClient<runtime.Types.Result.GetResult<Prisma.$EnrollmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  previousEnrollments<T extends Prisma.Enrollment$previousEnrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Enrollment$previousEnrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attendance<T extends Prisma.Enrollment$attendanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Enrollment$attendanceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   marks<T extends Prisma.Enrollment$marksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Enrollment$marksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MarksPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   billingPlans<T extends Prisma.Enrollment$billingPlansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Enrollment$billingPlansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BillingPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1906,10 +2572,13 @@ export interface EnrollmentFieldRefs {
   readonly instituteId: Prisma.FieldRef<"Enrollment", 'String'>
   readonly studentId: Prisma.FieldRef<"Enrollment", 'String'>
   readonly batchId: Prisma.FieldRef<"Enrollment", 'String'>
-  readonly joinedOn: Prisma.FieldRef<"Enrollment", 'DateTime'>
   readonly status: Prisma.FieldRef<"Enrollment", 'EnrollmentStatus'>
-  readonly discountType: Prisma.FieldRef<"Enrollment", 'DiscountType'>
-  readonly discountValue: Prisma.FieldRef<"Enrollment", 'Decimal'>
+  readonly enrolledAt: Prisma.FieldRef<"Enrollment", 'DateTime'>
+  readonly completedAt: Prisma.FieldRef<"Enrollment", 'DateTime'>
+  readonly withdrawnAt: Prisma.FieldRef<"Enrollment", 'DateTime'>
+  readonly transferredAt: Prisma.FieldRef<"Enrollment", 'DateTime'>
+  readonly transferredToBatchId: Prisma.FieldRef<"Enrollment", 'String'>
+  readonly transferredToEnrollmentId: Prisma.FieldRef<"Enrollment", 'String'>
   readonly createdAt: Prisma.FieldRef<"Enrollment", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Enrollment", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Enrollment", 'DateTime'>
@@ -2311,6 +2980,68 @@ export type EnrollmentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Limit how many Enrollments to delete.
    */
   limit?: number
+}
+
+/**
+ * Enrollment.transferredToBatch
+ */
+export type Enrollment$transferredToBatchArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Batch
+   */
+  select?: Prisma.BatchSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Batch
+   */
+  omit?: Prisma.BatchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BatchInclude<ExtArgs> | null
+  where?: Prisma.BatchWhereInput
+}
+
+/**
+ * Enrollment.transferredToEnrollment
+ */
+export type Enrollment$transferredToEnrollmentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Enrollment
+   */
+  select?: Prisma.EnrollmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Enrollment
+   */
+  omit?: Prisma.EnrollmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EnrollmentInclude<ExtArgs> | null
+  where?: Prisma.EnrollmentWhereInput
+}
+
+/**
+ * Enrollment.previousEnrollments
+ */
+export type Enrollment$previousEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Enrollment
+   */
+  select?: Prisma.EnrollmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Enrollment
+   */
+  omit?: Prisma.EnrollmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EnrollmentInclude<ExtArgs> | null
+  where?: Prisma.EnrollmentWhereInput
+  orderBy?: Prisma.EnrollmentOrderByWithRelationInput | Prisma.EnrollmentOrderByWithRelationInput[]
+  cursor?: Prisma.EnrollmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EnrollmentScalarFieldEnum | Prisma.EnrollmentScalarFieldEnum[]
 }
 
 /**

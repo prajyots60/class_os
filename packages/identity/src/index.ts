@@ -87,3 +87,4 @@ export * from './infrastructure/repositories/prisma-program.repository';
 export * from './infrastructure/repositories/prisma-subject.repository';
 export * from './infrastructure/repositories/prisma-program-subject.repository';
 export * from './infrastructure/repositories/prisma-batch.repository';
+export * from './infrastructure/repositories/prisma-enrollment.repository';
