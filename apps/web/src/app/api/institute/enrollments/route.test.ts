@@ -8,14 +8,10 @@ import {
 } from '@coaching-os/database';
 import { auth } from '@coaching-os/auth';
 import { GET as listGET, POST as createPOST, PUT as rootPUT, PATCH as rootPATCH, DELETE as rootDELETE } from './route';
-import { GET as getByIdGET, DELETE as archiveDELETE, POST as idPOST, PUT as idPUT, PATCH as idPATCH } from './[id]/route';
+import { GET as getByIdGET, DELETE as archiveDELETE } from './[id]/route';
 import { POST as activatePOST } from './[id]/activate/route';
 import { POST as completePOST } from './[id]/complete/route';
-import { POST as withdrawPOST } from './[id]/withdraw/route';
-import { POST as cancelPOST } from './[id]/cancel/route';
 import { POST as transferPOST } from './[id]/transfer/route';
-import { GET as studentEnrollmentsGET } from '../students/[id]/enrollments/route';
-import { GET as batchEnrollmentsGET } from '../batches/[id]/enrollments/route';
 import { POST as onboardPOST } from '../../onboarding/institute/route';
 import { POST as createStudentPOST } from '../students/route';
 import { POST as admitStudentPOST } from '../students/[id]/admit/route';

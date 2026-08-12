@@ -224,13 +224,13 @@ The following functionality is **EXPLICITLY DEFERRED**:
 ```text
 Phase 1.11.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     ↓
-Phase 1.11.1 — Enrollment Domain Entity & Value Objects ⏳ (UPCOMING)
-Phase 1.11.2 — Repository & PostgreSQL Persistence ⏳ (UPCOMING)
+Phase 1.11.1 — Enrollment Domain Entity & Value Objects 🟢 (COMPLETE)
+Phase 1.11.2 — Repository & PostgreSQL Persistence 🟢 (COMPLETE)
     ↓
-Phase 1.11.3 — Application Use Cases & Enrollment Lifecycle ⏳ (UPCOMING)
-Phase 1.11.4 — API Boundary & Presentation Validators ⏳ (UPCOMING)
+Phase 1.11.3 — Application Use Cases & Enrollment Lifecycle 🟢 (COMPLETE)
+Phase 1.11.4 — API Boundary & Presentation Validators 🟢 (COMPLETE)
     ↓
-Phase 1.11.5 — Security / Tenant Isolation E2E Matrix ⏳ (UPCOMING)
+Phase 1.11.5 — Security / Tenant Isolation E2E Matrix 🟢 (COMPLETE)
 Phase 1.11.6 — Staff Enrollment UI ⏳ (UPCOMING)
     ↓
 Phase 1.11.7 — UX / Accessibility / Workflow Testing ⏳ (UPCOMING)
