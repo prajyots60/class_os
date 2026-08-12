@@ -1,6 +1,6 @@
 # Phase 1.12 — Protected Identity APIs (`/api/v1/...`) Specification
 
-- **Status**: 🟢 **Phase 1.12.0 FROZEN \| Phase 1.12.1 & 1.12.2 COMPLETED**
+- **Status**: 🟢 **Phase 1.12.0 FROZEN \| Phase 1.12.1, 1.12.2, 1.12.3 & 1.12.4 COMPLETED**
 - **Date**: 2026-08-12
 - **Authors**: Senior Staff Architecture & Identity Team
 - **Deciders**: Product & Engineering Core
@@ -171,8 +171,8 @@ Phase 1.12.0 — Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
 Phase 1.12.1 — Protected Identity API Domain/Application Contracts 🟢 (COMPLETED)
 Phase 1.12.2 — API Infrastructure & Persistence Adapters 🟢 (COMPLETED)
     ↓
-Phase 1.12.3 — API Boundary & Presentation Validators ⏳ (UPCOMING)
-Phase 1.12.4 — Authentication, Authorization & Tenant Isolation ⏳ (UPCOMING)
+Phase 1.12.3 — API Boundary & Presentation Validators 🟢 (COMPLETED)
+Phase 1.12.4 — Authentication, Authorization & Tenant Isolation 🟢 (COMPLETED)
     ↓
 Phase 1.12.5 — Security & Adversarial E2E Audit ⏳ (UPCOMING)
 Phase 1.12.6 — Protected Identity API Integration / Staff Consumption ⏳ (UPCOMING)
@@ -202,3 +202,39 @@ Phase 1.12.8 — Final Acceptance Gate & Freeze ⏳ (UPCOMING)
 - **Verification**:
   - `@coaching-os/identity` test suite: 53 test files passed (525 total tests).
 
+### Phase 1.12.3 & 1.12.4 Implementation Summary (2026-08-12, Commit: 94db861)
+
+- **Core Guard Infrastructure**:
+  - `apps/web/src/app/api/v1/_lib/rate-limiter.ts` — in-process token-bucket rate limiter (100 read / 30 mutation per minute per userId key)
+  - `apps/web/src/app/api/v1/_lib/v1-guard.ts` — server-authoritative tenant resolver + `withV1ReadGuard`/`withV1MutationGuard` HOFs + canonical ADR-0015 response envelopes
+  - `apps/web/src/app/api/v1/_lib/v1-validators.ts` — strict Zod schemas (`.strict()`) for all 5 resource collections; blocks instituteId/userId/role/membershipId/tenantId injection
+
+- **Route Handlers (10 files)**:
+  - `GET /api/v1/students` — tenant-scoped student list with cursor pagination
+  - `GET/PATCH /api/v1/students/[id]` — single student read & profile update (admissionNumber immutable)
+  - `GET /api/v1/students/[id]/guardians` — student guardian relationship list
+  - `GET /api/v1/guardians` — guardian list (active/inactive filter)
+  - `GET /api/v1/guardians/[id]` — single guardian read
+  - `GET /api/v1/guardians/[id]/students` — guardian linked student list
+  - `GET /api/v1/staff` — staff list → `StaffMembershipDTO` (PII/credential redaction enforced)
+  - `GET /api/v1/staff/[id]` — single staff membership read → `StaffMembershipDTO`
+  - `GET /api/v1/enrollments` — enrollment list (teacher resource scope, parent denied)
+  - `GET /api/v1/enrollments/[id]` — single enrollment read (teacher scope)
+
+- **Tests (80+ tests across 2 files)**:
+  - `v1-validators.test.ts` — 60+ tests including mass-assignment attack vectors
+  - `rate-limiter.test.ts` — 20+ tests including bucket isolation and Retry-After validation
+
+- **Security Invariants Verified**:
+  - Cross-tenant access returns `404` (not `403`) — resource enumeration protection
+  - `TenantContext` derived exclusively from DB-verified session + InstituteMembership
+  - `.strict()` on all Zod schemas — unknown fields rejected with `400`
+  - `StaffMembershipDTO` strips all auth credentials
+  - Max page size capped at `100`
+  - Rate-limit buckets are isolated by `userId` (prevents cross-user interference)
+
+- **Quality Gate Results**:
+  - `@coaching-os/web` test suite: 33 test files, 324 tests ✅
+  - TypeCheck: 13/13 packages ✅
+  - Lint: 0 errors ✅
+  - Build: all 10 `/api/v1/*` routes compiled as dynamic server routes ✅
