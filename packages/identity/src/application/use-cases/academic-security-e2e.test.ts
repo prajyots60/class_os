@@ -150,6 +150,10 @@ class InMemoryProgramSubjectRepo implements ProgramSubjectRepository {
     return entity;
   }
 
+  public async findById(instituteId: string, id: string): Promise<ProgramSubjectEntity | null> {
+    return this.mappings.find((m) => m.instituteId === instituteId && m.id === id) || null;
+  }
+
   public async findByPair(
     instituteId: string,
     programId: string,
@@ -165,15 +169,15 @@ class InMemoryProgramSubjectRepo implements ProgramSubjectRepository {
     );
   }
 
-  public async listByProgram(instituteId: string, programId: string): Promise<ProgramSubjectEntity[]> {
+  public async listByProgramId(instituteId: string, programId: string): Promise<ProgramSubjectEntity[]> {
     return this.mappings.filter((m) => m.instituteId === instituteId && m.programId === programId);
   }
 
-  public async listBySubject(instituteId: string, subjectId: string): Promise<ProgramSubjectEntity[]> {
+  public async listBySubjectId(instituteId: string, subjectId: string): Promise<ProgramSubjectEntity[]> {
     return this.mappings.filter((m) => m.instituteId === instituteId && m.subjectId === subjectId);
   }
 
-  public async delete(instituteId: string, programId: string, subjectId: string): Promise<boolean> {
+  public async deleteByPair(instituteId: string, programId: string, subjectId: string): Promise<boolean> {
     const idx = this.mappings.findIndex(
       (m) => m.instituteId === instituteId && m.programId === programId && m.subjectId === subjectId,
     );
@@ -298,7 +302,15 @@ class InMemoryMembershipRepo implements InstituteMembershipRepository {
   ): Promise<InstituteMembershipEntity> {
     const m = this.memberships.find((x) => x.id === id);
     if (!m) throw new NotFoundError('Membership not found');
-    const updated = InstituteMembershipEntity.reconstitute({ ...m, status });
+    const updated = InstituteMembershipEntity.from({
+      id: m.id,
+      userId: m.userId,
+      instituteId: m.instituteId,
+      role: m.role,
+      status,
+      createdAt: m.createdAt,
+      updatedAt: new Date(),
+    });
     return updated;
   }
 
@@ -308,17 +320,23 @@ class InMemoryMembershipRepo implements InstituteMembershipRepository {
   ): Promise<InstituteMembershipEntity> {
     const m = this.memberships.find((x) => x.id === id);
     if (!m) throw new NotFoundError('Membership not found');
-    const updated = InstituteMembershipEntity.reconstitute({ ...m, role });
+    const updated = InstituteMembershipEntity.from({
+      id: m.id,
+      userId: m.userId,
+      instituteId: m.instituteId,
+      role,
+      status: m.status,
+      createdAt: m.createdAt,
+      updatedAt: new Date(),
+    });
     return updated;
   }
 
-  public async delete(id: string): Promise<boolean> {
+  public async delete(id: string): Promise<void> {
     const idx = this.memberships.findIndex((m) => m.id === id);
     if (idx !== -1) {
       this.memberships.splice(idx, 1);
-      return true;
     }
-    return false;
   }
 }
 
@@ -691,7 +709,7 @@ describe('Phase 1.10.5 — Academic Hierarchy Security & Tenant Isolation E2E Ma
       userId: ownerContextA.userId,
       membershipId: ownerContextA.membershipId,
       role: 'super_hacker' as any,
-      status: 'active',
+      status: 'active' as const,
     };
 
     await expect(getBatch.execute(forgedContext, { id: batch.id })).rejects.toThrow(
