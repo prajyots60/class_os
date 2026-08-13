@@ -579,6 +579,14 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Security & Authorization**: Enforced server-authoritative tenant resolution (`resolveV1TenantContext`), RBAC capability guards (`withV1ReadGuard`, `withV1MutationGuard`), fail-closed 404 cross-tenant isolation, strict Zod schema validation, and sanitized JSON response envelopes per ADR-0015.
 - **Verification**: Built comprehensive API security suite in `academics-security.test.ts` verifying `ACADEMIC-API-01` through `30`. Verified zero regression against Phase 1 security suites (`v1-security.test.ts`). Passed 100% quality gates across environment, DB health, schema drift, TypeScript, vitest, ESLint, and Next.js 16 production build. **Phase 2.5 COMPLETED.**
 
+### 🟢 Phase 2.6 — Staff Academic Workspace UI (COMPLETED)
+
+- **UI & API Integration Layer**: Implemented strongly-typed DTOs (`v1-academics-ui.types.ts`) and API client fetch wrapper (`v1AcademicsClient`) communicating with `/api/v1/academics/...` REST endpoints.
+- **Teacher-First Daily Workflow**: Re-architected `/academics` workspace UI around 6 tabbed sub-views: `Today's Work` (overview dashboard displaying daily classes, time slots, and attendance status), `Sessions & Schedules` (weekly recurring schedules & batch session generator), `Attendance` (1-click bulk roster marking anchored to `(batchSessionId, enrollmentId)`), `Homework` (batch draft creation, editing, and explicit publication dialog), `Assessments & Marks` (test lifecycle management and spreadsheet-style bulk mark entry), and `Programs & Batches` (academic hierarchy management).
+- **Publication Immutability**: Enforced visual read-only state for published homework and published test results in UI (edit/delete buttons hidden/disabled).
+- **Security & Multi-Tenant E2E Matrix**: Created unit test suite (`v1-academics-client.test.ts`) and Playwright E2E security matrix (`academic-workspace-security.spec.ts`) testing workspace navigation, attendance submission, homework publication, marks entry, and cross-tenant fail-closed 404 resource masking.
+- **Verification Gate**: Passed 100% monorepo quality gates (`env:check`, `db:validate`, `db:health`, `typecheck`, `test`, `lint`, `build`). **Phase 2.6 COMPLETED.**
+
 ---
 
 ## 4. Next Milestone Roadmap
@@ -598,7 +606,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 2.3:** Homework Workflow (`Homework`) 🟢 (ACCEPTED & COMPLETED)
   - **Phase 2.4:** Assessment & Bulk Marks Engine (`Test` & `Marks`) 🟢 (ACCEPTED & COMPLETED)
   - **Phase 2.5:** Protected Academics APIs (`/api/v1/academics/...`) 🟢 (ACCEPTED & COMPLETED)
-  - **Phase 2.6:** Staff Academic Workspace UI (Teacher & Staff Workspaces) ⏳ NEXT
-  - **Phase 2.7:** UX / Accessibility & Security E2E Matrix ⏳ UPCOMING
+  - **Phase 2.6:** Staff Academic Workspace UI (Teacher & Staff Workspaces) 🟢 (ACCEPTED & COMPLETED)
+  - **Phase 2.7:** UX / Accessibility & Security E2E Matrix ⏳ NEXT
   - **Phase 2.8:** Phase 2 Acceptance Gate & Milestone Freeze ⏳ UPCOMING
 

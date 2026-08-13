@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { Alert, AlertTitle, AlertDescription, Button } from '@coaching-os/ui';
-import { ShieldAlert, AlertCircle, RefreshCw, BookOpen, Layers, Users, Book } from 'lucide-react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Alert, AlertTitle, AlertDescription } from '@coaching-os/ui';
+import { ShieldAlert, AlertCircle, RefreshCw, Calendar, CheckSquare, FileText, ClipboardList, BookOpen } from 'lucide-react';
 import { getCapabilitiesForRole, type ProgramDTO, type SubjectDTO, type ProgramSubjectDTO, type BatchDTO } from '@coaching-os/identity/client';
 
 import type {
@@ -12,10 +12,13 @@ import type {
   EditProgramFormValues,
   CreateSubjectFormValues,
   EditSubjectFormValues,
+  CreateProgramSubjectFormValues,
   CreateBatchFormValues,
   EditBatchFormValues,
+  AssignTeacherFormValues,
   ChangeBatchStatusFormValues,
 } from '../types/academic-ui.types';
+
 import {
   fetchProgramsList,
   createProgram,
@@ -37,6 +40,12 @@ import {
   fetchStaffList,
 } from '../api/academic-api';
 
+import { AcademicOverviewView } from './AcademicOverviewView';
+import { SessionsView } from './SessionsView';
+import { AttendanceView } from './AttendanceView';
+import { HomeworkView } from './HomeworkView';
+import { AssessmentsView } from './AssessmentsView';
+
 import { ProgramsView } from './ProgramsView';
 import { ProgramFormModal } from './ProgramFormModal';
 import { ProgramDetailsModal } from './ProgramDetailsModal';
@@ -52,18 +61,32 @@ import { BatchStatusModal } from './BatchStatusModal';
 import { BatchDetailsModal } from './BatchDetailsModal';
 import { ConfirmArchiveModal } from './ConfirmArchiveModal';
 
-export function AcademicWorkspace() {
-  const router = useRouter();
+export type WorkspaceTab = 'today' | 'sessions' | 'attendance' | 'homework' | 'tests' | 'hierarchy';
+export type HierarchySubTab = 'programs' | 'subjects' | 'mappings' | 'batches';
 
-  // Active Tab: 'programs' | 'subjects' | 'mappings' | 'batches'
-  const [activeTab, setActiveTab] = useState<'programs' | 'subjects' | 'mappings' | 'batches'>('programs');
+function AcademicWorkspaceContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Active Main Tab initialized directly from searchParams
+  const [mainTab, setMainTab] = useState<WorkspaceTab>(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && ['today', 'sessions', 'attendance', 'homework', 'tests', 'hierarchy'].includes(tabParam)) {
+      return tabParam as WorkspaceTab;
+    }
+    return 'today';
+  });
+  const [hierarchySubTab, setHierarchySubTab] = useState<HierarchySubTab>('programs');
+
+  // Contextual params passed across tabs
+  const [navContext, setNavContext] = useState<{ sessionId?: string; batchId?: string }>({});
 
   // Tenant & Capability State
   const [userCapabilities, setUserCapabilities] = useState<string[]>([]);
   const [isContextLoading, setIsContextLoading] = useState(true);
   const [accessDenied, setAccessDenied] = useState(false);
 
-  // Entities Data State
+  // Entities Data State for Hierarchy
   const [programs, setPrograms] = useState<ProgramDTO[]>([]);
   const [subjects, setSubjects] = useState<SubjectDTO[]>([]);
   const [mappings, setMappings] = useState<ProgramSubjectDTO[]>([]);
@@ -74,7 +97,7 @@ export function AcademicWorkspace() {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // Modals & Active Operation States
+  // Modals & Active Operation States for Hierarchy
   const [isProgramFormOpen, setIsProgramFormOpen] = useState(false);
   const [selectedProgramForEdit, setSelectedProgramForEdit] = useState<ProgramDTO | null>(null);
   const [selectedProgramForDetails, setSelectedProgramForDetails] = useState<ProgramDTO | null>(null);
@@ -101,26 +124,23 @@ export function AcademicWorkspace() {
   const [modalError, setModalError] = useState<string | null>(null);
 
   // Capabilities
-  const canProgramRead = userCapabilities.includes('program:read');
-  const canProgramCreate = userCapabilities.includes('program:create');
-  const canProgramUpdate = userCapabilities.includes('program:update');
-  const canProgramArchive = userCapabilities.includes('program:archive');
+  const canProgramCreate = userCapabilities.includes('program:create') || userCapabilities.includes('academic:write');
+  const canProgramUpdate = userCapabilities.includes('program:update') || userCapabilities.includes('academic:write');
+  const canProgramArchive = userCapabilities.includes('program:archive') || userCapabilities.includes('academic:write');
 
-  const canSubjectRead = userCapabilities.includes('subject:read');
-  const canSubjectCreate = userCapabilities.includes('subject:create');
-  const canSubjectUpdate = userCapabilities.includes('subject:update');
-  const canSubjectArchive = userCapabilities.includes('subject:archive');
+  const canSubjectCreate = userCapabilities.includes('subject:create') || userCapabilities.includes('academic:write');
+  const canSubjectUpdate = userCapabilities.includes('subject:update') || userCapabilities.includes('academic:write');
+  const canSubjectArchive = userCapabilities.includes('subject:archive') || userCapabilities.includes('academic:write');
 
-  const canBatchRead = userCapabilities.includes('batch:read');
-  const canBatchCreate = userCapabilities.includes('batch:create');
-  const canBatchUpdate = userCapabilities.includes('batch:update');
-  const canBatchTeacher = userCapabilities.includes('batch:teacher');
-  const canBatchStatus = userCapabilities.includes('batch:status');
-  const canBatchArchive = userCapabilities.includes('batch:archive');
+  const canBatchCreate = userCapabilities.includes('batch:create') || userCapabilities.includes('academic:write');
+  const canBatchUpdate = userCapabilities.includes('batch:update') || userCapabilities.includes('academic:write');
+  const canBatchTeacher = userCapabilities.includes('batch:teacher') || userCapabilities.includes('academic:write');
+  const canBatchStatus = userCapabilities.includes('batch:status') || userCapabilities.includes('academic:write');
+  const canBatchArchive = userCapabilities.includes('batch:archive') || userCapabilities.includes('academic:write');
 
-  const hasAnyAcademicAccess = canProgramRead || canSubjectRead || canBatchRead;
+  const hasMutationCapability = userCapabilities.includes('academic:write') || canProgramCreate || canBatchCreate;
 
-  // 1. Context Resolution
+  // Context Resolution
   useEffect(() => {
     let isMounted = true;
     async function loadContext() {
@@ -143,12 +163,6 @@ export function AcademicWorkspace() {
           const capSet = getCapabilitiesForRole(data.tenantContext.role);
           const caps = Array.from(capSet) as string[];
           setUserCapabilities(caps);
-          const hasAccess = caps.some((c) =>
-            ['program:read', 'subject:read', 'batch:read'].includes(c),
-          );
-          if (!hasAccess) {
-            setAccessDenied(true);
-          }
         } else {
           setAccessDenied(true);
         }
@@ -169,17 +183,17 @@ export function AcademicWorkspace() {
     };
   }, [router]);
 
-  // 2. Fetch Data
+  // Fetch Hierarchy Data
   const loadAllAcademicData = useCallback(async () => {
-    if (isContextLoading || accessDenied || !hasAnyAcademicAccess) return;
+    if (isContextLoading || accessDenied) return;
     setIsLoading(true);
     setError(null);
 
     const [progRes, subRes, mapRes, batchRes, staffRes] = await Promise.all([
-      canProgramRead ? fetchProgramsList() : Promise.resolve({ success: true, data: [] }),
-      canSubjectRead ? fetchSubjectsList() : Promise.resolve({ success: true, data: [] }),
-      canProgramRead || canSubjectRead ? fetchProgramSubjectsList() : Promise.resolve({ success: true, data: [] }),
-      canBatchRead ? fetchBatchesList() : Promise.resolve({ success: true, data: [] }),
+      fetchProgramsList(),
+      fetchSubjectsList(),
+      fetchProgramSubjectsList(),
+      fetchBatchesList(),
       fetchStaffList(),
     ]);
 
@@ -189,181 +203,191 @@ export function AcademicWorkspace() {
     if (batchRes.success) setBatches(batchRes.data || []);
     if (staffRes.success) setStaff(staffRes.data || []);
 
-    if (!progRes.success || !subRes.success || !mapRes.success || !batchRes.success) {
-      setError('Some academic data could not be loaded. Check your permissions.');
-    }
-
     setIsLoading(false);
-  }, [isContextLoading, accessDenied, hasAnyAcademicAccess, canProgramRead, canSubjectRead, canBatchRead]);
+  }, [isContextLoading, accessDenied]);
 
   useEffect(() => {
-    let active = true;
-    Promise.resolve().then(() => {
-      if (active) loadAllAcademicData();
-    });
+    let mounted = true;
+    async function initData() {
+      if (isContextLoading || accessDenied) return;
+      setIsLoading(true);
+      setError(null);
+
+      const [progRes, subRes, mapRes, batchRes, staffRes] = await Promise.all([
+        fetchProgramsList(),
+        fetchSubjectsList(),
+        fetchProgramSubjectsList(),
+        fetchBatchesList(),
+        fetchStaffList(),
+      ]);
+
+      if (mounted) {
+        if (progRes.success) setPrograms(progRes.data || []);
+        if (subRes.success) setSubjects(subRes.data || []);
+        if (mapRes.success) setMappings(mapRes.data || []);
+        if (batchRes.success) setBatches(batchRes.data || []);
+        if (staffRes.success) setStaff(staffRes.data || []);
+        setIsLoading(false);
+      }
+    }
+
+    initData();
     return () => {
-      active = false;
+      mounted = false;
     };
-  }, [loadAllAcademicData]);
+  }, [isContextLoading, accessDenied]);
 
-  // Notification Auto-dismiss
-  useEffect(() => {
-    if (successMessage) {
-      const timer = setTimeout(() => setSuccessMessage(null), 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [successMessage]);
-
-  // Handler: Program Save / Edit
-  const handleProgramSubmit = async (values: CreateProgramFormValues | EditProgramFormValues) => {
-    setIsSubmitting(true);
-    setModalError(null);
-
-    if (selectedProgramForEdit) {
-      const res = await updateProgram(selectedProgramForEdit.id, values as EditProgramFormValues);
-      if (res.success) {
-        setSuccessMessage(`Updated program ${selectedProgramForEdit.code}.`);
-        setSelectedProgramForEdit(null);
-        await loadAllAcademicData();
-      } else {
-        setModalError(res.error?.message || 'Failed to update program.');
-      }
-    } else {
-      const res = await createProgram(values as CreateProgramFormValues);
-      if (res.success) {
-        setSuccessMessage('Program created successfully.');
-        setIsProgramFormOpen(false);
-        await loadAllAcademicData();
-      } else {
-        setModalError(res.error?.message || 'Failed to create program.');
-      }
-    }
-
-    setIsSubmitting(false);
+  // Tab switch helper
+  const handleNavigateToTab = (tab: WorkspaceTab, context?: { sessionId?: string; batchId?: string }) => {
+    if (context) setNavContext(context);
+    setMainTab(tab);
   };
 
-  // Handler: Subject Save / Edit
-  const handleSubjectSubmit = async (values: CreateSubjectFormValues | EditSubjectFormValues) => {
+  // Hierarchy Handlers
+  const handleCreateProgramSubmit = async (values: CreateProgramFormValues | EditProgramFormValues) => {
     setIsSubmitting(true);
     setModalError(null);
-
-    if (selectedSubjectForEdit) {
-      const res = await updateSubject(selectedSubjectForEdit.id, values as EditSubjectFormValues);
-      if (res.success) {
-        setSuccessMessage(`Updated subject ${selectedSubjectForEdit.code}.`);
-        setSelectedSubjectForEdit(null);
-        await loadAllAcademicData();
-      } else {
-        setModalError(res.error?.message || 'Failed to update subject.');
-      }
-    } else {
-      const res = await createSubject(values as CreateSubjectFormValues);
-      if (res.success) {
-        setSuccessMessage('Subject created successfully.');
-        setIsSubjectFormOpen(false);
-        await loadAllAcademicData();
-      } else {
-        setModalError(res.error?.message || 'Failed to create subject.');
-      }
-    }
-
+    const res = await createProgram(values as CreateProgramFormValues);
     setIsSubmitting(false);
+    if (!res.success) {
+      setModalError(res.error?.message || 'Failed to create program.');
+    } else {
+      setIsProgramFormOpen(false);
+      setSuccessMessage('Program created successfully.');
+      loadAllAcademicData();
+    }
   };
 
-  // Handler: ProgramSubject Map
-  const handleMappingSubmit = async (values: { programId: string; subjectId: string }) => {
+  const handleUpdateProgramSubmit = async (values: CreateProgramFormValues | EditProgramFormValues) => {
+    if (!selectedProgramForEdit) return;
     setIsSubmitting(true);
     setModalError(null);
+    const res = await updateProgram(selectedProgramForEdit.id, values as EditProgramFormValues);
+    setIsSubmitting(false);
+    if (!res.success) {
+      setModalError(res.error?.message || 'Failed to update program.');
+    } else {
+      setSelectedProgramForEdit(null);
+      setSuccessMessage('Program updated successfully.');
+      loadAllAcademicData();
+    }
+  };
 
+  const handleCreateSubjectSubmit = async (values: CreateSubjectFormValues | EditSubjectFormValues) => {
+    setIsSubmitting(true);
+    setModalError(null);
+    const res = await createSubject(values as CreateSubjectFormValues);
+    setIsSubmitting(false);
+    if (!res.success) {
+      setModalError(res.error?.message || 'Failed to create subject.');
+    } else {
+      setIsSubjectFormOpen(false);
+      setSuccessMessage('Subject created successfully.');
+      loadAllAcademicData();
+    }
+  };
+
+  const handleUpdateSubjectSubmit = async (values: CreateSubjectFormValues | EditSubjectFormValues) => {
+    if (!selectedSubjectForEdit) return;
+    setIsSubmitting(true);
+    setModalError(null);
+    const res = await updateSubject(selectedSubjectForEdit.id, values as EditSubjectFormValues);
+    setIsSubmitting(false);
+    if (!res.success) {
+      setModalError(res.error?.message || 'Failed to update subject.');
+    } else {
+      setSelectedSubjectForEdit(null);
+      setSuccessMessage('Subject updated successfully.');
+      loadAllAcademicData();
+    }
+  };
+
+  const handleCreateProgramSubjectSubmit = async (values: CreateProgramSubjectFormValues) => {
+    setIsSubmitting(true);
+    setModalError(null);
     const res = await createProgramSubject(values);
-    if (res.success) {
-      setSuccessMessage('Subject mapped to program successfully.');
-      setIsMapModalOpen(false);
-      await loadAllAcademicData();
-    } else {
-      setModalError(res.error?.message || 'Failed to map subject to program.');
-    }
-
     setIsSubmitting(false);
-  };
-
-  // Handler: ProgramSubject Unmap
-  const handleUnmap = async (programId: string, subjectId: string) => {
-    const res = await deleteProgramSubject(programId, subjectId);
-    if (res.success) {
-      setSuccessMessage('Subject unmapped from program.');
-      await loadAllAcademicData();
+    if (!res.success) {
+      setModalError(res.error?.message || 'Failed to map subject to program.');
     } else {
-      setError(res.error?.message || 'Failed to unmap subject.');
+      setIsMapModalOpen(false);
+      setPreselectedProgramIdForMap(undefined);
+      setSuccessMessage('Subject mapped to program successfully.');
+      loadAllAcademicData();
     }
   };
 
-  // Handler: Batch Save / Edit
-  const handleBatchSubmit = async (values: CreateBatchFormValues | EditBatchFormValues) => {
+  const handleDeleteProgramSubject = async (programId: string, subjectId: string) => {
+    setIsLoading(true);
+    const res = await deleteProgramSubject(programId, subjectId);
+    if (!res.success) {
+      setError(res.error?.message || 'Failed to unmap subject.');
+    } else {
+      setSuccessMessage('Subject unmapped successfully.');
+      loadAllAcademicData();
+    }
+  };
+
+  const handleCreateBatchSubmit = async (values: CreateBatchFormValues | EditBatchFormValues) => {
     setIsSubmitting(true);
     setModalError(null);
-
-    if (selectedBatchForEdit) {
-      const res = await updateBatch(selectedBatchForEdit.id, values as EditBatchFormValues);
-      if (res.success) {
-        setSuccessMessage(`Updated batch ${selectedBatchForEdit.code}.`);
-        setSelectedBatchForEdit(null);
-        await loadAllAcademicData();
-      } else {
-        setModalError(res.error?.message || 'Failed to update batch.');
-      }
-    } else {
-      const res = await createBatch(values as CreateBatchFormValues);
-      if (res.success) {
-        setSuccessMessage('Batch created successfully.');
-        setIsBatchFormOpen(false);
-        await loadAllAcademicData();
-      } else {
-        setModalError(res.error?.message || 'Failed to create batch.');
-      }
-    }
-
+    const res = await createBatch(values as CreateBatchFormValues);
     setIsSubmitting(false);
+    if (!res.success) {
+      setModalError(res.error?.message || 'Failed to create batch.');
+    } else {
+      setIsBatchFormOpen(false);
+      setSuccessMessage('Batch created successfully.');
+      loadAllAcademicData();
+    }
   };
 
-  // Handler: Batch Teacher Assignment
-  const handleTeacherSubmit = async (values: { teacherId: string | null }) => {
+  const handleUpdateBatchSubmit = async (values: CreateBatchFormValues | EditBatchFormValues) => {
+    if (!selectedBatchForEdit) return;
+    setIsSubmitting(true);
+    setModalError(null);
+    const res = await updateBatch(selectedBatchForEdit.id, values as EditBatchFormValues);
+    setIsSubmitting(false);
+    if (!res.success) {
+      setModalError(res.error?.message || 'Failed to update batch.');
+    } else {
+      setSelectedBatchForEdit(null);
+      setSuccessMessage('Batch updated successfully.');
+      loadAllAcademicData();
+    }
+  };
+
+  const handleAssignTeacherSubmit = async (values: AssignTeacherFormValues) => {
     if (!selectedBatchForTeacher) return;
     setIsSubmitting(true);
     setModalError(null);
-
     const res = await assignBatchTeacher(selectedBatchForTeacher.id, values);
-    if (res.success) {
-      setSuccessMessage(`Updated teacher assignment for batch ${selectedBatchForTeacher.code}.`);
-      setSelectedBatchForTeacher(null);
-      await loadAllAcademicData();
-    } else {
-      setModalError(res.error?.message || 'Failed to assign teacher.');
-    }
-
     setIsSubmitting(false);
+    if (!res.success) {
+      setModalError(res.error?.message || 'Failed to assign teacher.');
+    } else {
+      setSelectedBatchForTeacher(null);
+      setSuccessMessage('Teacher assignment updated.');
+      loadAllAcademicData();
+    }
   };
 
-  // Handler: Batch Status Transition
-  const handleStatusSubmit = async (values: ChangeBatchStatusFormValues) => {
+  const handleChangeStatusSubmit = async (values: ChangeBatchStatusFormValues) => {
     if (!selectedBatchForStatus) return;
     setIsSubmitting(true);
     setModalError(null);
-
     const res = await changeBatchStatus(selectedBatchForStatus.id, values);
-    if (res.success) {
-      setSuccessMessage(`Transitioned batch ${selectedBatchForStatus.code} status to ${values.status}.`);
-      setSelectedBatchForStatus(null);
-      await loadAllAcademicData();
-    } else {
-      setModalError(res.error?.message || 'Failed to transition status.');
-    }
-
     setIsSubmitting(false);
+    if (!res.success) {
+      setModalError(res.error?.message || 'Failed to change batch status.');
+    } else {
+      setSelectedBatchForStatus(null);
+      setSuccessMessage('Batch status updated.');
+      loadAllAcademicData();
+    }
   };
 
-  // Handler: Archive Confirm
-  const handleArchiveConfirm = async () => {
+  const handleConfirmArchive = async () => {
     if (!archiveTarget) return;
     setIsSubmitting(true);
     setModalError(null);
@@ -377,33 +401,33 @@ export function AcademicWorkspace() {
       res = await archiveBatch(archiveTarget.entity.id);
     }
 
-    if (res.success) {
-      setSuccessMessage(`Archived ${archiveTarget.type} ${archiveTarget.entity.code}.`);
-      setArchiveTarget(null);
-      await loadAllAcademicData();
-    } else {
-      setModalError(res.error?.message || `Failed to archive ${archiveTarget.type}.`);
-    }
-
     setIsSubmitting(false);
+    if (!res.success) {
+      setModalError(res.error?.message || `Failed to archive ${archiveTarget.type}.`);
+    } else {
+      setArchiveTarget(null);
+      setSuccessMessage(`${archiveTarget.type.toUpperCase()} archived successfully.`);
+      loadAllAcademicData();
+    }
   };
 
   if (isContextLoading) {
     return (
-      <div className="p-8 text-center text-xs text-[hsl(var(--muted-foreground))]" data-testid="academic-context-loading">
-        Loading Academic Workspace context...
+      <div className="flex h-96 items-center justify-center">
+        <RefreshCw className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-3 text-sm text-muted-foreground">Verifying staff permissions...</span>
       </div>
     );
   }
 
-  if (accessDenied || !hasAnyAcademicAccess) {
+  if (accessDenied) {
     return (
-      <div className="p-6" data-testid="academic-access-denied">
+      <div className="mx-auto max-w-2xl p-6">
         <Alert variant="destructive">
           <ShieldAlert className="h-5 w-5" />
-          <AlertTitle>Access Denied</AlertTitle>
+          <AlertTitle>Access Restricted</AlertTitle>
           <AlertDescription>
-            You do not have required academic permissions to access the Academic Hierarchy Workspace.
+            You do not have active staff membership permissions to access the Staff Academic Workspace.
           </AlertDescription>
         </Alert>
       </div>
@@ -411,335 +435,432 @@ export function AcademicWorkspace() {
   }
 
   return (
-    <div className="space-y-6" data-testid="academic-content">
-      {/* Workspace Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[hsl(var(--border))] pb-5">
+    <div className="space-y-6 p-6">
+      {/* Workspace Title & Top Banner */}
+      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between border-b border-border pb-4">
         <div>
-          <h1 className="text-xl font-bold text-[hsl(var(--foreground))] tracking-tight">
-            Academic Hierarchy Workspace
-          </h1>
-          <p className="text-xs text-[hsl(var(--muted-foreground))] mt-1">
-            Manage Programs, Subjects, Subject-Program Mappings, and Batches.
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Staff Academic Workspace</h1>
+          <p className="text-sm text-muted-foreground">
+            Daily offline coaching operations engine for schedules, sessions, attendance, homework, and assessments.
           </p>
-        </div>
-
-        {/* Tab Navigation Controls */}
-        <div className="flex items-center gap-1 bg-[hsl(var(--muted)/0.4)] p-1 rounded-xl border border-[hsl(var(--border))] shrink-0">
-          {canProgramRead && (
-            <button
-              onClick={() => setActiveTab('programs')}
-              data-testid="tab-programs"
-              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 ${
-                activeTab === 'programs'
-                  ? 'bg-[hsl(var(--card))] text-[hsl(var(--foreground))] shadow-sm font-semibold'
-                  : 'text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]'
-              }`}
-            >
-              <BookOpen className="h-3.5 w-3.5" /> Programs ({programs.length})
-            </button>
-          )}
-
-          {canSubjectRead && (
-            <button
-              onClick={() => setActiveTab('subjects')}
-              data-testid="tab-subjects"
-              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 ${
-                activeTab === 'subjects'
-                  ? 'bg-[hsl(var(--card))] text-[hsl(var(--foreground))] shadow-sm font-semibold'
-                  : 'text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]'
-              }`}
-            >
-              <Book className="h-3.5 w-3.5" /> Subjects ({subjects.length})
-            </button>
-          )}
-
-          {(canProgramRead || canSubjectRead) && (
-            <button
-              onClick={() => setActiveTab('mappings')}
-              data-testid="tab-mappings"
-              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 ${
-                activeTab === 'mappings'
-                  ? 'bg-[hsl(var(--card))] text-[hsl(var(--foreground))] shadow-sm font-semibold'
-                  : 'text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]'
-              }`}
-            >
-              <Layers className="h-3.5 w-3.5" /> Mappings ({mappings.length})
-            </button>
-          )}
-
-          {canBatchRead && (
-            <button
-              onClick={() => setActiveTab('batches')}
-              data-testid="tab-batches"
-              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 ${
-                activeTab === 'batches'
-                  ? 'bg-[hsl(var(--card))] text-[hsl(var(--foreground))] shadow-sm font-semibold'
-                  : 'text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]'
-              }`}
-            >
-              <Users className="h-3.5 w-3.5" /> Batches ({batches.length})
-            </button>
-          )}
         </div>
       </div>
 
-      {/* Success Notification Alert */}
-      {successMessage && (
-        <Alert className="bg-emerald-50 text-emerald-900 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800">
-          <AlertTitle className="text-xs font-semibold">Operation Successful</AlertTitle>
-          <AlertDescription className="text-xs">{successMessage}</AlertDescription>
-        </Alert>
-      )}
-
-      {/* Error Notification Alert */}
       {error && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription className="flex items-center justify-between text-xs">
-            <span>{error}</span>
-            <Button variant="outline" size="sm" onClick={() => loadAllAcademicData()} className="h-7 px-2 gap-1 text-xs">
-              <RefreshCw className="h-3 w-3" /> Retry
-            </Button>
-          </AlertDescription>
+          <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
 
-      {/* Active Tab View Rendering */}
-      {activeTab === 'programs' && canProgramRead && (
-        <ProgramsView
+      {successMessage && (
+        <Alert variant="success">
+          <AlertDescription>{successMessage}</AlertDescription>
+        </Alert>
+      )}
+
+      {/* Main Tab Navigation Header */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-border pb-2">
+        <button
+          type="button"
+          onClick={() => handleNavigateToTab('today')}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md transition-colors ${
+            mainTab === 'today'
+              ? 'bg-primary text-primary-foreground'
+              : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+          }`}
+        >
+          <Calendar className="h-4 w-4" />
+          Today&apos;s Work
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleNavigateToTab('sessions')}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md transition-colors ${
+            mainTab === 'sessions'
+              ? 'bg-primary text-primary-foreground'
+              : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+          }`}
+        >
+          <Calendar className="h-4 w-4" />
+          Sessions &amp; Schedules
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleNavigateToTab('attendance')}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md transition-colors ${
+            mainTab === 'attendance'
+              ? 'bg-primary text-primary-foreground'
+              : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+          }`}
+        >
+          <CheckSquare className="h-4 w-4" />
+          Attendance
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleNavigateToTab('homework')}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md transition-colors ${
+            mainTab === 'homework'
+              ? 'bg-primary text-primary-foreground'
+              : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+          }`}
+        >
+          <FileText className="h-4 w-4" />
+          Homework
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleNavigateToTab('tests')}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md transition-colors ${
+            mainTab === 'tests'
+              ? 'bg-primary text-primary-foreground'
+              : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+          }`}
+        >
+          <ClipboardList className="h-4 w-4" />
+          Assessments &amp; Marks
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleNavigateToTab('hierarchy')}
+          className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md transition-colors ${
+            mainTab === 'hierarchy'
+              ? 'bg-primary text-primary-foreground'
+              : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+          }`}
+        >
+          <BookOpen className="h-4 w-4" />
+          Programs &amp; Batches
+        </button>
+      </div>
+
+      {/* Main Tab Views */}
+      {mainTab === 'today' && (
+        <AcademicOverviewView
+          onNavigateToTab={handleNavigateToTab}
+          hasMutationCapability={hasMutationCapability}
+        />
+      )}
+
+      {mainTab === 'sessions' && (
+        <SessionsView
+          initialBatchId={navContext.batchId}
+          hasMutationCapability={hasMutationCapability}
+          onNavigateToAttendance={(sessionId, batchId) =>
+            handleNavigateToTab('attendance', { sessionId, batchId })
+          }
+        />
+      )}
+
+      {mainTab === 'attendance' && (
+        <AttendanceView
+          initialSessionId={navContext.sessionId}
+          initialBatchId={navContext.batchId}
+          hasMutationCapability={hasMutationCapability}
+        />
+      )}
+
+      {mainTab === 'homework' && (
+        <HomeworkView
+          initialBatchId={navContext.batchId}
+          hasMutationCapability={hasMutationCapability}
+        />
+      )}
+
+      {mainTab === 'tests' && (
+        <AssessmentsView
+          initialBatchId={navContext.batchId}
+          hasMutationCapability={hasMutationCapability}
+        />
+      )}
+
+      {mainTab === 'hierarchy' && (
+        <div className="space-y-6">
+          {/* Sub-tab Navigation */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setHierarchySubTab('programs')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+                hierarchySubTab === 'programs'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Programs ({programs.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setHierarchySubTab('subjects')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+                hierarchySubTab === 'subjects'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Subjects ({subjects.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setHierarchySubTab('mappings')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+                hierarchySubTab === 'mappings'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Program-Subject Mappings ({mappings.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setHierarchySubTab('batches')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+                hierarchySubTab === 'batches'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Batches ({batches.length})
+            </button>
+          </div>
+
+          {hierarchySubTab === 'programs' && (
+            <ProgramsView
+              programs={programs}
+              isLoading={isLoading}
+              canCreate={canProgramCreate}
+              canUpdate={canProgramUpdate}
+              canArchive={canProgramArchive}
+              onAddProgram={() => setIsProgramFormOpen(true)}
+              onViewProgram={(p) => setSelectedProgramForDetails(p)}
+              onEditProgram={(p) => setSelectedProgramForEdit(p)}
+              onArchiveProgram={(p) => setArchiveTarget({ type: 'program', entity: p })}
+            />
+          )}
+
+          {hierarchySubTab === 'subjects' && (
+            <SubjectsView
+              subjects={subjects}
+              isLoading={isLoading}
+              canCreate={canSubjectCreate}
+              canUpdate={canSubjectUpdate}
+              canArchive={canSubjectArchive}
+              onAddSubject={() => setIsSubjectFormOpen(true)}
+              onViewSubject={(s) => setSelectedSubjectForDetails(s)}
+              onEditSubject={(s) => setSelectedSubjectForEdit(s)}
+              onArchiveSubject={(s) => setArchiveTarget({ type: 'subject', entity: s })}
+            />
+          )}
+
+          {hierarchySubTab === 'mappings' && (
+            <ProgramSubjectMappingView
+              mappings={mappings}
+              programs={programs}
+              subjects={subjects}
+              isLoading={isLoading}
+              canCreate={canProgramUpdate}
+              canArchive={canProgramUpdate}
+              onOpenMapModal={() => setIsMapModalOpen(true)}
+              onUnmapSubject={handleDeleteProgramSubject}
+            />
+          )}
+
+          {hierarchySubTab === 'batches' && (
+            <BatchesView
+              batches={batches}
+              programs={programs}
+              subjects={subjects}
+              staff={staff}
+              isLoading={isLoading}
+              canCreate={canBatchCreate}
+              canUpdate={canBatchUpdate}
+              canTeacher={canBatchTeacher}
+              canStatus={canBatchStatus}
+              canArchive={canBatchArchive}
+              onAddBatch={() => setIsBatchFormOpen(true)}
+              onViewBatch={(b) => setSelectedBatchForDetails(b)}
+              onEditBatch={(b) => setSelectedBatchForEdit(b)}
+              onAssignTeacher={(b) => setSelectedBatchForTeacher(b)}
+              onChangeStatus={(b) => setSelectedBatchForStatus(b)}
+              onArchiveBatch={(b) => setArchiveTarget({ type: 'batch', entity: b })}
+            />
+          )}
+        </div>
+      )}
+
+      {/* Hierarchy Modals */}
+      {isProgramFormOpen && (
+        <ProgramFormModal
+          isOpen={isProgramFormOpen}
+          isSubmitting={isSubmitting}
+          serverError={modalError}
+          onClose={() => setIsProgramFormOpen(false)}
+          onSubmit={handleCreateProgramSubmit}
+        />
+      )}
+
+      {selectedProgramForEdit && (
+        <ProgramFormModal
+          isOpen={!!selectedProgramForEdit}
+          program={selectedProgramForEdit}
+          isSubmitting={isSubmitting}
+          serverError={modalError}
+          onClose={() => setSelectedProgramForEdit(null)}
+          onSubmit={handleUpdateProgramSubmit}
+        />
+      )}
+
+      {selectedProgramForDetails && (
+        <ProgramDetailsModal
+          isOpen={!!selectedProgramForDetails}
+          program={selectedProgramForDetails}
+          mappedSubjects={subjects.filter((s) =>
+            mappings.some((m) => m.programId === selectedProgramForDetails.id && m.subjectId === s.id),
+          )}
+          onClose={() => setSelectedProgramForDetails(null)}
+        />
+      )}
+
+      {isSubjectFormOpen && (
+        <SubjectFormModal
+          isOpen={isSubjectFormOpen}
+          isSubmitting={isSubmitting}
+          serverError={modalError}
+          onClose={() => setIsSubjectFormOpen(false)}
+          onSubmit={handleCreateSubjectSubmit}
+        />
+      )}
+
+      {selectedSubjectForEdit && (
+        <SubjectFormModal
+          isOpen={!!selectedSubjectForEdit}
+          subject={selectedSubjectForEdit}
+          isSubmitting={isSubmitting}
+          serverError={modalError}
+          onClose={() => setSelectedSubjectForEdit(null)}
+          onSubmit={handleUpdateSubjectSubmit}
+        />
+      )}
+
+      {selectedSubjectForDetails && (
+        <SubjectDetailsModal
+          isOpen={!!selectedSubjectForDetails}
+          subject={selectedSubjectForDetails}
+          programsUsingSubject={programs.filter((p) =>
+            mappings.some((m) => m.subjectId === selectedSubjectForDetails.id && m.programId === p.id),
+          )}
+          onClose={() => setSelectedSubjectForDetails(null)}
+        />
+      )}
+
+      {isMapModalOpen && (
+        <ProgramSubjectFormModal
+          isOpen={isMapModalOpen}
           programs={programs}
-          isLoading={isLoading}
-          canCreate={canProgramCreate}
-          canUpdate={canProgramUpdate}
-          canArchive={canProgramArchive}
-          onAddProgram={() => {
-            setSelectedProgramForEdit(null);
-            setModalError(null);
-            setIsProgramFormOpen(true);
-          }}
-          onViewProgram={(p) => setSelectedProgramForDetails(p)}
-          onEditProgram={(p) => {
-            setSelectedProgramForEdit(p);
-            setModalError(null);
-          }}
-          onArchiveProgram={(p) => {
-            setArchiveTarget({ type: 'program', entity: p });
-            setModalError(null);
-          }}
-        />
-      )}
-
-      {activeTab === 'subjects' && canSubjectRead && (
-        <SubjectsView
           subjects={subjects}
-          isLoading={isLoading}
-          canCreate={canSubjectCreate}
-          canUpdate={canSubjectUpdate}
-          canArchive={canSubjectArchive}
-          onAddSubject={() => {
-            setSelectedSubjectForEdit(null);
-            setModalError(null);
-            setIsSubjectFormOpen(true);
+          preselectedProgramId={preselectedProgramIdForMap}
+          isSubmitting={isSubmitting}
+          serverError={modalError}
+          onClose={() => {
+            setIsMapModalOpen(false);
+            setPreselectedProgramIdForMap(undefined);
           }}
-          onViewSubject={(s) => setSelectedSubjectForDetails(s)}
-          onEditSubject={(s) => {
-            setSelectedSubjectForEdit(s);
-            setModalError(null);
-          }}
-          onArchiveSubject={(s) => {
-            setArchiveTarget({ type: 'subject', entity: s });
-            setModalError(null);
-          }}
+          onSubmit={handleCreateProgramSubjectSubmit}
         />
       )}
 
-      {activeTab === 'mappings' && (canProgramRead || canSubjectRead) && (
-        <ProgramSubjectMappingView
-          programs={programs}
-          subjects={subjects}
-          mappings={mappings}
-          isLoading={isLoading}
-          canCreate={canProgramCreate || canSubjectCreate}
-          canArchive={canProgramArchive || canSubjectArchive}
-          onOpenMapModal={(preId) => {
-            setPreselectedProgramIdForMap(preId);
-            setModalError(null);
-            setIsMapModalOpen(true);
-          }}
-          onUnmapSubject={handleUnmap}
-        />
-      )}
-
-      {activeTab === 'batches' && canBatchRead && (
-        <BatchesView
-          batches={batches}
+      {isBatchFormOpen && (
+        <BatchFormModal
+          isOpen={isBatchFormOpen}
           programs={programs}
           subjects={subjects}
           staff={staff}
-          isLoading={isLoading}
-          canCreate={canBatchCreate}
-          canUpdate={canBatchUpdate}
-          canTeacher={canBatchTeacher}
-          canStatus={canBatchStatus}
-          canArchive={canBatchArchive}
-          onAddBatch={() => {
-            setSelectedBatchForEdit(null);
-            setModalError(null);
-            setIsBatchFormOpen(true);
-          }}
-          onViewBatch={(b) => setSelectedBatchForDetails(b)}
-          onEditBatch={(b) => {
-            setSelectedBatchForEdit(b);
-            setModalError(null);
-          }}
-          onAssignTeacher={(b) => {
-            setSelectedBatchForTeacher(b);
-            setModalError(null);
-          }}
-          onChangeStatus={(b) => {
-            setSelectedBatchForStatus(b);
-            setModalError(null);
-          }}
-          onArchiveBatch={(b) => {
-            setArchiveTarget({ type: 'batch', entity: b });
-            setModalError(null);
-          }}
+          isSubmitting={isSubmitting}
+          serverError={modalError}
+          onClose={() => setIsBatchFormOpen(false)}
+          onSubmit={handleCreateBatchSubmit}
         />
       )}
 
-      {/* Program Modals */}
-      <ProgramFormModal
-        isOpen={isProgramFormOpen || !!selectedProgramForEdit}
-        onClose={() => {
-          setIsProgramFormOpen(false);
-          setSelectedProgramForEdit(null);
-          setModalError(null);
-        }}
-        onSubmit={handleProgramSubmit}
-        program={selectedProgramForEdit}
-        isSubmitting={isSubmitting}
-        serverError={modalError}
-      />
+      {selectedBatchForEdit && (
+        <BatchFormModal
+          isOpen={!!selectedBatchForEdit}
+          batch={selectedBatchForEdit}
+          programs={programs}
+          subjects={subjects}
+          staff={staff}
+          isSubmitting={isSubmitting}
+          serverError={modalError}
+          onClose={() => setSelectedBatchForEdit(null)}
+          onSubmit={handleUpdateBatchSubmit}
+        />
+      )}
 
-      <ProgramDetailsModal
-        isOpen={!!selectedProgramForDetails}
-        onClose={() => setSelectedProgramForDetails(null)}
-        program={selectedProgramForDetails}
-        mappedSubjects={
-          selectedProgramForDetails
-            ? subjects.filter((s) =>
-                mappings.some((m) => m.programId === selectedProgramForDetails.id && m.subjectId === s.id),
-              )
-            : []
-        }
-      />
+      {selectedBatchForTeacher && (
+        <BatchTeacherModal
+          isOpen={!!selectedBatchForTeacher}
+          batch={selectedBatchForTeacher}
+          staff={staff}
+          isSubmitting={isSubmitting}
+          serverError={modalError}
+          onClose={() => setSelectedBatchForTeacher(null)}
+          onSubmit={handleAssignTeacherSubmit}
+        />
+      )}
 
-      {/* Subject Modals */}
-      <SubjectFormModal
-        isOpen={isSubjectFormOpen || !!selectedSubjectForEdit}
-        onClose={() => {
-          setIsSubjectFormOpen(false);
-          setSelectedSubjectForEdit(null);
-          setModalError(null);
-        }}
-        onSubmit={handleSubjectSubmit}
-        subject={selectedSubjectForEdit}
-        isSubmitting={isSubmitting}
-        serverError={modalError}
-      />
+      {selectedBatchForStatus && (
+        <BatchStatusModal
+          isOpen={!!selectedBatchForStatus}
+          batch={selectedBatchForStatus}
+          isSubmitting={isSubmitting}
+          serverError={modalError}
+          onClose={() => setSelectedBatchForStatus(null)}
+          onSubmit={handleChangeStatusSubmit}
+        />
+      )}
 
-      <SubjectDetailsModal
-        isOpen={!!selectedSubjectForDetails}
-        onClose={() => setSelectedSubjectForDetails(null)}
-        subject={selectedSubjectForDetails}
-        programsUsingSubject={
-          selectedSubjectForDetails
-            ? programs.filter((p) =>
-                mappings.some((m) => m.subjectId === selectedSubjectForDetails.id && m.programId === p.id),
-              )
-            : []
-        }
-      />
+      {selectedBatchForDetails && (
+        <BatchDetailsModal
+          isOpen={!!selectedBatchForDetails}
+          batch={selectedBatchForDetails}
+          program={programs.find((p) => p.id === selectedBatchForDetails.programId)}
+          subject={subjects.find((s) => s.id === selectedBatchForDetails.subjectId)}
+          onClose={() => setSelectedBatchForDetails(null)}
+        />
+      )}
 
-      {/* Mapping Modal */}
-      <ProgramSubjectFormModal
-        isOpen={isMapModalOpen}
-        onClose={() => {
-          setIsMapModalOpen(false);
-          setModalError(null);
-        }}
-        onSubmit={handleMappingSubmit}
-        programs={programs}
-        subjects={subjects}
-        preselectedProgramId={preselectedProgramIdForMap}
-        isSubmitting={isSubmitting}
-        serverError={modalError}
-      />
-
-      {/* Batch Modals */}
-      <BatchFormModal
-        isOpen={isBatchFormOpen || !!selectedBatchForEdit}
-        onClose={() => {
-          setIsBatchFormOpen(false);
-          setSelectedBatchForEdit(null);
-          setModalError(null);
-        }}
-        onSubmit={handleBatchSubmit}
-        batch={selectedBatchForEdit}
-        programs={programs}
-        subjects={subjects}
-        staff={staff}
-        isSubmitting={isSubmitting}
-        serverError={modalError}
-      />
-
-      <BatchTeacherModal
-        isOpen={!!selectedBatchForTeacher}
-        onClose={() => {
-          setSelectedBatchForTeacher(null);
-          setModalError(null);
-        }}
-        onSubmit={handleTeacherSubmit}
-        batch={selectedBatchForTeacher}
-        staff={staff}
-        isSubmitting={isSubmitting}
-        serverError={modalError}
-      />
-
-      <BatchStatusModal
-        isOpen={!!selectedBatchForStatus}
-        onClose={() => {
-          setSelectedBatchForStatus(null);
-          setModalError(null);
-        }}
-        onSubmit={handleStatusSubmit}
-        batch={selectedBatchForStatus}
-        isSubmitting={isSubmitting}
-        serverError={modalError}
-      />
-
-      <BatchDetailsModal
-        isOpen={!!selectedBatchForDetails}
-        onClose={() => setSelectedBatchForDetails(null)}
-        batch={selectedBatchForDetails}
-        subject={selectedBatchForDetails ? subjects.find((s) => s.id === selectedBatchForDetails.subjectId) : null}
-        program={selectedBatchForDetails && selectedBatchForDetails.programId ? programs.find((p) => p.id === selectedBatchForDetails.programId) : null}
-      />
-
-      {/* Archive Modal */}
-      <ConfirmArchiveModal
-        isOpen={!!archiveTarget}
-        onClose={() => {
-          setArchiveTarget(null);
-          setModalError(null);
-        }}
-        onConfirm={handleArchiveConfirm}
-        title={`Archive ${archiveTarget?.type === 'program' ? 'Program' : archiveTarget?.type === 'subject' ? 'Subject' : 'Batch'}`}
-        description={`Are you sure you want to archive ${archiveTarget?.entity.code} (${archiveTarget?.entity.name})? This action soft-deletes the record.`}
-        isSubmitting={isSubmitting}
-        error={modalError}
-      />
+      {archiveTarget && (
+        <ConfirmArchiveModal
+          isOpen={!!archiveTarget}
+          title={`Archive ${archiveTarget.type.toUpperCase()}`}
+          description={`Are you sure you want to archive "${archiveTarget.entity.name}"? This action moves the record to archived state.`}
+          confirmLabel={`Archive ${archiveTarget.type}`}
+          isSubmitting={isSubmitting}
+          error={modalError}
+          onClose={() => setArchiveTarget(null)}
+          onConfirm={handleConfirmArchive}
+        />
+      )}
     </div>
+  );
+}
+
+export function AcademicWorkspace() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-64 items-center justify-center">
+          <RefreshCw className="h-6 w-6 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <AcademicWorkspaceContent />
+    </Suspense>
   );
 }

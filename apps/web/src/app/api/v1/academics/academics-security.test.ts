@@ -71,7 +71,8 @@ describe('Phase 2.5 — Protected Academics APIs Security & Integration Suite', 
       asResponse: true,
     });
 
-    const cookieHeader = signUpResponse.headers.get('set-cookie');
+    const getSetCookie = (signUpResponse.headers as unknown as { getSetCookie?: () => string[] }).getSetCookie;
+    const cookieHeader = getSetCookie ? getSetCookie.call(signUpResponse.headers).join('; ') : (signUpResponse.headers.get('set-cookie') || '');
     if (!cookieHeader) throw new Error('No set-cookie header from signUpEmail');
 
     const user = await db.user.findFirstOrThrow({ where: { email: email.toLowerCase() } });
@@ -146,8 +147,8 @@ describe('Phase 2.5 — Protected Academics APIs Security & Integration Suite', 
 
       const st1 = await createTestStudent(instA.id, { firstName: 'Alice', lastName: 'Smith' });
       const st2 = await createTestStudent(instA.id, { firstName: 'Bob', lastName: 'Jones' });
-      enrollmentA1 = await createTestEnrollment(st1.id, batchA.id, { status: 'active' });
-      enrollmentA2 = await createTestEnrollment(st2.id, batchA.id, { status: 'active' });
+      enrollmentA1 = await createTestEnrollment(st1.id, batchA.id, { instituteId: instA.id, status: 'active' });
+      enrollmentA2 = await createTestEnrollment(st2.id, batchA.id, { instituteId: instA.id, status: 'active' });
 
       // Setup Institute B (Adversarial Tenant)
       const sessB = await createAuthenticatedSession('owner_b');
@@ -163,7 +164,7 @@ describe('Phase 2.5 — Protected Academics APIs Security & Integration Suite', 
       const subjectB = await createTestSubject(instB.id, { name: 'Chemistry', code: 'CHE-101' });
       batchB = await createTestBatch(instB.id, subjectB.id, { name: 'Batch Beta', code: 'BETA' });
       const stB = await createTestStudent(instB.id, { firstName: 'David', lastName: 'Miller' });
-      enrollmentB = await createTestEnrollment(stB.id, batchB.id, { status: 'active' });
+      enrollmentB = await createTestEnrollment(stB.id, batchB.id, { instituteId: instB.id, status: 'active' });
     });
 
     // ── Schedules Endpoints ──────────────────────────────────────────────────
