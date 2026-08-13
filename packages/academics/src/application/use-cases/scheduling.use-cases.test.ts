@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { cleanTestDatabase, createTestUser, validateTestEnvironment } from '@coaching-os/database';
+import { cleanTestDatabase, createTestInstitute, createTestUser, validateTestEnvironment } from '@coaching-os/database';
 import {
   AuthorizationError,
   ConflictError,
@@ -8,7 +8,6 @@ import {
 } from '@coaching-os/shared';
 import {
   CreateBatchUseCase,
-  CreateInstituteUseCase,
   CreateInstituteMembershipUseCase,
   CreateSubjectUseCase,
   PrismaBatchRepository,
@@ -30,14 +29,12 @@ import {
 } from './scheduling.use-cases';
 
 describe('Phase 2.1 — Scheduling & Session Engine Integration & Security Suite', () => {
-  let instituteRepo: PrismaInstituteRepository;
   let membershipRepo: PrismaInstituteMembershipRepository;
   let subjectRepo: PrismaSubjectRepository;
   let batchRepo: PrismaBatchRepository;
   let scheduleRepo: PrismaScheduleRepository;
   let sessionRepo: PrismaBatchSessionRepository;
 
-  let createInstituteUseCase: CreateInstituteUseCase;
   let createMembershipUseCase: CreateInstituteMembershipUseCase;
   let createSubjectUseCase: CreateSubjectUseCase;
   let createBatchUseCase: CreateBatchUseCase;
@@ -63,14 +60,12 @@ describe('Phase 2.1 — Scheduling & Session Engine Integration & Security Suite
     validateTestEnvironment();
     await cleanTestDatabase();
 
-    instituteRepo = new PrismaInstituteRepository();
     membershipRepo = new PrismaInstituteMembershipRepository();
     subjectRepo = new PrismaSubjectRepository();
     batchRepo = new PrismaBatchRepository();
     scheduleRepo = new PrismaScheduleRepository();
     sessionRepo = new PrismaBatchSessionRepository();
 
-    createInstituteUseCase = new CreateInstituteUseCase(instituteRepo);
     createMembershipUseCase = new CreateInstituteMembershipUseCase(membershipRepo);
     createSubjectUseCase = new CreateSubjectUseCase(subjectRepo);
     createBatchUseCase = new CreateBatchUseCase(batchRepo, subjectRepo);
@@ -83,11 +78,9 @@ describe('Phase 2.1 — Scheduling & Session Engine Integration & Security Suite
     listSessionsUseCase = new ListBatchSessionsUseCase(batchRepo, sessionRepo);
 
     // Setup Institute A
-    const instA = await createInstituteUseCase.execute({
+    const instA = await createTestInstitute({
       name: 'Apex Academy A',
-      slug: 'apex-academy-a',
-      phone: '+919876543210',
-      email: 'owner@apex-a.com',
+      slug: `apex-a-${crypto.randomUUID().substring(0, 6)}`,
     });
 
     const userOwnerA = await createTestUser();
@@ -134,11 +127,9 @@ describe('Phase 2.1 — Scheduling & Session Engine Integration & Security Suite
     batchAId = batchA.id;
 
     // Setup Institute B (Adversarial Tenant)
-    const instB = await createInstituteUseCase.execute({
+    const instB = await createTestInstitute({
       name: 'Beta Institute B',
-      slug: 'beta-institute-b',
-      phone: '+919876543211',
-      email: 'owner@beta-b.com',
+      slug: `beta-b-${crypto.randomUUID().substring(0, 6)}`,
     });
 
     const userOwnerB = await createTestUser();
