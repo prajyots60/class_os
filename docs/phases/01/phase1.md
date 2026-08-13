@@ -1261,3 +1261,123 @@ That preserves the discipline we used throughout Phase 0 while still letting us 
 # Phase 1.0 → DONE
 
 The **domain contract is frozen** and ready for subphase implementation.
+
+### 🚧 PHASE 1 — IDENTITY MODULE (NOW ACTIVE)
+
+- **Domain Contract Specification:** Documented in [docs/phases/phase1.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.md) (Phase 1.0 Architecture Freeze), [docs/phases/phase1.3-rbac.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.3-rbac.md) (Phase 1.3.0 RBAC Architecture Freeze), and [docs/phases/phase1.4-onboarding.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.4-onboarding.md) (Phase 1.4.0 Onboarding Architecture Freeze).
+- **Subphase Tracking Rule:** Subphases are added to the tracker in `docs/CONTEXT.md` as each subphase is approved and implemented.
+- **Phase 1 Implementation Map:**
+  - **Phase 1.0:** Domain & Architecture Contract Freeze ✅
+  - **Phase 1.1:** Institute Tenant Core ✅
+  - **Phase 1.2:** Users & Memberships ✅
+  - **Phase 1.3:** Capability-Based RBAC ✅ (ACCEPTED 🟢)
+    - **Phase 1.3.0:** RBAC Architecture & Capability Matrix ✅ (Freeze)
+    - **Phase 1.3.1:** Capability Taxonomy & Strongly-Typed Enums ✅
+    - **Phase 1.3.2:** Role → Capability Resolver Engine ✅
+    - **Phase 1.3.3:** Authorization Engine & Assertion Guards ✅
+    - **Phase 1.3.4:** Tenant-Scoped Capability Evaluation ✅
+    - **Phase 1.3.5:** Resource-Scoped Filtering Helpers (Parent/Teacher) ✅
+    - **Phase 1.3.6:** Identity Use Case Integration ✅
+    - **Phase 1.3.7:** Security & RBAC Test Matrix ✅
+    - **Phase 1.3.8:** Phase 1.3 Acceptance Gate ✅ (ACCEPTED 🟢)
+  - **Phase 1.4:** Institute Onboarding Workflow ✅ (ACCEPTED 🟢)
+    - **Phase 1.4.0:** Architecture & Workflow Contract Freeze 🟢 (Freeze)
+    - **Phase 1.4.1:** Onboarding Domain & Application Orchestration ✅
+    - **Phase 1.4.2:** Atomic Institute + Owner Bootstrap Transaction ✅
+    - **Phase 1.4.3:** Idempotency & Conflict Handling ✅
+    - **Phase 1.4.4:** Onboarding API Boundary ✅
+    - **Phase 1.4.5:** Onboarding UI Flow ✅
+    - **Phase 1.4.6:** Tenant Context Resolution & Post-Onboarding Redirect ✅
+    - **Phase 1.4.7:** End-to-End Security & Failure Testing ✅
+    - **Phase 1.4.8:** Phase 1.4 Acceptance Gate ✅ (ACCEPTED 🟢)
+  - **Phase 1.5:** Institute Settings & White-Label Branding ✅ (ACCEPTED 🟢)
+    - **Phase 1.5.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.5.1:** Settings Domain Use Cases & Authorization ✅ COMPLETED
+    - **Phase 1.5.2:** Settings API & Validators ✅ COMPLETED
+    - **Phase 1.5.3:** Settings UI Feature ✅ COMPLETED
+    - **Phase 1.5.4:** Security E2E & Acceptance Gate 🟢 (ACCEPTED & FROZEN)
+  - **Phase 1.6:** Global ParentIdentity Platform Layer 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.6.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.6.1:** ParentIdentity Domain Entities & Value Objects ✅ COMPLETED
+    - **Phase 1.6.2:** ParentIdentity Repository & Persistence Layer ✅ COMPLETED
+    - **Phase 1.6.3:** ParentIdentity Application Use Cases ✅ COMPLETED
+    - **Phase 1.6.4:** Parent Identity ↔ Authentication Integration ✅ COMPLETED
+    - **Phase 1.6.5:** Multi-Tenant Security & Authorization Matrix ✅ COMPLETED
+    - **Phase 1.6.6:** Phase 1.6 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
+  - **Phase 1.7:** Tenant InstituteParent CRM Layer 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.7.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.7.1:** InstituteParent Domain Entity & Value Objects ✅ COMPLETED
+    - **Phase 1.7.2:** InstituteParent Repository & PostgreSQL Persistence Layer ✅ COMPLETED
+    - **Phase 1.7.3:** InstituteParent Application Use Cases ✅ COMPLETED
+    - **Phase 1.7.4:** ParentIdentity ↔ InstituteParent Linking & Authorization ✅ COMPLETED
+    - **Phase 1.7.5:** InstituteParent API Boundary & Validators ✅ COMPLETED
+    - **Phase 1.7.6:** InstituteParent Security / Privacy E2E Matrix ✅ COMPLETED
+    - **Phase 1.7.7:** InstituteParent Staff UI / CRM Feature ✅ COMPLETED
+    - **Phase 1.7.8:** UX, Accessibility & Tenant-Scoped Workflow Testing ✅ COMPLETED
+    - **Phase 1.7.9:** Phase 1.7 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
+  - **Phase 1.8:** Student Admission & Profile Core 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.8.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.8.1:** Student Domain Entity & Value Objects ✅ COMPLETED
+    - **Phase 1.8.2:** Student Repository & PostgreSQL Persistence Layer ✅ COMPLETED
+    - **Phase 1.8.3:** Student Application Use Cases ✅ COMPLETED
+    - **Phase 1.8.4:** Student Admission & Lifecycle Rules ✅ COMPLETED
+    - **Phase 1.8.5:** Student API Boundary & Validators ✅ COMPLETED
+    - **Phase 1.8.6:** Student Security / Tenant E2E Matrix ✅ COMPLETED
+    - **Phase 1.8.7:** Student Staff UI / Admission Feature ✅ COMPLETED
+    - **Phase 1.8.8:** UX, Accessibility & Admission Workflow Testing ✅ COMPLETED
+  - **Phase 1.9:** Guardian & Student Links 🟢 (COMPLETED & FROZEN)
+    - **Phase 1.9.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.9.1:** Relationship Domain Entity & Value Objects 🟢 COMPLETED
+    - **Phase 1.9.2:** Relationship Repository & PostgreSQL Persistence 🟢 COMPLETED
+    - **Phase 1.9.3:** Relationship Application Use Cases 🟢 COMPLETED
+    - **Phase 1.9.4:** Guardian/Student Linking & Authorization 🟢 COMPLETED
+    - **Phase 1.9.5:** Relationship API Boundary & Validators 🟢 COMPLETED
+    - **Phase 1.9.6:** Relationship Security / Privacy E2E Matrix 🟢 COMPLETED
+    - **Phase 1.9.7:** Staff Guardian/Relationship UI 🟢 COMPLETED
+    - **Phase 1.9.8:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
+    - **Phase 1.9.9:** Phase 1.9 Acceptance Gate 🟢 ACCEPTED & FROZEN
+  - **Phase 1.10:** Academic Hierarchy (Programs, Subjects, Batches) 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.10.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.10.1:** Academic Hierarchy Domain Entities & Value Objects 🟢 COMPLETED
+    - **Phase 1.10.2:** Repository & PostgreSQL Persistence Layer 🟢 COMPLETED
+    - **Phase 1.10.3:** Application Use Cases & State Machine Rules 🟢 COMPLETED
+    - **Phase 1.10.4:** API Boundary & Presentation Validators 🟢 COMPLETED
+    - **Phase 1.10.5:** Security & Tenant Isolation E2E Matrix 🟢 COMPLETED
+    - **Phase 1.10.6:** Staff Academic Workspace UI 🟢 COMPLETED
+    - **Phase 1.10.7:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
+    - **Phase 1.10.8:** Phase 1.10 Acceptance Gate & Freeze 🟢 ACCEPTED & FROZEN
+  - **Phase 1.11:** Student Enrollment Lifecycle 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.11.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.11.1:** Enrollment Domain Entity & Value Objects 🟢 COMPLETED
+    - **Phase 1.11.2:** Repository & PostgreSQL Persistence Layer 🟢 COMPLETED
+    - **Phase 1.11.3:** Application Use Cases & Enrollment Lifecycle 🟢 COMPLETED
+    - **Phase 1.11.4:** API Boundary & Presentation Validators 🟢 COMPLETED
+    - **Phase 1.11.5:** Security & Tenant Isolation E2E Matrix 🟢 COMPLETED
+    - **Phase 1.11.6:** Staff Enrollment UI 🟢 COMPLETED
+    - **Phase 1.11.7:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
+    - **Phase 1.11.8:** Phase 1.11 Acceptance Gate & Freeze 🟢 ACCEPTED & FROZEN
+  - **Phase 1.12:** Protected Identity APIs (`/api/v1/...`) 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.12.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.12.1:** Protected Identity API Domain/Application Contracts 🟢 COMPLETED
+    - **Phase 1.12.2:** API Infrastructure & Persistence Adapters 🟢 COMPLETED
+    - **Phase 1.12.3:** API Boundary & Presentation Validators 🟢 COMPLETED
+    - **Phase 1.12.4:** Authentication, Authorization & Tenant Isolation 🟢 COMPLETED
+    - **Phase 1.12.5:** Security & Adversarial E2E Audit 🟢 COMPLETED
+    - **Phase 1.12.6:** Protected Identity API Integration / Staff Consumption 🟢 COMPLETED
+    - **Phase 1.12.7:** API UX / Developer Experience / Documentation 🟢 COMPLETED
+    - **Phase 1.12.8:** Final Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
+  - **Phase 1.13:** Staff UI & Onboarding Workflows 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.13.0:** Staff Management Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.13.1:** Staff Management Domain & Application Layer 🟢 COMPLETED
+    - **Phase 1.13.2:** Staff Management API & Validators 🟢 COMPLETED
+    - **Phase 1.13.3:** Staff Management Security & E2E Matrix 🟢 COMPLETED
+    - **Phase 1.13.4:** Staff Workspace UI Feature 🟢 COMPLETED
+    - **Phase 1.13.5:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
+    - **Phase 1.13.6:** Phase 1.13 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
+  - **Phase 1.14:** Multi-Tenant Cross-Tenant Access Security Hardening 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.14.0:** Security Architecture & Threat Model 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.14.1:** Repository & Application Hardening 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.14.2:** API Boundary Hardening 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.14.3:** Adversarial Security E2E Matrix 🟢 (ACCEPTED & FROZEN)
+    - **Phase 1.14.4:** Phase 1.14 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
+  - **Phase 1.15:** Phase 1 Acceptance Gate 🟢 (ACCEPTED & FROZEN)

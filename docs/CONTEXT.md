@@ -185,8 +185,17 @@ PHASE 1 — FOUNDATION & IDENTITY MODULE               🟢 ACCEPTED & FROZEN
   └── Phase 1.15 — Final Phase 1 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
                                                         ↓
                                                   PHASE 1 GATE (PASSED & FROZEN)
-PHASE 2  → Academics Module                             ⏳ UPCOMING
-    ↓
+PHASE 2 — ACADEMICS MODULE                             🟡 IN EXECUTION
+  ├── Phase 2.0 — Architecture & Contract Freeze              🟢 ACCEPTED & FROZEN
+  ├── Phase 2.1 — Scheduling & Session Engine (`Schedule` & `BatchSession`) 🟢 ACCEPTED & COMPLETED
+  ├── Phase 2.2 — Session Attendance Core (`Attendance`)       ⏳ UPCOMING
+  ├── Phase 2.3 — Homework Workflow (`Homework`)               ⏳ UPCOMING
+  ├── Phase 2.4 — Assessment & Bulk Marks Engine (`Test` & `Marks`) ⏳ UPCOMING
+  ├── Phase 2.5 — Protected Academics APIs (`/api/v1/academics/...`) ⏳ UPCOMING
+  ├── Phase 2.6 — Staff Academic Workspace UI (Teacher & Staff Workspaces) ⏳ UPCOMING
+  ├── Phase 2.7 — UX / Accessibility & Security E2E Matrix     ⏳ UPCOMING
+  └── Phase 2.8 — Phase 2 Acceptance Gate & Milestone Freeze   ⏳ UPCOMING
+                                                        ↓
 PHASE 3  Billing Module                               ⏳ UPCOMING
     ↓
 PHASE 4  Communication Module                         ⏳ UPCOMING

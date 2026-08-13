@@ -1,0 +1,103 @@
+import { ValidationError } from '@coaching-os/shared';
+import { BatchSessionEntity } from '../entities/batch-session.entity';
+import { ScheduleEntity } from '../entities/schedule.entity';
+
+export interface GenerateCandidateSessionsProps {
+  schedules: ScheduleEntity[];
+  instituteId: string;
+  batchId: string;
+  startDate: Date | string;
+  endDate: Date | string;
+}
+
+export class ScheduleGeneratorService {
+  /**
+   * Calculates matching calendar dates within [startDate, endDate] for a recurring schedule rule.
+   */
+  public static calculateMatchingDates(
+    schedule: ScheduleEntity,
+    startDate: Date | string,
+    endDate: Date | string,
+  ): Date[] {
+    const start = ScheduleGeneratorService.normalizeToUtcDate(startDate);
+    const end = ScheduleGeneratorService.normalizeToUtcDate(endDate);
+
+    if (end.getTime() < start.getTime()) {
+      throw new ValidationError('End date must be on or after start date for session generation.');
+    }
+
+    const targetDayIndex = schedule.dayOfWeek.getDayIndex();
+    const matchingDates: Date[] = [];
+
+    const current = new Date(start.getTime());
+    while (current.getTime() <= end.getTime()) {
+      if (current.getUTCDay() === targetDayIndex) {
+        matchingDates.push(new Date(current.getTime()));
+      }
+      // Move to next day (24 hours = 86400000 ms)
+      current.setUTCDate(current.getUTCDate() + 1);
+    }
+
+    return matchingDates;
+  }
+
+  /**
+   * Generates candidate BatchSession entities from batch schedules over a date range.
+   *
+   * Note: Filter out existing sessions separately using repository lookup to ensure idempotency.
+   */
+  public static generateCandidateSessions(props: GenerateCandidateSessionsProps): BatchSessionEntity[] {
+    if (!props.instituteId || typeof props.instituteId !== 'string' || props.instituteId.trim() === '') {
+      throw new ValidationError('Institute ID cannot be empty');
+    }
+
+    if (!props.batchId || typeof props.batchId !== 'string' || props.batchId.trim() === '') {
+      throw new ValidationError('Batch ID cannot be empty');
+    }
+
+    const candidateSessions: BatchSessionEntity[] = [];
+
+    for (const schedule of props.schedules) {
+      if (schedule.batchId !== props.batchId) {
+        throw new ValidationError(
+          `Schedule "${schedule.id}" belongs to batch "${schedule.batchId}", not target batch "${props.batchId}".`,
+        );
+      }
+
+      const dates = ScheduleGeneratorService.calculateMatchingDates(
+        schedule,
+        props.startDate,
+        props.endDate,
+      );
+
+      for (const date of dates) {
+        const session = BatchSessionEntity.create({
+          instituteId: props.instituteId,
+          batchId: props.batchId,
+          date,
+          startTime: schedule.startTime,
+          endTime: schedule.endTime,
+          status: 'scheduled',
+          attendanceTaken: false,
+        });
+
+        candidateSessions.push(session);
+      }
+    }
+
+    return candidateSessions;
+  }
+
+  public static normalizeToUtcDate(dateInput: Date | string): Date {
+    if (!dateInput) {
+      throw new ValidationError('Date input cannot be empty');
+    }
+
+    const d = dateInput instanceof Date ? dateInput : new Date(dateInput);
+    if (Number.isNaN(d.getTime())) {
+      throw new ValidationError(`Invalid date string: "${dateInput}"`);
+    }
+
+    return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+  }
+}
