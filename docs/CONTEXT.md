@@ -526,124 +526,79 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **UX, Accessibility & Workflow Matrix (Phase 1.13.5)**: Implemented automated Playwright E2E suites (`staff-workflow.spec.ts` & `staff-accessibility.spec.ts`, 10/10 scenarios passed) proving end-to-end multi-tenant staff management, WAI-ARIA `role="dialog"` modal semantics, Escape key dismissal, focus trap management, explicit filter `aria-label` attributes, and 375px mobile viewport rendering without horizontal scroll overflow. **Phase 1.13.5 COMPLETED.**
 - **Final Acceptance Gate & Freeze (Phase 1.13.6)**: Verified 100% ADR-0016 compliance across domain, RBAC, tenant isolation, security (`STAFF-SEC-01..24`), Playwright E2E matrix, accessibility, mobile layout, DB integrity, and quality gates (`pnpm typecheck` 0 errors, `pnpm lint` 0 errors/warnings, `pnpm build` clean, 87 unit tests + 10 E2E tests passing). **Phase 1.13 formally ACCEPTED and FROZEN.**
 
+### 🟢 Phase 1.14 — Multi-Tenant Cross-Tenant Security Hardening (ACCEPTED & FROZEN)
+
+- **Architecture & Threat Model (ADR-0017 & Phase 1.14.0)**: Defined comprehensive multi-tenant threat model and fail-closed security boundary across all workspace repositories, application use cases, and REST API route handlers. Established mandatory rule: client tenant inputs (`instituteId`, `x-institute-id`, `x-tenant-id`, `x-role`) are strictly untrusted and rejected.
+- **Repository & Application Hardening (Phase 1.14.1)**: Enforced explicit `instituteId` scoping across 100% of Prisma queries and mutations. Hardened `InstituteMembership`, `InstituteParent`, `Student`, `InstituteParentStudent`, `Program`, `Subject`, `Batch`, and `Enrollment` repositories to enforce tenant boundaries and prevent cross-tenant record leakage.
+- **API Boundary Hardening (Phase 1.14.2)**: Hardened `/api/v1` and `/api/institute` presentation route handlers using `withV1ReadGuard`, `withV1MutationGuard`, and `resolveV1TenantContext`. Enforced automatic return of `404 NOT_FOUND` for foreign tenant resource requests to prevent resource enumeration attacks.
+- **Adversarial Security E2E Matrix (Phase 1.14.3)**: Built `cross-tenant-security.test.ts` and `cross-tenant-repository.test.ts` executing 30+ adversarial scenarios testing tenant context forgery, parameter substitution, cross-tenant record lookups, and unauthorized status mutation attempts.
+- **Acceptance Gate & Freeze (Phase 1.14.4)**: Verified complete build pipeline (`env:check`, `db:validate`, `db:health`, `db:drift:check`, `verify:auth`, `verify:infra`, `verify:observability`, `lint`, `typecheck`, `test`, `build`). **Phase 1.14 formally ACCEPTED and FROZEN.**
+
+### 🟢 Phase 1.15 — Final Phase 1 Acceptance Gate & Freeze (ACCEPTED & FROZEN)
+
+- **Full Module Audit**: Conducted exhaustive architectural and security audit across all 15 Phase 1 identity subphases (`1.0` through `1.14`).
+- **Complete Suite Verification**: Verified 100% pass rate across 531 `@coaching-os/identity` tests, 351 `@coaching-os/web` tests, 73 Playwright E2E scenarios, TypeScript strict checks, ESLint, and Next.js 16 production build.
+- **Formal Milestone Freeze**: Formally declared **Phase 1 — Identity Module ACCEPTED and FROZEN.**
+
+### 🟢 Phase 2.0 — Academics Architecture & Contract Freeze (ACCEPTED & FROZEN)
+
+- **Contract Specification**: Formally specified and froze the authoritative Phase 2 Academics contract in `docs/phases/02/phase2-academics-contract.md`.
+- **Domain Boundaries**: Defined boundaries for 5 core academic subdomains: Scheduling & Sessions, Session Attendance, Homework Workflow, Assessment & Bulk Marks, and Protected Academics APIs.
+- **Operational Invariants**: Established operational local institute time calendar-date semantics (`YYYY-MM-DD` string inputs), same-batch ownership boundaries (`ACADEMIC-005`), immutable publication states for homework and tests, atomic bulk transactions, and fail-closed cross-tenant access rules (`ACADEMIC-006`). **Phase 2.0 ACCEPTED & FROZEN.**
+
+### 🟢 Phase 2.1 — Scheduling & Session Engine (COMPLETED)
+
+- **Domain Entities & Value Objects**: Implemented `ScheduleEntity`, `BatchSessionEntity`, `DayOfWeek` VO, and `TimeOfDay` VO in `packages/academics`.
+- **Schedule Generator Service**: Built pure `ScheduleGeneratorService` generating candidate sessions across UTC date ranges while preserving operational local time semantics (`Schedule` ≠ `BatchSession`).
+- **Persistence & Use Cases**: Implemented `PrismaScheduleRepository` and `PrismaBatchSessionRepository`, along with 8 application use cases (`CreateScheduleUseCase`, `UpdateScheduleUseCase`, `DeleteScheduleUseCase`, `ListSchedulesForBatchUseCase`, `GenerateBatchSessionsUseCase`, `ListBatchSessionsUseCase`, `CompleteBatchSessionUseCase`, `CancelBatchSessionUseCase`).
+- **Verification**: Verified across 34 unit & integration tests (`scheduling.use-cases.test.ts`). **Phase 2.1 COMPLETED.**
+
+### 🟢 Phase 2.2 — Session Attendance Core (COMPLETED)
+
+- **Domain Entity & Persistence**: Implemented `AttendanceEntity` (`status`: `present`, `absent`, `late`) bound strictly to `(batchSessionId, enrollmentId)` pair and `PrismaAttendanceRepository`.
+- **Application Use Cases & Rules**: Implemented `RecordSessionAttendanceUseCase` and `GetSessionAttendanceUseCase` enforcing active enrollment requirement (`ACADEMIC-008`), same-batch invariant (`ACADEMIC-005`), cancelled session attendance rejection, atomic bulk transaction execution (`$transaction`), and idempotent upserts.
+- **Verification**: Verified across 50 unit & integration tests (`attendance.use-cases.test.ts`). **Phase 2.2 COMPLETED.**
+
+### 🟢 Phase 2.3 — Homework Workflow (COMPLETED)
+
+- **Domain Entity & Persistence**: Implemented `HomeworkEntity` (`isPublished` flag, explicit `publish()` state transition) targeted to a `Batch` and `PrismaHomeworkRepository`.
+- **Application Use Cases & Rules**: Implemented `CreateHomeworkUseCase`, `GetHomeworkUseCase`, `ListHomeworkForBatchUseCase`, `UpdateHomeworkUseCase`, `PublishHomeworkUseCase`, and `DeleteHomeworkUseCase`.
+- **Publication Immutability**: Enforced strict publication immutability: once published (`isPublished === true`), title, description, attachment URL, and publication timestamp are immutable.
+- **Verification**: Verified across 71 unit & integration tests (`homework.use-cases.test.ts`). **Phase 2.3 COMPLETED.**
+
+### 🟢 Phase 2.4 — Assessment & Bulk Marks Engine (COMPLETED)
+
+- **Domain Entities & Persistence**: Implemented `TestEntity` (positive integer `maximumMarks`, state machine: `draft` → `scheduled` → `marks_entered` → `published`) and `MarksEntity` (`ACADEMIC-010`: `0 <= marksObtained <= maxMarks`, max 2 decimal places precision). Implemented `PrismaTestRepository` and `PrismaMarksRepository`.
+- **Application Use Cases & Invariants**: Implemented `CreateTestUseCase`, `GetTestUseCase`, `ListTestsForBatchUseCase`, `UpdateTestUseCase`, `ScheduleTestUseCase`, `EnterTestMarksUseCase`, `GetTestMarksUseCase`, `PublishTestResultsUseCase`, and `DeleteTestUseCase`.
+- **Bulk Atomicity & Idempotency**: Bulk mark submission executes inside a single database transaction (`$transaction`). If any mark is invalid, 0 records are written. Repeated submissions update records in-place without creating duplicate DB rows (enforced by `@@unique([testId, enrollmentId])`). Published test results are strictly immutable.
+- **Verification**: Verified across 97 unit & integration tests (`assessment.use-cases.test.ts`). **Phase 2.4 COMPLETED.**
+
+### 🟢 Phase 2.5 — Protected Academics APIs (COMPLETED)
+
+- **REST API Boundary**: Implemented 15 versioned REST API route handlers under `apps/web/src/app/api/v1/academics/...` covering Schedules, Sessions, Attendance, Homework, Tests, and Marks.
+- **Security & Authorization**: Enforced server-authoritative tenant resolution (`resolveV1TenantContext`), RBAC capability guards (`withV1ReadGuard`, `withV1MutationGuard`), fail-closed 404 cross-tenant isolation, strict Zod schema validation, and sanitized JSON response envelopes per ADR-0015.
+- **Verification**: Built comprehensive API security suite in `academics-security.test.ts` verifying `ACADEMIC-API-01` through `30`. Verified zero regression against Phase 1 security suites (`v1-security.test.ts`). Passed 100% quality gates across environment, DB health, schema drift, TypeScript, vitest, ESLint, and Next.js 16 production build. **Phase 2.5 COMPLETED.**
+
+---
+
 ## 4. Next Milestone Roadmap
 
-### 🚧 PHASE 1 — IDENTITY MODULE (NOW ACTIVE)
+### 🟢 PHASE 1 — IDENTITY MODULE (ACCEPTED & FROZEN)
 
-- **Domain Contract Specification:** Documented in [docs/phases/phase1.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.md) (Phase 1.0 Architecture Freeze), [docs/phases/phase1.3-rbac.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.3-rbac.md) (Phase 1.3.0 RBAC Architecture Freeze), and [docs/phases/phase1.4-onboarding.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.4-onboarding.md) (Phase 1.4.0 Onboarding Architecture Freeze).
-- **Subphase Tracking Rule:** Subphases are added to the tracker in `docs/CONTEXT.md` as each subphase is approved and implemented.
-- **Phase 1 Implementation Map:**
-  - **Phase 1.0:** Domain & Architecture Contract Freeze ✅
-  - **Phase 1.1:** Institute Tenant Core ✅
-  - **Phase 1.2:** Users & Memberships ✅
-  - **Phase 1.3:** Capability-Based RBAC ✅ (ACCEPTED 🟢)
-    - **Phase 1.3.0:** RBAC Architecture & Capability Matrix ✅ (Freeze)
-    - **Phase 1.3.1:** Capability Taxonomy & Strongly-Typed Enums ✅
-    - **Phase 1.3.2:** Role → Capability Resolver Engine ✅
-    - **Phase 1.3.3:** Authorization Engine & Assertion Guards ✅
-    - **Phase 1.3.4:** Tenant-Scoped Capability Evaluation ✅
-    - **Phase 1.3.5:** Resource-Scoped Filtering Helpers (Parent/Teacher) ✅
-    - **Phase 1.3.6:** Identity Use Case Integration ✅
-    - **Phase 1.3.7:** Security & RBAC Test Matrix ✅
-    - **Phase 1.3.8:** Phase 1.3 Acceptance Gate ✅ (ACCEPTED 🟢)
-  - **Phase 1.4:** Institute Onboarding Workflow ✅ (ACCEPTED 🟢)
-    - **Phase 1.4.0:** Architecture & Workflow Contract Freeze 🟢 (Freeze)
-    - **Phase 1.4.1:** Onboarding Domain & Application Orchestration ✅
-    - **Phase 1.4.2:** Atomic Institute + Owner Bootstrap Transaction ✅
-    - **Phase 1.4.3:** Idempotency & Conflict Handling ✅
-    - **Phase 1.4.4:** Onboarding API Boundary ✅
-    - **Phase 1.4.5:** Onboarding UI Flow ✅
-    - **Phase 1.4.6:** Tenant Context Resolution & Post-Onboarding Redirect ✅
-    - **Phase 1.4.7:** End-to-End Security & Failure Testing ✅
-    - **Phase 1.4.8:** Phase 1.4 Acceptance Gate ✅ (ACCEPTED 🟢)
-  - **Phase 1.5:** Institute Settings & White-Label Branding ✅ (ACCEPTED 🟢)
-    - **Phase 1.5.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.5.1:** Settings Domain Use Cases & Authorization ✅ COMPLETED
-    - **Phase 1.5.2:** Settings API & Validators ✅ COMPLETED
-    - **Phase 1.5.3:** Settings UI Feature ✅ COMPLETED
-    - **Phase 1.5.4:** Security E2E & Acceptance Gate 🟢 (ACCEPTED & FROZEN)
-  - **Phase 1.6:** Global ParentIdentity Platform Layer 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.6.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.6.1:** ParentIdentity Domain Entities & Value Objects ✅ COMPLETED
-    - **Phase 1.6.2:** ParentIdentity Repository & Persistence Layer ✅ COMPLETED
-    - **Phase 1.6.3:** ParentIdentity Application Use Cases ✅ COMPLETED
-    - **Phase 1.6.4:** Parent Identity ↔ Authentication Integration ✅ COMPLETED
-    - **Phase 1.6.5:** Multi-Tenant Security & Authorization Matrix ✅ COMPLETED
-    - **Phase 1.6.6:** Phase 1.6 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
-  - **Phase 1.7:** Tenant InstituteParent CRM Layer 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.7.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.7.1:** InstituteParent Domain Entity & Value Objects ✅ COMPLETED
-    - **Phase 1.7.2:** InstituteParent Repository & PostgreSQL Persistence Layer ✅ COMPLETED
-    - **Phase 1.7.3:** InstituteParent Application Use Cases ✅ COMPLETED
-    - **Phase 1.7.4:** ParentIdentity ↔ InstituteParent Linking & Authorization ✅ COMPLETED
-    - **Phase 1.7.5:** InstituteParent API Boundary & Validators ✅ COMPLETED
-    - **Phase 1.7.6:** InstituteParent Security / Privacy E2E Matrix ✅ COMPLETED
-    - **Phase 1.7.7:** InstituteParent Staff UI / CRM Feature ✅ COMPLETED
-    - **Phase 1.7.8:** UX, Accessibility & Tenant-Scoped Workflow Testing ✅ COMPLETED
-    - **Phase 1.7.9:** Phase 1.7 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
-  - **Phase 1.8:** Student Admission & Profile Core 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.8.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.8.1:** Student Domain Entity & Value Objects ✅ COMPLETED
-    - **Phase 1.8.2:** Student Repository & PostgreSQL Persistence Layer ✅ COMPLETED
-    - **Phase 1.8.3:** Student Application Use Cases ✅ COMPLETED
-    - **Phase 1.8.4:** Student Admission & Lifecycle Rules ✅ COMPLETED
-    - **Phase 1.8.5:** Student API Boundary & Validators ✅ COMPLETED
-    - **Phase 1.8.6:** Student Security / Tenant E2E Matrix ✅ COMPLETED
-    - **Phase 1.8.7:** Student Staff UI / Admission Feature ✅ COMPLETED
-    - **Phase 1.8.8:** UX, Accessibility & Admission Workflow Testing ✅ COMPLETED
-  - **Phase 1.9:** Guardian & Student Links 🟢 (COMPLETED & FROZEN)
-    - **Phase 1.9.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.9.1:** Relationship Domain Entity & Value Objects 🟢 COMPLETED
-    - **Phase 1.9.2:** Relationship Repository & PostgreSQL Persistence 🟢 COMPLETED
-    - **Phase 1.9.3:** Relationship Application Use Cases 🟢 COMPLETED
-    - **Phase 1.9.4:** Guardian/Student Linking & Authorization 🟢 COMPLETED
-    - **Phase 1.9.5:** Relationship API Boundary & Validators 🟢 COMPLETED
-    - **Phase 1.9.6:** Relationship Security / Privacy E2E Matrix 🟢 COMPLETED
-    - **Phase 1.9.7:** Staff Guardian/Relationship UI 🟢 COMPLETED
-    - **Phase 1.9.8:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
-    - **Phase 1.9.9:** Phase 1.9 Acceptance Gate 🟢 ACCEPTED & FROZEN
-  - **Phase 1.10:** Academic Hierarchy (Programs, Subjects, Batches) 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.10.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.10.1:** Academic Hierarchy Domain Entities & Value Objects 🟢 COMPLETED
-    - **Phase 1.10.2:** Repository & PostgreSQL Persistence Layer 🟢 COMPLETED
-    - **Phase 1.10.3:** Application Use Cases & State Machine Rules 🟢 COMPLETED
-    - **Phase 1.10.4:** API Boundary & Presentation Validators 🟢 COMPLETED
-    - **Phase 1.10.5:** Security & Tenant Isolation E2E Matrix 🟢 COMPLETED
-    - **Phase 1.10.6:** Staff Academic Workspace UI 🟢 COMPLETED
-    - **Phase 1.10.7:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
-    - **Phase 1.10.8:** Phase 1.10 Acceptance Gate & Freeze 🟢 ACCEPTED & FROZEN
-  - **Phase 1.11:** Student Enrollment Lifecycle 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.11.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.11.1:** Enrollment Domain Entity & Value Objects 🟢 COMPLETED
-    - **Phase 1.11.2:** Repository & PostgreSQL Persistence Layer 🟢 COMPLETED
-    - **Phase 1.11.3:** Application Use Cases & Enrollment Lifecycle 🟢 COMPLETED
-    - **Phase 1.11.4:** API Boundary & Presentation Validators 🟢 COMPLETED
-    - **Phase 1.11.5:** Security & Tenant Isolation E2E Matrix 🟢 COMPLETED
-    - **Phase 1.11.6:** Staff Enrollment UI 🟢 COMPLETED
-    - **Phase 1.11.7:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
-    - **Phase 1.11.8:** Phase 1.11 Acceptance Gate & Freeze 🟢 ACCEPTED & FROZEN
-  - **Phase 1.12:** Protected Identity APIs (`/api/v1/...`) 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.12.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.12.1:** Protected Identity API Domain/Application Contracts 🟢 COMPLETED
-    - **Phase 1.12.2:** API Infrastructure & Persistence Adapters 🟢 COMPLETED
-    - **Phase 1.12.3:** API Boundary & Presentation Validators 🟢 COMPLETED
-    - **Phase 1.12.4:** Authentication, Authorization & Tenant Isolation 🟢 COMPLETED
-    - **Phase 1.12.5:** Security & Adversarial E2E Audit 🟢 COMPLETED
-    - **Phase 1.12.6:** Protected Identity API Integration / Staff Consumption 🟢 COMPLETED
-    - **Phase 1.12.7:** API UX / Developer Experience / Documentation 🟢 COMPLETED
-    - **Phase 1.12.8:** Final Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
-  - **Phase 1.13:** Staff UI & Onboarding Workflows 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.13.0:** Staff Management Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.13.1:** Staff Management Domain & Application Layer 🟢 COMPLETED
-    - **Phase 1.13.2:** Staff Management API & Validators 🟢 COMPLETED
-    - **Phase 1.13.3:** Staff Management Security & E2E Matrix 🟢 COMPLETED
-    - **Phase 1.13.4:** Staff Workspace UI Feature 🟢 COMPLETED
-    - **Phase 1.13.5:** UX, Accessibility & Workflow Testing 🟢 COMPLETED
-    - **Phase 1.13.6:** Phase 1.13 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
-  - **Phase 1.14:** Multi-Tenant Cross-Tenant Access Security Hardening 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.14.0:** Security Architecture & Threat Model 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.14.1:** Repository & Application Hardening 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.14.2:** API Boundary Hardening 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.14.3:** Adversarial Security E2E Matrix 🟢 (ACCEPTED & FROZEN)
-    - **Phase 1.14.4:** Phase 1.14 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
-  - **Phase 1.15:** Phase 1 Acceptance Gate 🟢 (ACCEPTED & FROZEN)
+- **Domain Contract Specification:** Documented in [docs/phases/phase1.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.md) (Phase 1.0 Architecture Freeze), [docs/phases/phase1.3-rbac.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.3-rbac.md) (Phase 1.3.0 RBAC Architecture Freeze), [docs/phases/phase1.4-onboarding.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.4-onboarding.md) (Phase 1.4.0 Onboarding Architecture Freeze), [docs/adr/0015-protected-identity-apis-v1.md](file:///home/supra/Desktop/class_os/docs/adr/0015-protected-identity-apis-v1.md), [docs/adr/0016-staff-management-architecture.md](file:///home/supra/Desktop/class_os/docs/adr/0016-staff-management-architecture.md), and [docs/adr/0017-multi-tenant-cross-tenant-security-hardening.md](file:///home/supra/Desktop/class_os/docs/adr/0017-multi-tenant-cross-tenant-security-hardening.md).
+- **Status**: 🟢 **ALL 15 SUBPHASES ACCEPTED & FROZEN.**
+
+### 🚧 PHASE 2 — ACADEMICS MODULE (NOW ACTIVE)
+
+- **Domain Contract Specification:** Documented in [docs/phases/02/phase2-academics-contract.md](file:///home/supra/Desktop/class_os/docs/phases/02/phase2-academics-contract.md).
+- **Subphase Tracking Map:**
+  - **Phase 2.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.1:** Scheduling & Session Engine (`Schedule` & `BatchSession`) 🟢 (ACCEPTED & COMPLETED)
+  - **Phase 2.2:** Session Attendance Core (`Attendance`) 🟢 (ACCEPTED & COMPLETED)
+  - **Phase 2.3:** Homework Workflow (`Homework`) 🟢 (ACCEPTED & COMPLETED)
+  - **Phase 2.4:** Assessment & Bulk Marks Engine (`Test` & `Marks`) 🟢 (ACCEPTED & COMPLETED)
+  - **Phase 2.5:** Protected Academics APIs (`/api/v1/academics/...`) 🟢 (ACCEPTED & COMPLETED)
+  - **Phase 2.6:** Staff Academic Workspace UI (Teacher & Staff Workspaces) ⏳ NEXT
+  - **Phase 2.7:** UX / Accessibility & Security E2E Matrix ⏳ UPCOMING
+  - **Phase 2.8:** Phase 2 Acceptance Gate & Milestone Freeze ⏳ UPCOMING
+
