@@ -183,6 +183,7 @@ PHASE 1 — FOUNDATION & IDENTITY MODULE               🟢 ACCEPTED & FROZEN
   └── Phase 1.15 — Final Phase 1 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
                                                         ↓
                                                   PHASE 1 GATE (PASSED & FROZEN)
+PHASE 2  → Academics Module                             ⏳ UPCOMING
     ↓
 PHASE 3  Billing Module                               ⏳ UPCOMING
     ↓
@@ -274,7 +275,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Phase 0.12.1 (UI Foundation & Design System Audit)**: Established the UI foundation in `@coaching-os/ui` and `apps/web`. Retained existing primitives (`Button`, `Input`, `Card`, `Badge`), created missing primitives (`Label`, `Textarea`, `Alert`, `Spinner`, `Skeleton`, `Separator`), created web brand (`CoachingOSLogo`) and layout (`Container`, `Section`) primitives, created unit test suite (`ui-primitives.test.ts`), and verified zero backend/auth/onboarding contract regressions.
 - **Phase 0.12.2.0 (Landing Page UX & Content Contract Freeze)**: Created authoritative landing page UX and content contract in `docs/phases/phase0.12.2-landing-page.md`. Frozen target audience (institute owners/founders), core positioning ("Run your coaching institute from one place"), primary CTA (`"Get Started"` -> `/sign-up`), secondary CTA (`"Sign In"` -> `/sign-in`), 8-section vertical information architecture, component hierarchy under `apps/web/src/components/marketing/`, factual trust/security boundaries (zero fake claims), and non-goals. Zero code modifications introduced during contract freeze.
 - **Phase 0.12.2.1 (Marketing Layout Shell)**: Implemented Next.js route group layout `app/(marketing)/layout.tsx` rendering `MarketingHeader` + `<main>` + `MarketingFooter`, created `(marketing)/page.tsx` composition placeholder serving `/`, built `MarketingHeader` with desktop anchor links and `<MobileNav />` client toggle, built `MarketingFooter` with dynamic copyright and system status badge, removed obsolete flat `app/page.tsx`, and verified zero database/auth/RBAC dependencies in marketing components.
-- **Phase 0.12.2.2 (Hero Section Component)**: Implemented 100% Server Component `<HeroSection />` (`hero-section.tsx`) and `<HeroProductPreview />` (`hero-product-preview.tsx`), strictly adhering to Section 7.2 of frozen UX contract (H1 headline *"Run your coaching institute from one place."*, supporting copy, eyebrow badge, primary CTA `/sign-up`, secondary CTA `/sign-in`, multi-tenant trust micro-copy, and realistic React/CSS institute workspace dashboard preview). Composed in `app/(marketing)/page.tsx` and verified zero DB/auth/RBAC dependencies.
+- **Phase 0.12.2.2 (Hero Section Component)**: Implemented 100% Server Component `<HeroSection />` (`hero-section.tsx`) and `<HeroProductPreview />` (`hero-product-preview.tsx`), strictly adhering to Section 7.2 of frozen UX contract (H1 headline _"Run your coaching institute from one place."_, supporting copy, eyebrow badge, primary CTA `/sign-up`, secondary CTA `/sign-in`, multi-tenant trust micro-copy, and realistic React/CSS institute workspace dashboard preview). Composed in `app/(marketing)/page.tsx` and verified zero DB/auth/RBAC dependencies.
 - **Phase 0.12.2.3 (Product Workflow Section)**: Implemented 100% Server Component `<WorkflowSection />` (`workflow-section.tsx`) rendering a 4-step operational progression (`STEP 01`: Set Up Your Institute, `STEP 02`: Add Team & Students, `STEP 03`: Run Daily Operations, `STEP 04`: Stay in Total Control). Composed in `app/(marketing)/page.tsx` with zero DB/auth dependencies.
 - **Phase 0.12.2.4 (Core Capabilities Section)**: Implemented 100% Server Component `<CapabilitiesSection />` (`capabilities-section.tsx`) rendering an 8-card domain grid (Student Management, Academic Operations, Attendance Tracking, Homework & Tasks, Tests & Marks, Fees & Billing, Staff & Role Control, Institute Announcements). Composed in `app/(marketing)/page.tsx` with zero DB/auth dependencies.
 - **Phase 0.12.2.5 (Roles & Value Section)**: Implemented 100% Server Component `<RolesSection />` (`roles-section.tsx`) rendering 4 canonical role cards (Institute Owner, Teacher, Assistant, Parent & Student) highlighting role-specific operational value propositions. Composed in `app/(marketing)/page.tsx` with zero DB/auth dependencies.
@@ -290,6 +291,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Form Validation & UX State**: Implemented Zod validation schema `signUpSchema` (name, email, password min 8, password matching) and robust state handling with `@hookform/resolvers/zod`. Added password visibility toggles (`Eye` / `EyeOff`), loading state with `Spinner`, and `AuthError` alerts.
 - **Better Auth Client Integration**: Connected `SignUpForm` directly to `@coaching-os/auth/client` (`signUp.email`), ensuring authentication sessions are established automatically upon successful registration.
 - **Server Identity Boundary Invariants**: Verified that zero identity attributes (`userId`, `instituteId`, `membershipId`, `role`, `status`, `tenantId`) are accepted from client request payloads. Automatically redirects authenticated users away from `/sign-up` to `/onboarding`.
+
 ### ✅ Phase 0.12.5 — Sign In UI & Authentication Flow (COMPLETED)
 
 - **Sign In Feature Architecture**: Created `/sign-in` page (`app/(auth)/sign-in/page.tsx`) as a thin composition boundary (< 30 lines) embedding `<SignInForm />` inside `<React.Suspense>`.
@@ -514,7 +516,6 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Final Acceptance Gate & Freeze (Phase 1.13.6)**: Verified 100% ADR-0016 compliance across domain, RBAC, tenant isolation, security (`STAFF-SEC-01..24`), Playwright E2E matrix, accessibility, mobile layout, DB integrity, and quality gates (`pnpm typecheck` 0 errors, `pnpm lint` 0 errors/warnings, `pnpm build` clean, 87 unit tests + 10 E2E tests passing). **Phase 1.13 formally ACCEPTED and FROZEN.**
 
 ## 4. Next Milestone Roadmap
-
 
 ### 🚧 PHASE 1 — IDENTITY MODULE (NOW ACTIVE)
 
