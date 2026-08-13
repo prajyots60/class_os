@@ -57,6 +57,14 @@ describe('ScheduleGeneratorService Domain Service', () => {
     expect(candidateSessions[1].date.toISOString().slice(0, 10)).toBe('2026-08-19');
   });
 
+  it('should parse YYYY-MM-DD date strings without server timezone offset skew', () => {
+    const normalized = ScheduleGeneratorService.normalizeToUtcDate('2026-08-17');
+    expect(normalized.getUTCFullYear()).toBe(2026);
+    expect(normalized.getUTCMonth()).toBe(7); // August = index 7
+    expect(normalized.getUTCDate()).toBe(17);
+    expect(normalized.toISOString()).toBe('2026-08-17T00:00:00.000Z');
+  });
+
   it('should throw ValidationError if endDate is before startDate', () => {
     const schedule = ScheduleEntity.create({
       batchId: 'batch-123',

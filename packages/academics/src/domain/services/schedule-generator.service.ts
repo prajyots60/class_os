@@ -13,6 +13,9 @@ export interface GenerateCandidateSessionsProps {
 export class ScheduleGeneratorService {
   /**
    * Calculates matching calendar dates within [startDate, endDate] for a recurring schedule rule.
+   *
+   * Calendar dates are normalized to UTC midnight (00:00:00.000Z) representing the operational
+   * local calendar day of the institute without timezone boundary shifts.
    */
   public static calculateMatchingDates(
     schedule: ScheduleEntity,
@@ -88,9 +91,25 @@ export class ScheduleGeneratorService {
     return candidateSessions;
   }
 
+  /**
+   * Normalizes a Date object or date string to a UTC midnight Date object (00:00:00.000Z).
+   *
+   * If a "YYYY-MM-DD" formatted string is provided, year/month/day components are extracted
+   * directly to avoid server/container timezone boundary skew.
+   */
   public static normalizeToUtcDate(dateInput: Date | string): Date {
     if (!dateInput) {
       throw new ValidationError('Date input cannot be empty');
+    }
+
+    if (typeof dateInput === 'string') {
+      const match = dateInput.trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (match) {
+        const year = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10) - 1;
+        const day = parseInt(match[3], 10);
+        return new Date(Date.UTC(year, month, day));
+      }
     }
 
     const d = dateInput instanceof Date ? dateInput : new Date(dateInput);
