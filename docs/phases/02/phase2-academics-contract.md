@@ -254,7 +254,7 @@ PHASE 2 — ACADEMICS MODULE EXECUTION ROADMAP
   ├── Phase 2.0 — Architecture & Contract Freeze              🟢 ACCEPTED & FROZEN
   ├── Phase 2.1 — Scheduling & Session Engine (`Schedule` & `BatchSession`) 🟢 ACCEPTED & COMPLETED
   ├── Phase 2.2 — Session Attendance Core (`Attendance`)       🟢 ACCEPTED & COMPLETED
-  ├── Phase 2.3 — Homework Workflow (`Homework`)               ⏳ UPCOMING
+  ├── Phase 2.3 — Homework Workflow (`Homework`)               🟢 ACCEPTED & COMPLETED
   ├── Phase 2.4 — Assessment & Bulk Marks Engine (`Test` & `Marks`) ⏳ UPCOMING
   ├── Phase 2.5 — Protected Academics APIs (`/api/v1/academics/...`) ⏳ UPCOMING
   ├── Phase 2.6 — Staff Academic Workspace UI (Teacher & Staff Workspaces) ⏳ UPCOMING
