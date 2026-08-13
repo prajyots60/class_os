@@ -7,6 +7,10 @@ export const attendanceItemSchema = z.object({
   }),
 });
 
+export const getSessionAttendanceSchema = z.object({
+  sessionId: z.string().uuid({ message: 'Session ID must be a valid UUID' }),
+});
+
 export const recordSessionAttendanceSchema = z.object({
   sessionId: z.string().uuid({ message: 'Session ID must be a valid UUID' }),
   records: z

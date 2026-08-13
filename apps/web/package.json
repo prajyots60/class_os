@@ -12,6 +12,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@coaching-os/academics": "workspace:*",
     "@coaching-os/auth": "workspace:*",
     "@coaching-os/database": "workspace:*",
     "@coaching-os/identity": "workspace:*",

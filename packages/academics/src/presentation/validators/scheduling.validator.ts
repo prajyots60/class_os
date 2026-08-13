@@ -37,8 +37,18 @@ export const updateScheduleSchema = z.object({
   teacherId: z.string().uuid().nullable().optional(),
 });
 
+export const listSchedulesForBatchSchema = z.object({
+  batchId: z.string().uuid({ message: 'Batch ID must be a valid UUID' }),
+});
+
 export const generateBatchSessionsSchema = z.object({
   batchId: z.string().uuid({ message: 'Batch ID must be a valid UUID' }),
   startDate: z.string().min(1, { message: 'Start date is required' }),
   endDate: z.string().min(1, { message: 'End date is required' }),
+});
+
+export const listBatchSessionsSchema = z.object({
+  batchId: z.string().uuid({ message: 'Batch ID must be a valid UUID' }),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
 });
