@@ -21,6 +21,7 @@ CoachingOS is a multi-tenant SaaS operating system built for founder-led coachin
 
 ### Authoritative Architecture Specifications
 
+- **[Master System Overview & Phase Progression](file:///home/supra/Desktop/class_os/docs/SYSTEM_OVERVIEW.md)**
 - **[Software Requirements Specification (SRS)](file:///home/supra/Desktop/class_os/docs/srs.md)**
 - **[System Design Document (SDD)](file:///home/supra/Desktop/class_os/docs/sdd.md)**
 - **[Database & API Design Document (DADD)](file:///home/supra/Desktop/class_os/docs/dadd.md)**
@@ -34,6 +35,7 @@ CoachingOS is a multi-tenant SaaS operating system built for founder-led coachin
 - **[ADR-0008: Brand Identity & Template Engine Architecture (Future Roadmap)](file:///home/supra/Desktop/class_os/docs/adr/0008-brand-identity-template-architecture.md)**
 - **[ADR-0017: Multi-Tenant Cross-Tenant Access Security Hardening](file:///home/supra/Desktop/class_os/docs/adr/0017-multi-tenant-cross-tenant-security-hardening.md)**
 - **[Phase 1 Domain & Architecture Contract](file:///home/supra/Desktop/class_os/docs/phases/phase1.md)**
+- **[Phase 2 Academics Architecture & Domain Contract](file:///home/supra/Desktop/class_os/docs/phases/02/phase2-academics-contract.md)**
 - **[Phase 1.14 Specification](file:///home/supra/Desktop/class_os/docs/phases/phase1.14-cross-tenant-security-hardening.md)**
 - **[Engineering Backlog](file:///home/supra/Desktop/class_os/docs/BACKLOG.md)**
 
