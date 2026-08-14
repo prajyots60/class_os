@@ -68,6 +68,18 @@ Receipt
 - **Conflict**: High-frequency web applications can experience double-click submissions.
 - **Resolution**: `RecordPaymentUseCase` enforces tuple idempotency `(invoiceId, amount, paymentMode, receivedOn)` in PostgreSQL transaction. Re-submitting the exact same tuple returns the previously recorded `Payment` without duplicating ledger entries.
 
+### R-FIN-004 — Payment Tuple Idempotency Product Limitation
+- **Conflict**: Legitimate duplicate payments on the same date for the exact same amount (`₹5,000` cash on `2026-08-14` for `Invoice X`).
+- **Resolution**: Both identical payments share the tuple idempotency key `(invoiceId, amount, paymentMode, receivedOn)` and will return the first recorded `Payment` DTO. This is an accepted product boundary/limitation for Phase 3. Staff making legitimate duplicate payments on the same date must vary remarks or timestamp metadata.
+
+### R-FIN-005 — Stale Balance Concurrency Response Canonical Standard
+- **Conflict**: UI contract mentions `409 Conflict`, while use case validation returns `400 Bad Request` (`ValidationError`).
+- **Resolution**: The backend `RecordPaymentUseCase` returns `400 Bad Request` with `code: "VALIDATION_ERROR"` when payment exceeds remaining balance due to concurrent updates. The UI `RecordPaymentModal` catches both `400` and `409` status codes and renders the financial conflict notice.
+
+### R-REC-001 — Receipt Sequence Allocation & Rollback Gap Behavior
+- **Conflict**: Certain descriptions refer to "gapless sequence numbering". PostgreSQL atomic sequence allocation permits gaps on transaction rollback.
+- **Resolution**: Receipt numbers use format `REC-{YYYY}-{SEQ:5}` allocated atomically per institute. Sequence numbers are unique and strictly monotonic per allocation. If a transaction rolls back after sequence increment, sequence gaps are allowed and compliant with Phase 3.4 contract. "Gapless" is NOT guaranteed across transaction rollbacks.
+
 ### R-UX-001 — Stale Balance Concurrency UX Handling
 - **Conflict**: Concurrent payment recording by two staff members on the same invoice.
 - **Resolution**: When a payment fails due to 409 Conflict / 400 Bad Request (outstanding changed concurrently), UI displays an alert: *"Financial Conflict: The outstanding balance on this invoice has changed. Please review the updated balance before retrying."* UI DOES NOT auto-retry or alter payment amounts automatically.
