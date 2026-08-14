@@ -587,12 +587,11 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Security & Multi-Tenant E2E Matrix**: Created unit test suite (`v1-academics-client.test.ts`) and Playwright E2E security matrix (`academic-workspace-security.spec.ts`) testing workspace navigation, attendance submission, homework publication, marks entry, and cross-tenant fail-closed 404 resource masking.
 - **Verification Gate**: Passed 100% monorepo quality gates (`env:check`, `db:validate`, `db:health`, `typecheck`, `test`, `lint`, `build`). **Phase 2.6 COMPLETED.**
 
-### 🟢 Phase 2.7 — UX / Accessibility & Security E2E Matrix (COMPLETED)
+### 🟢 Phase 2.8 — Phase 2 Acceptance Gate & Milestone Freeze (ACCEPTED & FROZEN)
 
-- **Adversarial Security Suite**: Implemented `academics-adversarial-security.test.ts` validating unit/API threat vectors (`SEC-ADV-01` to `07`), including unauthenticated rejection across all routes, capability authorization gating (read-only vs mutation staff), client tenant spoofing defense (header/body `instituteId` injection ignored), cross-tenant fail-closed 404 masking, attendance atomicity/cancelled session protection, bulk marks bounds validation (`0 <= marks <= maxMarks`), and published immutability boundary.
-- **End-to-End Workflow Matrix**: Built Playwright E2E matrix (`academic-workflow-matrix.spec.ts`) validating scenarios `E2E-ACADEMIC-01` through `18` (Overview dashboard, Tab navigation, Attendance submission & refresh persistence, Homework draft creation & publication modal, Published homework immutability, Assessment creation & bulk marks entry, Invalid marks client validation, Session generation idempotency, Cross-tenant UI isolation, 375px mobile viewport touch layouts, Navigation tab URL synchronization, Error UX, and Double-click submission prevention).
-- **Accessibility & WAI-ARIA Matrix**: Created Playwright WAI-ARIA suite (`academic-accessibility.spec.ts`) testing full keyboard navigation tab order, modal focus trap management & Escape key dismissal, explicit `<label>` form field associations, and color-independent status badges.
-- **Quality Gate Verification**: Passed 100% monorepo quality gates (`env:check`, `db:validate`, `db:health`, `typecheck`, `test`, `lint`, `build`). **Phase 2.7 COMPLETED.**
+- **Final Acceptance Audit**: Executed comprehensive final audit across all 15 frozen invariants (`ACADEMIC-001` through `015`), domain architecture, repository boundaries, multi-tenant isolation, RBAC capabilities, REST API endpoints (`/api/v1/academics/...`), staff workspace UI, accessibility, and E2E workflows.
+- **Formal Documentation**: Authored final milestone acceptance report in `docs/phases/02/phase2-final-acceptance.md`.
+- **Milestone Freeze**: Formally ACCEPTED and FROZEN Phase 2 — Academics Module. All domain entities, API contracts, database tables, and immutability rules are now locked contracts. Passed 100% monorepo quality gates (`env:check`, `db:validate`, `db:health`, `typecheck`, `test`, `lint`, `build`).
 
 ---
 
@@ -603,17 +602,17 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Domain Contract Specification:** Documented in [docs/phases/phase1.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.md) (Phase 1.0 Architecture Freeze), [docs/phases/phase1.3-rbac.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.3-rbac.md) (Phase 1.3.0 RBAC Architecture Freeze), [docs/phases/phase1.4-onboarding.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.4-onboarding.md) (Phase 1.4.0 Onboarding Architecture Freeze), [docs/adr/0015-protected-identity-apis-v1.md](file:///home/supra/Desktop/class_os/docs/adr/0015-protected-identity-apis-v1.md), [docs/adr/0016-staff-management-architecture.md](file:///home/supra/Desktop/class_os/docs/adr/0016-staff-management-architecture.md), and [docs/adr/0017-multi-tenant-cross-tenant-security-hardening.md](file:///home/supra/Desktop/class_os/docs/adr/0017-multi-tenant-cross-tenant-security-hardening.md).
 - **Status**: 🟢 **ALL 15 SUBPHASES ACCEPTED & FROZEN.**
 
-### 🚧 PHASE 2 — ACADEMICS MODULE (NOW ACTIVE)
+### 🟢 PHASE 2 — ACADEMICS MODULE (ACCEPTED & FROZEN)
 
-- **Domain Contract Specification:** Documented in [docs/phases/02/phase2-academics-contract.md](file:///home/supra/Desktop/class_os/docs/phases/02/phase2-academics-contract.md).
+- **Domain Contract Specification:** Documented in [docs/phases/02/phase2-academics-contract.md](file:///home/supra/Desktop/class_os/docs/phases/02/phase2-academics-contract.md) and [docs/phases/02/phase2-final-acceptance.md](file:///home/supra/Desktop/class_os/docs/phases/02/phase2-final-acceptance.md).
 - **Subphase Tracking Map:**
   - **Phase 2.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-  - **Phase 2.1:** Scheduling & Session Engine (`Schedule` & `BatchSession`) 🟢 (ACCEPTED & COMPLETED)
-  - **Phase 2.2:** Session Attendance Core (`Attendance`) 🟢 (ACCEPTED & COMPLETED)
-  - **Phase 2.3:** Homework Workflow (`Homework`) 🟢 (ACCEPTED & COMPLETED)
-  - **Phase 2.4:** Assessment & Bulk Marks Engine (`Test` & `Marks`) 🟢 (ACCEPTED & COMPLETED)
-  - **Phase 2.5:** Protected Academics APIs (`/api/v1/academics/...`) 🟢 (ACCEPTED & COMPLETED)
-  - **Phase 2.6:** Staff Academic Workspace UI (Teacher & Staff Workspaces) 🟢 (ACCEPTED & COMPLETED)
-  - **Phase 2.7:** UX / Accessibility & Security E2E Matrix 🟢 (ACCEPTED & COMPLETED)
-  - **Phase 2.8:** Phase 2 Acceptance Gate & Milestone Freeze ⏳ NEXT
+  - **Phase 2.1:** Scheduling & Session Engine (`Schedule` & `BatchSession`) 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.2:** Session Attendance Core (`Attendance`) 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.3:** Homework Workflow (`Homework`) 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.4:** Assessment & Bulk Marks Engine (`Test` & `Marks`) 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.5:** Protected Academics APIs (`/api/v1/academics/...`) 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.6:** Staff Academic Workspace UI (Teacher & Staff Workspaces) 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.7:** UX / Accessibility & Security E2E Matrix 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.8:** Phase 2 Acceptance Gate & Milestone Freeze 🟢 (ACCEPTED & FROZEN)
 
