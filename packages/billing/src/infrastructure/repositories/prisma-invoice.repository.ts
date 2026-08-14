@@ -29,9 +29,11 @@ export class PrismaInvoiceRepository implements InvoiceRepository {
     });
   }
 
-  public async save(invoice: InvoiceEntity, instituteId: string): Promise<void> {
+  public async save(invoice: InvoiceEntity, instituteId: string, tx?: unknown): Promise<void> {
+    const client = (tx as PrismaClient) || this.prisma;
+
     // 1. Verify tenant ownership of target BillingPlan before save
-    const billingPlan = await this.prisma.billingPlan.findFirst({
+    const billingPlan = await client.billingPlan.findFirst({
       where: {
         id: invoice.billingPlanId,
         enrollment: {
@@ -47,7 +49,7 @@ export class PrismaInvoiceRepository implements InvoiceRepository {
     }
 
     try {
-      await this.prisma.invoice.upsert({
+      await client.invoice.upsert({
         where: { id: invoice.id },
         create: {
           id: invoice.id,
@@ -74,8 +76,18 @@ export class PrismaInvoiceRepository implements InvoiceRepository {
     }
   }
 
-  public async findById(id: string, instituteId: string): Promise<InvoiceEntity | null> {
-    const record = await this.prisma.invoice.findFirst({
+  public async findById(id: string, instituteId: string, tx?: unknown): Promise<InvoiceEntity | null> {
+    const client = (tx as PrismaClient) || this.prisma;
+
+    if (tx && typeof (tx as any).$executeRaw === 'function') {
+      try {
+        await (tx as any).$executeRaw`SELECT id FROM invoices WHERE id = ${id}::uuid FOR UPDATE`;
+      } catch {
+        // Ignore lock errors if raw query unsupported e.g. mock
+      }
+    }
+
+    const record = await client.invoice.findFirst({
       where: {
         id,
         billingPlan: {
@@ -95,9 +107,12 @@ export class PrismaInvoiceRepository implements InvoiceRepository {
 
   public async findByBillingPlanId(
     billingPlanId: string,
-    instituteId: string
+    instituteId: string,
+    tx?: unknown
   ): Promise<InvoiceEntity[]> {
-    const records = await this.prisma.invoice.findMany({
+    const client = (tx as PrismaClient) || this.prisma;
+
+    const records = await client.invoice.findMany({
       where: {
         billingPlanId,
         billingPlan: {
