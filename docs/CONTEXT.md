@@ -200,10 +200,10 @@ PHASE 2 — ACADEMICS MODULE                             🟢 ACCEPTED & FROZEN
 PHASE 3 — BILLING MODULE                                🟡 IN EXECUTION
   ├── Phase 3.0 — Billing Architecture & Domain Contract Freeze 🟢 ACCEPTED & FROZEN
   ├── Phase 3.1 — BillingPlan Domain & Persistence            🟢 COMPLETED
-  ├── Phase 3.2 — Invoice Engine                              🟡 IN EXECUTION
+  ├── Phase 3.2 — Invoice Engine                              🟢 COMPLETED
   │     ├── Phase 3.2.0 — Invoice Architecture & Contract Freeze 🟢 ACCEPTED & FROZEN
-  │     └── Phase 3.2.1 — Invoice Engine Implementation       ⏳ NEXT
-  ├── Phase 3.3 — Payment Engine                              ⏳ UPCOMING
+  │     └── Phase 3.2.1 — Invoice Engine Implementation       🟢 COMPLETED
+  ├── Phase 3.3 — Payment Engine                              ⏳ NEXT
   ├── Phase 3.4 — Receipt Engine                              ⏳ UPCOMING
   ├── Phase 3.5 — Protected Billing APIs                      ⏳ UPCOMING
   ├── Phase 3.6 — Staff Billing Workspace UI                  ⏳ UPCOMING
@@ -626,6 +626,14 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Generation & Idempotency Rules**: Documented exact generation rules for `one_time` (idempotency key `billingPlanId`), `monthly` (idempotency key `(billingPlanId, YYYY-MM)` with month-end date capping), and `installment` (idempotency key `(billingPlanId, installmentNumber)`), plus `firstInvoiceAmountOverride` precedence.
 - **Security & Multi-Tenancy**: Enforced server-authoritative tenant scoping (`billingPlan: { enrollment: { instituteId } }`), capability RBAC (`CAPABILITIES.BILLING_READ`, `CAPABILITIES.BILLING_WRITE`), single-use-case transaction boundary, and `InvoiceGenerated` domain event payload. **Phase 3.2.0 ACCEPTED & FROZEN.**
 
+### 🟢 Phase 3.2.1 — Invoice Engine Implementation (COMPLETED & VERIFIED)
+
+- **Domain Entities & Services**: Implemented `InvoiceEntity` aggregate root with getters enforcing financial immutability (`amount`, `dueDate`, `billingPlanId`), `InvoiceStatus` enum (`pending` | `partial` | `paid`), and state transition helper `updateStatusFromPayments`.
+- **Installment Calculator Service**: Created `calculateInstallmentSchedule` domain service implementing R-006 ($N$ immutability), R-007 (integer-cent arithmetic and remainder cents distribution), and R-008 (first-invoice override remaining balance distribution over $N-1$ installments).
+- **Application Use Cases & Domain Events**: Built `GenerateInvoiceUseCase` and `GetInvoiceUseCase` supporting `one_time`, `monthly`, and `installment` generation with period/installment idempotency keys and `InvoiceGenerated` event publication after successful database persistence.
+- **Infrastructure & Multi-Tenant Persistence**: Implemented `PrismaInvoiceRepository` with row-level tenant scoping (`billingPlan: { enrollment: { instituteId } }`) and zero schema drift.
+- **Verification Matrix**: Built comprehensive unit test suite (`invoice.entity.test.ts`, `installment-calculator.test.ts`, `invoice.use-cases.test.ts`) and PostgreSQL integration test suite (`prisma-invoice.repository.integration.test.ts`). Passed 100% quality gates across `env:check`, `db:validate`, `db:health`, `typecheck`, `test`, `lint`, and `build`. **Phase 3.2 COMPLETED.**
+
 ---
 
 ## 4. Next Milestone Roadmap
@@ -655,10 +663,10 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Subphase Tracking Map:**
   - **Phase 3.0:** Billing Architecture & Domain Contract Freeze 🟢 (ACCEPTED & FROZEN)
   - **Phase 3.1:** BillingPlan Domain & Persistence 🟢 (COMPLETED)
-  - **Phase 3.2:** Invoice Engine 🟡 (IN EXECUTION)
+  - **Phase 3.2:** Invoice Engine 🟢 (COMPLETED)
     - **Phase 3.2.0:** Invoice Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 3.2.1:** Invoice Engine Implementation ⏳ (NEXT)
-  - **Phase 3.3:** Payment Engine ⏳ (UPCOMING)
+    - **Phase 3.2.1:** Invoice Engine Implementation 🟢 (COMPLETED & VERIFIED)
+  - **Phase 3.3:** Payment Engine ⏳ (NEXT)
   - **Phase 3.4:** Receipt Engine ⏳ (UPCOMING)
   - **Phase 3.5:** Protected Billing APIs (`/api/v1/billing-plans`, `/api/v1/invoices`, `/api/v1/payments`, `/api/v1/receipts`) ⏳ (UPCOMING)
   - **Phase 3.6:** Staff Billing Workspace UI ⏳ (UPCOMING)
