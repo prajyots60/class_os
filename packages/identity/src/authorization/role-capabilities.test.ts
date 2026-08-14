@@ -41,9 +41,9 @@ describe('Role → Capability Resolver Engine Suite', () => {
       }
     });
 
-    it('Test 2 — Teacher capabilities (Exact 38 capabilities)', () => {
+    it('Test 2 — Teacher capabilities (Exact 40 capabilities)', () => {
       const teacherCaps = getCapabilitiesForRole('teacher');
-      expect(teacherCaps.size).toBe(38);
+      expect(teacherCaps.size).toBe(40);
 
       // Teacher possesses academic, attendance, homework, test, marks, announcement, institute:read, parent CRM (read, create, update), guardian:read
       expect(teacherCaps.has(CAPABILITIES.INSTITUTE_READ)).toBe(true);
@@ -62,9 +62,9 @@ describe('Role → Capability Resolver Engine Suite', () => {
       expect(teacherCaps.has(CAPABILITIES.INSTITUTE_UPDATE)).toBe(false);
     });
 
-    it('Test 3 — Assistant capabilities (Exact 37 capabilities)', () => {
+    it('Test 3 — Assistant capabilities (Exact 39 capabilities)', () => {
       const assistantCaps = getCapabilitiesForRole('assistant');
-      expect(assistantCaps.size).toBe(37);
+      expect(assistantCaps.size).toBe(39);
 
       // Assistant possesses staff:read, student:create, payment:record, receipt:issue, parent:read, guardian (read, create, update, primary)
       expect(assistantCaps.has(CAPABILITIES.STAFF_READ)).toBe(true);
@@ -84,9 +84,9 @@ describe('Role → Capability Resolver Engine Suite', () => {
       expect(assistantCaps.has(CAPABILITIES.GUARDIAN_ARCHIVE)).toBe(false);
     });
 
-    it('Test 4 — Parent capabilities (Exact 13 capabilities)', () => {
+    it('Test 4 — Parent capabilities (Exact 14 capabilities)', () => {
       const parentCaps = getCapabilitiesForRole('parent');
-      expect(parentCaps.size).toBe(13);
+      expect(parentCaps.size).toBe(14);
 
       const expectedParentCaps: Capability[] = [
         CAPABILITIES.STUDENT_READ,
@@ -99,6 +99,7 @@ describe('Role → Capability Resolver Engine Suite', () => {
         CAPABILITIES.PAYMENT_READ,
         CAPABILITIES.RECEIPT_READ,
         CAPABILITIES.ANNOUNCEMENT_READ,
+        CAPABILITIES.NOTIFICATION_READ,
         CAPABILITIES.PROGRAM_READ,
         CAPABILITIES.SUBJECT_READ,
         CAPABILITIES.BATCH_READ,
@@ -135,7 +136,7 @@ describe('Role → Capability Resolver Engine Suite', () => {
       expect(first.size).toBe(0);
 
       const second = getCapabilitiesForRole('teacher');
-      expect(second.size).toBe(38);
+      expect(second.size).toBe(40);
       expect(second.has(CAPABILITIES.ATTENDANCE_MARK)).toBe(true);
     });
 

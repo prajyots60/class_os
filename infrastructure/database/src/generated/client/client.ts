@@ -182,6 +182,11 @@ export type Receipt = Prisma.ReceiptModel
  */
 export type Announcement = Prisma.AnnouncementModel
 /**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
+/**
  * Model Settings
  * 
  */

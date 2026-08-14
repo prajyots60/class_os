@@ -667,23 +667,6 @@ export type EnumPaymentModeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumPaymentModeFilter<$PrismaModel>
 }
 
-export type EnumAttendanceSourceFilter<$PrismaModel = never> = {
-  equals?: $Enums.AttendanceSource | Prisma.EnumAttendanceSourceFieldRefInput<$PrismaModel>
-  in?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
-  notIn?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumAttendanceSourceFilter<$PrismaModel> | $Enums.AttendanceSource
-}
-
-export type EnumAttendanceSourceWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.AttendanceSource | Prisma.EnumAttendanceSourceFieldRefInput<$PrismaModel>
-  in?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
-  notIn?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumAttendanceSourceWithAggregatesFilter<$PrismaModel> | $Enums.AttendanceSource
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumAttendanceSourceFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumAttendanceSourceFilter<$PrismaModel>
-}
-
 export type JsonNullableFilter<$PrismaModel = never> =
 | Prisma.PatchUndefined<
     Prisma.Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -733,6 +716,23 @@ export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedJsonNullableFilter<$PrismaModel>
   _max?: Prisma.NestedJsonNullableFilter<$PrismaModel>
+}
+
+export type EnumAttendanceSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.AttendanceSource | Prisma.EnumAttendanceSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAttendanceSourceFilter<$PrismaModel> | $Enums.AttendanceSource
+}
+
+export type EnumAttendanceSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AttendanceSource | Prisma.EnumAttendanceSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAttendanceSourceWithAggregatesFilter<$PrismaModel> | $Enums.AttendanceSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAttendanceSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAttendanceSourceFilter<$PrismaModel>
 }
 
 export type NestedUuidFilter<$PrismaModel = never> = {
@@ -1397,23 +1397,6 @@ export type NestedEnumPaymentModeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumPaymentModeFilter<$PrismaModel>
 }
 
-export type NestedEnumAttendanceSourceFilter<$PrismaModel = never> = {
-  equals?: $Enums.AttendanceSource | Prisma.EnumAttendanceSourceFieldRefInput<$PrismaModel>
-  in?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
-  notIn?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumAttendanceSourceFilter<$PrismaModel> | $Enums.AttendanceSource
-}
-
-export type NestedEnumAttendanceSourceWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.AttendanceSource | Prisma.EnumAttendanceSourceFieldRefInput<$PrismaModel>
-  in?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
-  notIn?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumAttendanceSourceWithAggregatesFilter<$PrismaModel> | $Enums.AttendanceSource
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumAttendanceSourceFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumAttendanceSourceFilter<$PrismaModel>
-}
-
 export type NestedJsonNullableFilter<$PrismaModel = never> =
 | Prisma.PatchUndefined<
     Prisma.Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -1436,6 +1419,23 @@ export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
   gt?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   gte?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel>
   not?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | Prisma.JsonNullValueFilter
+}
+
+export type NestedEnumAttendanceSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.AttendanceSource | Prisma.EnumAttendanceSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAttendanceSourceFilter<$PrismaModel> | $Enums.AttendanceSource
+}
+
+export type NestedEnumAttendanceSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.AttendanceSource | Prisma.EnumAttendanceSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.AttendanceSource[] | Prisma.ListEnumAttendanceSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumAttendanceSourceWithAggregatesFilter<$PrismaModel> | $Enums.AttendanceSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumAttendanceSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumAttendanceSourceFilter<$PrismaModel>
 }
 
 

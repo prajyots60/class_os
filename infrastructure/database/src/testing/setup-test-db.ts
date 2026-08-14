@@ -1,6 +1,10 @@
 import { execSync } from 'node:child_process';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { validateTestEnvironment } from './test-db-guard';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export function setupTestDatabase() {
   console.log('🌱 Setting up CoachingOS PostgreSQL Test Database...');

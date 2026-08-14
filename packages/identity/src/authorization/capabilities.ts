@@ -65,6 +65,8 @@ export const CAPABILITIES = {
   ANNOUNCEMENT_UPDATE: 'announcement:update',
   ANNOUNCEMENT_DELETE: 'announcement:delete',
   ANNOUNCEMENT_PUBLISH: 'announcement:publish',
+  NOTIFICATION_READ: 'notification:read',
+  NOTIFICATION_MANAGE: 'notification:manage',
   AUDIT_READ: 'audit:read',
 
   // Parent CRM Management (Phase 1.7)
@@ -137,6 +139,7 @@ export type CapabilityResource =
   | 'payment'
   | 'receipt'
   | 'announcement'
+  | 'notification'
   | 'audit';
 
 export type CapabilityAction =
@@ -158,7 +161,8 @@ export type CapabilityAction =
   | 'primary'
   | 'status'
   | 'teacher'
-  | 'transfer';
+  | 'transfer'
+  | 'manage';
 
 const ALL_CAPABILITIES_SET: ReadonlySet<string> = new Set(Object.values(CAPABILITIES));
 
@@ -184,6 +188,7 @@ const ALL_RESOURCES_SET: ReadonlySet<string> = new Set([
   'payment',
   'receipt',
   'announcement',
+  'notification',
   'audit',
 ]);
 
@@ -207,6 +212,7 @@ const ALL_ACTIONS_SET: ReadonlySet<string> = new Set([
   'status',
   'teacher',
   'transfer',
+  'manage',
 ]);
 
 /**

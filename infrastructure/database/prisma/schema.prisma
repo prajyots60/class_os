@@ -247,6 +247,7 @@ model Institute {
   marks               Marks[]
   receipts            Receipt[]
   announcements       Announcement[]
+  notifications       Notification[]
   settings            Settings?
   branding            Branding?
   auditLogs           AuditLog[]
@@ -276,6 +277,7 @@ model User {
   assignedSchedules  Schedule[]      @relation("TeacherSchedules")
   substituteSessions BatchSession[]  @relation("SubstituteTeacherSessions")
   collectedPayments  Payment[]       @relation("CollectedByPayments")
+  notifications      Notification[]
   auditLogs          AuditLog[]
   sessions           Session[]
   accounts           Account[]
@@ -755,6 +757,29 @@ model Announcement {
   @@index([instituteId])
   @@index([batchId])
   @@map("announcements")
+}
+
+model Notification {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId     String    @map("institute_id") @db.Uuid
+  recipientUserId String    @map("recipient_user_id") @db.Uuid
+  recipientType   String    @map("recipient_type") @db.VarChar(50)
+  priority        String    @default("informational") @db.VarChar(50)
+  category        String    @default("general") @db.VarChar(50)
+  title           String    @db.VarChar(255)
+  message         String    @db.Text
+  actionUrl       String?   @map("action_url") @db.Text
+  isRead          Boolean   @default(false) @map("is_read")
+  readAt          DateTime? @map("read_at")
+  metadata        Json?
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  institute Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  recipient User      @relation(fields: [recipientUserId], references: [id], onDelete: Cascade)
+
+  @@index([instituteId, recipientUserId, isRead])
+  @@index([instituteId, recipientUserId, createdAt])
+  @@map("notifications")
 }
 
 model Settings {
