@@ -587,6 +587,13 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Security & Multi-Tenant E2E Matrix**: Created unit test suite (`v1-academics-client.test.ts`) and Playwright E2E security matrix (`academic-workspace-security.spec.ts`) testing workspace navigation, attendance submission, homework publication, marks entry, and cross-tenant fail-closed 404 resource masking.
 - **Verification Gate**: Passed 100% monorepo quality gates (`env:check`, `db:validate`, `db:health`, `typecheck`, `test`, `lint`, `build`). **Phase 2.6 COMPLETED.**
 
+### 🟢 Phase 2.7 — UX / Accessibility & Security E2E Matrix (COMPLETED)
+
+- **Adversarial Security Suite**: Implemented `academics-adversarial-security.test.ts` validating unit/API threat vectors (`SEC-ADV-01` to `07`), including unauthenticated rejection across all routes, capability authorization gating (read-only vs mutation staff), client tenant spoofing defense (header/body `instituteId` injection ignored), cross-tenant fail-closed 404 masking, attendance atomicity/cancelled session protection, bulk marks bounds validation (`0 <= marks <= maxMarks`), and published immutability boundary.
+- **End-to-End Workflow Matrix**: Built Playwright E2E matrix (`academic-workflow-matrix.spec.ts`) validating scenarios `E2E-ACADEMIC-01` through `18` (Overview dashboard, Tab navigation, Attendance submission & refresh persistence, Homework draft creation & publication modal, Published homework immutability, Assessment creation & bulk marks entry, Invalid marks client validation, Session generation idempotency, Cross-tenant UI isolation, 375px mobile viewport touch layouts, Navigation tab URL synchronization, Error UX, and Double-click submission prevention).
+- **Accessibility & WAI-ARIA Matrix**: Created Playwright WAI-ARIA suite (`academic-accessibility.spec.ts`) testing full keyboard navigation tab order, modal focus trap management & Escape key dismissal, explicit `<label>` form field associations, and color-independent status badges.
+- **Quality Gate Verification**: Passed 100% monorepo quality gates (`env:check`, `db:validate`, `db:health`, `typecheck`, `test`, `lint`, `build`). **Phase 2.7 COMPLETED.**
+
 ---
 
 ## 4. Next Milestone Roadmap
@@ -607,6 +614,6 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 2.4:** Assessment & Bulk Marks Engine (`Test` & `Marks`) 🟢 (ACCEPTED & COMPLETED)
   - **Phase 2.5:** Protected Academics APIs (`/api/v1/academics/...`) 🟢 (ACCEPTED & COMPLETED)
   - **Phase 2.6:** Staff Academic Workspace UI (Teacher & Staff Workspaces) 🟢 (ACCEPTED & COMPLETED)
-  - **Phase 2.7:** UX / Accessibility & Security E2E Matrix ⏳ NEXT
-  - **Phase 2.8:** Phase 2 Acceptance Gate & Milestone Freeze ⏳ UPCOMING
+  - **Phase 2.7:** UX / Accessibility & Security E2E Matrix 🟢 (ACCEPTED & COMPLETED)
+  - **Phase 2.8:** Phase 2 Acceptance Gate & Milestone Freeze ⏳ NEXT
 

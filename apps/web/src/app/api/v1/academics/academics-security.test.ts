@@ -81,6 +81,7 @@ describe('Phase 2.5 — Protected Academics APIs Security & Integration Suite', 
 
   function makeReq(url: string, method: string, cookieHeader?: string, body?: unknown): NextRequest {
     const headers = new Headers();
+    headers.set('x-forwarded-for', `10.0.1.${Math.floor(Math.random() * 250) + 1}`);
     if (cookieHeader) headers.set('cookie', cookieHeader);
     if (body) headers.set('content-type', 'application/json');
 
