@@ -244,6 +244,7 @@ export type UserWhereInput = {
   substituteSessions?: Prisma.BatchSessionListRelationFilter
   collectedPayments?: Prisma.PaymentListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  outboundMessages?: Prisma.OutboundMessageQueueListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
@@ -268,6 +269,7 @@ export type UserOrderByWithRelationInput = {
   substituteSessions?: Prisma.BatchSessionOrderByRelationAggregateInput
   collectedPayments?: Prisma.PaymentOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
+  outboundMessages?: Prisma.OutboundMessageQueueOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   accounts?: Prisma.AccountOrderByRelationAggregateInput
@@ -295,6 +297,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   substituteSessions?: Prisma.BatchSessionListRelationFilter
   collectedPayments?: Prisma.PaymentListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  outboundMessages?: Prisma.OutboundMessageQueueListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
@@ -353,6 +356,7 @@ export type UserCreateInput = {
   substituteSessions?: Prisma.BatchSessionCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -375,6 +379,7 @@ export type UserUncheckedCreateInput = {
   substituteSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -397,6 +402,7 @@ export type UserUpdateInput = {
   substituteSessions?: Prisma.BatchSessionUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -419,6 +425,7 @@ export type UserUncheckedUpdateInput = {
   substituteSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUncheckedUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -718,6 +725,20 @@ export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type UserCreateNestedOneWithoutOutboundMessagesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOutboundMessagesInput, Prisma.UserUncheckedCreateWithoutOutboundMessagesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOutboundMessagesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutOutboundMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOutboundMessagesInput, Prisma.UserUncheckedCreateWithoutOutboundMessagesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOutboundMessagesInput
+  upsert?: Prisma.UserUpsertWithoutOutboundMessagesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOutboundMessagesInput, Prisma.UserUpdateWithoutOutboundMessagesInput>, Prisma.UserUncheckedUpdateWithoutOutboundMessagesInput>
+}
+
 export type UserCreateNestedOneWithoutAuditLogsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuditLogsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuditLogsInput
@@ -750,6 +771,7 @@ export type UserCreateWithoutParentIdentityInput = {
   substituteSessions?: Prisma.BatchSessionCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -771,6 +793,7 @@ export type UserUncheckedCreateWithoutParentIdentityInput = {
   substituteSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -836,6 +859,7 @@ export type UserCreateWithoutInstituteInput = {
   substituteSessions?: Prisma.BatchSessionCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -857,6 +881,7 @@ export type UserUncheckedCreateWithoutInstituteInput = {
   substituteSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -905,6 +930,7 @@ export type UserCreateWithoutSessionsInput = {
   substituteSessions?: Prisma.BatchSessionCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
 }
@@ -926,6 +952,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   substituteSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
 }
@@ -963,6 +990,7 @@ export type UserUpdateWithoutSessionsInput = {
   substituteSessions?: Prisma.BatchSessionUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
 }
@@ -984,6 +1012,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   substituteSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUncheckedUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1005,6 +1034,7 @@ export type UserCreateWithoutAccountsInput = {
   substituteSessions?: Prisma.BatchSessionCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
 }
@@ -1026,6 +1056,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   substituteSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1063,6 +1094,7 @@ export type UserUpdateWithoutAccountsInput = {
   substituteSessions?: Prisma.BatchSessionUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
 }
@@ -1084,6 +1116,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   substituteSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUncheckedUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1104,6 +1137,7 @@ export type UserCreateWithoutAssignedSchedulesInput = {
   substituteSessions?: Prisma.BatchSessionCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1125,6 +1159,7 @@ export type UserUncheckedCreateWithoutAssignedSchedulesInput = {
   substituteSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1162,6 +1197,7 @@ export type UserUpdateWithoutAssignedSchedulesInput = {
   substituteSessions?: Prisma.BatchSessionUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1183,6 +1219,7 @@ export type UserUncheckedUpdateWithoutAssignedSchedulesInput = {
   substituteSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUncheckedUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1204,6 +1241,7 @@ export type UserCreateWithoutSubstituteSessionsInput = {
   assignedSchedules?: Prisma.ScheduleCreateNestedManyWithoutTeacherInput
   collectedPayments?: Prisma.PaymentCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1225,6 +1263,7 @@ export type UserUncheckedCreateWithoutSubstituteSessionsInput = {
   assignedSchedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutTeacherInput
   collectedPayments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1262,6 +1301,7 @@ export type UserUpdateWithoutSubstituteSessionsInput = {
   assignedSchedules?: Prisma.ScheduleUpdateManyWithoutTeacherNestedInput
   collectedPayments?: Prisma.PaymentUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1283,6 +1323,7 @@ export type UserUncheckedUpdateWithoutSubstituteSessionsInput = {
   assignedSchedules?: Prisma.ScheduleUncheckedUpdateManyWithoutTeacherNestedInput
   collectedPayments?: Prisma.PaymentUncheckedUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1304,6 +1345,7 @@ export type UserCreateWithoutCollectedPaymentsInput = {
   assignedSchedules?: Prisma.ScheduleCreateNestedManyWithoutTeacherInput
   substituteSessions?: Prisma.BatchSessionCreateNestedManyWithoutSubstituteTeacherInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1325,6 +1367,7 @@ export type UserUncheckedCreateWithoutCollectedPaymentsInput = {
   assignedSchedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutTeacherInput
   substituteSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutSubstituteTeacherInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1362,6 +1405,7 @@ export type UserUpdateWithoutCollectedPaymentsInput = {
   assignedSchedules?: Prisma.ScheduleUpdateManyWithoutTeacherNestedInput
   substituteSessions?: Prisma.BatchSessionUpdateManyWithoutSubstituteTeacherNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1383,6 +1427,7 @@ export type UserUncheckedUpdateWithoutCollectedPaymentsInput = {
   assignedSchedules?: Prisma.ScheduleUncheckedUpdateManyWithoutTeacherNestedInput
   substituteSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutSubstituteTeacherNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1404,6 +1449,7 @@ export type UserCreateWithoutNotificationsInput = {
   assignedSchedules?: Prisma.ScheduleCreateNestedManyWithoutTeacherInput
   substituteSessions?: Prisma.BatchSessionCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentCreateNestedManyWithoutCollectorInput
+  outboundMessages?: Prisma.OutboundMessageQueueCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1425,6 +1471,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   assignedSchedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutTeacherInput
   substituteSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCollectorInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedCreateNestedManyWithoutRecipientInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1462,6 +1509,7 @@ export type UserUpdateWithoutNotificationsInput = {
   assignedSchedules?: Prisma.ScheduleUpdateManyWithoutTeacherNestedInput
   substituteSessions?: Prisma.BatchSessionUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUpdateManyWithoutCollectorNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1483,6 +1531,111 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   assignedSchedules?: Prisma.ScheduleUncheckedUpdateManyWithoutTeacherNestedInput
   substituteSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUncheckedUpdateManyWithoutCollectorNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedUpdateManyWithoutRecipientNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutOutboundMessagesInput = {
+  id?: string
+  name: string
+  phone?: string | null
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  institute?: Prisma.InstituteCreateNestedOneWithoutUsersInput
+  parentIdentity?: Prisma.ParentIdentityCreateNestedOneWithoutUsersInput
+  assignedSchedules?: Prisma.ScheduleCreateNestedManyWithoutTeacherInput
+  substituteSessions?: Prisma.BatchSessionCreateNestedManyWithoutSubstituteTeacherInput
+  collectedPayments?: Prisma.PaymentCreateNestedManyWithoutCollectorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutOutboundMessagesInput = {
+  id?: string
+  instituteId?: string | null
+  parentIdentityId?: string | null
+  name: string
+  phone?: string | null
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  assignedSchedules?: Prisma.ScheduleUncheckedCreateNestedManyWithoutTeacherInput
+  substituteSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutSubstituteTeacherInput
+  collectedPayments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCollectorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutOutboundMessagesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutOutboundMessagesInput, Prisma.UserUncheckedCreateWithoutOutboundMessagesInput>
+}
+
+export type UserUpsertWithoutOutboundMessagesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutOutboundMessagesInput, Prisma.UserUncheckedUpdateWithoutOutboundMessagesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutOutboundMessagesInput, Prisma.UserUncheckedCreateWithoutOutboundMessagesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutOutboundMessagesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutOutboundMessagesInput, Prisma.UserUncheckedUpdateWithoutOutboundMessagesInput>
+}
+
+export type UserUpdateWithoutOutboundMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  institute?: Prisma.InstituteUpdateOneWithoutUsersNestedInput
+  parentIdentity?: Prisma.ParentIdentityUpdateOneWithoutUsersNestedInput
+  assignedSchedules?: Prisma.ScheduleUpdateManyWithoutTeacherNestedInput
+  substituteSessions?: Prisma.BatchSessionUpdateManyWithoutSubstituteTeacherNestedInput
+  collectedPayments?: Prisma.PaymentUpdateManyWithoutCollectorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutOutboundMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  instituteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentIdentityId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  assignedSchedules?: Prisma.ScheduleUncheckedUpdateManyWithoutTeacherNestedInput
+  substituteSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutSubstituteTeacherNestedInput
+  collectedPayments?: Prisma.PaymentUncheckedUpdateManyWithoutCollectorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1505,6 +1658,7 @@ export type UserCreateWithoutAuditLogsInput = {
   substituteSessions?: Prisma.BatchSessionCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueCreateNestedManyWithoutRecipientInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
 }
@@ -1526,6 +1680,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   substituteSessions?: Prisma.BatchSessionUncheckedCreateNestedManyWithoutSubstituteTeacherInput
   collectedPayments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCollectorInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutRecipientInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedCreateNestedManyWithoutRecipientInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1563,6 +1718,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   substituteSessions?: Prisma.BatchSessionUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUpdateManyWithoutRecipientNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
 }
@@ -1584,6 +1740,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   substituteSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUncheckedUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedUpdateManyWithoutRecipientNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1618,6 +1775,7 @@ export type UserUpdateWithoutParentIdentityInput = {
   substituteSessions?: Prisma.BatchSessionUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1639,6 +1797,7 @@ export type UserUncheckedUpdateWithoutParentIdentityInput = {
   substituteSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUncheckedUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1688,6 +1847,7 @@ export type UserUpdateWithoutInstituteInput = {
   substituteSessions?: Prisma.BatchSessionUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1709,6 +1869,7 @@ export type UserUncheckedUpdateWithoutInstituteInput = {
   substituteSessions?: Prisma.BatchSessionUncheckedUpdateManyWithoutSubstituteTeacherNestedInput
   collectedPayments?: Prisma.PaymentUncheckedUpdateManyWithoutCollectorNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutRecipientNestedInput
+  outboundMessages?: Prisma.OutboundMessageQueueUncheckedUpdateManyWithoutRecipientNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1738,6 +1899,7 @@ export type UserCountOutputType = {
   substituteSessions: number
   collectedPayments: number
   notifications: number
+  outboundMessages: number
   auditLogs: number
   sessions: number
   accounts: number
@@ -1748,6 +1910,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   substituteSessions?: boolean | UserCountOutputTypeCountSubstituteSessionsArgs
   collectedPayments?: boolean | UserCountOutputTypeCountCollectedPaymentsArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
+  outboundMessages?: boolean | UserCountOutputTypeCountOutboundMessagesArgs
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
   accounts?: boolean | UserCountOutputTypeCountAccountsArgs
@@ -1794,6 +1957,13 @@ export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Ty
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountOutboundMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OutboundMessageQueueWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AuditLogWhereInput
 }
@@ -1832,6 +2002,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   substituteSessions?: boolean | Prisma.User$substituteSessionsArgs<ExtArgs>
   collectedPayments?: boolean | Prisma.User$collectedPaymentsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  outboundMessages?: boolean | Prisma.User$outboundMessagesArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -1895,6 +2066,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   substituteSessions?: boolean | Prisma.User$substituteSessionsArgs<ExtArgs>
   collectedPayments?: boolean | Prisma.User$collectedPaymentsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  outboundMessages?: boolean | Prisma.User$outboundMessagesArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -1918,6 +2090,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     substituteSessions: Prisma.$BatchSessionPayload<ExtArgs>[]
     collectedPayments: Prisma.$PaymentPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    outboundMessages: Prisma.$OutboundMessageQueuePayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
     sessions: Prisma.$SessionPayload<ExtArgs>[]
     accounts: Prisma.$AccountPayload<ExtArgs>[]
@@ -2335,6 +2508,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   substituteSessions<T extends Prisma.User$substituteSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$substituteSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BatchSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   collectedPayments<T extends Prisma.User$collectedPaymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$collectedPaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  outboundMessages<T extends Prisma.User$outboundMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$outboundMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OutboundMessageQueuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2911,6 +3085,30 @@ export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
+}
+
+/**
+ * User.outboundMessages
+ */
+export type User$outboundMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OutboundMessageQueue
+   */
+  select?: Prisma.OutboundMessageQueueSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OutboundMessageQueue
+   */
+  omit?: Prisma.OutboundMessageQueueOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OutboundMessageQueueInclude<ExtArgs> | null
+  where?: Prisma.OutboundMessageQueueWhereInput
+  orderBy?: Prisma.OutboundMessageQueueOrderByWithRelationInput | Prisma.OutboundMessageQueueOrderByWithRelationInput[]
+  cursor?: Prisma.OutboundMessageQueueWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OutboundMessageQueueScalarFieldEnum | Prisma.OutboundMessageQueueScalarFieldEnum[]
 }
 
 /**

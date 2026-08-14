@@ -17,9 +17,12 @@ import type { ActivityProjectionService } from '../../application/use-cases/acti
 // Dependency Interfaces (Injected without Direct Monorepo Package Imports)
 // ============================================================================
 
+import type { EnqueueOutboundMessageUseCase } from '../../application/use-cases/outbound-message.use-cases';
+
 export interface StudentParentResolver {
   findParentUserIdsForStudent(instituteId: string, studentId: string): Promise<string[]>;
   findStudentById?(instituteId: string, studentId: string): Promise<{ id: string; instituteId: string } | null>;
+  findUserPhoneById?(instituteId: string, userId: string): Promise<string | null>;
 }
 
 export interface BatchEnrollmentResolver {
@@ -32,6 +35,7 @@ export interface CommunicationEventDependencies {
   activityProjectionService: ActivityProjectionService;
   studentParentResolver: StudentParentResolver;
   batchEnrollmentResolver: BatchEnrollmentResolver;
+  enqueueOutboundMessageUseCase?: EnqueueOutboundMessageUseCase;
 }
 
 // ============================================================================
@@ -164,7 +168,7 @@ export async function handleAttendanceRecorded(
         } else {
           for (const parentUserId of parentUserIds) {
             try {
-              await deps.notificationProjectionService.projectNotificationToRecipient({
+              const notificationDto = await deps.notificationProjectionService.projectNotificationToRecipient({
                 instituteId: event.instituteId,
                 recipientUserId: parentUserId,
                 recipientType: 'parent',
@@ -179,6 +183,29 @@ export async function handleAttendanceRecorded(
                 projectionType: 'notification',
                 recipientUserId: parentUserId,
               });
+
+              // Optional Outbound WhatsApp Enqueue (Isolated try-catch)
+              if (deps.enqueueOutboundMessageUseCase && deps.studentParentResolver.findUserPhoneById) {
+                try {
+                  const phone = await deps.studentParentResolver.findUserPhoneById(event.instituteId, parentUserId);
+                  if (phone) {
+                    await deps.enqueueOutboundMessageUseCase.execute({
+                      instituteId: event.instituteId,
+                      notificationId: notificationDto.id,
+                      recipientUserId: parentUserId,
+                      recipientPhone: phone,
+                      templateName: 'attendance_absent_alert',
+                      templateVariables: { sessionTitle },
+                    });
+                  }
+                } catch (err: any) {
+                  logger.warn('communication.outbound.enqueue_failed', {
+                    eventId: event.eventId,
+                    recipientUserId: parentUserId,
+                    error: err?.message,
+                  });
+                }
+              }
             } catch (err: any) {
               logger.error('communication.projection.failed', {
                 eventId: event.eventId,

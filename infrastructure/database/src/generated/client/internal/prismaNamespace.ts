@@ -427,6 +427,7 @@ export const ModelName = {
   Announcement: 'Announcement',
   Notification: 'Notification',
   Activity: 'Activity',
+  OutboundMessageQueue: 'OutboundMessageQueue',
   Settings: 'Settings',
   Branding: 'Branding',
   AuditLog: 'AuditLog'
@@ -445,7 +446,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "parentIdentity" | "instituteMembership" | "childProfile" | "studentLink" | "institute" | "user" | "session" | "account" | "verification" | "instituteParent" | "instituteParentStudent" | "student" | "program" | "subject" | "programSubject" | "batch" | "enrollment" | "schedule" | "batchSession" | "attendance" | "homework" | "test" | "marks" | "billingPlan" | "invoice" | "payment" | "receipt" | "announcement" | "notification" | "activity" | "settings" | "branding" | "auditLog"
+    modelProps: "parentIdentity" | "instituteMembership" | "childProfile" | "studentLink" | "institute" | "user" | "session" | "account" | "verification" | "instituteParent" | "instituteParentStudent" | "student" | "program" | "subject" | "programSubject" | "batch" | "enrollment" | "schedule" | "batchSession" | "attendance" | "homework" | "test" | "marks" | "billingPlan" | "invoice" | "payment" | "receipt" | "announcement" | "notification" | "activity" | "outboundMessageQueue" | "settings" | "branding" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2669,6 +2670,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    OutboundMessageQueue: {
+      payload: Prisma.$OutboundMessageQueuePayload<ExtArgs>
+      fields: Prisma.OutboundMessageQueueFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OutboundMessageQueueFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutboundMessageQueuePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OutboundMessageQueueFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutboundMessageQueuePayload>
+        }
+        findFirst: {
+          args: Prisma.OutboundMessageQueueFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutboundMessageQueuePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OutboundMessageQueueFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutboundMessageQueuePayload>
+        }
+        findMany: {
+          args: Prisma.OutboundMessageQueueFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutboundMessageQueuePayload>[]
+        }
+        create: {
+          args: Prisma.OutboundMessageQueueCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutboundMessageQueuePayload>
+        }
+        createMany: {
+          args: Prisma.OutboundMessageQueueCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OutboundMessageQueueCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutboundMessageQueuePayload>[]
+        }
+        delete: {
+          args: Prisma.OutboundMessageQueueDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutboundMessageQueuePayload>
+        }
+        update: {
+          args: Prisma.OutboundMessageQueueUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutboundMessageQueuePayload>
+        }
+        deleteMany: {
+          args: Prisma.OutboundMessageQueueDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OutboundMessageQueueUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OutboundMessageQueueUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutboundMessageQueuePayload>[]
+        }
+        upsert: {
+          args: Prisma.OutboundMessageQueueUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutboundMessageQueuePayload>
+        }
+        aggregate: {
+          args: Prisma.OutboundMessageQueueAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOutboundMessageQueue>
+        }
+        groupBy: {
+          args: Prisma.OutboundMessageQueueGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OutboundMessageQueueGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OutboundMessageQueueCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OutboundMessageQueueCountAggregateOutputType> | number
+        }
+      }
+    }
     Settings: {
       payload: Prisma.$SettingsPayload<ExtArgs>
       fields: Prisma.SettingsFieldRefs
@@ -3382,6 +3457,29 @@ export const ActivityScalarFieldEnum = {
 export type ActivityScalarFieldEnum = (typeof ActivityScalarFieldEnum)[keyof typeof ActivityScalarFieldEnum]
 
 
+export const OutboundMessageQueueScalarFieldEnum = {
+  id: 'id',
+  instituteId: 'instituteId',
+  notificationId: 'notificationId',
+  recipientUserId: 'recipientUserId',
+  recipientPhone: 'recipientPhone',
+  channel: 'channel',
+  templateName: 'templateName',
+  templateVariables: 'templateVariables',
+  status: 'status',
+  attempts: 'attempts',
+  maxAttempts: 'maxAttempts',
+  lastError: 'lastError',
+  idempotencyKey: 'idempotencyKey',
+  availableAt: 'availableAt',
+  sentAt: 'sentAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OutboundMessageQueueScalarFieldEnum = (typeof OutboundMessageQueueScalarFieldEnum)[keyof typeof OutboundMessageQueueScalarFieldEnum]
+
+
 export const SettingsScalarFieldEnum = {
   id: 'id',
   instituteId: 'instituteId',
@@ -4036,6 +4134,7 @@ export type GlobalOmitConfig = {
   announcement?: Prisma.AnnouncementOmit
   notification?: Prisma.NotificationOmit
   activity?: Prisma.ActivityOmit
+  outboundMessageQueue?: Prisma.OutboundMessageQueueOmit
   settings?: Prisma.SettingsOmit
   branding?: Prisma.BrandingOmit
   auditLog?: Prisma.AuditLogOmit

@@ -81,6 +81,7 @@ export const ModelName = {
   Announcement: 'Announcement',
   Notification: 'Notification',
   Activity: 'Activity',
+  OutboundMessageQueue: 'OutboundMessageQueue',
   Settings: 'Settings',
   Branding: 'Branding',
   AuditLog: 'AuditLog'
@@ -552,6 +553,29 @@ export const ActivityScalarFieldEnum = {
 } as const
 
 export type ActivityScalarFieldEnum = (typeof ActivityScalarFieldEnum)[keyof typeof ActivityScalarFieldEnum]
+
+
+export const OutboundMessageQueueScalarFieldEnum = {
+  id: 'id',
+  instituteId: 'instituteId',
+  notificationId: 'notificationId',
+  recipientUserId: 'recipientUserId',
+  recipientPhone: 'recipientPhone',
+  channel: 'channel',
+  templateName: 'templateName',
+  templateVariables: 'templateVariables',
+  status: 'status',
+  attempts: 'attempts',
+  maxAttempts: 'maxAttempts',
+  lastError: 'lastError',
+  idempotencyKey: 'idempotencyKey',
+  availableAt: 'availableAt',
+  sentAt: 'sentAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OutboundMessageQueueScalarFieldEnum = (typeof OutboundMessageQueueScalarFieldEnum)[keyof typeof OutboundMessageQueueScalarFieldEnum]
 
 
 export const SettingsScalarFieldEnum = {

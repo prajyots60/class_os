@@ -249,6 +249,7 @@ model Institute {
   announcements       Announcement[]
   notifications       Notification[]
   activities          Activity[]
+  outboundMessages    OutboundMessageQueue[]
   settings            Settings?
   branding            Branding?
   auditLogs           AuditLog[]
@@ -279,6 +280,7 @@ model User {
   substituteSessions BatchSession[]  @relation("SubstituteTeacherSessions")
   collectedPayments  Payment[]       @relation("CollectedByPayments")
   notifications      Notification[]
+  outboundMessages   OutboundMessageQueue[]
   auditLogs          AuditLog[]
   sessions           Session[]
   accounts           Account[]
@@ -779,6 +781,8 @@ model Notification {
   institute Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
   recipient User      @relation(fields: [recipientUserId], references: [id], onDelete: Cascade)
 
+  outboundMessages OutboundMessageQueue[]
+
   @@index([instituteId, recipientUserId, isRead])
   @@index([instituteId, recipientUserId, createdAt])
   @@map("notifications")
@@ -803,6 +807,35 @@ model Activity {
   @@unique([instituteId, studentId, idempotencyKey])
   @@index([instituteId, studentId, occurredAt(sort: Desc), id(sort: Desc)])
   @@map("activities")
+}
+
+model OutboundMessageQueue {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId       String    @map("institute_id") @db.Uuid
+  notificationId    String?   @map("notification_id") @db.Uuid
+  recipientUserId   String    @map("recipient_user_id") @db.Uuid
+  recipientPhone    String    @map("recipient_phone") @db.VarChar(50)
+  channel           String    @default("whatsapp") @db.VarChar(50)
+  templateName      String    @map("template_name") @db.VarChar(100)
+  templateVariables Json?     @map("template_variables")
+  status            String    @default("pending") @db.VarChar(50)
+  attempts          Int       @default(0)
+  maxAttempts       Int       @default(3) @map("max_attempts")
+  lastError         String?   @map("last_error") @db.Text
+  idempotencyKey    String?   @map("idempotency_key") @db.VarChar(255)
+  availableAt       DateTime  @default(now()) @map("available_at")
+  sentAt            DateTime? @map("sent_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  institute    Institute     @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  notification Notification? @relation(fields: [notificationId], references: [id], onDelete: SetNull)
+  recipient    User          @relation(fields: [recipientUserId], references: [id], onDelete: Cascade)
+
+  @@unique([instituteId, notificationId, channel, recipientUserId])
+  @@index([status, availableAt, createdAt])
+  @@index([instituteId, status])
+  @@map("outbound_message_queue")
 }
 
 model Settings {

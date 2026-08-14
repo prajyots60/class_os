@@ -168,6 +168,11 @@ export type Notification = Prisma.NotificationModel
  */
 export type Activity = Prisma.ActivityModel
 /**
+ * Model OutboundMessageQueue
+ * 
+ */
+export type OutboundMessageQueue = Prisma.OutboundMessageQueueModel
+/**
  * Model Settings
  * 
  */
