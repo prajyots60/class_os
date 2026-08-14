@@ -9,12 +9,6 @@ export default defineConfig({
     // contend on the same tables (user, institute, session). Enforce sequential file execution.
     fileParallelism: false,
     maxWorkers: 1,
-    minWorkers: 1,
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
     env: {
       NODE_ENV: 'test',
     },

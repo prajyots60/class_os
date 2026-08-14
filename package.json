@@ -7,7 +7,7 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
-    "test": "turbo test",
+    "test": "turbo test --concurrency 1",
     "test:unit": "turbo test:unit",
     "test:integration": "turbo test:integration",
     "test:e2e": "pnpm --filter @coaching-os/web run test:e2e",
