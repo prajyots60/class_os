@@ -8,6 +8,13 @@ export default defineConfig({
     // Running in parallel causes PostgreSQL deadlocks and data wiping when concurrent transactions
     // contend on the same tables (user, institute, session). Enforce sequential file execution.
     fileParallelism: false,
+    maxWorkers: 1,
+    minWorkers: 1,
+    poolOptions: {
+      forks: {
+        singleFork: true,
+      },
+    },
     env: {
       NODE_ENV: 'test',
     },
