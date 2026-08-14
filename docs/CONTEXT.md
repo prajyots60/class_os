@@ -223,7 +223,7 @@ PHASE 3 — BILLING MODULE                                🟢 ACCEPTED & FROZEN
                                                   PHASE 3 GATE (PASSED & FROZEN)
 PHASE 4 — COMMUNICATION MODULE                         🟡 IN EXECUTION
   ├── Phase 4.0 — Architecture & Contract Freeze       🟢 ACCEPTED & FROZEN
-  ├── Phase 4.1 — Announcement Engine Core             ⏳ UPCOMING
+  ├── Phase 4.1 — Announcement Engine Core             🟢 COMPLETED & VERIFIED
   ├── Phase 4.2 — Notification Core & In-App Engine    ⏳ UPCOMING
   ├── Phase 4.3 — Child Activity Timeline Engine       ⏳ UPCOMING
   ├── Phase 4.4 — Domain Event Integration             ⏳ UPCOMING
@@ -775,8 +775,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Domain Contract Specification:** Documented in [docs/phases/04/phase4.0-communication-contract.md](file:///home/supra/Desktop/class_os/docs/phases/04/phase4.0-communication-contract.md).
 - **Subphase Tracking Map:**
   - **Phase 4.0:** Communication Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-  - **Phase 4.1:** Announcement Engine Core ⏳ (NEXT)
-  - **Phase 4.2:** Notification Core & In-App Engine ⏳ (UPCOMING)
+  - **Phase 4.1:** Announcement Engine Core 🟢 (COMPLETED & VERIFIED)
+  - **Phase 4.2:** Notification Core & In-App Engine ⏳ (NEXT)
   - **Phase 4.3:** Child Activity Timeline Engine ⏳ (UPCOMING)
   - **Phase 4.4:** Domain Event Integration & Projections ⏳ (UPCOMING)
   - **Phase 4.5:** Outbound Messaging & WhatsApp Provider ⏳ (UPCOMING)

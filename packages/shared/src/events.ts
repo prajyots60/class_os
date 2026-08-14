@@ -57,8 +57,21 @@ export type AnnouncementPublishedEvent = DomainEventEnvelope<
   }
 >;
 
+export type CommunicationAnnouncementPublishedEvent = DomainEventEnvelope<
+  'communication.announcement.published',
+  {
+    announcementId: string;
+    targetType: 'institute' | 'batch';
+    targetBatchId?: string | null;
+    title: string;
+    publishedAt: string;
+  }
+>;
+
 export type ApplicationEvent =
   | AttendanceMarkedEvent
   | TestResultPublishedEvent
   | InvoiceGeneratedEvent
-  | AnnouncementPublishedEvent;
+  | AnnouncementPublishedEvent
+  | CommunicationAnnouncementPublishedEvent;
+
