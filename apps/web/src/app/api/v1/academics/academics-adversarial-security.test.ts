@@ -34,6 +34,8 @@ import { POST as testSchedulePOST } from './tests/[id]/schedule/route';
 import { POST as testPublishPOST } from './tests/[id]/publish/route';
 import { GET as marksGET, POST as marksPOST } from './tests/[id]/marks/route';
 
+import { resetRateLimitStore } from '../_lib/rate-limiter';
+
 describe('Phase 2.7 — Academics Adversarial Security & Invariants Suite', () => {
   let membershipRepo: PrismaInstituteMembershipRepository;
   let createMembershipUseCase: CreateInstituteMembershipUseCase;
@@ -45,6 +47,7 @@ describe('Phase 2.7 — Academics Adversarial Security & Invariants Suite', () =
   });
 
   beforeEach(async () => {
+    resetRateLimitStore();
     await cleanTestDatabase();
   });
 

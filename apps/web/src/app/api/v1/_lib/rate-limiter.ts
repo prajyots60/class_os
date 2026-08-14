@@ -80,5 +80,10 @@ export class RateLimitLimitError extends RateLimitError {
   }
 }
 
+/** Reset rate-limit store for test isolation */
+export function resetRateLimitStore(): void {
+  store.clear();
+}
+
 // Expose limits for deterministic test configuration
 export { READ_LIMIT, MUTATION_LIMIT, WINDOW_MS };
