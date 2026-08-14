@@ -206,10 +206,10 @@ PHASE 3 — BILLING MODULE                                🟡 IN EXECUTION
   ├── Phase 3.3 — Payment Engine                              🟢 COMPLETED
   │     ├── Phase 3.3.0 — Payment Architecture & Contract Freeze 🟢 ACCEPTED & FROZEN
   │     └── Phase 3.3.1 — Payment Engine Implementation       🟢 COMPLETED & VERIFIED
-  ├── Phase 3.4 — Receipt Engine                              🟡 IN EXECUTION
+  ├── Phase 3.4 — Receipt Engine                              🟢 COMPLETED
   │     ├── Phase 3.4.0 — Receipt Architecture & Contract Freeze 🟢 ACCEPTED & FROZEN
-  │     └── Phase 3.4.1 — Receipt Engine Implementation       ⏳ NEXT
-  ├── Phase 3.5 — Protected Billing APIs                      ⏳ UPCOMING
+  │     └── Phase 3.4.1 — Receipt Engine Implementation       🟢 COMPLETED & VERIFIED
+  ├── Phase 3.5 — Protected Billing APIs                      ⏳ NEXT
   ├── Phase 3.6 — Staff Billing Workspace UI                  ⏳ UPCOMING
   ├── Phase 3.7 — Security / UX / E2E Matrix                  ⏳ UPCOMING
   └── Phase 3.8 — Phase 3 Acceptance Gate & Milestone Freeze   ⏳ UPCOMING
@@ -660,6 +660,13 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **PDF & Storage Architecture**: Separated DB `Receipt` record creation from asynchronous PDF artifact compilation in Object Storage (S3/GCS) with short-lived (15-min) signed download URLs (R-018).
 - **Security & Multi-Tenancy**: Enforced direct `instituteId` tenant scoping, capability RBAC (`CAPABILITIES.RECEIPT_ISSUE`, `CAPABILITIES.RECEIPT_READ`), and `ReceiptGenerated` domain event payload (`billing.receipt.generated`, R-022). **Phase 3.4.0 ACCEPTED & FROZEN.**
 
+### 🟢 Phase 3.4.1 — Receipt Engine Implementation (COMPLETED & VERIFIED)
+
+- **Domain Entities & Interfaces**: Implemented `ReceiptEntity` aggregate root with 100% field immutability, date encapsulation, zero deletion methods, and `ReceiptRepository` interface.
+- **Application Use Cases & Domain Events**: Created `GenerateReceiptUseCase` and `GetReceiptUseCase` with capability authorization (`receipt:issue`, `receipt:read`), R-019 idempotency lookup, atomic institute-scoped sequence allocation (`REC-YYYY-SEQ:5`), and post-commit `ReceiptGenerated` event publication (`billing.receipt.generated`).
+- **Infrastructure & Multi-Tenant Persistence**: Implemented `PrismaReceiptRepository` with row-level tenant scoping, PostgreSQL `institutes` row locking for sequence concurrency serialization, zero database schema drift, and Prisma error mapping.
+- **Verification Matrix**: Built unit test suites (`receipt.entity.test.ts`, `receipt.use-cases.test.ts`) and real PostgreSQL integration test suite (`prisma-receipt.repository.integration.test.ts` with real PostgreSQL concurrency tests for SAME payment & DIFFERENT payments, multi-tenant numbering). Passed 100% quality gates across `env:check`, `db:validate`, `db:health`, `typecheck`, `lint`, `test` (91 billing tests, 477 workspace tests passing), and `build`. **Phase 3.4 COMPLETED.**
+
 ---
 
 ## 4. Next Milestone Roadmap
@@ -695,9 +702,10 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 3.3:** Payment Engine 🟢 (COMPLETED)
     - **Phase 3.3.0:** Payment Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     - **Phase 3.3.1:** Payment Engine Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 3.4:** Receipt Engine ⏳ (NEXT)
-  - **Phase 3.5:** Protected Billing APIs (`/api/v1/billing-plans`, `/api/v1/invoices`, `/api/v1/payments`, `/api/v1/receipts`) ⏳ (UPCOMING)
+  - **Phase 3.4:** Receipt Engine 🟢 (COMPLETED)
+    - **Phase 3.4.0:** Receipt Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 3.4.1:** Receipt Engine Implementation 🟢 (COMPLETED & VERIFIED)
+  - **Phase 3.5:** Protected Billing APIs (`/api/v1/billing-plans`, `/api/v1/invoices`, `/api/v1/payments`, `/api/v1/receipts`) ⏳ (NEXT)
   - **Phase 3.6:** Staff Billing Workspace UI ⏳ (UPCOMING)
   - **Phase 3.7:** Security / UX / E2E Matrix ⏳ (UPCOMING)
   - **Phase 3.8:** Phase 3 Acceptance Gate & Milestone Freeze ⏳ (UPCOMING)
-
