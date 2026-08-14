@@ -212,7 +212,9 @@ PHASE 3 — BILLING MODULE                                🟡 IN EXECUTION
   ├── Phase 3.5 — Protected Billing APIs                      🟢 COMPLETED & VERIFIED
   │     ├── Phase 3.5.0 — Protected Billing APIs Contract Freeze   🟢 ACCEPTED & FROZEN
   │     └── Phase 3.5.1 — Protected Billing APIs Implementation   🟢 COMPLETED & VERIFIED
-  ├── Phase 3.6 — Staff Billing Workspace UI                  ⏳ NEXT
+  ├── Phase 3.6 — Staff Billing Workspace UI                  🟡 IN EXECUTION
+  │     ├── Phase 3.6.0 — Staff Billing Workspace UI Contract Freeze 🟢 ACCEPTED & FROZEN
+  │     └── Phase 3.6.1 — Staff Billing Workspace UI Implementation  ⏳ NEXT
   ├── Phase 3.7 — Security / UX / E2E Matrix                  ⏳ UPCOMING
   └── Phase 3.8 — Phase 3 Acceptance Gate & Milestone Freeze   ⏳ UPCOMING
                                                         ↓
@@ -716,6 +718,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 3.5:** Protected Billing APIs (`/api/v1/billing-plans`, `/api/v1/invoices`, `/api/v1/payments`, `/api/v1/receipts`) 🟢 (COMPLETED & VERIFIED)
     - **Phase 3.5.0:** Protected Billing APIs Contract Freeze 🟢 (ACCEPTED & FROZEN)
     - **Phase 3.5.1:** Protected Billing APIs Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 3.6:** Staff Billing Workspace UI ⏳ (NEXT)
+  - **Phase 3.6:** Staff Billing Workspace UI 🟡 (IN EXECUTION)
+    - **Phase 3.6.0:** Staff Billing Workspace UI Architecture & UX Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 3.6.1:** Staff Billing Workspace UI Implementation ⏳ (NEXT)
   - **Phase 3.7:** Security / UX / E2E Matrix ⏳ (UPCOMING)
   - **Phase 3.8:** Phase 3 Acceptance Gate & Milestone Freeze ⏳ (UPCOMING)
