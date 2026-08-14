@@ -14,11 +14,11 @@ coaching-os/
 │   └── web/                      ← Main Web Portal (App Router, Feature Components, Route Handlers, E2E)
 │
 ├── packages/                     ← Isolated Modular Domain Packages
-│   ├── identity/                 ← Institute Tenants, Users, Memberships, Capability RBAC, Parents & Students
-│   ├── academics/                ← Schedules, Sessions, Batches, Attendance, Homework
+│   ├── identity/                 ← Institute Tenants, Users, Memberships, Capability RBAC, Parents, Students, Staff
+│   ├── academics/                ← Schedules, Sessions, Attendance, Homework, Tests, Marks Engine
 │   ├── billing/                  ← Fee Structures, Invoices, Receipts, Payments
 │   ├── communication/            ← Announcements, Notifications, WhatsApp Triggers
-│   ├── administration/           ← Staff Management & System Configuration
+│   ├── administration/           ← System Configuration & Global Settings
 │   ├── audit/                    ← Event Tracking & Audit Logging
 │   ├── shared/                   ← Error Taxonomy, Domain Events, Common Utilities
 │   └── ui/                       ← Token-Driven UI Primitives (Button, Card, Input, Modal, Theme)
@@ -32,8 +32,9 @@ coaching-os/
 │   └── storage/                  ← Storage Service Interfaces & Asset Wrappers
 │
 └── docs/                         ← System Architecture Specifications, Phase Contracts & ADRs
-    ├── adr/                      ├── Architecture Decision Records (ADR 0001 - 0011)
-    └── phases/                   └── Phase Contracts (Phase 0.12, 1.0, 1.3 RBAC, 1.4 - 1.8 Core)
+    ├── adr/                      ├── Architecture Decision Records (ADR 0001 - 0017)
+    ├── api/                      ├── Canonical Public & Versioned REST API Specifications
+    └── phases/                   └── Phase Contracts & Freeze Reports (Phase 0, Phase 1, Phase 2)
 ```
 
 ---
@@ -65,29 +66,47 @@ coaching-os/
 ```text
 apps/web/
 ├── e2e/                          ← Playwright End-to-End Test Suite
+│   ├── academic-workspace-e2e.spec.ts   ← Academics E2E workflow & accessibility suite
+│   ├── academic-workspace-security.spec.ts ← Academics cross-tenant security matrix
 │   ├── app.spec.ts               ← Health check & Baseline UI smoke tests
+│   ├── enrollment-workflow.spec.ts ← Student enrollment lifecycle E2E suite
 │   ├── guardian-student-security.spec.ts ← Relationship API security & anti-spoofing matrix
 │   ├── guardian-student-workflow.spec.ts ← Staff Guardian/Student UI workflow & accessibility
 │   ├── institute-parent-security.spec.ts ← Parent CRM security test suite
 │   ├── onboarding.spec.ts        ← Institute Onboarding & Tenant Context flow suite
 │   ├── rbac.spec.ts              ← Capability-based RBAC browser evaluation tests
+│   ├── staff-accessibility.spec.ts ← Staff UI WAI-ARIA & accessibility suite
+│   ├── staff-workflow.spec.ts    ← Staff onboarding & membership workflow suite
 │   ├── student-security.spec.ts  ← Student admission security test suite
 │   └── student-workflow.spec.ts  ← Student admission workflow test suite
 ├── public/                       ← Static public assets (SVG icons, branding placeholders)
 ├── src/
 │   ├── app/                      ← Next.js 16 App Router structure
+│   │   ├── (app)/                ← Authenticated application shell & workspace routes
+│   │   │   ├── (workspace)/      ← Tenant workspace views
+│   │   │   │   ├── academics/    ← Teacher & Staff Academic Workspace (`page.tsx`)
+│   │   │   │   ├── dashboard/    ← Tenant operational overview dashboard (`page.tsx`)
+│   │   │   │   ├── enrollments/  ← Student Enrollment lifecycle workspace (`page.tsx`)
+│   │   │   │   ├── parents/      ← Parent CRM workspace (`page.tsx`)
+│   │   │   │   ├── settings/     ← White-label Institute Settings & Branding (`page.tsx`)
+│   │   │   │   ├── staff/        ← Staff Management workspace (`page.tsx`)
+│   │   │   │   └── students/     ← Student Admission & Profile workspace (`page.tsx`)
+│   │   │   └── onboarding/       ← Institute setup onboarding wizard (`page.tsx`)
+│   │   ├── (auth)/               ← Public authentication flow routes (`/sign-in`, `/sign-up`)
+│   │   ├── (marketing)/          ← Public product landing page (`page.tsx`)
 │   │   ├── api/                  ← HTTP Route Handler Adapters
 │   │   │   ├── auth/             ← Better Auth catch-all route (`/api/auth/[...all]`)
 │   │   │   ├── dashboard/        ← Server tenant context handler (`GET /api/dashboard/context`)
 │   │   │   ├── health/           ← System baseline health endpoint (`GET /api/health`)
-│   │   │   ├── institute/        ← Tenant settings, parents, students & guardian relationship endpoints
-│   │   │   │   ├── parent-student/← Relationship management API (`/api/institute/parent-student/[id]`)
-│   │   │   │   ├── parents/      ← InstituteParent API (`/api/institute/parents`, `/parents/[parentId]/students`)
-│   │   │   │   ├── settings/     ← Institute settings API (`/api/institute/settings`)
-│   │   │   │   └── students/     ← Student admission & guardians API (`/api/institute/students`, `/[studentId]/guardians`)
-│   │   │   └── onboarding/       ← Institute onboarding endpoint (`POST /api/onboarding/institute`)
-│   │   ├── dashboard/            ← Authenticated tenant dashboard pages & sub-views
-│   │   ├── onboarding/           ← Institute setup onboarding form page (`page.tsx`)
+│   │   │   ├── institute/        ← Internal Staff UI API endpoints (batches, enrollments, parents, students, staff, settings)
+│   │   │   ├── onboarding/       ← Institute onboarding endpoint (`POST /api/onboarding/institute`)
+│   │   │   └── v1/               ← Versioned Protected Integration REST APIs
+│   │   │       ├── _lib/         ← V1 tenant guards (`v1-guard.ts`) & rate limiter (`rate-limiter.ts`)
+│   │   │       ├── academics/    ← Protected Academics REST API (`schedules`, `sessions`, `attendance`, `homework`, `tests`)
+│   │   │       ├── enrollments/  ← Protected Enrollment REST API
+│   │   │       ├── guardians/    ← Protected Guardian REST API
+│   │   │       ├── staff/        ← Protected Staff REST API
+│   │   │       └── students/     ← Protected Student REST API
 │   │   ├── error.tsx             ← Global Next.js error boundary
 │   │   ├── globals.css           ← Global styles & CSS variables
 │   │   ├── layout.tsx            ← Root application layout
@@ -96,10 +115,12 @@ apps/web/
 │   │   └── page.tsx              ← Landing page showcase
 │   ├── components/               ← Shared UI layout & marketing presentation components
 │   ├── features/                 ← Feature-driven application components
+│   │   ├── academic/             ← Staff Academic Workspace sub-views, tab navigation, DTOs & API client
 │   │   ├── app-shell/            ← Header, Navigation sidebar, Tenant Context Banner
 │   │   ├── auth/                 ← Auth forms, login modals, session state components
 │   │   ├── dashboard/            ← Authenticated staff dashboard components
-│   │   ├── guardian/             ├── Staff Guardian management components, modals, badges, API client
+│   │   ├── enrollment/           ← Student Enrollment lifecycle components & modals
+│   │   ├── guardian/             ← Staff Guardian management components, modals, badges, API client
 │   │   ├── institute-parent/     ← Tenant Parent CRM UI components & modals
 │   │   ├── institute-settings/   ← White-label settings & branding form UI components
 │   │   ├── onboarding/           ← Multi-step institute setup onboarding wizard
@@ -124,11 +145,14 @@ packages/identity/
 ├── src/
 │   ├── application/              ← Application DTOs & Use Cases
 │   │   ├── dto/
+│   │   │   ├── enrollment.dto.ts           ← Enrollment DTO & conversion helper
 │   │   │   ├── guardian-student-relationship.dto.ts ← Relationship DTOs & conversion helpers
+│   │   │   ├── institute-membership.dto.ts ← Staff Membership DTO & conversion helper
 │   │   │   ├── institute-parent.dto.ts     ← InstituteParent DTO & conversion helper
 │   │   │   ├── parent-identity.dto.ts      ← ParentIdentity DTO & conversion helper
 │   │   │   └── student.dto.ts              ← Student DTO & conversion helper
 │   │   └── use-cases/
+│   │       ├── enrollment.use-cases.ts     ← Student enrollment lifecycle orchestration
 │   │       ├── guardian-student-relationship/ ← Relationship linking, update, primary & archive use cases
 │   │       ├── institute.use-cases.ts      ← Institute CRUD & query orchestration
 │   │       ├── institute-parent.use-cases.ts← InstituteParent CRM orchestration
@@ -136,15 +160,17 @@ packages/identity/
 │   │       ├── onboarding.use-cases.ts     ← Institute onboarding orchestration
 │   │       ├── parent-identity.use-cases.ts← Platform Global ParentIdentity orchestration
 │   │       ├── settings.use-cases.ts       ← Institute Settings & Branding orchestration
+│   │       ├── staff.use-cases.ts          ← Staff management use cases (invite, role, status)
 │   │       └── student.use-cases.ts        ← Student admission, lifecycle & profile use cases
 │   ├── authorization/            ← Capability-Based RBAC Engine
 │   │   ├── authorization-engine.ts         ← Dynamic capability evaluation & guards
-│   │   ├── capabilities.ts                 ← Capability taxonomy enum (58 capabilities)
+│   │   ├── capabilities.ts                 ← Capability taxonomy enum (64 capabilities)
 │   │   ├── resource-scope.ts               ← Resource filtering & parent/teacher scopes
 │   │   └── role-capabilities.ts            ← Role → Capability map (Owner, Assistant, Teacher, Parent)
 │   ├── domain/                   ← Framework-Independent Business Domain
 │   │   ├── entities/
-│   │   │   ├── batch.entity.ts             ← Batch aggregate & state machine (Phase 1.11 isolated)
+│   │   │   ├── batch.entity.ts             ← Batch aggregate & state machine
+│   │   │   ├── enrollment.entity.ts        ← Enrollment aggregate & state machine (active, suspended, completed, withdrawn, cancelled)
 │   │   │   ├── institute.entity.ts         ← Institute domain entity & status invariants
 │   │   │   ├── institute-membership.entity.ts ← Membership domain entity & role invariants
 │   │   │   ├── institute-parent.entity.ts  ← Tenant-scoped parent CRM entity
@@ -164,6 +190,7 @@ packages/identity/
 │   │   │   └── subject-code.vo.ts          ← SubjectCode value object validation
 │   │   └── repositories/
 │   │       ├── batch.repository.ts         ← Batch repository interface
+│   │       ├── enrollment.repository.ts    ← Enrollment repository interface
 │   │       ├── institute.repository.ts     ← Institute persistence interface
 │   │       ├── institute-membership.repository.ts ← Membership repository interface
 │   │       ├── institute-onboarding.repository.ts ← Atomic onboarding unit of work interface
@@ -177,6 +204,7 @@ packages/identity/
 │   ├── infrastructure/           ← Prisma Persistence Implementations
 │   │   └── repositories/
 │   │       ├── prisma-batch.repository.ts  ← PostgreSQL Batch repository
+│   │       ├── prisma-enrollment.repository.ts ← PostgreSQL Enrollment repository with locking capacity check
 │   │       ├── prisma-institute.repository.ts ← PostgreSQL Institute repository
 │   │       ├── prisma-institute-membership.repository.ts ← PostgreSQL Membership repository
 │   │       ├── prisma-institute-parent.repository.ts    ← PostgreSQL InstituteParent repository
@@ -187,13 +215,38 @@ packages/identity/
 │   │       └── prisma-student.repository.ts            ← PostgreSQL Student repository
 │   ├── presentation/             ← Presentation Validators
 │   │   └── validators/
+│   │       ├── enrollment.validator.ts     ← Enrollment input schemas (Zod)
 │   │       ├── guardian-student-relationship.validator.ts ← Relationship input schemas (Zod)
 │   │       ├── institute.validator.ts      ← Institute input schemas (Zod)
 │   │       ├── institute-parent.validator.ts← InstituteParent CRM schemas (Zod)
 │   │       ├── membership.validator.ts     ← Membership input schemas (Zod)
-│   │       └── onboarding.validator.ts     ← Onboarding presentation schema (Zod)
+│   │       ├── onboarding.validator.ts     ← Onboarding presentation schema (Zod)
+│   │       ├── staff.validator.ts          ← Staff management Zod schemas
+│   │       └── v1-validators.ts            ← Protected Identity API v1 Zod schemas
 │   └── index.ts                  ← Explicit barrel exports for package consumers
 ├── package.json                  ← `@coaching-os/identity` package configuration
+├── tsconfig.json                 ← Strict TypeScript configuration
+└── vitest.config.ts              ← Vitest unit & integration runner config
+```
+
+#### `packages/academics/` (Academics Domain)
+```text
+packages/academics/
+├── src/
+│   ├── application/              ← Application DTOs & Use Cases
+│   │   ├── dto/                  ← Academic DTOs (Schedule, Session, Attendance, Homework, Test, Marks)
+│   │   └── use-cases/            ← Application Use Cases (Scheduling, Attendance, Homework, Assessment)
+│   ├── domain/                   ← Framework-Independent Business Domain
+│   │   ├── entities/             ← Domain Aggregate Entities (Schedule, BatchSession, Attendance, Homework, Test, Marks)
+│   │   ├── repositories/         ← Repository Interfaces
+│   │   ├── services/             ← ScheduleGeneratorService (Pure Date/Time normalization service)
+│   │   └── value-objects/        ← DayOfWeek, TimeOfDay Value Objects
+│   ├── infrastructure/           ← Prisma Persistence Implementations
+│   │   └── repositories/         ← Prisma repositories for Schedule, BatchSession, Attendance, Homework, Test, Marks
+│   ├── presentation/             ← Presentation Validators
+│   │   └── validators/           ← Zod validators for Schedules, Attendance, Homework, Assessments
+│   └── index.ts                  ← Explicit barrel exports
+├── package.json                  ← `@coaching-os/academics` package configuration
 ├── tsconfig.json                 ← Strict TypeScript configuration
 └── vitest.config.ts              ← Vitest unit & integration runner config
 ```
@@ -201,19 +254,18 @@ packages/identity/
 #### Other Domain & Shared Packages
 ```text
 packages/
-├── academics/                    ← Academic management domain (Schedules, Sessions, Batches)
 ├── administration/               ← System config & staff admin domain
 ├── audit/                        ← Audit logging domain contracts
 ├── billing/                      ← Billing, invoicing, & payments domain
 ├── communication/                ← WhatsApp, SMS, & announcement messaging domain
 ├── shared/                       ← Common utilities across monorepo
 │   └── src/
-│       ├── errors.ts             ← Standardized error taxonomy (ValidationError, ConflictError, etc.)
+│       ├── errors.ts             ← Standardized error taxonomy (ValidationError, ConflictError, NotFoundError, etc.)
 │       ├── events.ts             ← Domain event type definitions
 │       └── index.ts              ← Barrel exports
 └── ui/                           ← Shared UI token primitives
     └── src/
-        ├── components/           ← Reusable UI components (Button, Input, Card, Modal, Form)
+        ├── components/           ← Reusable UI components (Button, Input, Card, Modal, Form, Table)
         ├── lib/                  ← UI class utility helpers (`cn()`)
         ├── theme/                ← Design tokens & theme provider
         └── index.ts              ← Primitive barrel exports
@@ -274,18 +326,21 @@ docs/
 ├── adr/                          ← Architecture Decision Records
 │   ├── 0001-monorepo-architecture.md
 │   ├── ...
-│   └── 0015-protected-identity-apis-architecture.md
+│   ├── 0015-protected-identity-apis-architecture.md
+│   ├── 0016-staff-management-onboarding-architecture.md
+│   └── 0017-multi-tenant-cross-tenant-security-hardening.md
 ├── api/                          ← Public API Specifications
 │   └── protected-identity-api-v1.md← Canonical Protected Identity API v1 Specification
 ├── phases/                       ← Authoritative Phase Contracts & Architecture Freezes
-│   ├── phase0.12-public-auth-ux.md
-│   ├── ...
-│   └── phase1.12-protected-identity-apis.md ← Phase 1.12 Protected Identity APIs Freeze
+│   ├── 00/                       ← Phase 0 Contracts & Acceptance Reports
+│   ├── 01/                       ← Phase 1 Contracts, RBAC, API & Freeze Reports
+│   └── 02/                       ← Phase 2 Contracts, Academics Contract, UI & Acceptance Reports
 ├── BACKLOG.md                    ← Product backlog & future phase items
 ├── CONTEXT.md                    ← Active milestone tracker & phase history
 ├── ENGINEERING_PLAYBOOK.md       ← Monorepo development guidelines & rules
 ├── FOLDER_STRUCTURE.md           ← Authoritative repository directory reference (This File)
 ├── ROADMAP.md                    ← Versioned milestone roadmap (Phase 0 through Phase 7)
+├── SYSTEM_OVERVIEW.md            ← Master System Architecture & Phase Progression Overview
 ├── dadd.md                       ← Database & API Design Document
 ├── sdd.md                        ├── System Design Document
 └── srs.md                        └── Software Requirements Specification
@@ -298,8 +353,8 @@ docs/
 | Package / App | Category | Purpose | Core Tech Stack |
 |---|---|---|---|
 | `@coaching-os/web` | Application | Presentation UI & API Route Handlers | Next.js 16, React 19, Vanilla CSS (CSS Variables) |
-| `@coaching-os/identity` | Package | Multi-tenant Identity, Memberships, RBAC, Parents & Students | TypeScript, Zod, Vitest |
-| `@coaching-os/academics` | Package | Batches, Schedules, Attendance, Homework | TypeScript, Zod |
+| `@coaching-os/identity` | Package | Multi-tenant Identity, Memberships, RBAC, Parents, Students & Staff | TypeScript, Zod, Vitest |
+| `@coaching-os/academics` | Package | Batches, Schedules, Sessions, Attendance, Homework, Tests & Marks | TypeScript, Zod, Vitest |
 | `@coaching-os/billing` | Package | Fees, Invoices, Receipts, Payments | TypeScript, Zod |
 | `@coaching-os/shared` | Package | Error Taxonomy, Result Helpers & Common Types | TypeScript |
 | `@coaching-os/ui` | Package | Design System Tokens & Primitive Components | Vanilla CSS Tokens, React 19 |
