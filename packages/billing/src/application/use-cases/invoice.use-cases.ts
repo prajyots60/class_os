@@ -138,17 +138,13 @@ export class GenerateInvoiceUseCase {
         totalInstallments: N,
       });
 
-      // Sort existing invoices by dueDate ascending to match schedule index
-      const sortedExisting = [...existingInvoices].sort(
-        (a, b) => a.dueDate.getTime() - b.dueDate.getTime()
-      );
-
-      // R-006 Verification: Verify candidate N matches existing invoice schedule
-      if (sortedExisting.length > 0) {
-        for (let idx = 0; idx < sortedExisting.length; idx++) {
-          const inv = sortedExisting[idx];
-          const expectedItem = schedule[idx];
-          if (inv && expectedItem && inv.amount !== expectedItem.amount) {
+      // R-006 Verification: Match existing invoices by dueDate to candidate schedule items
+      if (existingInvoices.length > 0) {
+        for (const inv of existingInvoices) {
+          const expectedItem = schedule.find(
+            (item) => item.dueDate.getTime() === inv.dueDate.getTime()
+          );
+          if (!expectedItem || inv.amount !== expectedItem.amount) {
             throw new ValidationError(
               'Installment count N cannot be changed once installment generation has started.'
             );
@@ -156,16 +152,19 @@ export class GenerateInvoiceUseCase {
         }
       }
 
-      // Idempotency: Check if installment k already exists
-      if (sortedExisting.length >= k) {
-        existingMatch = sortedExisting[k - 1];
-      } else {
-        const item = schedule[k - 1];
-        if (!item) {
-          throw new ValidationError(`Invalid installment index ${k}`);
-        }
-        targetAmount = item.amount;
-        targetDueDate = item.dueDate;
+      // Idempotency: Check if installment k already exists by target dueDate
+      const targetItem = schedule[k - 1];
+      if (!targetItem) {
+        throw new ValidationError(`Invalid installment index ${k}`);
+      }
+
+      existingMatch = existingInvoices.find(
+        (inv) => inv.dueDate.getTime() === targetItem.dueDate.getTime()
+      );
+
+      if (!existingMatch) {
+        targetAmount = targetItem.amount;
+        targetDueDate = targetItem.dueDate;
       }
     } else {
       throw new ValidationError(`Unsupported billing type: ${plan.type}`);

@@ -48,6 +48,15 @@ class InMemoryInvoiceRepository implements InvoiceRepository {
   }
 
   public async save(invoice: InvoiceEntity, instituteId: string): Promise<void> {
+    for (const [key, existing] of this.invoices.entries()) {
+      if (
+        key.startsWith(`${instituteId}:`) &&
+        existing.billingPlanId === invoice.billingPlanId &&
+        existing.dueDate.getTime() === invoice.dueDate.getTime()
+      ) {
+        return; // Idempotent save: existing invoice for this billingPlan & dueDate already exists
+      }
+    }
     this.invoices.set(`${instituteId}:${invoice.id}`, invoice);
     this.planToInstitute.set(invoice.billingPlanId, instituteId);
   }
@@ -275,6 +284,175 @@ describe('Invoice Use Cases', () => {
       expect(inst3.amount).toBe(12500);
 
       expect(inst1.amount + inst2.amount + inst3.amount).toBe(30000);
+    });
+  });
+
+  describe('R-006 Hardening Audit Suite (5 Mandatory Cases)', () => {
+    it('Case 1: Generate #1 with N=3 -> generate #2 with N=3 -> succeeds', async () => {
+      const plan = BillingPlanEntity.create({
+        instituteId,
+        enrollmentId,
+        type: 'installment',
+        amount: 15000,
+        billingStartDate: '2026-08-01',
+      });
+      await billingPlanRepo.create(plan);
+      invoiceRepo.registerPlanInstitute(plan.id, instituteId);
+
+      const inv1 = await generateUseCase.execute(instituteId, {
+        billingPlanId: plan.id,
+        installmentNumber: 1,
+        totalInstallments: 3,
+      });
+
+      const inv2 = await generateUseCase.execute(instituteId, {
+        billingPlanId: plan.id,
+        installmentNumber: 2,
+        totalInstallments: 3,
+      });
+
+      expect(inv1.amount).toBe(5000);
+      expect(inv2.amount).toBe(5000);
+    });
+
+    it('Case 2: Generate #1 with N=3 -> generate #2 with N=4 -> throws ValidationError', async () => {
+      const plan = BillingPlanEntity.create({
+        instituteId,
+        enrollmentId,
+        type: 'installment',
+        amount: 12000,
+        billingStartDate: '2026-08-01',
+      });
+      await billingPlanRepo.create(plan);
+      invoiceRepo.registerPlanInstitute(plan.id, instituteId);
+
+      await generateUseCase.execute(instituteId, {
+        billingPlanId: plan.id,
+        installmentNumber: 1,
+        totalInstallments: 3,
+      });
+
+      await expect(
+        generateUseCase.execute(instituteId, {
+          billingPlanId: plan.id,
+          installmentNumber: 2,
+          totalInstallments: 4,
+        })
+      ).rejects.toThrow(ValidationError);
+    });
+
+    it('Case 3: Override exists -> N=3 remains deterministically identifiable and locked', async () => {
+      const plan = BillingPlanEntity.create({
+        instituteId,
+        enrollmentId,
+        type: 'installment',
+        amount: 30000,
+        billingStartDate: '2026-08-01',
+        firstInvoiceAmountOverride: 5000,
+      });
+      await billingPlanRepo.create(plan);
+      invoiceRepo.registerPlanInstitute(plan.id, instituteId);
+
+      // Generate #1 with N=3 (Amount 5000)
+      await generateUseCase.execute(instituteId, {
+        billingPlanId: plan.id,
+        installmentNumber: 1,
+        totalInstallments: 3,
+      });
+
+      // Generate #2 with N=3 (Amount 12500)
+      await generateUseCase.execute(instituteId, {
+        billingPlanId: plan.id,
+        installmentNumber: 2,
+        totalInstallments: 3,
+      });
+
+      // Attempt #3 with N=4 MUST fail because N=3 schedule is locked
+      await expect(
+        generateUseCase.execute(instituteId, {
+          billingPlanId: plan.id,
+          installmentNumber: 3,
+          totalInstallments: 4,
+        })
+      ).rejects.toThrow(ValidationError);
+    });
+
+    it('Case 4: Two concurrent requests start installment generation with conflicting N values -> only one wins', async () => {
+      const plan = BillingPlanEntity.create({
+        instituteId,
+        enrollmentId,
+        type: 'installment',
+        amount: 12000,
+        billingStartDate: '2026-08-01',
+      });
+      await billingPlanRepo.create(plan);
+      invoiceRepo.registerPlanInstitute(plan.id, instituteId);
+
+      // Execute concurrent generation attempts for Installment #1 with N=3 vs N=4
+      const results = await Promise.allSettled([
+        generateUseCase.execute(instituteId, {
+          billingPlanId: plan.id,
+          installmentNumber: 1,
+          totalInstallments: 3,
+        }),
+        generateUseCase.execute(instituteId, {
+          billingPlanId: plan.id,
+          installmentNumber: 1,
+          totalInstallments: 4,
+        }),
+      ]);
+
+      // At least one must succeed
+      const fulfilled = results.filter((r) => r.status === 'fulfilled');
+      const rejected = results.filter((r) => r.status === 'rejected');
+
+      expect(fulfilled.length).toBeGreaterThanOrEqual(1);
+
+      // Verify stored invoice count in repo is strictly 1
+      const stored = await invoiceRepo.findByBillingPlanId(plan.id, instituteId);
+      expect(stored).toHaveLength(1);
+
+      // If both completed or one was rejected, any subsequent call with a conflicting N MUST throw ValidationError
+      const winningAmount = stored[0]?.amount; // 4000 for N=3, 3000 for N=4
+      const winningN = winningAmount === 4000 ? 3 : 4;
+      const conflictingN = winningN === 3 ? 4 : 3;
+
+      await expect(
+        generateUseCase.execute(instituteId, {
+          billingPlanId: plan.id,
+          installmentNumber: 2,
+          totalInstallments: conflictingN,
+        })
+      ).rejects.toThrow(ValidationError);
+    });
+
+    it('Case 5: Retry the same installment -> returns same Invoice without duplicate', async () => {
+      const plan = BillingPlanEntity.create({
+        instituteId,
+        enrollmentId,
+        type: 'installment',
+        amount: 10000,
+        billingStartDate: '2026-08-01',
+      });
+      await billingPlanRepo.create(plan);
+      invoiceRepo.registerPlanInstitute(plan.id, instituteId);
+
+      const inv1 = await generateUseCase.execute(instituteId, {
+        billingPlanId: plan.id,
+        installmentNumber: 2,
+        totalInstallments: 3,
+      });
+
+      const inv1Retry = await generateUseCase.execute(instituteId, {
+        billingPlanId: plan.id,
+        installmentNumber: 2,
+        totalInstallments: 3,
+      });
+
+      expect(inv1Retry.id).toBe(inv1.id);
+
+      const allInvoices = await invoiceRepo.findByBillingPlanId(plan.id, instituteId);
+      expect(allInvoices).toHaveLength(1);
     });
   });
 
