@@ -174,15 +174,31 @@ status != 'paid'
 - **Subsequent Invoice Amounts**: `amount = BillingPlan.calculateStandardInvoiceAmount()`.
 - **Month-End Boundary Rule**: If `billingStartDate` day of month (e.g., 31st) exceeds the target month's maximum days (e.g., Feb 28/29), due date caps to the last day of that month (`Feb 28` / `Feb 29`).
 
-### 6.3 Installment Billing (`BillingType.installment`) — Resolution of R-004
-- **Context & Source Reconciliation**: SRS defines installments as $N$ scheduled invoices. The database schema does not have a separate `installment_schedules` table.
-- **Frozen Contract Resolution**:
-  - Installment generation requests accept an explicit `installmentNumber` ($1 \dots N$) and `totalInstallments` parameter.
-  - **Amount Calculation**:
-    - For Installment #1: If `firstInvoiceAmountOverride` is present, `amount = firstInvoiceAmountOverride`. Otherwise `amount = (totalAmount - discount) / totalInstallments` (rounded to 2 decimal places).
-    - For Installments #2 through $N$: `amount = (totalAmount - discount) / totalInstallments`.
-  - **Due Dates**: Installment $k$ due date = `billingStartDate` + $(k - 1)$ months.
-  - **Idempotency Key**: `(billingPlanId, installmentNumber)`.
+### 6.3 Installment Billing (`BillingType.installment`) — Resolution of R-004, R-006, R-007, R-008
+- **Context & Source Reconciliation**: SRS defines installments as $N$ scheduled invoices. The database schema does not have a separate `installment_schedules` table or `totalInstallments` column on `BillingPlan`.
+- **R-006 — Installment Schedule Consistency**:
+  - Installment generation requests accept an explicit `installmentNumber` ($1 \dots N$) and `totalInstallments` parameter ($N \ge 2$).
+  - **Immutability of $N$**: Once the first installment invoice (`installmentNumber = 1`) is generated for a `BillingPlan`, $N$ (`totalInstallments`) becomes locked for that plan. Any subsequent generation request for the same `billingPlanId` MUST pass the exact same `totalInstallments` value $N$. If a conflicting `totalInstallments` is supplied, `GenerateInvoiceUseCase` throws `ValidationError("Installment count N cannot be changed once installment generation has started.")`.
+- **R-007 — Installment Remainder Cents Allocation**:
+  - To prevent floating-point loss or cent drift (e.g. ₹10,000 / 3 = ₹3,333.33 x 3 = ₹9,999.99 losing ₹0.01), remainder cents are allocated deterministically:
+  - Let total billable amount be $T = \text{effectiveNetPlanAmount}$.
+  - Base installment amount: $A_{\text{base}} = \lfloor (T \times 100) / N \rfloor / 100$.
+  - Cents remainder: $R = \text{round}(T \times 100) - (A_{\text{base}} \times 100 \times N)$ (where $0 \le R < N$ cents).
+  - The $R$ extra cents are distributed +₹0.01 to each of the first $R$ installments ($k \le R$).
+  - Guaranteed Invariant: $\sum_{k=1}^{N} \text{Invoice}_k.\text{amount} == T$ exact!
+- **R-008 — First Invoice Override & Installment Balance Distribution**:
+  - When `firstInvoiceAmountOverride` $O$ is set on an installment `BillingPlan`:
+    - **Installment #1 Amount**: $O$ (the explicit override amount for the first installment/pro-rata period).
+    - **Remaining Balance for Installments #2 through $N$**: $T_{\text{rem}} = \max(0, T_{\text{standard\_plan\_total}} - O)$.
+    - The remaining balance $T_{\text{rem}}$ is distributed across the remaining $N - 1$ installments using R-007 remainder cents allocation.
+    - Example: Total $T = ₹30,000$, $N = 3$, Override $O = ₹5,000$.
+      - Installment #1 = ₹5,000.00
+      - Remaining balance $T_{\text{rem}} = 30,000 - 5,000 = 25,000.00$.
+      - Installment #2 = ₹12,500.00
+      - Installment #3 = ₹12,500.00
+      - Total = ₹30,000.00 exact!
+- **Due Dates**: Installment $k$ due date = `billingStartDate` + $(k - 1)$ months.
+- **Idempotency Key**: `(billingPlanId, installmentNumber)`.
 
 ---
 
@@ -198,13 +214,16 @@ status != 'paid'
                      │                           │
                      ▼                           ▼
         Invoice Amount =             Invoice Amount =
-        firstInvoiceAmountOverride   Base Amount - Discount
+        firstInvoiceAmountOverride   Standard Plan Amount
+                                     (Base Amount - Discount)
+                                     [distributed via R-007/008]
 ```
 
 ### Precedence Invariants
-1. **`firstInvoiceAmountOverride`**: Represents a final explicit monetary agreement for the first invoice (e.g., late-join pro-rata fee). It is NOT subjected to additional plan discount deductions unless specified.
-2. **Subsequent Invoices**: Always use standard BillingPlan discount rules (`calculateStandardInvoiceAmount()`).
-3. **Non-Negative Invariant**: An Invoice `amount` MUST NEVER be negative (`amount >= 0.00`).
+1. **`firstInvoiceAmountOverride`**: Represents a final explicit monetary agreement for the first invoice (e.g., late-join pro-rata fee). It is NOT subjected to additional plan discount deductions.
+2. **Subsequent Invoices**: Use standard BillingPlan rules and installment balance distribution (R-008).
+3. **Exact Total Preservation**: In all cases (monthly, one-time, installment), monetary rounding guarantees $\sum \text{Invoice.amount} == \text{Total Obligation}$.
+4. **Non-Negative Invariant**: An Invoice `amount` MUST NEVER be negative (`amount >= 0.00`).
 
 ---
 
@@ -298,6 +317,18 @@ AFTER COMMIT:
 ### R-005 — `overdue` Status
 - **Conflict**: DADD mentions `overdue` as an invoice status; SRS and Prisma schema use `pending`, `partial`, `paid`.
 - **Resolution**: `overdue` is a derived reporting condition (`dueDate < today AND status != 'paid'`), NOT a persisted database enum.
+
+### R-006 — Installment Schedule Consistency
+- **Conflict**: `totalInstallments` $N$ is provided at invoice generation time and is not stored on `BillingPlan`.
+- **Resolution**: Once Installment #1 is generated with count $N$, $N$ becomes immutable for that `BillingPlan`. Subsequent generation calls MUST supply the matching $N$ or throw `ValidationError`.
+
+### R-007 — Installment Remainder Cents Allocation
+- **Conflict**: Integer division of monetary amounts across $N$ installments can yield floating-point cent remainders (e.g., ₹10,000 / 3 = ₹9,999.99 total).
+- **Resolution**: Base installment = $\lfloor (T \times 100) / N \rfloor / 100$. Extra $R$ cents are allocated +₹0.01 to each of the first $R$ installments ($k \le R$), guaranteeing $\sum \text{Invoice.amount} == T$ exact.
+
+### R-008 — First Invoice Override & Installment Balance Distribution
+- **Conflict**: Interaction between `firstInvoiceAmountOverride` $O$ and installment balance calculation.
+- **Resolution**: Override $O$ replaces Installment #1 amount directly. The remaining plan balance $T_{\text{rem}} = \max(0, T_{\text{total}} - O)$ is distributed across Installments #2 through $N$ using R-007, preserving total plan obligation.
 
 ---
 
