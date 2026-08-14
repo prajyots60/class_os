@@ -2,8 +2,8 @@
 
 > **Authoritative Technical & Product Summary Document**  
 > **Target Audience:** Engineering Staff, Product Lead, Architecture Reviewers, Onboarding Engineers  
-> **Status:** Phase 0 (ACCEPTED & FROZEN) | Phase 1 (ACCEPTED & FROZEN) | Phase 2 (ACTIVE & IN PROGRESS)  
-> **Updated:** August 13, 2026
+> **Status:** Phase 0 (ACCEPTED & FROZEN) | Phase 1 (ACCEPTED & FROZEN) | Phase 2 (ACCEPTED & FROZEN)  
+> **Updated:** August 14, 2026
 
 ---
 
@@ -40,7 +40,7 @@ PHASE 1 — IDENTITY & ORGANIZATIONAL MODULE               ✅ ACCEPTED & FROZEN
   └── Build multi-tenancy, capability RBAC, institute onboarding, settings,
       two-layer ParentIdentity, Student CRM, Guardians, Academic Hierarchy & Enrollment.
 
-PHASE 2 — ACADEMICS OPERATIONAL ENGINE                   🟢 ACTIVE & IN PROGRESS
+PHASE 2 — ACADEMICS OPERATIONAL ENGINE                   ✅ ACCEPTED & FROZEN
   └── Build daily operational workflows (Weekly Schedules, Generated BatchSessions,
       Bulk Attendance, Batch Homework, Tests & Bulk Marks Entry).
 
@@ -171,11 +171,9 @@ Phase 1 established the identity, organizational structure, tenant security boun
 
 ---
 
-## 5. Our Current Phase Target: Phase 2 (Academics Operational Engine)
+## 5. What We Implemented & Achieved in Phase 2 (Academics Operational Engine)
 
-### The Objective of Phase 2
-
-Phase 2 builds the **daily operational engine** of CoachingOS. While Phase 0 built the machine and Phase 1 built the identity foundation, Phase 2 answers:
+Phase 2 established the **daily operational engine** of CoachingOS. While Phase 0 built the machine and Phase 1 built the identity foundation, Phase 2 answered:
 
 > **"What happens on Monday morning when the teacher actually starts teaching?"**
 
@@ -189,15 +187,15 @@ Phase 2 builds the **daily operational engine** of CoachingOS. While Phase 0 bui
          │                             │                             │
          └─────────────────────────────┼─────────────────────────────┘
                                        ▼
-                               4. Conduct Test
-                             (Weekly/Unit/Mock)
+                                4. Conduct Test
+                              (Weekly/Unit/Mock)
                                        │
                                        ▼
-                              5. Enter Bulk Marks
-                              (0 <= Marks <= Max)
+                               5. Enter Bulk Marks
+                               (0 <= Marks <= Max)
                                        │
                                        ▼
-                              6. Publish Results
+                               6. Publish Results
 ```
 
 ---
@@ -210,20 +208,34 @@ Phase 2 builds the **daily operational engine** of CoachingOS. While Phase 0 bui
 - **Capabilities:** Generation window engine, ad-hoc session creation, session cancellation, substitute teacher assignment.
 
 #### 2. Session-Driven Attendance Core (`Attendance`)
-- **Rule:** Attendance is recorded against `(sessionId, enrollmentId)`.
+- **Rule:** Attendance is recorded against `(batchSessionId, enrollmentId)`.
 - **Rule:** Only `active` enrollments are eligible for attendance.
 - **Rule:** Target operational execution: Teachers record batch attendance in under **30 seconds**.
 - **Rule:** Submitting attendance updates `batchSessions.attendanceTaken = true` and emits `academics.attendance.recorded`.
 
 #### 3. Homework Workflow (`Homework`)
 - **Rule:** Homework is batch-targeted (`batchId`) and created by authorized teachers/staff.
-- **Rule:** Supports state transitions (`draft` → `published`) and optional attachment links.
+- **Rule:** Supports state transitions (`draft` → `published`) and optional attachment links. Once published, title, description, attachments, and timestamps are strictly immutable.
 
 #### 4. Assessment & Marks Engine (`Test` & `Marks`)
 - **Rule:** Test state machine: `draft` → `scheduled` → `marks_entered` → `published`.
 - **Rule:** Marks validation: `0 <= marksObtained <= test.maximumMarks` (decimal precision up to 2 places).
 - **Rule:** Every submitted enrollment MUST belong to an active enrollment in `test.batchId`.
-- **Rule:** Published test marks are immutable unless explicitly reverted by authorized roles.
+- **Rule:** Single transaction bulk mark recording (`$transaction`). Published test results are strictly immutable.
+
+---
+
+### 5.1 Subphase Execution & Summary
+
+- **Phase 2.0 — Architecture & Contract Freeze**: Specified and froze authoritative Phase 2 Academics contract (`docs/phases/02/phase2-academics-contract.md`), operational local time date semantics, same-batch ownership boundaries, homework/test publication immutability, and atomic bulk operations.
+- **Phase 2.1 — Scheduling & Session Engine**: Built `ScheduleEntity`, `BatchSessionEntity`, value objects (`DayOfWeek`, `TimeOfDay`), pure `ScheduleGeneratorService`, Prisma repositories, and 8 application use cases.
+- **Phase 2.2 — Session Attendance Core**: Built `AttendanceEntity` anchored to `(batchSessionId, enrollmentId)` pair, enforcing active enrollment requirement (`ACADEMIC-008`), cancelled session attendance rejection, atomic bulk transaction execution, and idempotent upserts.
+- **Phase 2.3 — Homework Workflow**: Built `HomeworkEntity` targeted to a `Batch`, state transitions (`draft` → `published`), explicit publication dialogs, and strict publication immutability.
+- **Phase 2.4 — Assessment & Bulk Marks Engine**: Built `TestEntity` state machine (`draft` → `scheduled` → `marks_entered` → `published`) and `MarksEntity` (`0 <= marks <= maxMarks`, max 2 decimal places). Implemented single-transaction bulk mark recording with atomic rollback and immutable published test results.
+- **Phase 2.5 — Protected Academics APIs**: Exposed 15 versioned REST API endpoints under `/api/v1/academics/...` with server-authoritative tenant context resolution (`resolveV1TenantContext`), RBAC capability guards (`withV1ReadGuard`, `withV1MutationGuard`), fail-closed 404 cross-tenant resource masking, and strict Zod validation.
+- **Phase 2.6 — Staff Academic Workspace UI**: Built responsive, accessible tabbed workspace `/academics` with 6 sub-views (`Today's Work`, `Sessions & Schedules`, `Attendance`, `Homework`, `Assessments & Marks`, `Programs & Batches`) and strongly-typed `v1AcademicsClient`.
+- **Phase 2.7 — UX / Accessibility & Security E2E Matrix**: Built `academics-adversarial-security.test.ts` (30+ threat scenarios verifying `ACADEMIC-001..015`) and Playwright E2E suite `academic-workspace-e2e.spec.ts` (verifying workspace navigation, schedule generation, bulk attendance, homework publication, assessment marks entry, screen reader ARIA semantics, and 375px mobile responsiveness).
+- **Phase 2.8 — Phase 2 Acceptance Gate & Milestone Freeze**: Executed full quality gate verification (`env:check`, `db:validate`, `db:health`, `typecheck`, `test`, `lint`, `build`). Formally ACCEPTED and FROZEN Phase 2 — Academics Module (`docs/phases/02/phase2-final-acceptance.md`).
 
 ---
 
@@ -232,14 +244,16 @@ Phase 2 builds the **daily operational engine** of CoachingOS. While Phase 0 bui
 ```text
 PHASE 2 — ACADEMICS MODULE EXECUTION ROADMAP
   ├── Phase 2.0 — Architecture & Contract Freeze              🟢 ACCEPTED & FROZEN
-  ├── Phase 2.1 — Scheduling & Session Engine (`Schedule` & `BatchSession`)
-  ├── Phase 2.2 — Session Attendance Core (`Attendance`)
-  ├── Phase 2.3 — Homework Workflow (`Homework`)
-  ├── Phase 2.4 — Assessment & Bulk Marks Engine (`Test` & `Marks`)
-  ├── Phase 2.5 — Protected Academics APIs (`/api/v1/academics/...`)
-  ├── Phase 2.6 — Staff Academic Workspace UI (Teacher & Staff Workspaces)
-  ├── Phase 2.7 — Multi-Tenant Security & Adversarial E2E Matrix
-  └── Phase 2.8 — Phase 2 Acceptance Gate & Milestone Freeze
+  ├── Phase 2.1 — Scheduling & Session Engine (`Schedule` & `BatchSession`) 🟢 ACCEPTED & FROZEN
+  ├── Phase 2.2 — Session Attendance Core (`Attendance`)       🟢 ACCEPTED & FROZEN
+  ├── Phase 2.3 — Homework Workflow (`Homework`)               🟢 ACCEPTED & FROZEN
+  ├── Phase 2.4 — Assessment & Bulk Marks Engine (`Test` & `Marks`) 🟢 ACCEPTED & FROZEN
+  ├── Phase 2.5 — Protected Academics APIs (`/api/v1/academics/...`) 🟢 ACCEPTED & FROZEN
+  ├── Phase 2.6 — Staff Academic Workspace UI (Teacher & Staff Workspaces) 🟢 ACCEPTED & FROZEN
+  ├── Phase 2.7 — UX / Accessibility & Security E2E Matrix     🟢 ACCEPTED & FROZEN
+  └── Phase 2.8 — Phase 2 Acceptance Gate & Milestone Freeze   🟢 ACCEPTED & FROZEN
+                                                        ↓
+                                                  PHASE 2 GATE (PASSED & FROZEN)
 ```
 
 ---
