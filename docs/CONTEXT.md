@@ -221,8 +221,19 @@ PHASE 3 — BILLING MODULE                                🟢 ACCEPTED & FROZEN
   └── Phase 3.8 — Phase 3 Milestone Freeze & Acceptance Gate 🟢 ACCEPTED & FROZEN
                                                         ↓
                                                   PHASE 3 GATE (PASSED & FROZEN)
-PHASE 4  Communication Module                         ⏳ UPCOMING
-    ↓
+PHASE 4 — COMMUNICATION MODULE                         🟡 IN EXECUTION
+  ├── Phase 4.0 — Architecture & Contract Freeze       🟢 ACCEPTED & FROZEN
+  ├── Phase 4.1 — Announcement Engine Core             ⏳ UPCOMING
+  ├── Phase 4.2 — Notification Core & In-App Engine    ⏳ UPCOMING
+  ├── Phase 4.3 — Child Activity Timeline Engine       ⏳ UPCOMING
+  ├── Phase 4.4 — Domain Event Integration             ⏳ UPCOMING
+  ├── Phase 4.5 — Outbound Messaging & WhatsApp        ⏳ UPCOMING
+  ├── Phase 4.6 — Protected Communication REST APIs    ⏳ UPCOMING
+  ├── Phase 4.7 — Staff Communication Workspace UI     ⏳ UPCOMING
+  ├── Phase 4.8 — Security / Privacy / UX / E2E Matrix ⏳ UPCOMING
+  └── Phase 4.9 — Phase 4 Acceptance Gate & Freeze     ⏳ UPCOMING
+                                                         ↓
+                                                   PHASE 4 GATE (IN EXECUTION)
 PHASE 5  Parent PWA                                   ⏳ UPCOMING
     ↓
 PHASE 6  Staff Dashboard & UX                         ⏳ UPCOMING
@@ -759,7 +770,19 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 3.7.1:** Security / UX / E2E Test Suite Execution 🟢 (COMPLETED & VERIFIED)
   - **Phase 3.8:** Phase 3 Acceptance Gate & Milestone Freeze 🟢 (PASSED & FROZEN)
 
-### 🟡 PHASE 4 — COMMUNICATION MODULE (UPCOMING / NEXT)
+### 🟡 PHASE 4 — COMMUNICATION MODULE (IN EXECUTION)
 
-- **Domain Contract Specification:** Pending Phase 4.0 Architecture & Contract Freeze.
+- **Domain Contract Specification:** Documented in [docs/phases/04/phase4.0-communication-contract.md](file:///home/supra/Desktop/class_os/docs/phases/04/phase4.0-communication-contract.md).
+- **Subphase Tracking Map:**
+  - **Phase 4.0:** Communication Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+  - **Phase 4.1:** Announcement Engine Core ⏳ (NEXT)
+  - **Phase 4.2:** Notification Core & In-App Engine ⏳ (UPCOMING)
+  - **Phase 4.3:** Child Activity Timeline Engine ⏳ (UPCOMING)
+  - **Phase 4.4:** Domain Event Integration & Projections ⏳ (UPCOMING)
+  - **Phase 4.5:** Outbound Messaging & WhatsApp Provider ⏳ (UPCOMING)
+  - **Phase 4.6:** Protected Communication REST APIs ⏳ (UPCOMING)
+  - **Phase 4.7:** Staff Communication Workspace UI ⏳ (UPCOMING)
+  - **Phase 4.8:** Security / Privacy / UX / E2E Matrix ⏳ (UPCOMING)
+  - **Phase 4.9:** Phase 4 Acceptance Gate & Milestone Freeze ⏳ (UPCOMING)
+
 
