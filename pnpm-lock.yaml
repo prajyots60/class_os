@@ -32,6 +32,9 @@ importers:
       '@coaching-os/billing':
         specifier: workspace:*
         version: link:../../packages/billing
+      '@coaching-os/communication':
+        specifier: workspace:*
+        version: link:../../packages/communication
       '@coaching-os/database':
         specifier: workspace:*
         version: link:../../infrastructure/database

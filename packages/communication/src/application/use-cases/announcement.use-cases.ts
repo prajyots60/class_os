@@ -140,8 +140,8 @@ export class ArchiveAnnouncementUseCase {
     }
 
     announcement.archive();
-    const saved = await this.announcementRepository.save(announcement);
-    return toAnnouncementDTO(saved);
+    await this.announcementRepository.save(announcement);
+    return toAnnouncementDTO(announcement);
   }
 }
 

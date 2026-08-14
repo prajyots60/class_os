@@ -1,4 +1,4 @@
-import type { PrismaClient, Prisma } from '@coaching-os/database';
+import { db, type PrismaClient, type Prisma } from '@coaching-os/database';
 import { ConflictError, NotFoundError } from '@coaching-os/shared';
 import { ActivityEntity } from '../../domain/entities/activity.entity';
 import type {
@@ -8,7 +8,7 @@ import type {
 import type { ActivityEventType } from '../../domain/types';
 
 export class PrismaActivityRepository implements ActivityRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaClient = db) {}
 
   public async save(activity: ActivityEntity): Promise<ActivityEntity> {
     try {
