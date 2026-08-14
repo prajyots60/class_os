@@ -206,7 +206,9 @@ PHASE 3 — BILLING MODULE                                🟡 IN EXECUTION
   ├── Phase 3.3 — Payment Engine                              🟢 COMPLETED
   │     ├── Phase 3.3.0 — Payment Architecture & Contract Freeze 🟢 ACCEPTED & FROZEN
   │     └── Phase 3.3.1 — Payment Engine Implementation       🟢 COMPLETED & VERIFIED
-  ├── Phase 3.4 — Receipt Engine                              ⏳ NEXT
+  ├── Phase 3.4 — Receipt Engine                              🟡 IN EXECUTION
+  │     ├── Phase 3.4.0 — Receipt Architecture & Contract Freeze 🟢 ACCEPTED & FROZEN
+  │     └── Phase 3.4.1 — Receipt Engine Implementation       ⏳ NEXT
   ├── Phase 3.5 — Protected Billing APIs                      ⏳ UPCOMING
   ├── Phase 3.6 — Staff Billing Workspace UI                  ⏳ UPCOMING
   ├── Phase 3.7 — Security / UX / E2E Matrix                  ⏳ UPCOMING
@@ -650,6 +652,14 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Infrastructure & Multi-Tenant Persistence**: Implemented `PrismaPaymentRepository` with row-level tenant scoping (`invoice: { billingPlan: { enrollment: { instituteId } } }`), transaction client propagation, zero database schema drift, and error mapping.
 - **Verification Matrix**: Built comprehensive unit test suite (`payment.entity.test.ts`, `payment.use-cases.test.ts`) and real PostgreSQL integration test suite (`prisma-payment.repository.integration.test.ts` with real PostgreSQL concurrency locking test). Passed 100% quality gates across `env:check`, `db:validate`, `db:health`, `typecheck`, `lint`, `test` (70 billing tests, 456 workspace tests passing), and `build`. **Phase 3.3 COMPLETED.**
 
+### 🟢 Phase 3.4.0 — Receipt Architecture & Contract Freeze (ACCEPTED & FROZEN)
+
+- **Contract Specification**: Authored and froze authoritative Phase 3.4 Receipt Engine contract in `docs/phases/03/phase3.4-receipt-contract.md`.
+- **Entity & Financial Rules**: Defined `Receipt` domain semantics (proof of payment; 1 Payment = 1 Receipt), 100% field immutability (R-020), physical deletion prohibition (R-020), dynamic presentation resolution from immutable `Payment` graph (R-017), and zero database schema drift (0 migrations).
+- **Numbering & Concurrency Strategy**: Established institute-scoped sequential receipt numbering (`REC-YYYY-SEQ`, R-016), atomic database transaction allocation, and idempotency protection (`paymentId` UNIQUE constraint, R-019).
+- **PDF & Storage Architecture**: Separated DB `Receipt` record creation from asynchronous PDF artifact compilation in Object Storage (S3/GCS) with short-lived (15-min) signed download URLs (R-018).
+- **Security & Multi-Tenancy**: Enforced direct `instituteId` tenant scoping, capability RBAC (`CAPABILITIES.RECEIPT_ISSUE`, `CAPABILITIES.RECEIPT_READ`), and `ReceiptGenerated` domain event payload (`billing.receipt.generated`, R-022). **Phase 3.4.0 ACCEPTED & FROZEN.**
+
 ---
 
 ## 4. Next Milestone Roadmap
@@ -675,7 +685,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 
 ### 🟡 PHASE 3 — BILLING MODULE (IN EXECUTION)
 
-- **Domain Contract Specification:** Documented in [docs/phases/03/phase3-billing-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3-billing-contract.md), [docs/phases/03/phase3.2-invoice-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.2-invoice-contract.md), and [docs/phases/03/phase3.3-payment-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.3-payment-contract.md).
+- **Domain Contract Specification:** Documented in [docs/phases/03/phase3-billing-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3-billing-contract.md), [docs/phases/03/phase3.2-invoice-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.2-invoice-contract.md), [docs/phases/03/phase3.3-payment-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.3-payment-contract.md), and [docs/phases/03/phase3.4-receipt-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.4-receipt-contract.md).
 - **Subphase Tracking Map:**
   - **Phase 3.0:** Billing Architecture & Domain Contract Freeze 🟢 (ACCEPTED & FROZEN)
   - **Phase 3.1:** BillingPlan Domain & Persistence 🟢 (COMPLETED)
