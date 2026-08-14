@@ -128,4 +128,67 @@ export class PrismaInvoiceRepository implements InvoiceRepository {
 
     return records.map((rec) => this.mapToDomain(rec));
   }
+
+  public async findMany(
+    instituteId: string,
+    filter?: {
+      billingPlanId?: string;
+      enrollmentId?: string;
+      studentId?: string;
+      status?: string;
+      overdue?: boolean;
+      cursor?: string;
+      limit?: number;
+    }
+  ): Promise<InvoiceEntity[]> {
+    const where: any = {
+      billingPlan: {
+        enrollment: {
+          instituteId,
+        },
+      },
+    };
+
+    if (filter?.billingPlanId) {
+      where.billingPlanId = filter.billingPlanId;
+    }
+    if (filter?.enrollmentId) {
+      where.billingPlan.enrollmentId = filter.enrollmentId;
+    }
+    if (filter?.studentId) {
+      where.billingPlan.enrollment = {
+        ...where.billingPlan.enrollment,
+        studentId: filter.studentId,
+      };
+    }
+    if (filter?.status) {
+      where.status = filter.status;
+    }
+    if (filter?.overdue !== undefined) {
+      const now = new Date();
+      if (filter.overdue) {
+        where.dueDate = { lt: now };
+        where.status = { not: 'paid' };
+      } else {
+        where.OR = [
+          { dueDate: { gte: now } },
+          { status: 'paid' },
+        ];
+      }
+    }
+
+    const records = await this.prisma.invoice.findMany({
+      where,
+      take: filter?.limit ?? 20,
+      ...(filter?.cursor
+        ? {
+            skip: 1,
+            cursor: { id: filter.cursor },
+          }
+        : {}),
+      orderBy: { dueDate: 'asc' },
+    });
+
+    return records.map((rec) => this.mapToDomain(rec));
+  }
 }

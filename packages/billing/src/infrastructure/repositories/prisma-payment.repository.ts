@@ -169,4 +169,64 @@ export class PrismaPaymentRepository implements PaymentRepository {
 
     return this.mapToDomain(record);
   }
+
+  public async findMany(
+    instituteId: string,
+    filter?: {
+      invoiceId?: string;
+      studentId?: string;
+      batchId?: string;
+      paymentMode?: PaymentMode;
+      fromDate?: Date;
+      toDate?: Date;
+      cursor?: string;
+      limit?: number;
+    }
+  ): Promise<PaymentEntity[]> {
+    const where: any = {
+      invoice: {
+        billingPlan: {
+          enrollment: {
+            instituteId,
+          },
+        },
+      },
+    };
+
+    if (filter?.invoiceId) {
+      where.invoiceId = filter.invoiceId;
+    }
+    if (filter?.studentId) {
+      where.invoice.billingPlan.enrollment.studentId = filter.studentId;
+    }
+    if (filter?.batchId) {
+      where.invoice.billingPlan.enrollment.batchId = filter.batchId;
+    }
+    if (filter?.paymentMode) {
+      where.paymentMode = filter.paymentMode;
+    }
+    if (filter?.fromDate || filter?.toDate) {
+      where.receivedOn = {};
+      if (filter.fromDate) {
+        where.receivedOn.gte = filter.fromDate;
+      }
+      if (filter.toDate) {
+        where.receivedOn.lte = filter.toDate;
+      }
+    }
+
+    const records = await this.prisma.payment.findMany({
+      where,
+      take: filter?.limit ?? 20,
+      ...(filter?.cursor
+        ? {
+            skip: 1,
+            cursor: { id: filter.cursor },
+          }
+        : {}),
+      orderBy: { receivedOn: 'desc' },
+    });
+
+    return records.map((rec) => this.mapToDomain(rec));
+  }
 }

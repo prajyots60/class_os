@@ -258,3 +258,42 @@ export class GetPaymentUseCase {
     return toPaymentDTO(payment);
   }
 }
+
+export interface ListPaymentsInput {
+  invoiceId?: string;
+  studentId?: string;
+  batchId?: string;
+  paymentMode?: PaymentMode;
+  fromDate?: string;
+  toDate?: string;
+  cursor?: string;
+  limit?: number;
+}
+
+export class ListPaymentsUseCase {
+  constructor(private readonly paymentRepository: PaymentRepository) {}
+
+  public async execute(instituteId: string, filter?: ListPaymentsInput): Promise<PaymentDTO[]> {
+    if (!instituteId?.trim()) {
+      throw new ValidationError('Institute ID is required');
+    }
+
+    const cleanInstituteId = instituteId.trim();
+    const fromDate = filter?.fromDate ? new Date(filter.fromDate) : undefined;
+    const toDate = filter?.toDate ? new Date(filter.toDate) : undefined;
+
+    const payments = await this.paymentRepository.findMany(cleanInstituteId, {
+      invoiceId: filter?.invoiceId,
+      studentId: filter?.studentId,
+      batchId: filter?.batchId,
+      paymentMode: filter?.paymentMode,
+      fromDate,
+      toDate,
+      cursor: filter?.cursor,
+      limit: filter?.limit,
+    });
+
+    return payments.map((p) => toPaymentDTO(p));
+  }
+}
+

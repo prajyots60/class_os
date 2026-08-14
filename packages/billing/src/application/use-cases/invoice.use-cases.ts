@@ -240,3 +240,27 @@ export class GetInvoiceUseCase {
     return toInvoiceDTO(invoice);
   }
 }
+
+export interface ListInvoicesInput {
+  billingPlanId?: string;
+  enrollmentId?: string;
+  studentId?: string;
+  status?: string;
+  overdue?: boolean;
+  cursor?: string;
+  limit?: number;
+}
+
+export class ListInvoicesUseCase {
+  constructor(private readonly invoiceRepository: InvoiceRepository) {}
+
+  public async execute(instituteId: string, filter?: ListInvoicesInput): Promise<InvoiceDTO[]> {
+    if (!instituteId?.trim()) {
+      throw new ValidationError('Institute ID is required');
+    }
+
+    const invoices = await this.invoiceRepository.findMany(instituteId.trim(), filter);
+    return invoices.map((inv) => toInvoiceDTO(inv));
+  }
+}
+

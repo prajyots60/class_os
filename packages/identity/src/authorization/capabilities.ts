@@ -51,6 +51,7 @@ export const CAPABILITIES = {
   // Billing, Invoices & Financials
   BILLING_READ: 'billing:read',
   BILLING_CREATE: 'billing:create',
+  BILLING_WRITE: 'billing:write',
   BILLING_UPDATE: 'billing:update',
   BILLING_CANCEL: 'billing:cancel',
   PAYMENT_READ: 'payment:read',

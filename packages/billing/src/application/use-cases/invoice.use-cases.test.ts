@@ -37,6 +37,13 @@ class InMemoryBillingPlanRepository implements BillingPlanRepository {
     this.plans.set(`${plan.instituteId}:${plan.id}`, plan);
     return plan;
   }
+
+  public async findMany(
+    instituteId: string,
+    _filter?: Record<string, unknown>
+  ): Promise<BillingPlanEntity[]> {
+    return Array.from(this.plans.values()).filter((p) => p.instituteId === instituteId);
+  }
 }
 
 class InMemoryInvoiceRepository implements InvoiceRepository {
@@ -76,6 +83,19 @@ class InMemoryInvoiceRepository implements InvoiceRepository {
       }
     }
     return results.sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
+  }
+
+  public async findMany(
+    instituteId: string,
+    _filter?: Record<string, unknown>
+  ): Promise<InvoiceEntity[]> {
+    const results: InvoiceEntity[] = [];
+    for (const [key, inv] of this.invoices.entries()) {
+      if (key.startsWith(`${instituteId}:`)) {
+        results.push(inv);
+      }
+    }
+    return results;
   }
 }
 

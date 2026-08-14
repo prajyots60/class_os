@@ -33,6 +33,20 @@ export interface BillingPlanRepository {
   findByEnrollmentId(instituteId: string, enrollmentId: string): Promise<BillingPlanEntity | null>;
 
   /**
+   * Query BillingPlan collection strictly within tenant context.
+   */
+  findMany(
+    instituteId: string,
+    filter?: {
+      enrollmentId?: string;
+      studentId?: string;
+      feeType?: string;
+      cursor?: string;
+      limit?: number;
+    }
+  ): Promise<BillingPlanEntity[]>;
+
+  /**
    * Update an existing BillingPlan entity strictly within tenant context.
    * Throws NotFoundError if plan does not exist within the specified tenant.
    */

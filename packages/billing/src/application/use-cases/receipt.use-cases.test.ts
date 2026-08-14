@@ -43,6 +43,7 @@ describe('Receipt Use Cases Unit Suite', () => {
       }),
       findByInvoiceId: vi.fn(),
       findByIdempotencyTuple: vi.fn(),
+      findMany: vi.fn(),
     };
 
     let sequenceCounter = 0;

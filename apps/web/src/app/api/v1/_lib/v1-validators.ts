@@ -201,3 +201,182 @@ export const v1ListEnrollmentsQuerySchema = z
   .strict();
 
 export type V1ListEnrollmentsQueryInput = z.infer<typeof v1ListEnrollmentsQuerySchema>;
+
+// ─── Billing ─────────────────────────────────────────────────────────────────
+
+/**
+ * GET /api/v1/billing-plans
+ */
+export const v1ListBillingPlansQuerySchema = z
+  .object({
+    enrollmentId: z.string().uuid('enrollmentId must be a valid UUID').optional(),
+    studentId: z.string().uuid('studentId must be a valid UUID').optional(),
+    feeType: z.enum(['monthly', 'one_time', 'installment']).optional(),
+    cursor: z.string().optional(),
+    limit: z.coerce
+      .number()
+      .int()
+      .positive()
+      .max(MAX_PAGE_SIZE)
+      .optional()
+      .default(DEFAULT_PAGE_SIZE),
+  })
+  .strict();
+
+export type V1ListBillingPlansQueryInput = z.infer<typeof v1ListBillingPlansQuerySchema>;
+
+/**
+ * POST /api/v1/billing-plans
+ */
+export const v1CreateBillingPlanSchema = z
+  .object({
+    enrollmentId: z.string().uuid('enrollmentId must be a valid UUID'),
+    feeType: z.enum(['monthly', 'one_time', 'installment'], {
+      message: 'feeType must be monthly, one_time, or installment',
+    }),
+    totalAmount: z.number().positive('totalAmount must be greater than 0'),
+    billingStartDate: z
+      .string()
+      .trim()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, 'billingStartDate must be YYYY-MM-DD format'),
+    installmentCount: z.number().int().min(2, 'installmentCount must be at least 2').optional().nullable(),
+    discountType: z.enum(['none', 'percentage', 'fixed']).optional().nullable(),
+    discountValue: z.number().nonnegative('discountValue cannot be negative').optional().nullable(),
+    firstInvoiceAmountOverride: z
+      .number()
+      .nonnegative('firstInvoiceAmountOverride cannot be negative')
+      .optional()
+      .nullable(),
+  })
+  .strict();
+
+export type V1CreateBillingPlanInput = z.infer<typeof v1CreateBillingPlanSchema>;
+
+/**
+ * PATCH /api/v1/billing-plans/:id
+ */
+export const v1UpdateBillingPlanSchema = z
+  .object({
+    billingStartDate: z
+      .string()
+      .trim()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, 'billingStartDate must be YYYY-MM-DD format')
+      .optional(),
+    discountType: z.enum(['none', 'percentage', 'fixed']).optional().nullable(),
+    discountValue: z.number().nonnegative('discountValue cannot be negative').optional().nullable(),
+    firstInvoiceAmountOverride: z
+      .number()
+      .nonnegative('firstInvoiceAmountOverride cannot be negative')
+      .optional()
+      .nullable(),
+  })
+  .strict()
+  .refine((data) => Object.values(data).some((v) => v !== undefined), {
+    message: 'At least one field must be provided to update',
+  });
+
+export type V1UpdateBillingPlanInput = z.infer<typeof v1UpdateBillingPlanSchema>;
+
+/**
+ * GET /api/v1/invoices
+ */
+export const v1ListInvoicesQuerySchema = z
+  .object({
+    billingPlanId: z.string().uuid('billingPlanId must be a valid UUID').optional(),
+    enrollmentId: z.string().uuid('enrollmentId must be a valid UUID').optional(),
+    studentId: z.string().uuid('studentId must be a valid UUID').optional(),
+    status: z.enum(['pending', 'partial', 'paid']).optional(),
+    overdue: z.coerce.boolean().optional(),
+    cursor: z.string().optional(),
+    limit: z.coerce
+      .number()
+      .int()
+      .positive()
+      .max(MAX_PAGE_SIZE)
+      .optional()
+      .default(DEFAULT_PAGE_SIZE),
+  })
+  .strict();
+
+export type V1ListInvoicesQueryInput = z.infer<typeof v1ListInvoicesQuerySchema>;
+
+/**
+ * POST /api/v1/invoices
+ */
+export const v1GenerateInvoiceSchema = z
+  .object({
+    billingPlanId: z.string().uuid('billingPlanId must be a valid UUID'),
+    billingPeriod: z
+      .string()
+      .trim()
+      .regex(/^\d{4}-\d{2}$/, 'billingPeriod must be YYYY-MM format')
+      .optional(),
+    installmentNumber: z.number().int().positive('installmentNumber must be at least 1').optional(),
+  })
+  .strict();
+
+export type V1GenerateInvoiceInput = z.infer<typeof v1GenerateInvoiceSchema>;
+
+/**
+ * GET /api/v1/payments
+ */
+export const v1ListPaymentsQuerySchema = z
+  .object({
+    invoiceId: z.string().uuid('invoiceId must be a valid UUID').optional(),
+    studentId: z.string().uuid('studentId must be a valid UUID').optional(),
+    batchId: z.string().uuid('batchId must be a valid UUID').optional(),
+    paymentMode: z.enum(['cash', 'upi', 'bank_transfer']).optional(),
+    fromDate: z
+      .string()
+      .trim()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, 'fromDate must be YYYY-MM-DD format')
+      .optional(),
+    toDate: z
+      .string()
+      .trim()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, 'toDate must be YYYY-MM-DD format')
+      .optional(),
+    cursor: z.string().optional(),
+    limit: z.coerce
+      .number()
+      .int()
+      .positive()
+      .max(MAX_PAGE_SIZE)
+      .optional()
+      .default(DEFAULT_PAGE_SIZE),
+  })
+  .strict();
+
+export type V1ListPaymentsQueryInput = z.infer<typeof v1ListPaymentsQuerySchema>;
+
+/**
+ * POST /api/v1/payments
+ */
+export const v1RecordPaymentSchema = z
+  .object({
+    invoiceId: z.string().uuid('invoiceId must be a valid UUID'),
+    amount: z.number().positive('amount must be greater than 0'),
+    paymentMode: z.enum(['cash', 'upi', 'bank_transfer'], {
+      message: 'paymentMode must be cash, upi, or bank_transfer',
+    }),
+    receivedOn: z
+      .string()
+      .trim()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, 'receivedOn must be YYYY-MM-DD format'),
+    remarks: z.string().trim().max(500, 'remarks cannot exceed 500 characters').optional().nullable(),
+  })
+  .strict();
+
+export type V1RecordPaymentInput = z.infer<typeof v1RecordPaymentSchema>;
+
+/**
+ * POST /api/v1/receipts
+ */
+export const v1GenerateReceiptSchema = z
+  .object({
+    paymentId: z.string().uuid('paymentId must be a valid UUID'),
+  })
+  .strict();
+
+export type V1GenerateReceiptInput = z.infer<typeof v1GenerateReceiptSchema>;
+

@@ -29,6 +29,9 @@ importers:
       '@coaching-os/auth':
         specifier: workspace:*
         version: link:../../infrastructure/auth
+      '@coaching-os/billing':
+        specifier: workspace:*
+        version: link:../../packages/billing
       '@coaching-os/database':
         specifier: workspace:*
         version: link:../../infrastructure/database

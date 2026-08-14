@@ -31,4 +31,18 @@ export interface PaymentRepository {
     instituteId: string,
     tx?: unknown
   ): Promise<PaymentEntity | null>;
+
+  findMany(
+    instituteId: string,
+    filter?: {
+      invoiceId?: string;
+      studentId?: string;
+      batchId?: string;
+      paymentMode?: PaymentMode;
+      fromDate?: Date;
+      toDate?: Date;
+      cursor?: string;
+      limit?: number;
+    }
+  ): Promise<PaymentEntity[]>;
 }

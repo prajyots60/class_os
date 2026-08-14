@@ -157,3 +157,33 @@ export class UpdateBillingPlanUseCase {
     return toBillingPlanDTO(updatedPlan);
   }
 }
+
+export interface ListBillingPlansInput {
+  instituteId: string;
+  enrollmentId?: string;
+  studentId?: string;
+  feeType?: string;
+  cursor?: string;
+  limit?: number;
+}
+
+export class ListBillingPlansUseCase {
+  constructor(private readonly billingPlanRepository: BillingPlanRepository) {}
+
+  public async execute(input: ListBillingPlansInput): Promise<BillingPlanDTO[]> {
+    if (!input.instituteId?.trim()) {
+      throw new ValidationError('Institute ID is required');
+    }
+
+    const plans = await this.billingPlanRepository.findMany(input.instituteId.trim(), {
+      enrollmentId: input.enrollmentId,
+      studentId: input.studentId,
+      feeType: input.feeType,
+      cursor: input.cursor,
+      limit: input.limit,
+    });
+
+    return plans.map((p) => toBillingPlanDTO(p));
+  }
+}
+

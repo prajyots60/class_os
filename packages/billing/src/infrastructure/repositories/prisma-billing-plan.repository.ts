@@ -147,6 +147,55 @@ export class PrismaBillingPlanRepository implements BillingPlanRepository {
     return this.mapToDomain(record);
   }
 
+  public async findMany(
+    instituteId: string,
+    filter?: {
+      enrollmentId?: string;
+      studentId?: string;
+      feeType?: string;
+      cursor?: string;
+      limit?: number;
+    }
+  ): Promise<BillingPlanEntity[]> {
+    const where: any = {
+      enrollment: {
+        instituteId,
+      },
+    };
+
+    if (filter?.enrollmentId) {
+      where.enrollmentId = filter.enrollmentId;
+    }
+    if (filter?.studentId) {
+      where.enrollment = {
+        ...where.enrollment,
+        studentId: filter.studentId,
+      };
+    }
+    if (filter?.feeType) {
+      where.type = filter.feeType;
+    }
+
+    const records = await this.prisma.billingPlan.findMany({
+      where,
+      take: filter?.limit ?? 20,
+      ...(filter?.cursor
+        ? {
+            skip: 1,
+            cursor: { id: filter.cursor },
+          }
+        : {}),
+      orderBy: { createdAt: 'desc' },
+      include: {
+        enrollment: {
+          select: { instituteId: true },
+        },
+      },
+    });
+
+    return records.map((rec) => this.mapToDomain(rec));
+  }
+
   public async update(plan: BillingPlanEntity): Promise<BillingPlanEntity> {
     // 1. Verify tenant scoping
     const existing = await this.findById(plan.instituteId, plan.id);
