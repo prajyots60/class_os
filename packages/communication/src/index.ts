@@ -19,6 +19,8 @@ export * from './application/use-cases/activity.use-cases';
 export * from './infrastructure/repositories/prisma-announcement.repository';
 export * from './infrastructure/repositories/prisma-notification.repository';
 export * from './infrastructure/repositories/prisma-activity.repository';
+export * from './infrastructure/events/communication-event-handlers';
+export * from './infrastructure/events/communication-event-subscriber';
 
 // Presentation Validators
 export * from './presentation/validators/announcement.validator';
