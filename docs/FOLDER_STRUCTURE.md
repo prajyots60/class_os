@@ -34,7 +34,7 @@ coaching-os/
 └── docs/                         ← System Architecture Specifications, Phase Contracts & ADRs
     ├── adr/                      ├── Architecture Decision Records (ADR 0001 - 0017)
     ├── api/                      ├── Canonical Public & Versioned REST API Specifications
-    └── phases/                   └── Phase Contracts & Freeze Reports (Phase 0, Phase 1, Phase 2)
+    └── phases/                   └── Phase Contracts & Freeze Reports (Phase 0, Phase 1, Phase 2, Phase 3)
 ```
 
 ---
@@ -85,6 +85,7 @@ apps/web/
 │   │   ├── (app)/                ← Authenticated application shell & workspace routes
 │   │   │   ├── (workspace)/      ← Tenant workspace views
 │   │   │   │   ├── academics/    ← Teacher & Staff Academic Workspace (`page.tsx`)
+│   │   │   │   ├── billing/      ← Staff Billing Workspace (`page.tsx`)
 │   │   │   │   ├── dashboard/    ← Tenant operational overview dashboard (`page.tsx`)
 │   │   │   │   ├── enrollments/  ← Student Enrollment lifecycle workspace (`page.tsx`)
 │   │   │   │   ├── parents/      ← Parent CRM workspace (`page.tsx`)
@@ -103,8 +104,12 @@ apps/web/
 │   │   │   └── v1/               ← Versioned Protected Integration REST APIs
 │   │   │       ├── _lib/         ← V1 tenant guards (`v1-guard.ts`) & rate limiter (`rate-limiter.ts`)
 │   │   │       ├── academics/    ← Protected Academics REST API (`schedules`, `sessions`, `attendance`, `homework`, `tests`)
+│   │   │       ├── billing-plans/← Protected BillingPlan REST API (`GET`, `POST`, `[id]`)
 │   │   │       ├── enrollments/  ← Protected Enrollment REST API
 │   │   │       ├── guardians/    ← Protected Guardian REST API
+│   │   │       ├── invoices/     ← Protected Invoice REST API (`GET`, `POST`, `[id]`)
+│   │   │       ├── payments/     ← Protected Payment REST API (`GET`, `POST`, `[id]`)
+│   │   │       ├── receipts/     ← Protected Receipt REST API (`GET`, `POST`, `[id]`)
 │   │   │       ├── staff/        ← Protected Staff REST API
 │   │   │       └── students/     ← Protected Student REST API
 │   │   ├── error.tsx             ← Global Next.js error boundary
@@ -118,6 +123,7 @@ apps/web/
 │   │   ├── academic/             ← Staff Academic Workspace sub-views, tab navigation, DTOs & API client
 │   │   ├── app-shell/            ← Header, Navigation sidebar, Tenant Context Banner
 │   │   ├── auth/                 ← Auth forms, login modals, session state components
+│   │   ├── billing/              ← Staff Billing Workspace sub-views (Overview, Plans, Invoices, Payments, Receipts), modals, DTOs & API client
 │   │   ├── dashboard/            ← Authenticated staff dashboard components
 │   │   ├── enrollment/           ← Student Enrollment lifecycle components & modals
 │   │   ├── guardian/             ← Staff Guardian management components, modals, badges, API client
@@ -251,12 +257,33 @@ packages/academics/
 └── vitest.config.ts              ← Vitest unit & integration runner config
 ```
 
+#### `packages/billing/` (Billing Domain)
+```text
+packages/billing/
+├── src/
+│   ├── application/              ← Application DTOs & Use Cases
+│   │   ├── dto/                  ← BillingPlanDTO, InvoiceDTO, PaymentDTO, ReceiptDTO
+│   │   └── use-cases/            ← CreateBillingPlan, GenerateInvoice, RecordPayment, GenerateReceipt
+│   ├── domain/                   ← Framework-Independent Business Domain
+│   │   ├── entities/             ← BillingPlanEntity, InvoiceEntity, PaymentEntity, ReceiptEntity
+│   │   ├── enums/                ← BillingType, FeeType, PaymentMode, InvoiceStatus
+│   │   ├── repositories/         ← BillingPlan, Invoice, Payment, Receipt Repository Interfaces
+│   │   └── value-objects/        ← Currency, PeriodIdentifier, ReceiptNumber Value Objects
+│   ├── infrastructure/           ← Prisma Persistence Implementations
+│   │   └── repositories/         ← Prisma repositories for BillingPlan, Invoice, Payment, Receipt
+│   ├── presentation/             ← Presentation Validators
+│   │   └── validators/           ← Zod validators for Billing Plan, Invoice, Payment, Receipt API schemas
+│   └── index.ts                  ← Explicit barrel exports
+├── package.json                  ← `@coaching-os/billing` package configuration
+├── tsconfig.json                 ← Strict TypeScript configuration
+└── vitest.config.ts              ← Vitest unit & integration runner config
+```
+
 #### Other Domain & Shared Packages
 ```text
 packages/
 ├── administration/               ← System config & staff admin domain
 ├── audit/                        ← Audit logging domain contracts
-├── billing/                      ← Billing, invoicing, & payments domain
 ├── communication/                ← WhatsApp, SMS, & announcement messaging domain
 ├── shared/                       ← Common utilities across monorepo
 │   └── src/
@@ -355,7 +382,7 @@ docs/
 | `@coaching-os/web` | Application | Presentation UI & API Route Handlers | Next.js 16, React 19, Vanilla CSS (CSS Variables) |
 | `@coaching-os/identity` | Package | Multi-tenant Identity, Memberships, RBAC, Parents, Students & Staff | TypeScript, Zod, Vitest |
 | `@coaching-os/academics` | Package | Batches, Schedules, Sessions, Attendance, Homework, Tests & Marks | TypeScript, Zod, Vitest |
-| `@coaching-os/billing` | Package | Fees, Invoices, Receipts, Payments | TypeScript, Zod |
+| `@coaching-os/billing` | Package | Billing Plans, Invoices, Receipts, Payments (Completed & Verified) | TypeScript, Zod, Vitest |
 | `@coaching-os/shared` | Package | Error Taxonomy, Result Helpers & Common Types | TypeScript |
 | `@coaching-os/ui` | Package | Design System Tokens & Primitive Components | Vanilla CSS Tokens, React 19 |
 | `@coaching-os/database` | Infrastructure | Prisma ORM 7, PostgreSQL Client Adapter | Prisma 7, pg.Pool, `@prisma/adapter-pg` |

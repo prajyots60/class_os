@@ -2,7 +2,7 @@
 
 > **Authoritative Technical & Product Summary Document**  
 > **Target Audience:** Engineering Staff, Product Lead, Architecture Reviewers, Onboarding Engineers  
-> **Status:** Phase 0 (ACCEPTED & FROZEN) | Phase 1 (ACCEPTED & FROZEN) | Phase 2 (ACCEPTED & FROZEN)  
+> **Status:** Phase 0 (ACCEPTED & FROZEN) | Phase 1 (ACCEPTED & FROZEN) | Phase 2 (ACCEPTED & FROZEN) | Phase 3 (ACCEPTED & FROZEN)  
 > **Updated:** August 14, 2026
 
 ---
@@ -44,8 +44,8 @@ PHASE 2 — ACADEMICS OPERATIONAL ENGINE                   ✅ ACCEPTED & FROZEN
   └── Build daily operational workflows (Weekly Schedules, Generated BatchSessions,
       Bulk Attendance, Batch Homework, Tests & Bulk Marks Entry).
 
-PHASE 3 — BILLING MODULE                                 ⏳ UPCOMING
-  └── Billing Plans, Monthly/Installment Invoices, Payment Receipts & Balance Tracking.
+PHASE 3 — BILLING MODULE                                 ✅ ACCEPTED & FROZEN
+  └── Billing Plans, Invoices, Payment Recording, Receipt Generation & Balance Tracking.
 
 PHASE 4 — COMMUNICATION MODULE                           ⏳ UPCOMING
   └── Announcements, Notification Pipeline & Event-Driven WhatsApp Delivery.
@@ -258,7 +258,96 @@ PHASE 2 — ACADEMICS MODULE EXECUTION ROADMAP
 
 ---
 
-## 6. Verification & Quality Standards Summary
+---
+
+## 6. What We Implemented & Achieved in Phase 3 (Billing Module)
+
+Phase 3 established the **complete financial ledger and billing engine** of CoachingOS.
+
+```text
+                             PHASE 3 FINANCIAL LEDGER GRAPH
+                                           │
+                                     BillingPlan
+                              (Fee Structure & Type)
+                                           │
+                                           ▼
+                                        Invoice
+                        (Dynamic Outstanding = Amount - SUM(Payments))
+                                           │
+                                           ▼
+                                        Payment
+                           (Immutable Money Received Record)
+                                           │
+                                           ▼
+                                        Receipt
+                         (Atomic Monotonic Number REC-YYYY-SEQ:5)
+```
+
+---
+
+### Core Areas & Business Rules of Phase 3
+
+#### 1. Billing Plan Core (`BillingPlan`)
+- **Rule:** `BillingPlan` attaches to `Enrollment` (not Student) to define fee structures (`one_time`, `monthly`, `installment`).
+- **Rule:** Stores total plan obligation amount, optional discount overrides, and installment counts. Supports cent-exact arithmetic for installment scheduling.
+
+#### 2. Invoice Engine (`Invoice`)
+- **Rule:** Invoices represent payable fee obligations. Outstanding balance is calculated dynamically ($Outstanding = Invoice.amount - \sum(Payment.amount)$) and is **never stored as a mutable DB column**.
+- **Rule:** Invoice status transitions monotonically (`pending` $\rightarrow$ `partial` $\rightarrow$ `paid`). Direct status mutation is forbidden.
+- **Rule:** Historical generated invoices remain snapshot-frozen even if BillingPlan rules update. `PATCH` and `DELETE` requests return `405 Method Not Allowed`.
+
+#### 3. Payment Engine (`Payment`)
+- **Rule:** `Payment` represents an immutable record of money received (`cash`, `upi`, `bank_transfer`).
+- **Rule:** Overpayment is strictly forbidden ($Payment.amount \le Outstanding$). Attempting to overpay returns `400 Bad Request` (`ValidationError`).
+- **Rule:** Enforces application-level tuple idempotency `(invoiceId, amount, paymentMode, receivedOn)` to prevent duplicate submission races.
+- **Rule:** Emits `billing.payment.recorded` domain event post-commit.
+
+#### 4. Receipt Engine (`Receipt`)
+- **Rule:** 1 Payment = 1 Receipt. `Receipt.paymentId` `UNIQUE` constraint enforces one-to-one mapping.
+- **Rule:** Receipt numbers follow format `REC-{YYYY}-{SEQ:5}` allocated atomically per institute via PostgreSQL row locking.
+- **Rule:** Gaps in sequence numbering resulting from transaction rollbacks are permitted per PostgreSQL atomic counter semantics.
+- **Rule:** Emits `billing.receipt.generated` domain event post-commit.
+
+#### 5. Protected Billing APIs (`/api/v1/billing-plans`, `/api/v1/invoices`, `/api/v1/payments`, `/api/v1/receipts`)
+- **Rule:** Versioned REST endpoints with server-authoritative tenant scoping (`resolveV1TenantContext`), RBAC capability authorization (`BILLING_READ`, `BILLING_WRITE`, `PAYMENT_RECORD`, `RECEIPT_READ`, `RECEIPT_ISSUE`), cross-tenant `404 Not Found` masking, method safety (`405`), and Zod `.strict()` validation.
+
+#### 6. Staff Billing Workspace UI (`/billing`)
+- **Rule:** Tabbed workspace (`Overview`, `Billing Plans`, `Invoices`, `Payments`, `Receipts`) with capability-degraded UI states, modal dialogs (`RecordPaymentModal`, `InvoiceDetailsModal`, `ReceiptDetailsModal`, `BillingPlanFormModal`), and "Billing & Fees" integration inside student details modal. Zero business logic or financial calculations in React components.
+
+---
+
+### Phase 3 Implementation Subphase Roadmap
+
+```text
+PHASE 3 — BILLING MODULE EXECUTION ROADMAP
+  ├── Phase 3.0 — Billing Architecture & Domain Contract Freeze 🟢 ACCEPTED & FROZEN
+  ├── Phase 3.1 — BillingPlan Domain & Persistence            🟢 COMPLETED & VERIFIED
+  ├── Phase 3.2 — Invoice Engine                              🟢 COMPLETED & VERIFIED
+  │     ├── Phase 3.2.0 — Invoice Architecture & Contract Freeze 🟢 ACCEPTED & FROZEN
+  │     └── Phase 3.2.1 — Invoice Engine Implementation       🟢 COMPLETED & VERIFIED
+  ├── Phase 3.3 — Payment Engine                              🟢 COMPLETED & VERIFIED
+  │     ├── Phase 3.3.0 — Payment Architecture & Contract Freeze 🟢 ACCEPTED & FROZEN
+  │     └── Phase 3.3.1 — Payment Engine Implementation       🟢 COMPLETED & VERIFIED
+  ├── Phase 3.4 — Receipt Engine                              🟢 COMPLETED & VERIFIED
+  │     ├── Phase 3.4.0 — Receipt Architecture & Contract Freeze 🟢 ACCEPTED & FROZEN
+  │     └── Phase 3.4.1 — Receipt Engine Implementation       🟢 COMPLETED & VERIFIED
+  ├── Phase 3.5 — Protected Billing APIs                      🟢 COMPLETED & VERIFIED
+  │     ├── Phase 3.5.0 — Protected Billing APIs Contract Freeze   🟢 ACCEPTED & FROZEN
+  │     └── Phase 3.5.1 — Protected Billing APIs Implementation   🟢 COMPLETED & VERIFIED
+  ├── Phase 3.6 — Staff Billing Workspace UI                  🟢 COMPLETED & VERIFIED
+  │     ├── Phase 3.6.0 — Staff Billing Workspace UI Contract Freeze 🟢 ACCEPTED & FROZEN
+  │     └── Phase 3.6.1 — Staff Billing Workspace UI Implementation  🟢 COMPLETED & VERIFIED
+  ├── Phase 3.7 — Security / UX / E2E Matrix                  🟢 COMPLETED & VERIFIED
+  │     ├── Phase 3.7.0 — Security / UX / E2E Contract Freeze       🟢 ACCEPTED & FROZEN
+  │     └── Phase 3.7.1 — Security / UX / E2E Test Suite Execution  🟢 COMPLETED & VERIFIED
+  └── Phase 3.8 — Phase 3 Milestone Freeze & Acceptance Gate 🟢 ACCEPTED & FROZEN
+                                                        ↓
+                                                  PHASE 3 GATE (PASSED & FROZEN)
+```
+
+---
+
+## 7. Verification & Quality Standards Summary
 
 Every phase and subphase in CoachingOS is governed by strict senior staff engineering standards defined in `AGENTS.md` and `ENGINEERING_PLAYBOOK.md`:
 
@@ -274,12 +363,12 @@ pnpm build              # Run Next.js App Router & package builds
 
 ---
 
-## 7. Future Horizons (Phases 3 – 7 Overview)
+## 8. Future Horizons (Phases 4 – 7 Overview)
 
 | Phase | Core Focus | Key Deliverables |
 | :--- | :--- | :--- |
-| **Phase 3** | **Billing Module** | Fee structures, billing plans, monthly/installment invoices, manual payments (Cash/UPI/Bank), receipts. |
 | **Phase 4** | **Communication Module** | Announcements, notification engine, automated WhatsApp alerts for absence, fees, and marks. |
 | **Phase 5** | **Parent PWA** | Mobile parent portal for attendance, homework, marks, fee history, and child profiles across institutes. |
 | **Phase 6** | **Staff Dashboard Polish** | Role-tailored dashboards for Founder/Owner, Teacher, and Assistant with operational analytics. |
 | **Phase 7** | **Beta & Production** | Query performance tuning, rate-limiting, security audits, and onboarding 3–5 beta institutes. |
+
