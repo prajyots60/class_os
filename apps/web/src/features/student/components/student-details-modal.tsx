@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@coaching-os/ui';
-import { X, User, Phone, Mail, MapPin, Calendar, Hash, Users } from 'lucide-react';
+import { X, User, Phone, Mail, MapPin, Calendar, Hash, Users, CreditCard } from 'lucide-react';
 import { StudentAdmissionStatusBadge, StudentStatusBadge } from './student-status-badge';
 import type { StudentDTO } from '../types/student-ui.types';
 import { StudentGuardiansList } from '../../guardian';
@@ -20,7 +20,7 @@ export function StudentDetailsModal({
   student,
   userCapabilities = [],
 }: StudentDetailsModalProps) {
-  const [activeTab, setActiveTab] = useState<'profile' | 'guardians'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'guardians' | 'billing'>('profile');
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -91,6 +91,19 @@ export function StudentDetailsModal({
           >
             <Users className="h-3.5 w-3.5" />
             <span>Guardians</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('billing')}
+            className={`pb-2.5 px-4 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 ${
+              activeTab === 'billing'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]'
+            }`}
+            data-testid="student-billing-tab"
+          >
+            <CreditCard className="h-3.5 w-3.5" />
+            <span>Billing & Fees</span>
           </button>
         </div>
 
