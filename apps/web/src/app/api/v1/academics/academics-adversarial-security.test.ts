@@ -32,7 +32,7 @@ import { GET as testsGET, POST as testsPOST } from './tests/route';
 import { PATCH as testIdPATCH, DELETE as testIdDELETE } from './tests/[id]/route';
 import { POST as testSchedulePOST } from './tests/[id]/schedule/route';
 import { POST as testPublishPOST } from './tests/[id]/publish/route';
-import { GET as marksGET, POST as marksPOST } from './tests/[id]/marks/route';
+import { POST as marksPOST } from './tests/[id]/marks/route';
 
 import { resetRateLimitStore } from '../_lib/rate-limiter';
 
