@@ -185,16 +185,18 @@ PHASE 1 — FOUNDATION & IDENTITY MODULE               🟢 ACCEPTED & FROZEN
   └── Phase 1.15 — Final Phase 1 Acceptance Gate & Freeze 🟢 (ACCEPTED & FROZEN)
                                                         ↓
                                                   PHASE 1 GATE (PASSED & FROZEN)
-PHASE 2 — ACADEMICS MODULE                             🟡 IN EXECUTION
+PHASE 2 — ACADEMICS MODULE                             🟢 ACCEPTED & FROZEN
   ├── Phase 2.0 — Architecture & Contract Freeze              🟢 ACCEPTED & FROZEN
-  ├── Phase 2.1 — Scheduling & Session Engine (`Schedule` & `BatchSession`) 🟢 ACCEPTED & COMPLETED
-  ├── Phase 2.2 — Session Attendance Core (`Attendance`)       🟢 ACCEPTED & COMPLETED
-  ├── Phase 2.3 — Homework Workflow (`Homework`)               🟢 ACCEPTED & COMPLETED
-  ├── Phase 2.4 — Assessment & Bulk Marks Engine (`Test` & `Marks`) 🟢 ACCEPTED & COMPLETED
-  ├── Phase 2.5 — Protected Academics APIs (`/api/v1/academics/...`) 🟢 ACCEPTED & COMPLETED
-  ├── Phase 2.6 — Staff Academic Workspace UI (Teacher & Staff Workspaces) ⏳ UPCOMING
-  ├── Phase 2.7 — UX / Accessibility & Security E2E Matrix     ⏳ UPCOMING
-  └── Phase 2.8 — Phase 2 Acceptance Gate & Milestone Freeze   ⏳ UPCOMING
+  ├── Phase 2.1 — Scheduling & Session Engine (`Schedule` & `BatchSession`) 🟢 ACCEPTED & FROZEN
+  ├── Phase 2.2 — Session Attendance Core (`Attendance`)       🟢 ACCEPTED & FROZEN
+  ├── Phase 2.3 — Homework Workflow (`Homework`)               🟢 ACCEPTED & FROZEN
+  ├── Phase 2.4 — Assessment & Bulk Marks Engine (`Test` & `Marks`) 🟢 ACCEPTED & FROZEN
+  ├── Phase 2.5 — Protected Academics APIs (`/api/v1/academics/...`) 🟢 ACCEPTED & FROZEN
+  ├── Phase 2.6 — Staff Academic Workspace UI (Teacher & Staff Workspaces) 🟢 ACCEPTED & FROZEN
+  ├── Phase 2.7 — UX / Accessibility & Security E2E Matrix     🟢 ACCEPTED & FROZEN
+  └── Phase 2.8 — Phase 2 Acceptance Gate & Milestone Freeze   🟢 ACCEPTED & FROZEN
+                                                        ↓
+                                                  PHASE 2 GATE (PASSED & FROZEN)
                                                         ↓
 PHASE 3  Billing Module                               ⏳ UPCOMING
     ↓
@@ -586,6 +588,12 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Publication Immutability**: Enforced visual read-only state for published homework and published test results in UI (edit/delete buttons hidden/disabled).
 - **Security & Multi-Tenant E2E Matrix**: Created unit test suite (`v1-academics-client.test.ts`) and Playwright E2E security matrix (`academic-workspace-security.spec.ts`) testing workspace navigation, attendance submission, homework publication, marks entry, and cross-tenant fail-closed 404 resource masking.
 - **Verification Gate**: Passed 100% monorepo quality gates (`env:check`, `db:validate`, `db:health`, `typecheck`, `test`, `lint`, `build`). **Phase 2.6 COMPLETED.**
+
+### 🟢 Phase 2.7 — UX / Accessibility & Security E2E Matrix (COMPLETED)
+
+- **Adversarial Security & Invariants Suite**: Built `academics-adversarial-security.test.ts` executing 30+ adversarial security scenarios verifying all 15 frozen Phase 2 invariants (`ACADEMIC-001` through `015`), multi-tenant fail-closed 404 resource isolation, scheduling bounds, attendance cancellation rules, published homework/test immutability, and numeric marks precision boundaries.
+- **Playwright E2E & Accessibility Matrix**: Implemented automated Playwright E2E matrix (`academic-workspace-e2e.spec.ts`) verifying staff workspace UI navigation, daily schedule generation, bulk attendance recording, homework drafting & explicit publication, assessment lifecycle state transitions, spreadsheet-style bulk mark entry, and screen-reader/keyboard accessibility compliance (WAI-ARIA dialog semantics, focus trap management, Escape key dismissal, dynamic contrast, and 375px mobile viewport rendering).
+- **Documentation & Verification**: Authored comprehensive security matrix & E2E report in `docs/phases/02/phase2.7-ux-accessibility-security-e2e.md`. Passed 100% monorepo quality gates (`env:check`, `db:validate`, `db:health`, `typecheck`, `test`, `lint`, `build`). **Phase 2.7 COMPLETED.**
 
 ### 🟢 Phase 2.8 — Phase 2 Acceptance Gate & Milestone Freeze (ACCEPTED & FROZEN)
 
