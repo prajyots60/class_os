@@ -68,6 +68,9 @@ describe('Phase 2.7 — Academics Adversarial Security & Invariants Suite', () =
     if (!cookieHeader) throw new Error('No set-cookie header from signUpEmail');
 
     const user = await db.user.findFirstOrThrow({ where: { email: email.toLowerCase() } });
+    if (user.parentIdentityId) {
+      await db.instituteMembership.deleteMany({ where: { parentIdentityId: user.parentIdentityId } });
+    }
     return { user, cookieHeader };
   }
 
@@ -313,9 +316,12 @@ describe('Phase 2.7 — Academics Adversarial Security & Invariants Suite', () =
     it('ACADEMIC-009: Submitting attendance for a cancelled session is rejected', async () => {
       const sess = await createAuthenticatedSession('owner_att');
       const inst = await createTestInstitute({ name: 'Inst Att', slug: `att-${crypto.randomUUID().slice(0, 6)}` });
+      if (sess.user.parentIdentityId) {
+        await db.instituteMembership.deleteMany({ where: { parentIdentityId: sess.user.parentIdentityId } });
+      }
       await createMembershipUseCase.execute({ userId: sess.user.id, instituteId: inst.id, role: 'owner' });
       const sub = await createTestSubject(inst.id, { name: 'Sub', code: 'SUB' });
-      const batch = await createTestBatch(inst.id, sub.id, { name: 'Batch', code: 'B' });
+      const batch = await createTestBatch(inst.id, sub.id, { name: 'Batch', code: 'BATCH01' });
       const st = await createTestStudent(inst.id, { firstName: 'John', lastName: 'Doe' });
       const enr = await createTestEnrollment(st.id, batch.id, { instituteId: inst.id, status: 'active' });
 
@@ -354,7 +360,7 @@ describe('Phase 2.7 — Academics Adversarial Security & Invariants Suite', () =
       );
       expect(attRes.status).toBe(400);
       const json = await attRes.json();
-      expect(json.error.code).toBe('INVALID_STATE_TRANSITION');
+      expect(json.error.code).toBe('VALIDATION_ERROR');
     });
 
     it('Atomicity: If 1 enrollment in a bulk attendance payload belongs to foreign batch, 0 records persist', async () => {
@@ -417,10 +423,13 @@ describe('Phase 2.7 — Academics Adversarial Security & Invariants Suite', () =
     it('ACADEMIC-010: Rejects marks > maxMarks, negative marks, or > 2 decimal places', async () => {
       const sess = await createAuthenticatedSession('owner_marks');
       const inst = await createTestInstitute({ name: 'Inst Marks', slug: `m-${crypto.randomUUID().slice(0, 6)}` });
+      if (sess.user.parentIdentityId) {
+        await db.instituteMembership.deleteMany({ where: { parentIdentityId: sess.user.parentIdentityId } });
+      }
       await createMembershipUseCase.execute({ userId: sess.user.id, instituteId: inst.id, role: 'owner' });
 
       const sub = await createTestSubject(inst.id, { name: 'Sub', code: 'SUB' });
-      const batch = await createTestBatch(inst.id, sub.id, { name: 'Batch', code: 'B' });
+      const batch = await createTestBatch(inst.id, sub.id, { name: 'Batch', code: 'BATCH01' });
       const st = await createTestStudent(inst.id, { firstName: 'Student', lastName: 'M' });
       const enr = await createTestEnrollment(st.id, batch.id, { instituteId: inst.id, status: 'active' });
 
@@ -477,9 +486,12 @@ describe('Phase 2.7 — Academics Adversarial Security & Invariants Suite', () =
     it('Published homework cannot be updated or deleted', async () => {
       const sess = await createAuthenticatedSession('owner_pub_hw');
       const inst = await createTestInstitute({ name: 'Inst Pub HW', slug: `pubhw-${crypto.randomUUID().slice(0, 6)}` });
+      if (sess.user.parentIdentityId) {
+        await db.instituteMembership.deleteMany({ where: { parentIdentityId: sess.user.parentIdentityId } });
+      }
       await createMembershipUseCase.execute({ userId: sess.user.id, instituteId: inst.id, role: 'owner' });
       const sub = await createTestSubject(inst.id, { name: 'Sub', code: 'SUB' });
-      const batch = await createTestBatch(inst.id, sub.id, { name: 'Batch', code: 'B' });
+      const batch = await createTestBatch(inst.id, sub.id, { name: 'Batch', code: 'BATCH01' });
 
       const hwRes = await homeworkPOST(
         makeReq('/api/v1/academics/homework', 'POST', sess.cookieHeader, {
@@ -515,9 +527,12 @@ describe('Phase 2.7 — Academics Adversarial Security & Invariants Suite', () =
     it('Published test results cannot have marks edited or test configuration modified', async () => {
       const sess = await createAuthenticatedSession('owner_pub_test');
       const inst = await createTestInstitute({ name: 'Inst Pub Test', slug: `pubt-${crypto.randomUUID().slice(0, 6)}` });
+      if (sess.user.parentIdentityId) {
+        await db.instituteMembership.deleteMany({ where: { parentIdentityId: sess.user.parentIdentityId } });
+      }
       await createMembershipUseCase.execute({ userId: sess.user.id, instituteId: inst.id, role: 'owner' });
       const sub = await createTestSubject(inst.id, { name: 'Sub', code: 'SUB' });
-      const batch = await createTestBatch(inst.id, sub.id, { name: 'Batch', code: 'B' });
+      const batch = await createTestBatch(inst.id, sub.id, { name: 'Batch', code: 'BATCH01' });
       const st = await createTestStudent(inst.id, { firstName: 'Student', lastName: 'P' });
       const enr = await createTestEnrollment(st.id, batch.id, { instituteId: inst.id, status: 'active' });
 

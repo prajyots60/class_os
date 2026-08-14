@@ -193,6 +193,10 @@ export class DeleteHomeworkUseCase {
       );
     }
 
+    if (homework.isPublished) {
+      throw new ValidationError('Cannot delete published homework. Published homework is immutable.');
+    }
+
     return this.homeworkRepository.delete(context.instituteId, homeworkId);
   }
 }

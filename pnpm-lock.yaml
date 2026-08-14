@@ -237,7 +237,26 @@ importers:
 
   packages/audit: {}
 
-  packages/billing: {}
+  packages/billing:
+    dependencies:
+      '@coaching-os/config':
+        specifier: workspace:*
+        version: link:../../infrastructure/config
+      '@coaching-os/database':
+        specifier: workspace:*
+        version: link:../../infrastructure/database
+      '@coaching-os/identity':
+        specifier: workspace:*
+        version: link:../identity
+      '@coaching-os/observability':
+        specifier: workspace:*
+        version: link:../../infrastructure/observability
+      '@coaching-os/shared':
+        specifier: workspace:*
+        version: link:../shared
+      zod:
+        specifier: ^3.24.2
+        version: 3.25.76
 
   packages/communication: {}
 

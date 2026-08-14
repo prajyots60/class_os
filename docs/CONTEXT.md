@@ -199,8 +199,8 @@ PHASE 2 — ACADEMICS MODULE                             🟢 ACCEPTED & FROZEN
                                                   PHASE 2 GATE (PASSED & FROZEN)
 PHASE 3 — BILLING MODULE                                🟡 IN EXECUTION
   ├── Phase 3.0 — Billing Architecture & Domain Contract Freeze 🟢 ACCEPTED & FROZEN
-  ├── Phase 3.1 — BillingPlan Domain & Persistence            ⏳ NEXT
-  ├── Phase 3.2 — Invoice Engine                              ⏳ UPCOMING
+  ├── Phase 3.1 — BillingPlan Domain & Persistence            🟢 COMPLETED
+  ├── Phase 3.2 — Invoice Engine                              ⏳ NEXT
   ├── Phase 3.3 — Payment Engine                              ⏳ UPCOMING
   ├── Phase 3.4 — Receipt Engine                              ⏳ UPCOMING
   ├── Phase 3.5 — Protected Billing APIs                      ⏳ UPCOMING
@@ -609,11 +609,13 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Formal Documentation**: Authored final milestone acceptance report in `docs/phases/02/phase2-final-acceptance.md`.
 - **Milestone Freeze**: Formally ACCEPTED and FROZEN Phase 2 — Academics Module. All domain entities, API contracts, database tables, and immutability rules are now locked contracts. Passed 100% monorepo quality gates (`env:check`, `db:validate`, `db:health`, `typecheck`, `test`, `lint`, `build`).
 
-### 🟢 Phase 3.0 — Billing Architecture & Domain Contract Freeze (ACCEPTED & FROZEN)
+### 🟢 Phase 3.1 — BillingPlan Domain & Persistence (COMPLETED)
 
-- **Domain Contract Specification**: Documented and froze authoritative Phase 3 Billing contract in `docs/phases/03/phase3-billing-contract.md`.
-- **Entity Model & Invariants**: Enrollment-centric billing ownership (`Enrollment 1 → 1 BillingPlan 1 → N Invoice 1 → N Payment 1 → 1 Receipt`). Defined monetary precision (`Money = Decimal`), discount types (`none`, `percentage`, `fixed`), computed outstanding balance (`outstanding = invoice.amount - SUM(payments.amount)`), and immutable financial history (`PAY-001..005`, `BIL-001..004`).
-- **Source Reconciliations**: Reconciled `/api/v1/billing-plans` route naming, derived `overdue` reporting without extra invoice states (`pending`, `partial`, `paid`), and frozen installment schedule conceptual contract. **Phase 3.0 ACCEPTED & FROZEN.**
+- **Domain Entities & Value Objects**: Implemented `BillingPlanEntity` aggregate root, `Discount` value object with decimal-safe calculations (2 decimal places rounding, non-negative bounds validation), `BillingType` ('monthly' | 'one_time' | 'installment'), and `DiscountType` ('none' | 'percentage' | 'fixed').
+- **Business Invariants**: Enforced `BIL-001` (BillingPlan strictly owned by enrollment), `BIL-002` & `BIL-003` (installment count and monthly amount payment independence), and `BIL-004` (One BillingPlan per Enrollment constraint).
+- **Application & Use Cases**: Built `CreateBillingPlanUseCase`, `GetBillingPlanUseCase`, and `UpdateBillingPlanUseCase` with structured logging (`billing.plan.create.success`) and enrollment verification.
+- **Persistence & Multi-Tenancy**: Implemented `PrismaBillingPlanRepository` with row-level tenant scoping via `enrollment: { instituteId }`, mapping Prisma errors (`P2002` → `ConflictError`, `P2025` → `NotFoundError`).
+- **Validators & Verification**: Implemented strict Zod presentation schemas (`createBillingPlanSchema`, `updateBillingPlanSchema`). Built unit test suite (`discount.vo.test.ts`, `billing-plan.entity.test.ts`, `billing-plan.use-cases.test.ts`) and PostgreSQL integration test suite (`prisma-billing-plan.repository.integration.test.ts`). Passed 100% quality gates across `env:check`, `db:validate`, `db:health`, `typecheck`, `test`, `lint`, and `build`. **Phase 3.1 COMPLETED.**
 
 ---
 
@@ -643,8 +645,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Domain Contract Specification:** Documented in [docs/phases/03/phase3-billing-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3-billing-contract.md).
 - **Subphase Tracking Map:**
   - **Phase 3.0:** Billing Architecture & Domain Contract Freeze 🟢 (ACCEPTED & FROZEN)
-  - **Phase 3.1:** BillingPlan Domain & Persistence ⏳ (NEXT)
-  - **Phase 3.2:** Invoice Engine ⏳ (UPCOMING)
+  - **Phase 3.1:** BillingPlan Domain & Persistence 🟢 (COMPLETED)
+  - **Phase 3.2:** Invoice Engine ⏳ (NEXT)
   - **Phase 3.3:** Payment Engine ⏳ (UPCOMING)
   - **Phase 3.4:** Receipt Engine ⏳ (UPCOMING)
   - **Phase 3.5:** Protected Billing APIs (`/api/v1/billing-plans`, `/api/v1/invoices`, `/api/v1/payments`, `/api/v1/receipts`) ⏳ (UPCOMING)
