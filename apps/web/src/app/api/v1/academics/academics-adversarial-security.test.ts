@@ -78,8 +78,9 @@ describe('Phase 2.7 — Academics Adversarial Security & Invariants Suite', () =
     body?: unknown,
     customHeaders?: Record<string, string>,
   ): NextRequest {
+    resetRateLimitStore();
     const headers = new Headers();
-    headers.set('x-forwarded-for', `10.0.0.${Math.floor(Math.random() * 250) + 1}`);
+    headers.set('x-forwarded-for', `10.${Math.floor(Math.random() * 200)}.${Math.floor(Math.random() * 200)}.${Math.floor(Math.random() * 200) + 1}`);
     if (cookieHeader) headers.set('cookie', cookieHeader);
     if (body) headers.set('content-type', 'application/json');
     if (customHeaders) {

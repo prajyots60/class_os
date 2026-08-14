@@ -27,6 +27,7 @@ import {
   PrismaInstituteMembershipRepository,
 } from '@coaching-os/identity';
 import { auth } from '@coaching-os/auth';
+import { resetRateLimitStore } from '../_lib/rate-limiter';
 
 // Route Handlers
 import { GET as schedulesGET, POST as schedulesPOST } from './schedules/route';
@@ -80,8 +81,9 @@ describe('Phase 2.5 — Protected Academics APIs Security & Integration Suite', 
   }
 
   function makeReq(url: string, method: string, cookieHeader?: string, body?: unknown): NextRequest {
+    resetRateLimitStore();
     const headers = new Headers();
-    headers.set('x-forwarded-for', `10.0.1.${Math.floor(Math.random() * 250) + 1}`);
+    headers.set('x-forwarded-for', `10.${Math.floor(Math.random() * 200)}.${Math.floor(Math.random() * 200)}.${Math.floor(Math.random() * 200) + 1}`);
     if (cookieHeader) headers.set('cookie', cookieHeader);
     if (body) headers.set('content-type', 'application/json');
 
