@@ -200,7 +200,9 @@ PHASE 2 — ACADEMICS MODULE                             🟢 ACCEPTED & FROZEN
 PHASE 3 — BILLING MODULE                                🟡 IN EXECUTION
   ├── Phase 3.0 — Billing Architecture & Domain Contract Freeze 🟢 ACCEPTED & FROZEN
   ├── Phase 3.1 — BillingPlan Domain & Persistence            🟢 COMPLETED
-  ├── Phase 3.2 — Invoice Engine                              ⏳ NEXT
+  ├── Phase 3.2 — Invoice Engine                              🟡 IN EXECUTION
+  │     ├── Phase 3.2.0 — Invoice Architecture & Contract Freeze 🟢 ACCEPTED & FROZEN
+  │     └── Phase 3.2.1 — Invoice Engine Implementation       ⏳ NEXT
   ├── Phase 3.3 — Payment Engine                              ⏳ UPCOMING
   ├── Phase 3.4 — Receipt Engine                              ⏳ UPCOMING
   ├── Phase 3.5 — Protected Billing APIs                      ⏳ UPCOMING
@@ -617,6 +619,13 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Persistence & Multi-Tenancy**: Implemented `PrismaBillingPlanRepository` with row-level tenant scoping via `enrollment: { instituteId }`, mapping Prisma errors (`P2002` → `ConflictError`, `P2025` → `NotFoundError`).
 - **Validators & Verification**: Implemented strict Zod presentation schemas (`createBillingPlanSchema`, `updateBillingPlanSchema`). Built unit test suite (`discount.vo.test.ts`, `billing-plan.entity.test.ts`, `billing-plan.use-cases.test.ts`) and PostgreSQL integration test suite (`prisma-billing-plan.repository.integration.test.ts`). Passed 100% quality gates across `env:check`, `db:validate`, `db:health`, `typecheck`, `test`, `lint`, and `build`. **Phase 3.1 COMPLETED.**
 
+### 🟢 Phase 3.2.0 — Invoice Architecture & Contract Freeze (ACCEPTED & FROZEN)
+
+- **Contract Specification**: Authored and froze authoritative Phase 3.2 Invoice Engine contract in `docs/phases/03/phase3.2-invoice-contract.md`.
+- **Entity & Financial Snapshot**: Defined `Invoice` model semantics, strict status machine (`pending` | `partial` | `paid`), computed outstanding balance (`outstanding = invoice.amount - SUM(payments.amount)`), derived overdue reporting (`dueDate < today AND status != 'paid'`), and financial immutability.
+- **Generation & Idempotency Rules**: Documented exact generation rules for `one_time` (idempotency key `billingPlanId`), `monthly` (idempotency key `(billingPlanId, YYYY-MM)` with month-end date capping), and `installment` (idempotency key `(billingPlanId, installmentNumber)`), plus `firstInvoiceAmountOverride` precedence.
+- **Security & Multi-Tenancy**: Enforced server-authoritative tenant scoping (`billingPlan: { enrollment: { instituteId } }`), capability RBAC (`CAPABILITIES.BILLING_READ`, `CAPABILITIES.BILLING_WRITE`), single-use-case transaction boundary, and `InvoiceGenerated` domain event payload. **Phase 3.2.0 ACCEPTED & FROZEN.**
+
 ---
 
 ## 4. Next Milestone Roadmap
@@ -642,11 +651,13 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 
 ### 🟡 PHASE 3 — BILLING MODULE (IN EXECUTION)
 
-- **Domain Contract Specification:** Documented in [docs/phases/03/phase3-billing-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3-billing-contract.md).
+- **Domain Contract Specification:** Documented in [docs/phases/03/phase3-billing-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3-billing-contract.md) and [docs/phases/03/phase3.2-invoice-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.2-invoice-contract.md).
 - **Subphase Tracking Map:**
   - **Phase 3.0:** Billing Architecture & Domain Contract Freeze 🟢 (ACCEPTED & FROZEN)
   - **Phase 3.1:** BillingPlan Domain & Persistence 🟢 (COMPLETED)
-  - **Phase 3.2:** Invoice Engine ⏳ (NEXT)
+  - **Phase 3.2:** Invoice Engine 🟡 (IN EXECUTION)
+    - **Phase 3.2.0:** Invoice Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 3.2.1:** Invoice Engine Implementation ⏳ (NEXT)
   - **Phase 3.3:** Payment Engine ⏳ (UPCOMING)
   - **Phase 3.4:** Receipt Engine ⏳ (UPCOMING)
   - **Phase 3.5:** Protected Billing APIs (`/api/v1/billing-plans`, `/api/v1/invoices`, `/api/v1/payments`, `/api/v1/receipts`) ⏳ (UPCOMING)
