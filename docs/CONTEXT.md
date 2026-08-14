@@ -197,9 +197,17 @@ PHASE 2 — ACADEMICS MODULE                             🟢 ACCEPTED & FROZEN
   └── Phase 2.8 — Phase 2 Acceptance Gate & Milestone Freeze   🟢 ACCEPTED & FROZEN
                                                         ↓
                                                   PHASE 2 GATE (PASSED & FROZEN)
+PHASE 3 — BILLING MODULE                                🟡 IN EXECUTION
+  ├── Phase 3.0 — Billing Architecture & Domain Contract Freeze 🟢 ACCEPTED & FROZEN
+  ├── Phase 3.1 — BillingPlan Domain & Persistence            ⏳ NEXT
+  ├── Phase 3.2 — Invoice Engine                              ⏳ UPCOMING
+  ├── Phase 3.3 — Payment Engine                              ⏳ UPCOMING
+  ├── Phase 3.4 — Receipt Engine                              ⏳ UPCOMING
+  ├── Phase 3.5 — Protected Billing APIs                      ⏳ UPCOMING
+  ├── Phase 3.6 — Staff Billing Workspace UI                  ⏳ UPCOMING
+  ├── Phase 3.7 — Security / UX / E2E Matrix                  ⏳ UPCOMING
+  └── Phase 3.8 — Phase 3 Acceptance Gate & Milestone Freeze   ⏳ UPCOMING
                                                         ↓
-PHASE 3  Billing Module                               ⏳ UPCOMING
-    ↓
 PHASE 4  Communication Module                         ⏳ UPCOMING
     ↓
 PHASE 5  Parent PWA                                   ⏳ UPCOMING
@@ -601,6 +609,12 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Formal Documentation**: Authored final milestone acceptance report in `docs/phases/02/phase2-final-acceptance.md`.
 - **Milestone Freeze**: Formally ACCEPTED and FROZEN Phase 2 — Academics Module. All domain entities, API contracts, database tables, and immutability rules are now locked contracts. Passed 100% monorepo quality gates (`env:check`, `db:validate`, `db:health`, `typecheck`, `test`, `lint`, `build`).
 
+### 🟢 Phase 3.0 — Billing Architecture & Domain Contract Freeze (ACCEPTED & FROZEN)
+
+- **Domain Contract Specification**: Documented and froze authoritative Phase 3 Billing contract in `docs/phases/03/phase3-billing-contract.md`.
+- **Entity Model & Invariants**: Enrollment-centric billing ownership (`Enrollment 1 → 1 BillingPlan 1 → N Invoice 1 → N Payment 1 → 1 Receipt`). Defined monetary precision (`Money = Decimal`), discount types (`none`, `percentage`, `fixed`), computed outstanding balance (`outstanding = invoice.amount - SUM(payments.amount)`), and immutable financial history (`PAY-001..005`, `BIL-001..004`).
+- **Source Reconciliations**: Reconciled `/api/v1/billing-plans` route naming, derived `overdue` reporting without extra invoice states (`pending`, `partial`, `paid`), and frozen installment schedule conceptual contract. **Phase 3.0 ACCEPTED & FROZEN.**
+
 ---
 
 ## 4. Next Milestone Roadmap
@@ -623,4 +637,18 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 2.6:** Staff Academic Workspace UI (Teacher & Staff Workspaces) 🟢 (ACCEPTED & FROZEN)
   - **Phase 2.7:** UX / Accessibility & Security E2E Matrix 🟢 (ACCEPTED & FROZEN)
   - **Phase 2.8:** Phase 2 Acceptance Gate & Milestone Freeze 🟢 (ACCEPTED & FROZEN)
+
+### 🟡 PHASE 3 — BILLING MODULE (IN EXECUTION)
+
+- **Domain Contract Specification:** Documented in [docs/phases/03/phase3-billing-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3-billing-contract.md).
+- **Subphase Tracking Map:**
+  - **Phase 3.0:** Billing Architecture & Domain Contract Freeze 🟢 (ACCEPTED & FROZEN)
+  - **Phase 3.1:** BillingPlan Domain & Persistence ⏳ (NEXT)
+  - **Phase 3.2:** Invoice Engine ⏳ (UPCOMING)
+  - **Phase 3.3:** Payment Engine ⏳ (UPCOMING)
+  - **Phase 3.4:** Receipt Engine ⏳ (UPCOMING)
+  - **Phase 3.5:** Protected Billing APIs (`/api/v1/billing-plans`, `/api/v1/invoices`, `/api/v1/payments`, `/api/v1/receipts`) ⏳ (UPCOMING)
+  - **Phase 3.6:** Staff Billing Workspace UI ⏳ (UPCOMING)
+  - **Phase 3.7:** Security / UX / E2E Matrix ⏳ (UPCOMING)
+  - **Phase 3.8:** Phase 3 Acceptance Gate & Milestone Freeze ⏳ (UPCOMING)
 
