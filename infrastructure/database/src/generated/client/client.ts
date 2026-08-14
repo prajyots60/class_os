@@ -187,6 +187,11 @@ export type Announcement = Prisma.AnnouncementModel
  */
 export type Notification = Prisma.NotificationModel
 /**
+ * Model Activity
+ * 
+ */
+export type Activity = Prisma.ActivityModel
+/**
  * Model Settings
  * 
  */

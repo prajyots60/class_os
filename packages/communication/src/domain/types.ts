@@ -12,3 +12,12 @@ export type NotificationCategory =
   | 'emergency'
   | 'general';
 export type NotificationChannel = 'in_app';
+
+export type ActivityEventType =
+  | 'attendance_absent'
+  | 'attendance_present'
+  | 'homework_assigned'
+  | 'test_result'
+  | 'fee_payment'
+  | 'receipt_issued'
+  | 'announcement';

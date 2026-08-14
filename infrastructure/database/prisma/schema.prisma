@@ -248,6 +248,7 @@ model Institute {
   receipts            Receipt[]
   announcements       Announcement[]
   notifications       Notification[]
+  activities          Activity[]
   settings            Settings?
   branding            Branding?
   auditLogs           AuditLog[]
@@ -405,6 +406,7 @@ model Student {
   parents      InstituteParentStudent[]
   enrollments  Enrollment[]
   studentLinks StudentLink[]
+  activities   Activity[]
 
   @@unique([instituteId, admissionNumber], name: "student_admission_number_unique")
   @@index([instituteId, status])
@@ -780,6 +782,27 @@ model Notification {
   @@index([instituteId, recipientUserId, isRead])
   @@index([instituteId, recipientUserId, createdAt])
   @@map("notifications")
+}
+
+model Activity {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instituteId    String   @map("institute_id") @db.Uuid
+  studentId      String   @map("student_id") @db.Uuid
+  eventType      String   @map("event_type") @db.VarChar(50)
+  title          String   @db.VarChar(255)
+  description    String   @db.Text
+  occurredAt     DateTime @map("occurred_at")
+  actorName      String?  @map("actor_name") @db.VarChar(255)
+  metadata       Json?
+  idempotencyKey String?  @map("idempotency_key") @db.VarChar(255)
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  institute Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  student   Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([instituteId, studentId, idempotencyKey])
+  @@index([instituteId, studentId, occurredAt(sort: Desc), id(sort: Desc)])
+  @@map("activities")
 }
 
 model Settings {

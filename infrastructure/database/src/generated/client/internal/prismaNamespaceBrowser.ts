@@ -80,6 +80,7 @@ export const ModelName = {
   Receipt: 'Receipt',
   Announcement: 'Announcement',
   Notification: 'Notification',
+  Activity: 'Activity',
   Settings: 'Settings',
   Branding: 'Branding',
   AuditLog: 'AuditLog'
@@ -534,6 +535,23 @@ export const NotificationScalarFieldEnum = {
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const ActivityScalarFieldEnum = {
+  id: 'id',
+  instituteId: 'instituteId',
+  studentId: 'studentId',
+  eventType: 'eventType',
+  title: 'title',
+  description: 'description',
+  occurredAt: 'occurredAt',
+  actorName: 'actorName',
+  metadata: 'metadata',
+  idempotencyKey: 'idempotencyKey',
+  createdAt: 'createdAt'
+} as const
+
+export type ActivityScalarFieldEnum = (typeof ActivityScalarFieldEnum)[keyof typeof ActivityScalarFieldEnum]
 
 
 export const SettingsScalarFieldEnum = {

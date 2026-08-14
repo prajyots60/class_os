@@ -67,6 +67,8 @@ export const CAPABILITIES = {
   ANNOUNCEMENT_PUBLISH: 'announcement:publish',
   NOTIFICATION_READ: 'notification:read',
   NOTIFICATION_MANAGE: 'notification:manage',
+  ACTIVITY_READ: 'activity:read',
+  ACTIVITY_MANAGE: 'activity:manage',
   AUDIT_READ: 'audit:read',
 
   // Parent CRM Management (Phase 1.7)
@@ -140,6 +142,7 @@ export type CapabilityResource =
   | 'receipt'
   | 'announcement'
   | 'notification'
+  | 'activity'
   | 'audit';
 
 export type CapabilityAction =
@@ -189,6 +192,7 @@ const ALL_RESOURCES_SET: ReadonlySet<string> = new Set([
   'receipt',
   'announcement',
   'notification',
+  'activity',
   'audit',
 ]);
 
