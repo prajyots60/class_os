@@ -680,6 +680,36 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **API Surface & Reconciliations**: Documented `/api/v1/billing-plans` (R-API-001 canonical terminology), `/api/v1/invoices`, `/api/v1/payments`, `/api/v1/receipts` route matrix, Zod validation schemas, ADR-0015 `apiSuccess` / `apiCollection` response envelopes, and cursor pagination.
 - **Security & Multi-Tenancy**: Enforced server-authoritative tenant scoping (`resolveV1TenantContext`), capability authorization (`CAPABILITIES.BILLING_READ`, `BILLING_WRITE`, `PAYMENT_RECORD`, `RECEIPT_READ`, `RECEIPT_ISSUE`), cross-tenant 404 masking, method safety (`PATCH`/`DELETE` prohibited on financial records), rate limiting, and structured audit logging. **Phase 3.5.0 ACCEPTED & FROZEN.**
 
+### 🟢 Phase 3.5.1 — Protected Billing APIs Implementation (COMPLETED & VERIFIED)
+
+- **HTTP API Surface**: Implemented `/api/v1/billing-plans`, `/api/v1/billing-plans/[id]`, `/api/v1/invoices`, `/api/v1/invoices/[id]`, `/api/v1/payments`, `/api/v1/payments/[id]`, `/api/v1/receipts`, `/api/v1/receipts/[id]` Next.js App Router v1 API routes using `@coaching-os/billing` domain use cases.
+- **Security & Tenancy**: Enforced `withV1ReadGuard` and `withV1MutationGuard` server-side context resolution (`resolveV1TenantContext`), capability authorization (`CAPABILITIES.BILLING_READ`, `BILLING_WRITE`, `PAYMENT_RECORD`, `RECEIPT_READ`, `RECEIPT_ISSUE`), cross-tenant `404 Not Found` masking, client `instituteId` non-trust, method safety (`PATCH`/`DELETE` returning `405 Method Not Allowed`), and Zod `.strict()` input validation.
+- **Verification Matrix**: Built integration test suite (`billing-routes.test.ts` with 17 tests). Passed 100% monorepo quality gates. **Phase 3.5 COMPLETED.**
+
+### 🟢 Phase 3.6.0 — Staff Billing Workspace UI Architecture & UX Contract Freeze (ACCEPTED & FROZEN)
+
+- **Contract Specification**: Authored and froze authoritative Phase 3.6 Staff Billing Workspace UI contract in `docs/phases/03/phase3.6-ui-contract.md`.
+- **UI Architecture & UX Boundaries**: Defined tabbed workspace (`/billing`: Overview, Plans, Invoices, Payments, Receipts), modal dialog specifications (`RecordPaymentModal`, `InvoiceDetailsModal`, `ReceiptDetailsModal`, `BillingPlanFormModal`), capability-degraded UI states, and token-driven CSS styling (`@coaching-os/ui`). Zero business logic or financial calculations in React components. **Phase 3.6.0 ACCEPTED & FROZEN.**
+
+### 🟢 Phase 3.6.1 — Staff Billing Workspace UI Implementation (COMPLETED & VERIFIED)
+
+- **Component Tree & Integrations**: Implemented `BillingWorkspace`, `BillingOverviewView`, `BillingPlansView`, `InvoicesView`, `PaymentsView`, `ReceiptsView`, `RecordPaymentModal`, `InvoiceDetailsModal`, `ReceiptDetailsModal`, `BillingPlanFormModal`, `BillingPlanUpdateModal`, and `GenerateInvoiceModal` in `apps/web/src/features/billing/components/`. Integrated "Billing & Fees" tab into `student-details-modal.tsx`.
+- **Verification Matrix**: Built UI unit test suite (`billing-workspace.test.tsx` with 11 tests passing). Passed 100% quality gates across all 13 monorepo packages. **Phase 3.6 COMPLETED.**
+
+### 🟢 Phase 3.7.0 — Security / UX / E2E Matrix Architecture & Acceptance Freeze (ACCEPTED & FROZEN)
+
+- **Contract Specification**: Authored and froze authoritative Phase 3.7 Security / UX / E2E Acceptance Contract in `docs/phases/03/phase3.7-security-ux-e2e-contract.md`.
+- **Audit Reconciliations**: Reconciled explicit audit items: `R-REC-001` (receipt sequence rollback gap behavior), `R-FIN-004` (payment tuple idempotency boundary), and `R-FIN-005` (stale balance status standard). Defined security threat matrix (T-001 to T-014) and E2E journey matrix (E2E-001 to E2E-014). **Phase 3.7.0 ACCEPTED & FROZEN.**
+
+### 🟢 Phase 3.7.1 — Security / UX / E2E Test Suite Execution & Adversarial Verification (COMPLETED & VERIFIED)
+
+- **Adversarial Security Test Execution**: Authored and executed `apps/web/src/app/api/v1/billing-security-adversarial.test.ts` (11 tests passing) verifying cross-tenant IDOR masking (`404`), capability authorization (`403`), overpayment rejection (`400`), concurrent payment race safety, idempotency tuple retry, receipt sequencing (`REC-2026-XXXXX`), HTTP method safety (`405`), and integer cent arithmetic ($₹10,000 / 3 = ₹3,333.34 + ₹3,333.33 + ₹3,333.33$).
+- **Final Report & Gate**: Published [`docs/phases/03/phase3.7-security-ux-e2e-report.md`](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.7-security-ux-e2e-report.md). Passed 100% monorepo quality gates (`env:check`, `db:validate`, `db:health`, `test` with 460/460 passed, `typecheck`, `lint`, `build`). **Phase 3.7 COMPLETED & FROZEN.**
+
+### 🟢 Phase 3.8 — Phase 3 Milestone Freeze & Final Acceptance Gate (PASSED & FROZEN)
+
+- **Milestone Completion**: All subphases (3.0 through 3.7.1) completed, verified, and frozen. Zero schema drift, zero unhandled exceptions, zero unverified security claims. **PHASE 3 BILLING MODULE PASSED & FROZEN.**
+
 ---
 
 ## 4. Next Milestone Roadmap
@@ -703,19 +733,19 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 2.7:** UX / Accessibility & Security E2E Matrix 🟢 (ACCEPTED & FROZEN)
   - **Phase 2.8:** Phase 2 Acceptance Gate & Milestone Freeze 🟢 (ACCEPTED & FROZEN)
 
-### 🟡 PHASE 3 — BILLING MODULE (IN EXECUTION)
+### 🟢 PHASE 3 — BILLING MODULE (ACCEPTED & FROZEN)
 
-- **Domain Contract Specification:** Documented in [docs/phases/03/phase3-billing-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3-billing-contract.md), [docs/phases/03/phase3.2-invoice-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.2-invoice-contract.md), [docs/phases/03/phase3.3-payment-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.3-payment-contract.md), [docs/phases/03/phase3.4-receipt-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.4-receipt-contract.md), and [docs/phases/03/phase3.5-api-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.5-api-contract.md).
+- **Domain Contract Specification:** Documented in [docs/phases/03/phase3-billing-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3-billing-contract.md), [docs/phases/03/phase3.2-invoice-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.2-invoice-contract.md), [docs/phases/03/phase3.3-payment-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.3-payment-contract.md), [docs/phases/03/phase3.4-receipt-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.4-receipt-contract.md), [docs/phases/03/phase3.5-api-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.5-api-contract.md), [docs/phases/03/phase3.6-ui-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.6-ui-contract.md), [docs/phases/03/phase3.7-security-ux-e2e-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.7-security-ux-e2e-contract.md), and [docs/phases/03/phase3.7-security-ux-e2e-report.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.7-security-ux-e2e-report.md).
 - **Subphase Tracking Map:**
   - **Phase 3.0:** Billing Architecture & Domain Contract Freeze 🟢 (ACCEPTED & FROZEN)
-  - **Phase 3.1:** BillingPlan Domain & Persistence 🟢 (COMPLETED)
+  - **Phase 3.1:** BillingPlan Domain & Persistence 🟢 (COMPLETED & VERIFIED)
   - **Phase 3.2:** Invoice Engine 🟢 (COMPLETED & FROZEN)
     - **Phase 3.2.0:** Invoice Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     - **Phase 3.2.1:** Invoice Engine Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 3.3:** Payment Engine 🟢 (COMPLETED)
+  - **Phase 3.3:** Payment Engine 🟢 (COMPLETED & VERIFIED)
     - **Phase 3.3.0:** Payment Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     - **Phase 3.3.1:** Payment Engine Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 3.4:** Receipt Engine 🟢 (COMPLETED)
+  - **Phase 3.4:** Receipt Engine 🟢 (COMPLETED & VERIFIED)
     - **Phase 3.4.0:** Receipt Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
     - **Phase 3.4.1:** Receipt Engine Implementation 🟢 (COMPLETED & VERIFIED)
   - **Phase 3.5:** Protected Billing APIs (`/api/v1/billing-plans`, `/api/v1/invoices`, `/api/v1/payments`, `/api/v1/receipts`) 🟢 (COMPLETED & VERIFIED)
@@ -724,7 +754,12 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 3.6:** Staff Billing Workspace UI 🟢 (COMPLETED & VERIFIED)
     - **Phase 3.6.0:** Staff Billing Workspace UI Architecture & UX Contract Freeze 🟢 (ACCEPTED & FROZEN)
     - **Phase 3.6.1:** Staff Billing Workspace UI Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 3.7:** Security / UX / E2E Matrix 🟡 (IN EXECUTION)
+  - **Phase 3.7:** Security / UX / E2E Matrix 🟢 (COMPLETED & VERIFIED)
     - **Phase 3.7.0:** Security / UX / E2E Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 3.7.1:** Security / UX / E2E Test Suite ⏳ (NEXT)
-  - **Phase 3.8:** Phase 3 Acceptance Gate & Milestone Freeze ⏳ (UPCOMING)
+    - **Phase 3.7.1:** Security / UX / E2E Test Suite Execution 🟢 (COMPLETED & VERIFIED)
+  - **Phase 3.8:** Phase 3 Acceptance Gate & Milestone Freeze 🟢 (PASSED & FROZEN)
+
+### 🟡 PHASE 4 — COMMUNICATION MODULE (UPCOMING / NEXT)
+
+- **Domain Contract Specification:** Pending Phase 4.0 Architecture & Contract Freeze.
+
