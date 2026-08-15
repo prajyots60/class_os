@@ -2,8 +2,8 @@
 
 > **Authoritative Technical & Product Summary Document**  
 > **Target Audience:** Engineering Staff, Product Lead, Architecture Reviewers, Onboarding Engineers  
-> **Status:** Phase 0 (ACCEPTED & FROZEN) | Phase 1 (ACCEPTED & FROZEN) | Phase 2 (ACCEPTED & FROZEN) | Phase 3 (ACCEPTED & FROZEN)  
-> **Updated:** August 14, 2026
+> **Status:** Phase 0 (ACCEPTED & FROZEN) | Phase 1 (ACCEPTED & FROZEN) | Phase 2 (ACCEPTED & FROZEN) | Phase 3 (ACCEPTED & FROZEN) | Phase 4 (ACCEPTED & FROZEN)  
+> **Updated:** August 15, 2026
 
 ---
 
@@ -47,10 +47,10 @@ PHASE 2 — ACADEMICS OPERATIONAL ENGINE                   ✅ ACCEPTED & FROZEN
 PHASE 3 — BILLING MODULE                                 ✅ ACCEPTED & FROZEN
   └── Billing Plans, Invoices, Payment Recording, Receipt Generation & Balance Tracking.
 
-PHASE 4 — COMMUNICATION MODULE                           ⏳ UPCOMING
-  └── Announcements, Notification Pipeline & Event-Driven WhatsApp Delivery.
+PHASE 4 — COMMUNICATION MODULE                           ✅ ACCEPTED & FROZEN
+  └── Announcements, Notification Engine, Child Activity Timeline & Outbound WhatsApp Queue.
 
-PHASE 5 — PARENT PWA                                     ⏳ UPCOMING
+PHASE 5 — PARENT PWA                                     ⏳ UPCOMING (ACTIVE FOCUS)
   └── Mobile-first Parent Portal across multi-institute child profiles.
 
 PHASE 6 — STAFF DASHBOARD POLISH                         ⏳ UPCOMING
@@ -347,7 +347,81 @@ PHASE 3 — BILLING MODULE EXECUTION ROADMAP
 
 ---
 
-## 7. Verification & Quality Standards Summary
+## 7. What We Implemented & Achieved in Phase 4 (Communication Module)
+
+Phase 4 established the **complete communication engine, notification core, child activity feed, and outbound messaging pipeline** of CoachingOS.
+
+```text
+                               PHASE 4 COMMUNICATION GRAPH
+                                            │
+                                    Upstream Domain Events
+                           (Academics & Billing Domain Events)
+                                            │
+                                            ▼
+                             Communication Event Subscribers
+                                            │
+                       ┌────────────────────┴────────────────────┐
+                       ▼                                         ▼
+            Activity Projection                        Notification Projection
+            (Append-Only Ledger)                       (Recipient In-App Feed)
+                       │                                         │
+                       ▼                                         ▼
+            Student Activity Feed                     Outbound Message Queue
+            (/api/v1/students/{id}/activities)        (Internal WhatsApp Delivery Worker)
+```
+
+---
+
+### Core Areas & Business Rules of Phase 4
+
+#### 1. Announcement Engine (`Announcement`)
+- **Rule:** Authoring state machine: `draft` $\rightarrow$ `published` $\rightarrow$ `archived`.
+- **Rule:** Supports institute-wide or batch-targeted notice distribution with optional attachments. Published and archived notices are strictly immutable.
+
+#### 2. Notification Core & In-App Engine (`Notification`)
+- **Rule:** Recipient-isolated notification records created via event projections or system notifications.
+- **Rule:** Provides unread count tracking and idempotent mark-as-read transitions (`POST /api/v1/communication/notifications/{id}/read`).
+
+#### 3. Child Activity Timeline Engine (`Activity`)
+- **Rule:** Append-only student activity ledger tracking key milestones (attendance, homework, assessments, billing payments).
+- **Rule:** Read-only access via `/api/v1/students/{id}/activities`. `POST`, `PUT`, `PATCH`, and `DELETE` requests return `405 Method Not Allowed`.
+
+#### 4. Outbound Messaging & WhatsApp Provider (`OutboundMessageQueue`)
+- **Rule:** Asynchronous queue worker processing outbound WhatsApp messages (`MetaWhatsAppProvider` and `MockWhatsAppProvider`).
+- **Rule:** Failure isolation guarantees that provider API timeouts or HTTP errors never roll back or corrupt core business transactions, notifications, or activity projections.
+
+#### 5. Protected Communication REST APIs (`/api/v1/communication/*` & `/api/v1/students/{id}/activities`)
+- **Rule:** Versioned REST endpoints with server-authoritative tenant context resolution (`resolveV1TenantContext`), capability authorization (`ANNOUNCEMENT_READ`, `ANNOUNCEMENT_CREATE`, `NOTIFICATION_READ`, `ACTIVITY_READ`), cross-tenant `404 Not Found` masking, and strict Zod validation.
+
+#### 6. Staff Communication Workspace UI (`/communication`)
+- **Rule:** Staff UI views (`Announcements`, `Notifications`, `Student Activity Timeline`) built with React 19 / Next.js 16 App Router, capability-degraded controls, and `v1CommunicationClient`.
+
+---
+
+### Phase 4 Implementation Subphase Roadmap
+
+```text
+PHASE 4 — COMMUNICATION MODULE EXECUTION ROADMAP
+  ├── Phase 4.0 — Architecture & Contract Freeze              🟢 ACCEPTED & FROZEN
+  ├── Phase 4.1 — Announcement Engine Core                    🟢 COMPLETED & VERIFIED
+  ├── Phase 4.2 — Notification Core & In-App Engine           🟢 COMPLETED & VERIFIED
+  ├── Phase 4.3 — Child Activity Timeline Engine              🟢 COMPLETED & VERIFIED
+  ├── Phase 4.4 — Domain Event Integration & Projections      🟢 ACCEPTED & FROZEN
+  │     └── Phase 4.4.1 — Domain Event Integration Implementation 🟢 COMPLETED & VERIFIED
+  ├── Phase 4.5 — Outbound Messaging & WhatsApp Provider       🟢 COMPLETED & VERIFIED
+  ├── Phase 4.6 — Protected Communication REST APIs           🟢 ACCEPTED & FROZEN
+  │     └── Phase 4.6.1 — REST API Implementation             🟢 COMPLETED & VERIFIED
+  ├── Phase 4.7 — Staff Communication Workspace UI            🟢 ACCEPTED & FROZEN
+  │     └── Phase 4.7.1 — UI Implementation                   🟢 COMPLETED & VERIFIED
+  ├── Phase 4.8 — Security / Privacy / UX / E2E Matrix        🟢 COMPLETED & VERIFIED
+  └── Phase 4.9 — Phase 4 Acceptance Gate & Milestone Freeze  🟢 ACCEPTED & FROZEN
+                                                         ↓
+                                                   PHASE 4 GATE (PASSED & FROZEN)
+```
+
+---
+
+## 8. Verification & Quality Standards Summary
 
 Every phase and subphase in CoachingOS is governed by strict senior staff engineering standards defined in `AGENTS.md` and `ENGINEERING_PLAYBOOK.md`:
 
@@ -363,11 +437,10 @@ pnpm build              # Run Next.js App Router & package builds
 
 ---
 
-## 8. Future Horizons (Phases 4 – 7 Overview)
+## 9. Future Horizons (Phases 5 – 7 Overview)
 
 | Phase | Core Focus | Key Deliverables |
 | :--- | :--- | :--- |
-| **Phase 4** | **Communication Module** | Announcements, notification engine, automated WhatsApp alerts for absence, fees, and marks. |
 | **Phase 5** | **Parent PWA** | Mobile parent portal for attendance, homework, marks, fee history, and child profiles across institutes. |
 | **Phase 6** | **Staff Dashboard Polish** | Role-tailored dashboards for Founder/Owner, Teacher, and Assistant with operational analytics. |
 | **Phase 7** | **Beta & Production** | Query performance tuning, rate-limiting, security audits, and onboarding 3–5 beta institutes. |

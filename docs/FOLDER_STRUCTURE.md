@@ -17,7 +17,7 @@ coaching-os/
 │   ├── identity/                 ← Institute Tenants, Users, Memberships, Capability RBAC, Parents, Students, Staff
 │   ├── academics/                ← Schedules, Sessions, Attendance, Homework, Tests, Marks Engine
 │   ├── billing/                  ← Fee Structures, Invoices, Receipts, Payments
-│   ├── communication/            ← Announcements, Notifications, WhatsApp Triggers
+│   ├── communication/            ← Announcements, Notifications, Child Activity Timeline, Outbound WhatsApp Queue, Domain Event Projections
 │   ├── administration/           ← System Configuration & Global Settings
 │   ├── audit/                    ← Event Tracking & Audit Logging
 │   ├── shared/                   ← Error Taxonomy, Domain Events, Common Utilities
@@ -34,7 +34,7 @@ coaching-os/
 └── docs/                         ← System Architecture Specifications, Phase Contracts & ADRs
     ├── adr/                      ├── Architecture Decision Records (ADR 0001 - 0017)
     ├── api/                      ├── Canonical Public & Versioned REST API Specifications
-    └── phases/                   └── Phase Contracts & Freeze Reports (Phase 0, Phase 1, Phase 2, Phase 3)
+    └── phases/                   └── Phase Contracts & Freeze Reports (Phase 0, Phase 1, Phase 2, Phase 3, Phase 4)
 ```
 
 ---
@@ -84,8 +84,11 @@ apps/web/
 │   ├── app/                      ← Next.js 16 App Router structure
 │   │   ├── (app)/                ← Authenticated application shell & workspace routes
 │   │   │   ├── (workspace)/      ← Tenant workspace views
+│   │   ├── (app)/                ← Authenticated application shell & workspace routes
+│   │   │   ├── (workspace)/      ← Tenant workspace views
 │   │   │   │   ├── academics/    ← Teacher & Staff Academic Workspace (`page.tsx`)
 │   │   │   │   ├── billing/      ← Staff Billing Workspace (`page.tsx`)
+│   │   │   │   ├── communication/← Staff Communication Workspace (`page.tsx`, `announcements/`, `notifications/`)
 │   │   │   │   ├── dashboard/    ← Tenant operational overview dashboard (`page.tsx`)
 │   │   │   │   ├── enrollments/  ← Student Enrollment lifecycle workspace (`page.tsx`)
 │   │   │   │   ├── parents/      ← Parent CRM workspace (`page.tsx`)
@@ -105,13 +108,14 @@ apps/web/
 │   │   │       ├── _lib/         ← V1 tenant guards (`v1-guard.ts`) & rate limiter (`rate-limiter.ts`)
 │   │   │       ├── academics/    ← Protected Academics REST API (`schedules`, `sessions`, `attendance`, `homework`, `tests`)
 │   │   │       ├── billing-plans/← Protected BillingPlan REST API (`GET`, `POST`, `[id]`)
+│   │   │       ├── communication/← Protected Communication REST API (`announcements`, `notifications`)
 │   │   │       ├── enrollments/  ← Protected Enrollment REST API
 │   │   │       ├── guardians/    ← Protected Guardian REST API
 │   │   │       ├── invoices/     ← Protected Invoice REST API (`GET`, `POST`, `[id]`)
 │   │   │       ├── payments/     ← Protected Payment REST API (`GET`, `POST`, `[id]`)
 │   │   │       ├── receipts/     ← Protected Receipt REST API (`GET`, `POST`, `[id]`)
 │   │   │       ├── staff/        ← Protected Staff REST API
-│   │   │       └── students/     ← Protected Student REST API
+│   │   │       └── students/     ← Protected Student REST API (`[id]`, `[id]/activities`)
 │   │   ├── error.tsx             ← Global Next.js error boundary
 │   │   ├── globals.css           ← Global styles & CSS variables
 │   │   ├── layout.tsx            ← Root application layout
@@ -124,6 +128,7 @@ apps/web/
 │   │   ├── app-shell/            ← Header, Navigation sidebar, Tenant Context Banner
 │   │   ├── auth/                 ← Auth forms, login modals, session state components
 │   │   ├── billing/              ← Staff Billing Workspace sub-views (Overview, Plans, Invoices, Payments, Receipts), modals, DTOs & API client
+│   │   ├── communication/        ← Staff Communication Workspace sub-views (Overview, Announcements, Notifications, Activity Timeline), modals, hooks, DTOs & API client
 │   │   ├── dashboard/            ← Authenticated staff dashboard components
 │   │   ├── enrollment/           ← Student Enrollment lifecycle components & modals
 │   │   ├── guardian/             ← Staff Guardian management components, modals, badges, API client
@@ -271,10 +276,25 @@ packages/billing/
 │   │   └── value-objects/        ← Currency, PeriodIdentifier, ReceiptNumber Value Objects
 │   ├── infrastructure/           ← Prisma Persistence Implementations
 │   │   └── repositories/         ← Prisma repositories for BillingPlan, Invoice, Payment, Receipt
+│   #### `packages/communication/` (Communication Domain)
+```text
+packages/communication/
+├── src/
+│   ├── application/              ← Application DTOs & Use Cases
+│   │   ├── dto/                  ← AnnouncementDTO, NotificationDTO, ActivityDTO, OutboundMessageDTO
+│   │   └── use-cases/            ← Announcement (Create, Publish, Archive), Notification (Project, MarkRead), Activity (Project, Timeline), Outbound (Enqueue, Deliver)
+│   ├── domain/                   ← Framework-Independent Business Domain
+│   │   ├── entities/             ← AnnouncementEntity, NotificationEntity, ActivityEntity, OutboundMessageEntity
+│   │   ├── repositories/         ← Announcement, Notification, Activity, OutboundMessage Queue Repository Interfaces
+│   │   └── types/                ← NotificationRecipientType, ActivityEventType, OutboundMessageStatus
+│   ├── infrastructure/           ← Prisma Persistence & Event Integration
+│   │   ├── events/               ← Upstream Domain Event Subscribers & Projection Handlers
+│   │   ├── outbound/             ← WhatsApp Provider Adapter (MetaWhatsAppProvider, MockWhatsAppProvider)
+│   │   └── repositories/         ← Prisma repositories for Announcement, Notification, Activity, OutboundMessageQueue
 │   ├── presentation/             ← Presentation Validators
-│   │   └── validators/           ← Zod validators for Billing Plan, Invoice, Payment, Receipt API schemas
+│   │   └── validators/           ← Zod validators for Announcement, Notification, and Activity API schemas
 │   └── index.ts                  ← Explicit barrel exports
-├── package.json                  ← `@coaching-os/billing` package configuration
+├── package.json                  ← `@coaching-os/communication` package configuration
 ├── tsconfig.json                 ← Strict TypeScript configuration
 └── vitest.config.ts              ← Vitest unit & integration runner config
 ```
@@ -284,7 +304,6 @@ packages/billing/
 packages/
 ├── administration/               ← System config & staff admin domain
 ├── audit/                        ← Audit logging domain contracts
-├── communication/                ← WhatsApp, SMS, & announcement messaging domain
 ├── shared/                       ← Common utilities across monorepo
 │   └── src/
 │       ├── errors.ts             ← Standardized error taxonomy (ValidationError, ConflictError, NotFoundError, etc.)
@@ -361,7 +380,9 @@ docs/
 ├── phases/                       ← Authoritative Phase Contracts & Architecture Freezes
 │   ├── 00/                       ← Phase 0 Contracts & Acceptance Reports
 │   ├── 01/                       ← Phase 1 Contracts, RBAC, API & Freeze Reports
-│   └── 02/                       ← Phase 2 Contracts, Academics Contract, UI & Acceptance Reports
+│   ├── 02/                       ← Phase 2 Contracts, Academics Contract, UI & Acceptance Reports
+│   ├── 03/                       ← Phase 3 Contracts, Billing Contracts, REST API & Acceptance Reports
+│   └── 04/                       ← Phase 4 Contracts, Communication Contracts, Event Integration, WhatsApp Queue, REST API, UI & Acceptance Reports
 ├── BACKLOG.md                    ← Product backlog & future phase items
 ├── CONTEXT.md                    ← Active milestone tracker & phase history
 ├── ENGINEERING_PLAYBOOK.md       ← Monorepo development guidelines & rules
@@ -383,6 +404,7 @@ docs/
 | `@coaching-os/identity` | Package | Multi-tenant Identity, Memberships, RBAC, Parents, Students & Staff | TypeScript, Zod, Vitest |
 | `@coaching-os/academics` | Package | Batches, Schedules, Sessions, Attendance, Homework, Tests & Marks | TypeScript, Zod, Vitest |
 | `@coaching-os/billing` | Package | Billing Plans, Invoices, Receipts, Payments (Completed & Verified) | TypeScript, Zod, Vitest |
+| `@coaching-os/communication` | Package | Announcements, Notifications, Child Activity Timeline, Outbound WhatsApp Queue, Projections (Completed & Verified) | TypeScript, Zod, Vitest |
 | `@coaching-os/shared` | Package | Error Taxonomy, Result Helpers & Common Types | TypeScript |
 | `@coaching-os/ui` | Package | Design System Tokens & Primitive Components | Vanilla CSS Tokens, React 19 |
 | `@coaching-os/database` | Infrastructure | Prisma ORM 7, PostgreSQL Client Adapter | Prisma 7, pg.Pool, `@prisma/adapter-pg` |

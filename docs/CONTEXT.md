@@ -773,9 +773,9 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 3.7.1:** Security / UX / E2E Test Suite Execution 🟢 (COMPLETED & VERIFIED)
   - **Phase 3.8:** Phase 3 Acceptance Gate & Milestone Freeze 🟢 (PASSED & FROZEN)
 
-### 🟡 PHASE 4 — COMMUNICATION MODULE (IN EXECUTION)
+### 🟢 PHASE 4 — COMMUNICATION MODULE (ACCEPTED & FROZEN)
 
-- **Domain Contract Specification:** Documented in [docs/phases/04/phase4.0-communication-contract.md](file:///home/supra/Desktop/class_os/docs/phases/04/phase4.0-communication-contract.md).
+- **Domain Contract Specification:** Documented in [docs/phases/04/phase4.0-communication-contract.md](file:///home/supra/Desktop/class_os/docs/phases/04/phase4.0-communication-contract.md), [docs/phases/04/phase4.4-event-integration-contract.md](file:///home/supra/Desktop/class_os/docs/phases/04/phase4.4-event-integration-contract.md), [docs/phases/04/phase4.6-api-contract.md](file:///home/supra/Desktop/class_os/docs/phases/04/phase4.6-api-contract.md), [docs/phases/04/phase4.7-ui-contract.md](file:///home/supra/Desktop/class_os/docs/phases/04/phase4.7-ui-contract.md), and [docs/phases/04/phase4.9-acceptance-freeze-report.md](file:///home/supra/Desktop/class_os/docs/phases/04/phase4.9-acceptance-freeze-report.md).
 - **Subphase Tracking Map:**
   - **Phase 4.0:** Communication Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
   - **Phase 4.1:** Announcement Engine Core 🟢 (COMPLETED & VERIFIED)
@@ -790,5 +790,10 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 4.7.1:** Staff Communication Workspace UI Implementation 🟢 (COMPLETED & VERIFIED)
   - **Phase 4.8:** Security / Privacy / UX / E2E Matrix 🟢 (COMPLETED & VERIFIED)
   - **Phase 4.9:** Phase 4 Acceptance Gate & Milestone Freeze 🟢 (ACCEPTED & FROZEN)
+
+### ⏳ PHASE 5 — PARENT PWA (UPCOMING / ACTIVE FOCUS)
+
+- **Domain Focus:** Cross-coaching parent mobile PWA experience (`ParentIdentity`, `ChildProfile`, `StudentLink`, unified activity timeline, attendance calendar, homework, published test performance, invoice & receipt history).
+- **Status:** ⏳ **UPCOMING**
 
 
