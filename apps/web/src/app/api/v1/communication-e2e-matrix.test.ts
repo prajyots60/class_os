@@ -400,9 +400,12 @@ describe('Phase 4.8 — Communication Security, Privacy, UX & E2E Verification M
         occurredAt: new Date().toISOString(),
         instituteId: tenantA.institute.id, // Forged Inst A ID
         payload: {
+          sessionId: `sess-${Date.now()}`,
+          batchId: `batch-${Date.now()}`,
           sessionTitle: 'Math 101',
-          recordedByName: 'Teacher',
           records: [{ studentId: studentB.id, status: 'absent' as const }],
+          recordedByUserId: tenantA.user.id,
+          recordedByName: tenantA.user.name,
         },
       };
 
@@ -436,9 +439,12 @@ describe('Phase 4.8 — Communication Security, Privacy, UX & E2E Verification M
         occurredAt: new Date().toISOString(),
         instituteId: tenant.institute.id,
         payload: {
+          sessionId: `sess-${Date.now()}`,
+          batchId: `batch-${Date.now()}`,
           sessionTitle: 'Physics',
-          recordedByName: 'Teacher',
           records: [{ studentId: student.id, status: 'absent' as const }],
+          recordedByUserId: tenant.user.id,
+          recordedByName: tenant.user.name,
         },
       };
 
@@ -477,6 +483,7 @@ describe('Phase 4.8 — Communication Security, Privacy, UX & E2E Verification M
           title: 'Physics Chapter 4',
           subjectName: 'Physics',
           dueDate: '2026-08-20',
+          assignedByUserId: tenant.user.id,
           assignedByName: tenant.user.name,
         },
       };
