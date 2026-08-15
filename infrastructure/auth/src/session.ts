@@ -7,7 +7,10 @@ import {
   PrismaParentIdentityRepository,
   ResolveParentIdentityForUserUseCase,
   type ParentIdentityDTO,
+  type ParentAuthContext,
 } from '@coaching-os/identity';
+
+export type { ParentAuthContext };
 
 export interface TenantContext {
   userId: string;
@@ -116,6 +119,75 @@ export async function requireParentIdentity(
   }
 
   return result;
+}
+
+/**
+ * Resolves the authenticated ParentAuthContext from the request session.
+ * Enforces active ParentIdentity status.
+ * Returns null if unauthenticated or no ParentIdentity exists.
+ */
+export async function resolveParentAuthContext(
+  headers: Headers,
+): Promise<ParentAuthContext | null> {
+  const session = await getAuthenticatedSession(headers);
+  if (!session || !session.user || !session.session) {
+    return null;
+  }
+
+  const repo = new PrismaParentIdentityRepository();
+  const resolveUseCase = new ResolveParentIdentityForUserUseCase(repo);
+
+  const parentDTO = await resolveUseCase.execute({
+    userId: session.user.id,
+    autoCreateIfMissing: false,
+  });
+
+  if (!parentDTO) {
+    return null;
+  }
+
+  if (parentDTO.status === 'suspended') {
+    throw new AuthenticationError(
+      'ACCOUNT_SUSPENDED: Parent identity is suspended.',
+    );
+  }
+
+  if (parentDTO.status === 'deactivated') {
+    throw new AuthenticationError(
+      'UNAUTHENTICATED: Parent identity is deactivated.',
+    );
+  }
+
+  return {
+    userId: session.user.id,
+    parentIdentityId: parentDTO.id,
+    sessionId: session.session.id,
+    parentIdentity: parentDTO,
+  };
+}
+
+/**
+ * Requires a valid authenticated ParentAuthContext for a request.
+ * Throws AuthenticationError (401) if unauthenticated, expired, suspended, or deactivated.
+ */
+export async function requireParentAuth(
+  headers: Headers,
+): Promise<ParentAuthContext> {
+  const session = await getAuthenticatedSession(headers);
+  if (!session || !session.user || !session.session) {
+    throw new AuthenticationError(
+      'UNAUTHENTICATED: Valid authentication session is required.',
+    );
+  }
+
+  const ctx = await resolveParentAuthContext(headers);
+  if (!ctx) {
+    throw new AuthenticationError(
+      'UNAUTHENTICATED: Parent identity authorization required.',
+    );
+  }
+
+  return ctx;
 }
 
 /**

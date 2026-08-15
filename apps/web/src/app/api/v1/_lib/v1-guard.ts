@@ -1,10 +1,12 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { getAuthenticatedSession } from '@coaching-os/auth';
+import { getAuthenticatedSession, requireParentAuth, type ParentAuthContext } from '@coaching-os/auth';
 import {
   GetUserMembershipsUseCase,
   ResolveInstituteMembershipUseCase,
   PrismaInstituteMembershipRepository,
+  ParentAuthorizationEngine,
   type TenantContext,
+  type AuthorizedStudentContext,
 } from '@coaching-os/identity';
 import { ZodError } from 'zod';
 import { AuthenticationError, ValidationError } from '@coaching-os/shared';
@@ -191,6 +193,51 @@ export async function withV1MutationGuard(
     const ctx = await resolveV1TenantContext(req);
     assertMutationRateLimit(req, ctx.userId);
     return await handler(ctx);
+  } catch (err) {
+    return handleV1Error(err, requestId);
+  }
+}
+
+/**
+ * Wraps a Parent API route handler with: rate-limit → requireParentAuth → handler.
+ */
+export async function withParentAuthGuard(
+  req: NextRequest,
+  requestId: string,
+  handler: (ctx: ParentAuthContext) => Promise<NextResponse>,
+): Promise<NextResponse> {
+  try {
+    assertReadRateLimit(req);
+    const parentCtx = await requireParentAuth(req.headers);
+    assertReadRateLimit(req, parentCtx.userId);
+    return await handler(parentCtx);
+  } catch (err) {
+    return handleV1Error(err, requestId);
+  }
+}
+
+/**
+ * Wraps a Parent Student API route handler with:
+ * rate-limit → requireParentAuth → requireStudentAccess (Universal 404 Masking) → handler.
+ */
+export async function withParentStudentGuard(
+  req: NextRequest,
+  requestId: string,
+  studentId: string,
+  handler: (
+    parentCtx: ParentAuthContext,
+    studentCtx: AuthorizedStudentContext,
+  ) => Promise<NextResponse>,
+): Promise<NextResponse> {
+  try {
+    assertReadRateLimit(req);
+    const parentCtx = await requireParentAuth(req.headers);
+    assertReadRateLimit(req, parentCtx.userId);
+
+    const engine = new ParentAuthorizationEngine();
+    const studentCtx = await engine.requireStudentAccess(parentCtx, studentId);
+
+    return await handler(parentCtx, studentCtx);
   } catch (err) {
     return handleV1Error(err, requestId);
   }

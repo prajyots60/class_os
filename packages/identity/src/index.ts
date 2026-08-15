@@ -37,6 +37,7 @@ export * from './domain/repositories/subject.repository';
 export * from './domain/repositories/program-subject.repository';
 export * from './domain/repositories/batch.repository';
 export * from './domain/repositories/enrollment.repository';
+export * from './domain/repositories/parent-authorization.repository';
 
 // Domain Services
 export * from './domain/services/otp-provider.service';
@@ -101,3 +102,6 @@ export * from './infrastructure/repositories/prisma-subject.repository';
 export * from './infrastructure/repositories/prisma-program-subject.repository';
 export * from './infrastructure/repositories/prisma-batch.repository';
 export * from './infrastructure/repositories/prisma-enrollment.repository';
+export * from './infrastructure/repositories/prisma-parent-authorization.repository';
+export * from './authorization/parent-auth-context';
+export * from './authorization/parent-authorization-engine';
