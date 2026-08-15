@@ -231,7 +231,8 @@ PHASE 4 — COMMUNICATION MODULE                         🟡 IN EXECUTION
   ├── Phase 4.5 — Outbound Messaging & WhatsApp        🟢 COMPLETED & VERIFIED
   ├── Phase 4.6 — Protected Communication REST APIs    🟢 ACCEPTED & FROZEN
   │     └── Phase 4.6.1 — REST API Implementation      🟢 COMPLETED & VERIFIED
-  ├── Phase 4.7 — Staff Communication Workspace UI     ⏳ UPCOMING
+  ├── Phase 4.7 — Staff Communication Workspace UI     🟢 ACCEPTED & FROZEN
+  │     └── Phase 4.7.1 — UI Implementation            ⏳ UPCOMING
   ├── Phase 4.8 — Security / Privacy / UX / E2E Matrix ⏳ UPCOMING
   └── Phase 4.9 — Phase 4 Acceptance Gate & Freeze     ⏳ UPCOMING
                                                          ↓
@@ -785,7 +786,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 4.5:** Outbound Messaging & WhatsApp Provider 🟢 (COMPLETED & VERIFIED)
   - **Phase 4.6:** Protected Communication REST APIs 🟢 (ACCEPTED & FROZEN)
   - **Phase 4.6.1:** Communication REST API Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 4.7:** Staff Communication Workspace UI ⏳ (NEXT)
+  - **Phase 4.7:** Staff Communication Workspace UI 🟢 (ACCEPTED & FROZEN)
+  - **Phase 4.7.1:** Staff Communication Workspace UI Implementation ⏳ (NEXT)
   - **Phase 4.8:** Security / Privacy / UX / E2E Matrix ⏳ (UPCOMING)
   - **Phase 4.9:** Phase 4 Acceptance Gate & Milestone Freeze ⏳ (UPCOMING)
 
