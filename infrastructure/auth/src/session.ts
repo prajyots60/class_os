@@ -1,5 +1,7 @@
+import crypto from 'node:crypto';
 import { auth } from './auth';
 import { db } from '@coaching-os/database';
+import { serverConfig } from '@coaching-os/config';
 import { AuthenticationError, AuthorizationError } from '@coaching-os/shared';
 import {
   PrismaParentIdentityRepository,
@@ -75,6 +77,10 @@ export async function resolveAuthenticatedParentIdentity(
 
   if (!parentDTO) {
     return null;
+  }
+
+  if (parentDTO.status === 'suspended') {
+    throw new AuthenticationError('ACCOUNT_SUSPENDED: Parent identity is suspended.');
   }
 
   if (parentDTO.status === 'deactivated') {
@@ -187,6 +193,15 @@ export async function requireInstituteMembership(
   }
 
   throw new AuthorizationError(
-    `FORBIDDEN: User ${userId} is not an authorized member of institute ${requestedInstituteId}.`,
+    'FORBIDDEN: User does not possess an active membership for the requested institute.',
   );
+}
+
+/**
+ * Signs a session token with BETTER_AUTH_SECRET for Better Auth session cookies.
+ */
+export function signSessionToken(token: string): string {
+  const secret = serverConfig.BETTER_AUTH_SECRET;
+  const hmac = crypto.createHmac('sha256', secret).update(token).digest('base64');
+  return `${token}.${hmac}`;
 }

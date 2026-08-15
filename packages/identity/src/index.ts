@@ -28,6 +28,7 @@ export * from './domain/repositories/institute.repository';
 export * from './domain/repositories/institute-membership.repository';
 export * from './domain/repositories/institute-onboarding.repository';
 export * from './domain/repositories/parent-identity.repository';
+export * from './domain/repositories/otp-verification.repository';
 export * from './domain/repositories/institute-parent.repository';
 export * from './domain/repositories/student.repository';
 export * from './domain/repositories/institute-parent-student.repository';
@@ -36,6 +37,9 @@ export * from './domain/repositories/subject.repository';
 export * from './domain/repositories/program-subject.repository';
 export * from './domain/repositories/batch.repository';
 export * from './domain/repositories/enrollment.repository';
+
+// Domain Services
+export * from './domain/services/otp-provider.service';
 
 // Application Use Cases
 export * from './application/dto/parent-identity.dto';
@@ -58,6 +62,8 @@ export * from './application/use-cases/membership.use-cases';
 export * from './application/use-cases/onboarding.use-cases';
 export * from './application/use-cases/settings.use-cases';
 export * from './application/use-cases/parent-identity.use-cases';
+export * from './application/use-cases/request-parent-otp.use-case';
+export * from './application/use-cases/verify-parent-otp.use-case';
 export * from './application/use-cases/institute-parent.use-cases';
 export * from './application/use-cases/student.use-cases';
 export * from './application/use-cases/institute-parent-student.use-cases';
@@ -86,6 +92,7 @@ export * from './infrastructure/repositories/prisma-institute.repository';
 export * from './infrastructure/repositories/prisma-institute-membership.repository';
 export * from './infrastructure/repositories/prisma-onboard-institute.repository';
 export * from './infrastructure/repositories/prisma-parent-identity.repository';
+export * from './infrastructure/repositories/prisma-otp-verification.repository';
 export * from './infrastructure/repositories/prisma-institute-parent.repository';
 export * from './infrastructure/repositories/prisma-student.repository';
 export * from './infrastructure/repositories/prisma-institute-parent-student.repository';

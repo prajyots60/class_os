@@ -6,7 +6,8 @@ import {
   PrismaInstituteMembershipRepository,
   type TenantContext,
 } from '@coaching-os/identity';
-import { AuthenticationError } from '@coaching-os/shared';
+import { ZodError } from 'zod';
+import { AuthenticationError, ValidationError } from '@coaching-os/shared';
 import { generateRequestId, toErrorResponse } from '@coaching-os/observability';
 import { assertReadRateLimit, assertMutationRateLimit, RateLimitLimitError } from './rate-limiter';
 
@@ -148,6 +149,11 @@ export function handleV1Error(error: unknown, requestId: string): NextResponse {
         },
       },
     );
+  }
+
+  if (error instanceof ZodError) {
+    const message = error.issues.map((e) => e.message).join('; ') || 'Invalid request body payload.';
+    return toErrorResponse(new ValidationError(message), requestId) as NextResponse;
   }
 
   // Delegate to existing observability error handler (strips stack/DB details)
