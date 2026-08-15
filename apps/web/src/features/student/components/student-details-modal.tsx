@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@coaching-os/ui';
-import { X, User, Phone, Mail, MapPin, Calendar, Hash, Users, CreditCard } from 'lucide-react';
+import { X, User, Phone, Mail, MapPin, Calendar, Hash, Users, CreditCard, Activity } from 'lucide-react';
 import { StudentAdmissionStatusBadge, StudentStatusBadge } from './student-status-badge';
 import type { StudentDTO } from '../types/student-ui.types';
 import { StudentGuardiansList } from '../../guardian';
+import { StudentActivityTimeline } from '../../communication';
 
 export interface StudentDetailsModalProps {
   isOpen: boolean;
@@ -20,7 +21,7 @@ export function StudentDetailsModal({
   student,
   userCapabilities = [],
 }: StudentDetailsModalProps) {
-  const [activeTab, setActiveTab] = useState<'profile' | 'guardians' | 'billing'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'guardians' | 'billing' | 'activity'>('profile');
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -65,11 +66,11 @@ export function StudentDetailsModal({
         </div>
 
         {/* Navigation Tabs Bar */}
-        <div className="flex border-b border-[hsl(var(--border))] bg-[hsl(var(--muted)/0.15)] px-6 pt-2">
+        <div className="flex border-b border-[hsl(var(--border))] bg-[hsl(var(--muted)/0.15)] px-6 pt-2 overflow-x-auto">
           <button
             type="button"
             onClick={() => setActiveTab('profile')}
-            className={`pb-2.5 px-4 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 ${
+            className={`pb-2.5 px-4 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 shrink-0 ${
               activeTab === 'profile'
                 ? 'border-primary text-primary'
                 : 'border-transparent text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]'
@@ -77,12 +78,12 @@ export function StudentDetailsModal({
             data-testid="student-profile-tab"
           >
             <User className="h-3.5 w-3.5" />
-            <span>Profile & Admission</span>
+            <span>Profile</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('guardians')}
-            className={`pb-2.5 px-4 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 ${
+            className={`pb-2.5 px-4 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 shrink-0 ${
               activeTab === 'guardians'
                 ? 'border-primary text-primary'
                 : 'border-transparent text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]'
@@ -95,7 +96,7 @@ export function StudentDetailsModal({
           <button
             type="button"
             onClick={() => setActiveTab('billing')}
-            className={`pb-2.5 px-4 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 ${
+            className={`pb-2.5 px-4 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 shrink-0 ${
               activeTab === 'billing'
                 ? 'border-primary text-primary'
                 : 'border-transparent text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]'
@@ -103,7 +104,20 @@ export function StudentDetailsModal({
             data-testid="student-billing-tab"
           >
             <CreditCard className="h-3.5 w-3.5" />
-            <span>Billing & Fees</span>
+            <span>Billing</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('activity')}
+            className={`pb-2.5 px-4 text-xs font-semibold border-b-2 transition-colors flex items-center gap-1.5 shrink-0 ${
+              activeTab === 'activity'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]'
+            }`}
+            data-testid="student-activity-tab"
+          >
+            <Activity className="h-3.5 w-3.5" />
+            <span>Activity Timeline</span>
           </button>
         </div>
 
@@ -196,11 +210,20 @@ export function StudentDetailsModal({
                 </div>
               </div>
             </>
-          ) : (
+          ) : activeTab === 'guardians' ? (
             <StudentGuardiansList
               studentId={student.id}
               userCapabilities={userCapabilities}
             />
+          ) : activeTab === 'activity' ? (
+            <StudentActivityTimeline
+              studentId={student.id}
+              userCapabilities={userCapabilities}
+            />
+          ) : (
+            <div className="p-4 text-xs text-[hsl(var(--muted-foreground))] text-center">
+              Billing details available in Fee Workspace.
+            </div>
           )}
         </div>
 
