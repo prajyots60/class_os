@@ -212,9 +212,9 @@ Attendance recorded → Event published → Notification created → WhatsApp qu
 
 ---
 
-## Phase 5 — Parent PWA
+## Phase 5 — Parent PWA 🟡 (IN EXECUTION)
 
-**Goal:** Provide parents with a seamless cross-coaching portal.
+**Goal:** Provide parents with a seamless cross-coaching portal. (Phase 5.0 Contract ACCEPTED & FROZEN)
 
 ### 1. Authentication
 

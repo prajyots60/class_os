@@ -236,9 +236,10 @@ PHASE 4 — COMMUNICATION MODULE                         🟢 ACCEPTED & FROZEN
   ├── Phase 4.8 — Security / Privacy / UX / E2E Matrix 🟢 COMPLETED & VERIFIED
   └── Phase 4.9 — Phase 4 Acceptance Gate & Freeze     🟢 ACCEPTED & FROZEN
                                                          ↓
-                                                   PHASE 4 GATE (PASSED & FROZEN)
-PHASE 5  Parent PWA                                   ⏳ UPCOMING (ACTIVE MILESTONE)
-    ↓
+PHASE 5 — PARENT PWA                                    🟡 IN EXECUTION
+  └── Phase 5.0 — Architecture & Contract Freeze        🟢 ACCEPTED & FROZEN
+                                                         ↓
+                                                   PHASE 5.1 (NEXT MILESTONE)
 PHASE 6  Staff Dashboard & UX                         ⏳ UPCOMING
     ↓
 PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
@@ -791,9 +792,11 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 4.8:** Security / Privacy / UX / E2E Matrix 🟢 (COMPLETED & VERIFIED)
   - **Phase 4.9:** Phase 4 Acceptance Gate & Milestone Freeze 🟢 (ACCEPTED & FROZEN)
 
-### ⏳ PHASE 5 — PARENT PWA (UPCOMING / ACTIVE FOCUS)
+### 🟡 PHASE 5 — PARENT PWA (IN EXECUTION)
 
-- **Domain Focus:** Cross-coaching parent mobile PWA experience (`ParentIdentity`, `ChildProfile`, `StudentLink`, unified activity timeline, attendance calendar, homework, published test performance, invoice & receipt history).
-- **Status:** ⏳ **UPCOMING**
+- **Domain Contract Specification:** Documented in [docs/phases/05/phase5.0-parent-pwa-contract.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.0-parent-pwa-contract.md).
+- **Subphase Tracking Map:**
+  - **Phase 5.0:** Architecture & Domain Contract Freeze 🟢 (ACCEPTED & FROZEN)
+  - **Phase 5.1:** Parent Authentication & OTP Implementation ⏳ (NEXT)
 
 
