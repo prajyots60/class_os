@@ -153,8 +153,9 @@ export function handleV1Error(error: unknown, requestId: string): NextResponse {
     );
   }
 
-  if (error instanceof ZodError) {
-    const message = error.issues.map((e) => e.message).join('; ') || 'Invalid request body payload.';
+  if (error instanceof ZodError || (error && typeof error === 'object' && 'name' in error && error.name === 'ZodError')) {
+    const issues = (error as ZodError).issues;
+    const message = Array.isArray(issues) ? issues.map((e) => e.message).join('; ') : 'Invalid request body payload.';
     return toErrorResponse(new ValidationError(message), requestId) as NextResponse;
   }
 
