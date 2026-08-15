@@ -55,6 +55,42 @@ No background workflow engine (Inngest, Trigger.dev, BullMQ, Redis, SQS, Kafka) 
 
 ---
 
+## Phase 4 Execution & Architectural Realization (August 2026)
+
+During **Phase 4 — Communication Module**, we evaluated whether to introduce Inngest or Trigger.dev for the event-driven notification and WhatsApp outbound queue pipeline.
+
+### Architectural Decision for Phase 4
+
+Rather than installing Inngest or Trigger.dev, Phase 4 implemented the **PostgreSQL Transactional Outbox Pattern (`OutboundMessageQueue`)** combined with an **In-Process Typed Event Bus (`@coaching-os/shared`)**:
+
+```text
+Domain Event Emitted (Academics / Billing)
+         ↓
+Typed Shared EventBus (@coaching-os/shared)
+         ↓
+Communication Event Subscribers (handleAttendanceRecorded, etc.)
+         ├── ActivityProjectionService    → Activity table (Append-Only Ledger)
+         ├── NotificationProjectionService → Notification table (In-App Feed)
+         └── OutboundMessageQueue          → OutboundMessageQueue table (Transactional Outbox)
+                                                      ↓
+                                           WhatsApp Delivery Worker
+                                          (MetaWhatsAppProvider)
+```
+
+### Rationale for Omitting Inngest / Trigger.dev in Phase 4
+
+1. **ACID Transactional Guarantees**: Writing notifications, activity feed updates, and outbound WhatsApp messages directly to PostgreSQL within the domain transaction boundary guarantees zero lost events if external HTTP calls fail or network drops occur.
+2. **Zero Third-Party Operational Overhead**: Preserves the zero-external-dependency Modular Monolith principle. Eliminates third-party cloud queue outages, SaaS API keys, webhook endpoint routing, and local developer proxies (`inngest-cli` / `trigger.dev dev`).
+3. **Failure Isolation**: Provider HTTP failures (e.g. Meta WhatsApp 500s or 429 rate limits) are isolated to the `OutboundMessageQueue` worker retry loop and never corrupt core business transactions or in-app notification state.
+
+### Trigger for Future Re-evaluation
+
+Inngest and Trigger.dev remain approved options for future non-transactional, compute-heavy tasks if required in later phases:
+- **Trigger.dev**: Long-running background compute tasks (PDF report rendering, bulk student CSV parsing, AI summaries).
+- **Inngest**: Complex multi-step multi-service workflows spanning external cloud APIs beyond the monorepo boundary.
+
+---
+
 ## Status
 
-**ACCEPTED**
+**ACCEPTED & REIFIED IN PHASE 4**
