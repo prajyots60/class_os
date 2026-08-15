@@ -178,7 +178,7 @@ Assistant records fee → Invoice status updates → Receipt generated → Paren
 
 ---
 
-## Phase 4 — Communication Module
+## Phase 4 — Communication Module 🟢 (ACCEPTED & FROZEN)
 
 **Goal:** Event-driven notification pipeline and parent activity updates.
 
