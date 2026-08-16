@@ -103,15 +103,19 @@ export * from './domain/entities/student-link.entity';
 
 export * from './domain/repositories/child-profile.repository';
 export * from './domain/repositories/student-link.repository';
+export * from './domain/repositories/parent-hub.repository';
 
 export * from './application/dto/child-profile.dto';
 export * from './application/dto/student-link.dto';
+export * from './application/dto/parent-hub.dto';
 
 export * from './application/use-cases/child-profile.use-cases';
 export * from './application/use-cases/student-link.use-cases';
+export * from './application/use-cases/get-parent-hub.use-case';
 
 export * from './infrastructure/repositories/prisma-child-profile.repository';
 export * from './infrastructure/repositories/prisma-student-link.repository';
+export * from './infrastructure/repositories/prisma-parent-hub.repository';
 
 export * from './infrastructure/repositories/prisma-subject.repository';
 export * from './infrastructure/repositories/prisma-program-subject.repository';
@@ -120,3 +124,4 @@ export * from './infrastructure/repositories/prisma-enrollment.repository';
 export * from './infrastructure/repositories/prisma-parent-authorization.repository';
 export * from './authorization/parent-auth-context';
 export * from './authorization/parent-authorization-engine';
+
