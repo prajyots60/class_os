@@ -246,9 +246,12 @@ PHASE 5 — PARENT PWA                                    🟡 IN EXECUTION
   ├── Phase 5.6 — Attendance & Homework Views UI        🟢 COMPLETED & VERIFIED
   ├── Phase 5.7 — Assessments, Marks & Performance Views 🟢 COMPLETED & VERIFIED
   ├── Phase 5.8 — Fee Status, Invoice History & Receipts 🟢 COMPLETED & VERIFIED
-  └── Phase 5.9 — Unified Parent Timeline, Notifications & Acceptance 🟢 ACCEPTED & FROZEN
+  ├── Phase 5.9 — Notifications & Unified Timeline Feed  🟢 COMPLETED & VERIFIED
+  ├── Phase 5.10 — PWA Mobile UX, Touch & Accessibility  ⏳ NEXT
+  ├── Phase 5.11 — Security, Privacy & Adversarial Matrix ⏳ PENDING
+  └── Phase 5.12 — Phase 5 Acceptance Gate & Freeze     ⏳ PENDING
                                                          ↓
-                                                   PHASE 5 GATE (ACCEPTED & FROZEN)
+                                                   PHASE 5 GATE (IN EXECUTION)
 PHASE 6  Staff Dashboard & UX                         ⏳ UPCOMING
     ↓
 PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
@@ -801,7 +804,7 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 4.8:** Security / Privacy / UX / E2E Matrix 🟢 (COMPLETED & VERIFIED)
   - **Phase 4.9:** Phase 4 Acceptance Gate & Milestone Freeze 🟢 (ACCEPTED & FROZEN)
 
-### 🟢 PHASE 5 — PARENT PWA (ACCEPTED & FROZEN)
+### 🟡 PHASE 5 — PARENT PWA (IN EXECUTION)
 
 - **Domain Contract Specification:** Documented in [docs/phases/05/phase5.0-parent-pwa-contract.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.0-parent-pwa-contract.md), [docs/phases/05/phase5.1-parent-authentication-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.1-parent-authentication-report.md), [docs/phases/05/phase5.2-parent-session-authorization-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.2-parent-session-authorization-report.md), [docs/phases/05/phase5.3-child-profile-student-linking-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.3-child-profile-student-linking-report.md), [docs/phases/05/phase5.4-parent-hub-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.4-parent-hub-report.md), [docs/phases/05/phase5.5-parent-home-dashboard-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.5-parent-home-dashboard-ui-report.md), [docs/phases/05/phase5.6-attendance-homework-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.6-attendance-homework-ui-report.md), [docs/phases/05/phase5.7-assessments-performance-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.7-assessments-performance-ui-report.md), [docs/phases/05/phase5.8-parent-billing-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.8-parent-billing-ui-report.md), and [docs/phases/05/phase5.9-parent-timeline-notifications-acceptance-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.9-parent-timeline-notifications-acceptance-report.md).
 - **Subphase Tracking Map:**
@@ -814,6 +817,9 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 5.6:** Attendance & Homework Views UI 🟢 (COMPLETED & VERIFIED)
   - **Phase 5.7:** Assessments, Marks & Performance Views UI 🟢 (COMPLETED & VERIFIED)
   - **Phase 5.8:** Parent Fee Status, Invoice History & Receipt Downloads UI 🟢 (COMPLETED & VERIFIED)
-  - **Phase 5.9:** Unified Parent Timeline, Notifications & Acceptance Gate 🟢 (ACCEPTED & FROZEN)
+  - **Phase 5.9:** Notifications & Unified Timeline Feed UI 🟢 (COMPLETED & VERIFIED)
+  - **Phase 5.10:** PWA Mobile UX, Touch Targets & Accessibility Hardening ⏳ (NEXT)
+  - **Phase 5.11:** Security, Privacy & Adversarial E2E Matrix ⏳ (PENDING)
+  - **Phase 5.12:** Phase 5 Acceptance Gate & Milestone Freeze ⏳ (PENDING)
 
 
