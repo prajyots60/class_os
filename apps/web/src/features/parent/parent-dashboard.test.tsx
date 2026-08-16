@@ -18,6 +18,14 @@ import {
   type ParentHubProfileSummaryDTO,
 } from './index';
 
+vi.mock('./hooks/use-parent-notifications', () => ({
+  useParentUnreadCount: () => ({
+    data: { unreadCount: 2 },
+    isLoading: false,
+    error: null,
+  }),
+}));
+
 const mockParentHubData: ParentHubDTO = {
   parent: {
     id: 'parent-identity-uuid-12345',
