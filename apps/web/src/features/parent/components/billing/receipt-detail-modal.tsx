@@ -21,9 +21,51 @@ export function ReceiptDetailModal({
   instituteName = 'Coaching Institute',
   onClose,
 }: ReceiptDetailModalProps) {
+  const modalRef = React.useRef<HTMLDivElement>(null);
   const [detail, setDetail] = React.useState<ParentReceiptDetailDTO | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (!receipt) return;
+
+    const previousActiveElement = document.activeElement as HTMLElement | null;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        if (focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    const closeBtn = modalRef.current?.querySelector<HTMLElement>('button');
+    closeBtn?.focus();
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      previousActiveElement?.focus();
+    };
+  }, [receipt, onClose]);
 
   React.useEffect(() => {
     if (!receipt || !studentId) {
@@ -81,7 +123,7 @@ export function ReceiptDetailModal({
       aria-modal="true"
       aria-labelledby="receipt-modal-title"
     >
-      <div className="w-full max-w-lg rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-6 shadow-xl space-y-4">
+      <div ref={modalRef} className="w-full max-w-lg rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-start justify-between gap-3 border-b border-[hsl(var(--border))] pb-3">
           <div>

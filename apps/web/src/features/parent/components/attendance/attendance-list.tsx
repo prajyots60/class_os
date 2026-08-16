@@ -109,16 +109,16 @@ export function AttendanceList({ records }: AttendanceListProps) {
           return (
             <div
               key={record.id}
-              className="flex items-center justify-between rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-3 text-sm shadow-2xs hover:bg-[hsl(var(--muted)/0.15)] transition-colors"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-3 text-sm shadow-2xs hover:bg-[hsl(var(--muted)/0.15)] transition-colors"
             >
-              <div className="space-y-1">
+              <div className="space-y-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-[hsl(var(--foreground))]">
+                  <span className="font-semibold text-[hsl(var(--foreground))] truncate">
                     {formattedDate}
                   </span>
                 </div>
 
-                <div className="flex items-center gap-3 text-xs text-[hsl(var(--muted-foreground))]">
+                <div className="flex flex-wrap items-center gap-2 text-xs text-[hsl(var(--muted-foreground))]">
                   <span className="font-medium text-[hsl(var(--foreground))]">
                     {record.batchName}
                   </span>
@@ -131,7 +131,7 @@ export function AttendanceList({ records }: AttendanceListProps) {
                 </div>
               </div>
 
-              <div>{renderStatusBadge(record)}</div>
+              <div className="self-start sm:self-center shrink-0">{renderStatusBadge(record)}</div>
             </div>
           );
         })}

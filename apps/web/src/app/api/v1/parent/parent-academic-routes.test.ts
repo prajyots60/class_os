@@ -70,7 +70,7 @@ describe('Phase 5.6 — Parent Academic REST Routes Security & Isolation Matrix'
     });
 
     // 4. Enroll Student A in Batch
-    await db.enrollment.create({
+    const enrollmentA = await db.enrollment.create({
       data: {
         instituteId: institute.id,
         studentId: studentA.id,

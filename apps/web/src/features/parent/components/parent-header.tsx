@@ -19,17 +19,17 @@ export function ParentHeader({ parent, onLogout, onOpenNotifications }: ParentHe
     <header className="sticky top-0 z-30 w-full border-b border-[hsl(var(--border))] bg-[hsl(var(--background)/0.95)] backdrop-blur supports-[backdrop-filter]:bg-[hsl(var(--background)/0.6)]">
       <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3 sm:px-6">
         {/* Brand & Greeting */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[hsl(var(--primary)/0.1)] text-[hsl(var(--primary))]">
             <ShieldCheck className="h-5 w-5" aria-hidden="true" />
           </div>
-          <div>
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <h1 className="text-base font-semibold text-[hsl(var(--foreground))]">
+              <h1 className="text-base font-semibold text-[hsl(var(--foreground))] truncate">
                 Parent Hub
               </h1>
             </div>
-            <p className="text-xs text-[hsl(var(--muted-foreground))]">
+            <p className="text-xs text-[hsl(var(--muted-foreground))] truncate">
               Welcome back, <span className="font-medium text-[hsl(var(--foreground))]">{displayName}</span>
             </p>
           </div>

@@ -396,13 +396,17 @@ describe('Phase 5.9 — Timeline & Notifications UI Security & Experience Matrix
 
   it('PARENT-TIMELINE-UI-030: renders TodayOverview activity section with View all activity link', () => {
     const mockStudent = {
+      linkId: 'link-1',
       studentId: 'stud-1',
+      firstName: 'Aarav',
+      middleName: null,
+      lastName: 'Sharma',
       fullName: 'Aarav Sharma',
       admissionNumber: 'ADM-001',
       instituteId: 'inst-1',
       instituteName: 'Apex Academy',
       status: 'active',
-      enrollments: [{ batchId: 'batch-1', batchName: 'Physics Batch A' }],
+      enrollments: [{ id: 'enr-1', batchId: 'batch-1', batchName: 'Physics Batch A', status: 'active' }],
     };
 
     const html = renderComponent(<TodayOverview student={mockStudent} onViewTimeline={vi.fn()} />);
@@ -413,13 +417,17 @@ describe('Phase 5.9 — Timeline & Notifications UI Security & Experience Matrix
 
   it('PARENT-TIMELINE-UI-031: includes aria-label on View all activity button in TodayOverview', () => {
     const mockStudent = {
+      linkId: 'link-1',
       studentId: 'stud-1',
+      firstName: 'Aarav',
+      middleName: null,
+      lastName: 'Sharma',
       fullName: 'Aarav Sharma',
       admissionNumber: 'ADM-001',
       instituteId: 'inst-1',
       instituteName: 'Apex Academy',
       status: 'active',
-      enrollments: [{ batchId: 'batch-1', batchName: 'Physics Batch A' }],
+      enrollments: [{ id: 'enr-1', batchId: 'batch-1', batchName: 'Physics Batch A', status: 'active' }],
     };
 
     const html = renderComponent(<TodayOverview student={mockStudent} onViewTimeline={vi.fn()} />);
@@ -429,13 +437,17 @@ describe('Phase 5.9 — Timeline & Notifications UI Security & Experience Matrix
 
   it('PARENT-TIMELINE-UI-032: ensures View all activity button has minimum touch target min-h-[44px]', () => {
     const mockStudent = {
+      linkId: 'link-1',
       studentId: 'stud-1',
+      firstName: 'Aarav',
+      middleName: null,
+      lastName: 'Sharma',
       fullName: 'Aarav Sharma',
       admissionNumber: 'ADM-001',
       instituteId: 'inst-1',
       instituteName: 'Apex Academy',
       status: 'active',
-      enrollments: [{ batchId: 'batch-1', batchName: 'Physics Batch A' }],
+      enrollments: [{ id: 'enr-1', batchId: 'batch-1', batchName: 'Physics Batch A', status: 'active' }],
     };
 
     const html = renderComponent(<TodayOverview student={mockStudent} onViewTimeline={vi.fn()} />);

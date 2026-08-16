@@ -8,12 +8,30 @@ import {
   ProjectActivityUseCase,
   ActivityProjectionService,
   NotificationProjectionService,
+  handleAttendanceRecorded,
+  handleHomeworkPublished,
+  validateEventEnvelope,
 } from '@coaching-os/communication';
+import type { StudentParentResolver, BatchEnrollmentResolver } from '@coaching-os/communication';
 
 // Route Handlers
 import { POST as announcementsPOST } from './communication/announcements/route';
-import { GET as announcementByIdGET, PATCH as announcementByIdPATCH } from './communication/announcements/[id]/route';
-import { GET as activitiesGET } from './students/[id]/activities/route';
+import {
+  GET as announcementByIdGET,
+  PATCH as announcementByIdPATCH,
+  DELETE as announcementByIdDELETE,
+} from './communication/announcements/[id]/route';
+import { POST as publishPOST } from './communication/announcements/[id]/publish/route';
+import { POST as archivePOST } from './communication/announcements/[id]/archive/route';
+import { GET as notificationByIdGET } from './communication/notifications/[id]/route';
+import { POST as readPOST } from './communication/notifications/[id]/read/route';
+import {
+  GET as activitiesGET,
+  POST as activitiesPOST,
+  PUT as activitiesPUT,
+  PATCH as activitiesPATCH,
+  DELETE as activitiesDELETE,
+} from './students/[id]/activities/route';
 
 describe('Phase 4.8 — Communication Security, Privacy, UX & E2E Verification Matrix', () => {
   beforeAll(() => {
@@ -91,6 +109,7 @@ describe('Phase 4.8 — Communication Security, Privacy, UX & E2E Verification M
         const s = await db.student.findFirst({ where: { id: studentId, instituteId } });
         return s ? { id: s.id, instituteId: s.instituteId } : null;
       },
+      findUserPhoneById: async () => null,
     };
 
     const batchEnrollmentResolver: BatchEnrollmentResolver = {

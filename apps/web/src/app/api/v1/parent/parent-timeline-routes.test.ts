@@ -9,7 +9,7 @@ describe('Phase 5.9 — Parent Timeline REST Routes Security & Isolation Matrix'
   let pidB: { id: string };
   let userA: { id: string };
   let userB: { id: string };
-  let institute: { id: string };
+  let institute: { id: string; name: string };
   let studentA: { id: string };
   let studentB: { id: string };
   let validSessionTokenA: string;

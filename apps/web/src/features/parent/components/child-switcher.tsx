@@ -15,6 +15,27 @@ export function ChildSwitcher({
   selectedProfileId,
   onSelectProfile,
 }: ChildSwitcherProps) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (profiles.length === 0) return;
+    const currentIndex = profiles.findIndex((p) => p.id === selectedProfileId);
+    if (currentIndex === -1) return;
+
+    let nextIndex = currentIndex;
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      nextIndex = (currentIndex + 1) % profiles.length;
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      nextIndex = (currentIndex - 1 + profiles.length) % profiles.length;
+    }
+
+    if (nextIndex !== currentIndex) {
+      onSelectProfile(profiles[nextIndex].id);
+      const nextTab = document.getElementById(`child-tab-${profiles[nextIndex].id}`);
+      nextTab?.focus();
+    }
+  };
+
   if (profiles.length <= 1) {
     return null;
   }
@@ -34,6 +55,7 @@ export function ChildSwitcher({
       <div
         role="tablist"
         aria-labelledby="child-select-label"
+        onKeyDown={handleKeyDown}
         className="flex space-x-2 overflow-x-auto rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--muted)/0.3)] p-1 scrollbar-none"
       >
         {profiles.map((profile) => {
