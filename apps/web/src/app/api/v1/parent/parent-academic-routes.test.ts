@@ -7,18 +7,12 @@ import { GET as attendanceGET, POST as attendancePOST } from './students/[id]/at
 import { GET as homeworkGET, POST as homeworkPOST } from './students/[id]/homework/route';
 
 describe('Phase 5.6 — Parent Academic REST Routes Security & Isolation Matrix', () => {
-  let _parentUserA: { id: string; phone: string | null };
-  let _parentIdentityAId: string;
   let sessionTokenA: string;
-
-  let _parentUserB: { id: string; phone: string | null };
-  let _parentIdentityBId: string;
   let sessionTokenB: string;
 
   let institute: { id: string };
   let batch: { id: string };
   let studentA: { id: string };
-  let _studentB: { id: string };
   let batchSession: { id: string };
   let publishedHomework: { id: string };
   let draftHomework: { id: string };
@@ -65,7 +59,7 @@ describe('Phase 5.6 — Parent Academic REST Routes Security & Isolation Matrix'
       },
     });
 
-    studentB = await db.student.create({
+    await db.student.create({
       data: {
         instituteId: institute.id,
         firstName: 'Student',
@@ -76,7 +70,7 @@ describe('Phase 5.6 — Parent Academic REST Routes Security & Isolation Matrix'
     });
 
     // 4. Enroll Student A in Batch
-    const enrollmentA = await db.enrollment.create({
+    await db.enrollment.create({
       data: {
         instituteId: institute.id,
         studentId: studentA.id,
@@ -93,7 +87,6 @@ describe('Phase 5.6 — Parent Academic REST Routes Security & Isolation Matrix'
         status: 'active',
       },
     });
-    _parentIdentityAId = pidA.id;
 
     const uA = await db.user.create({
       data: {
@@ -104,7 +97,6 @@ describe('Phase 5.6 — Parent Academic REST Routes Security & Isolation Matrix'
         status: 'active',
       },
     });
-    _parentUserA = { id: uA.id, phone: uA.phone };
 
     const childProfileA = await db.childProfile.create({
       data: {
@@ -158,7 +150,6 @@ describe('Phase 5.6 — Parent Academic REST Routes Security & Isolation Matrix'
         status: 'active',
       },
     });
-    _parentIdentityBId = pidB.id;
 
     const uB = await db.user.create({
       data: {
@@ -169,7 +160,6 @@ describe('Phase 5.6 — Parent Academic REST Routes Security & Isolation Matrix'
         status: 'active',
       },
     });
-    _parentUserB = { id: uB.id, phone: uB.phone };
 
     const sessTokenB = `token-B-${crypto.randomUUID()}`;
     await db.session.create({
