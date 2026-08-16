@@ -4,10 +4,12 @@ import * as React from 'react';
 import { useParentAttendance } from '../hooks/use-parent-attendance';
 import { useParentHomework } from '../hooks/use-parent-homework';
 import { useParentAssessments } from '../hooks/use-parent-assessments';
+import { useParentBilling } from '../hooks/use-parent-billing';
 import { AttendanceSummary } from './attendance/attendance-summary';
 import { AttendanceList } from './attendance/attendance-list';
 import { HomeworkList } from './homework/homework-list';
 import { AssessmentList } from './assessments/assessment-list';
+import { BillingView } from './billing/billing-view';
 import { Skeleton, Card, CardContent } from '@coaching-os/ui';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@coaching-os/ui';
@@ -15,7 +17,7 @@ import { Button } from '@coaching-os/ui';
 interface ParentAcademicViewsProps {
   studentId: string | null;
   studentName?: string;
-  activeView: 'attendance' | 'homework' | 'assessments';
+  activeView: 'attendance' | 'homework' | 'assessments' | 'fees';
 }
 
 export function ParentAcademicViews({
@@ -26,6 +28,7 @@ export function ParentAcademicViews({
   const attendanceQuery = useParentAttendance(activeView === 'attendance' ? studentId : null);
   const homeworkQuery = useParentHomework(activeView === 'homework' ? studentId : null);
   const assessmentsQuery = useParentAssessments(activeView === 'assessments' ? studentId : null);
+  const billingQuery = useParentBilling(activeView === 'fees' ? studentId : null);
 
   if (!studentId) {
     return (
@@ -140,7 +143,55 @@ export function ParentAcademicViews({
   }
 
   // Render Assessments View
-  if (assessmentsQuery.isLoading) {
+  if (activeView === 'assessments') {
+    if (assessmentsQuery.isLoading) {
+      return (
+        <div className="space-y-4">
+          <div className="grid gap-3 grid-cols-1 sm:grid-cols-3">
+            <Skeleton className="h-24 rounded-lg" />
+            <Skeleton className="h-24 rounded-lg" />
+            <Skeleton className="h-24 rounded-lg" />
+          </div>
+          <Skeleton className="h-32 w-full rounded-lg" />
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Skeleton className="h-36 rounded-lg" />
+            <Skeleton className="h-36 rounded-lg" />
+          </div>
+        </div>
+      );
+    }
+
+    if (assessmentsQuery.isError || !assessmentsQuery.data) {
+      return (
+        <Card className="border border-[hsl(var(--destructive)/0.3)] p-6 text-center">
+          <CardContent className="space-y-3 pt-2">
+            <AlertCircle className="mx-auto h-8 w-8 text-[hsl(var(--destructive))]" aria-hidden="true" />
+            <h4 className="text-sm font-semibold text-[hsl(var(--foreground))]">
+              Unable to Load Assessment Results
+            </h4>
+            <p className="text-xs text-[hsl(var(--muted-foreground))]">
+              A network or authorization error occurred while fetching test results for {studentName}.
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => assessmentsQuery.refetch()}
+              className="gap-2 min-h-[44px]"
+            >
+              <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    const { summary, assessments } = assessmentsQuery.data;
+    return <AssessmentList summary={summary} assessments={assessments} />;
+  }
+
+  // Render Fees / Billing View
+  if (billingQuery.isLoading) {
     return (
       <div className="space-y-4">
         <div className="grid gap-3 grid-cols-1 sm:grid-cols-3">
@@ -148,7 +199,7 @@ export function ParentAcademicViews({
           <Skeleton className="h-24 rounded-lg" />
           <Skeleton className="h-24 rounded-lg" />
         </div>
-        <Skeleton className="h-32 w-full rounded-lg" />
+        <Skeleton className="h-11 w-full rounded-md" />
         <div className="grid gap-3 sm:grid-cols-2">
           <Skeleton className="h-36 rounded-lg" />
           <Skeleton className="h-36 rounded-lg" />
@@ -157,21 +208,21 @@ export function ParentAcademicViews({
     );
   }
 
-  if (assessmentsQuery.isError || !assessmentsQuery.data) {
+  if (billingQuery.isError || !billingQuery.data) {
     return (
       <Card className="border border-[hsl(var(--destructive)/0.3)] p-6 text-center">
         <CardContent className="space-y-3 pt-2">
           <AlertCircle className="mx-auto h-8 w-8 text-[hsl(var(--destructive))]" aria-hidden="true" />
           <h4 className="text-sm font-semibold text-[hsl(var(--foreground))]">
-            Unable to Load Assessment Results
+            Unable to Load Fee Records
           </h4>
           <p className="text-xs text-[hsl(var(--muted-foreground))]">
-            A network or authorization error occurred while fetching test results for {studentName}.
+            A network or authorization error occurred while fetching billing data for {studentName}.
           </p>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => assessmentsQuery.refetch()}
+            onClick={() => billingQuery.refetch()}
             className="gap-2 min-h-[44px]"
           >
             <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
@@ -182,6 +233,5 @@ export function ParentAcademicViews({
     );
   }
 
-  const { summary, assessments } = assessmentsQuery.data;
-  return <AssessmentList summary={summary} assessments={assessments} />;
+  return <BillingView billingData={billingQuery.data} />;
 }

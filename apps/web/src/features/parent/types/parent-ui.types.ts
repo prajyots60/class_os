@@ -18,7 +18,7 @@ export type {
 
 export interface ParentDashboardState {
   selectedProfileId: string | null;
-  activeTab?: 'overview' | 'attendance' | 'homework' | 'assessments';
+  activeTab?: 'overview' | 'attendance' | 'homework' | 'assessments' | 'fees';
 }
 
 export interface ParentApiErrorResponse {
@@ -113,5 +113,94 @@ export interface ParentStudentAssessmentDTO {
   };
   summary: ParentAssessmentSummaryDTO;
   assessments: ParentAssessmentItemDTO[];
+}
+
+export interface ParentInvoiceItemDTO {
+  id: string;
+  enrollmentId: string;
+  batchName: string;
+  amount: number;
+  paidAmount: number;
+  outstandingAmount: number;
+  dueDate: string;
+  status: string;
+  createdAt: string;
+}
+
+export interface ParentPaymentItemDTO {
+  id: string;
+  invoiceId: string;
+  batchName: string;
+  amount: number;
+  paymentMode: string;
+  receivedOn: string;
+  remarks: string | null;
+  receiptId: string | null;
+  receiptNumber: string | null;
+}
+
+export interface ParentReceiptItemDTO {
+  id: string;
+  receiptNumber: string;
+  paymentId: string;
+  amount: number;
+  paymentMode: string;
+  generatedAt: string;
+  batchName: string;
+}
+
+export interface ParentBillingSummaryDTO {
+  totalOutstandingAmount: number;
+  pendingInvoiceCount: number;
+  paidInvoiceCount: number;
+  lastPayment: {
+    amount: number;
+    paymentMode: string;
+    receivedOn: string;
+    receiptNumber: string | null;
+  } | null;
+}
+
+export interface ParentStudentBillingDTO {
+  student: {
+    id: string;
+    fullName: string;
+    admissionNumber: string;
+    instituteId: string;
+    instituteName: string;
+  };
+  summary: ParentBillingSummaryDTO;
+  invoices: ParentInvoiceItemDTO[];
+  payments: ParentPaymentItemDTO[];
+  receipts: ParentReceiptItemDTO[];
+}
+
+export interface ParentReceiptDetailDTO {
+  id: string;
+  receiptNumber: string;
+  generatedAt: string;
+  institute: {
+    id: string;
+    name: string;
+  };
+  student: {
+    id: string;
+    fullName: string;
+    admissionNumber: string;
+  };
+  batchName: string;
+  payment: {
+    id: string;
+    amount: number;
+    paymentMode: string;
+    receivedOn: string;
+    remarks: string | null;
+  };
+  invoice: {
+    id: string;
+    amount: number;
+    dueDate: string;
+    status: string;
+  };
 }
 

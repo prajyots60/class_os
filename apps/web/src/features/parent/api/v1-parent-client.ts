@@ -3,6 +3,8 @@ import type {
   ParentStudentAttendanceDTO,
   ParentStudentHomeworkDTO,
   ParentStudentAssessmentDTO,
+  ParentStudentBillingDTO,
+  ParentReceiptDetailDTO,
 } from '../types/parent-ui.types';
 
 export class ParentApiError extends Error {
@@ -62,6 +64,23 @@ export class ParentApiClient {
   static async getStudentAssessments(studentId: string): Promise<ParentStudentAssessmentDTO> {
     return this.request<ParentStudentAssessmentDTO>(
       `/api/v1/parent/students/${encodeURIComponent(studentId)}/assessments`,
+      { method: 'GET' },
+    );
+  }
+
+  static async getStudentBilling(studentId: string): Promise<ParentStudentBillingDTO> {
+    return this.request<ParentStudentBillingDTO>(
+      `/api/v1/parent/students/${encodeURIComponent(studentId)}/billing`,
+      { method: 'GET' },
+    );
+  }
+
+  static async getStudentReceipt(
+    studentId: string,
+    receiptId: string,
+  ): Promise<ParentReceiptDetailDTO> {
+    return this.request<ParentReceiptDetailDTO>(
+      `/api/v1/parent/students/${encodeURIComponent(studentId)}/receipts/${encodeURIComponent(receiptId)}`,
       { method: 'GET' },
     );
   }
