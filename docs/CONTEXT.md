@@ -243,9 +243,10 @@ PHASE 5 — PARENT PWA                                    🟡 IN EXECUTION
   ├── Phase 5.3 — Child Profile & Student Linking       🟢 COMPLETED & VERIFIED
   ├── Phase 5.4 — Parent Hub & Cross-Institute Read     🟢 COMPLETED & VERIFIED
   ├── Phase 5.5 — Parent Home Dashboard & Activity UI   🟢 COMPLETED & VERIFIED
-  └── Phase 5.6 — Attendance & Homework Views UI        🟢 COMPLETED & VERIFIED
+  ├── Phase 5.6 — Attendance & Homework Views UI        🟢 COMPLETED & VERIFIED
+  └── Phase 5.7 — Assessments, Marks & Performance Views 🟢 COMPLETED & VERIFIED
                                                          ↓
-                                                   PHASE 5.7 (NEXT MILESTONE)
+                                                   PHASE 5.8 (NEXT MILESTONE)
 PHASE 6  Staff Dashboard & UX                         ⏳ UPCOMING
     ↓
 PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING

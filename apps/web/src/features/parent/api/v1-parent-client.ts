@@ -2,6 +2,7 @@ import type {
   ParentHubDTO,
   ParentStudentAttendanceDTO,
   ParentStudentHomeworkDTO,
+  ParentStudentAssessmentDTO,
 } from '../types/parent-ui.types';
 
 export class ParentApiError extends Error {
@@ -54,6 +55,13 @@ export class ParentApiClient {
   static async getStudentHomework(studentId: string): Promise<ParentStudentHomeworkDTO> {
     return this.request<ParentStudentHomeworkDTO>(
       `/api/v1/parent/students/${encodeURIComponent(studentId)}/homework`,
+      { method: 'GET' },
+    );
+  }
+
+  static async getStudentAssessments(studentId: string): Promise<ParentStudentAssessmentDTO> {
+    return this.request<ParentStudentAssessmentDTO>(
+      `/api/v1/parent/students/${encodeURIComponent(studentId)}/assessments`,
       { method: 'GET' },
     );
   }

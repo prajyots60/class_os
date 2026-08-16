@@ -13,17 +13,17 @@ import { ParentAcademicViews } from './components/parent-academic-views';
 import { ParentDashboardSkeleton } from './components/parent-dashboard-skeleton';
 import { ParentDashboardEmpty } from './components/parent-dashboard-empty';
 import { ParentDashboardError } from './components/parent-dashboard-error';
-import { Calendar, FileText, Home } from 'lucide-react';
+import { Calendar, FileText, Home, Award } from 'lucide-react';
 
 interface ParentDashboardContentProps {
-  initialTab?: 'overview' | 'attendance' | 'homework';
+  initialTab?: 'overview' | 'attendance' | 'homework' | 'assessments';
 }
 
 export function ParentDashboardContent({ initialTab = 'overview' }: ParentDashboardContentProps) {
   const router = useRouter();
   const { data: hub, isLoading, isError, error, refetch } = useParentHub();
   const [selectedProfileId, setSelectedProfileId] = React.useState<string | null>(null);
-  const [activeTab, setActiveTab] = React.useState<'overview' | 'attendance' | 'homework'>(initialTab);
+  const [activeTab, setActiveTab] = React.useState<'overview' | 'attendance' | 'homework' | 'assessments'>(initialTab);
 
   if (isLoading) {
     return <ParentDashboardSkeleton />;
@@ -116,6 +116,21 @@ export function ParentDashboardContent({ initialTab = 'overview' }: ParentDashbo
               >
                 <FileText className="h-4 w-4" aria-hidden="true" />
                 <span>Homework</span>
+              </button>
+
+              <button
+                role="tab"
+                aria-selected={activeTab === 'assessments'}
+                id="tab-assessments"
+                onClick={() => setActiveTab('assessments')}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-md py-2 px-3 text-xs font-semibold min-h-[44px] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] ${
+                  activeTab === 'assessments'
+                    ? 'bg-[hsl(var(--card))] text-[hsl(var(--foreground))] shadow-xs border border-[hsl(var(--border))]'
+                    : 'text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]'
+                }`}
+              >
+                <Award className="h-4 w-4" aria-hidden="true" />
+                <span>Assessments</span>
               </button>
             </div>
 

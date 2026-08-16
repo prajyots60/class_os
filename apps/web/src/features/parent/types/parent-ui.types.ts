@@ -18,7 +18,7 @@ export type {
 
 export interface ParentDashboardState {
   selectedProfileId: string | null;
-  activeTab?: 'overview' | 'attendance' | 'homework';
+  activeTab?: 'overview' | 'attendance' | 'homework' | 'assessments';
 }
 
 export interface ParentApiErrorResponse {
@@ -81,5 +81,37 @@ export interface ParentStudentHomeworkDTO {
     instituteName: string;
   };
   homework: ParentHomeworkItemDTO[];
+}
+
+export interface ParentAssessmentSummaryDTO {
+  totalAssessments: number;
+  averagePercentage: number | null;
+  highestPercentage: number | null;
+}
+
+export interface ParentAssessmentItemDTO {
+  id: string;
+  batchId: string;
+  batchName: string;
+  subject: string | null;
+  title: string;
+  maximumMarks: number;
+  marksObtained: number | null;
+  percentage: number | null;
+  scheduledDate: string | null;
+  status: string;
+  createdAt: string;
+}
+
+export interface ParentStudentAssessmentDTO {
+  student: {
+    id: string;
+    fullName: string;
+    admissionNumber: string;
+    instituteId: string;
+    instituteName: string;
+  };
+  summary: ParentAssessmentSummaryDTO;
+  assessments: ParentAssessmentItemDTO[];
 }
 
