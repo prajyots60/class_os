@@ -13,17 +13,19 @@ import { ParentAcademicViews } from './components/parent-academic-views';
 import { ParentDashboardSkeleton } from './components/parent-dashboard-skeleton';
 import { ParentDashboardEmpty } from './components/parent-dashboard-empty';
 import { ParentDashboardError } from './components/parent-dashboard-error';
-import { Calendar, FileText, Home, Award, CreditCard } from 'lucide-react';
+import { Calendar, FileText, Home, Award, CreditCard, Clock, X } from 'lucide-react';
+import { NotificationPanel } from './components/notifications/notification-panel';
 
 interface ParentDashboardContentProps {
-  initialTab?: 'overview' | 'attendance' | 'homework' | 'assessments' | 'fees';
+  initialTab?: 'overview' | 'timeline' | 'attendance' | 'homework' | 'assessments' | 'fees';
 }
 
 export function ParentDashboardContent({ initialTab = 'overview' }: ParentDashboardContentProps) {
   const router = useRouter();
   const { data: hub, isLoading, isError, error, refetch } = useParentHub();
   const [selectedProfileId, setSelectedProfileId] = React.useState<string | null>(null);
-  const [activeTab, setActiveTab] = React.useState<'overview' | 'attendance' | 'homework' | 'assessments' | 'fees'>(initialTab);
+  const [activeTab, setActiveTab] = React.useState<'overview' | 'timeline' | 'attendance' | 'homework' | 'assessments' | 'fees'>(initialTab);
+  const [isNotificationsOpen, setIsNotificationsOpen] = React.useState(false);
 
   if (isLoading) {
     return <ParentDashboardSkeleton />;
@@ -49,7 +51,32 @@ export function ParentDashboardContent({ initialTab = 'overview' }: ParentDashbo
   return (
     <div className="min-h-screen bg-[hsl(var(--background))] text-[hsl(var(--foreground))]">
       {/* Header */}
-      <ParentHeader parent={hub.parent} onLogout={handleLogout} />
+      <ParentHeader
+        parent={hub.parent}
+        onLogout={handleLogout}
+        onOpenNotifications={() => setIsNotificationsOpen((prev) => !prev)}
+      />
+
+      {/* Notification Drawer Modal */}
+      {isNotificationsOpen && (
+        <div className="fixed inset-0 z-50 flex items-start justify-end bg-black/40 backdrop-blur-xs p-4 sm:p-6">
+          <div className="w-full max-w-md bg-[hsl(var(--card))] border border-[hsl(var(--border))] rounded-xl p-4 shadow-xl space-y-3 max-h-[85vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-[hsl(var(--border))] pb-2">
+              <span className="text-xs font-bold text-[hsl(var(--muted-foreground))]">
+                PARENT NOTIFICATIONS
+              </span>
+              <button
+                onClick={() => setIsNotificationsOpen(false)}
+                className="p-1 rounded-md text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent))] min-h-[44px] min-w-[44px] flex items-center justify-center"
+                aria-label="Close notifications drawer"
+              >
+                <X className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
+            <NotificationPanel onClose={() => setIsNotificationsOpen(false)} />
+          </div>
+        </div>
+      )}
 
       {/* Main Container */}
       <main className="mx-auto max-w-4xl space-y-4 p-4 sm:p-6">
@@ -71,7 +98,7 @@ export function ParentDashboardContent({ initialTab = 'overview' }: ParentDashbo
             <div
               role="tablist"
               aria-label="Parent Hub Views"
-              className="flex space-x-1 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--muted)/0.3)] p-1"
+              className="flex flex-wrap space-x-1 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--muted)/0.3)] p-1"
             >
               <button
                 role="tab"
@@ -86,6 +113,21 @@ export function ParentDashboardContent({ initialTab = 'overview' }: ParentDashbo
               >
                 <Home className="h-4 w-4" aria-hidden="true" />
                 <span>Overview</span>
+              </button>
+
+              <button
+                role="tab"
+                aria-selected={activeTab === 'timeline'}
+                id="tab-timeline"
+                onClick={() => setActiveTab('timeline')}
+                className={`flex flex-1 items-center justify-center gap-2 rounded-md py-2 px-3 text-xs font-semibold min-h-[44px] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--ring))] ${
+                  activeTab === 'timeline'
+                    ? 'bg-[hsl(var(--card))] text-[hsl(var(--foreground))] shadow-xs border border-[hsl(var(--border))]'
+                    : 'text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]'
+                }`}
+              >
+                <Clock className="h-4 w-4" aria-hidden="true" />
+                <span>Timeline</span>
               </button>
 
               <button
@@ -158,7 +200,10 @@ export function ParentDashboardContent({ initialTab = 'overview' }: ParentDashbo
                 )}
 
                 {/* Today's Status & Overview */}
-                <TodayOverview student={selectedStudent} />
+                <TodayOverview
+                  student={selectedStudent}
+                  onViewTimeline={() => setActiveTab('timeline')}
+                />
 
                 {/* Today's Activity Feed */}
                 <TodayActivity student={selectedStudent} activities={[]} />

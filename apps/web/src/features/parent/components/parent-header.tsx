@@ -3,14 +3,16 @@
 import * as React from 'react';
 import { Button } from '@coaching-os/ui';
 import { LogOut, ShieldCheck } from 'lucide-react';
+import { NotificationBell } from './notifications/notification-bell';
 import type { ParentHubIdentityDTO } from '../types/parent-ui.types';
 
 interface ParentHeaderProps {
   parent: ParentHubIdentityDTO;
   onLogout?: () => void;
+  onOpenNotifications?: () => void;
 }
 
-export function ParentHeader({ parent, onLogout }: ParentHeaderProps) {
+export function ParentHeader({ parent, onLogout, onOpenNotifications }: ParentHeaderProps) {
   const displayName = parent.name || parent.phone || 'Parent User';
 
   return (
@@ -33,19 +35,23 @@ export function ParentHeader({ parent, onLogout }: ParentHeaderProps) {
           </div>
         </div>
 
-        {/* Actions */}
-        {onLogout && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onLogout}
-            className="min-h-[44px] min-w-[44px] gap-2 text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--destructive))]"
-            aria-label="Log out of parent PWA"
-          >
-            <LogOut className="h-4 w-4" aria-hidden="true" />
-            <span className="hidden sm:inline">Logout</span>
-          </Button>
-        )}
+        {/* Actions Toolbar */}
+        <div className="flex items-center gap-1">
+          <NotificationBell onClick={onOpenNotifications} />
+
+          {onLogout && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onLogout}
+              className="min-h-[44px] min-w-[44px] gap-2 text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--destructive))]"
+              aria-label="Log out of parent PWA"
+            >
+              <LogOut className="h-4 w-4" aria-hidden="true" />
+              <span className="hidden sm:inline">Logout</span>
+            </Button>
+          )}
+        </div>
       </div>
     </header>
   );

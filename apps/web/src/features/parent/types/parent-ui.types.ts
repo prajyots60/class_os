@@ -18,7 +18,7 @@ export type {
 
 export interface ParentDashboardState {
   selectedProfileId: string | null;
-  activeTab?: 'overview' | 'attendance' | 'homework' | 'assessments' | 'fees';
+  activeTab?: 'overview' | 'timeline' | 'attendance' | 'homework' | 'assessments' | 'fees';
 }
 
 export interface ParentApiErrorResponse {
@@ -202,5 +202,40 @@ export interface ParentReceiptDetailDTO {
     dueDate: string;
     status: string;
   };
+}
+
+export interface ParentTimelineEventDTO {
+  id: string;
+  instituteId: string;
+  instituteName: string;
+  studentId: string;
+  studentName: string;
+  eventType: string;
+  title: string;
+  description: string;
+  occurredAt: string;
+  actorName: string | null;
+  metadata: Record<string, unknown> | null;
+}
+
+export interface ParentNotificationDTO {
+  id: string;
+  instituteId: string;
+  instituteName: string;
+  recipientUserId: string;
+  recipientType: string;
+  priority: string;
+  category: string;
+  title: string;
+  message: string;
+  actionUrl: string | null;
+  isRead: boolean;
+  readAt: string | null;
+  createdAt: string;
+  metadata: Record<string, unknown> | null;
+}
+
+export interface ParentUnreadCountDTO {
+  unreadCount: number;
 }
 

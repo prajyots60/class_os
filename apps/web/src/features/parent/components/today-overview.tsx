@@ -7,9 +7,10 @@ import type { ParentHubStudentSummaryDTO } from '../types/parent-ui.types';
 
 interface TodayOverviewProps {
   student: ParentHubStudentSummaryDTO | null;
+  onViewTimeline?: () => void;
 }
 
-export function TodayOverview({ student }: TodayOverviewProps) {
+export function TodayOverview({ student, onViewTimeline }: TodayOverviewProps) {
   const todayFormatted = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
@@ -85,20 +86,27 @@ export function TodayOverview({ student }: TodayOverviewProps) {
           </div>
         </div>
 
-        {/* Notice placeholder boundary for Phase 5.6 integrations */}
-        <div className="rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] p-3">
-          <div className="flex items-center justify-between mb-1.5">
+        {/* Live Activity & Timeline Link */}
+        <div className="rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--background))] p-3 space-y-2">
+          <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-[hsl(var(--foreground))] flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5 text-[hsl(var(--primary))]" aria-hidden="true" />
-              Schedule & Attendance Boundary
+              Activity Feed & Timeline
             </span>
-            <span className="text-[10px] text-[hsl(var(--muted-foreground))]">
-              Phase 5.6 View
-            </span>
+
+            {onViewTimeline && (
+              <button
+                onClick={onViewTimeline}
+                className="text-xs font-semibold text-[hsl(var(--primary))] hover:underline min-h-[44px] min-w-[44px] inline-flex items-center"
+                aria-label="View full activity timeline for student"
+              >
+                View all activity &rarr;
+              </button>
+            )}
           </div>
           <p className="text-xs text-[hsl(var(--muted-foreground))]">
             {student.enrollments.length > 0
-              ? `Currently enrolled in ${student.enrollments.map((e) => e.batchName).join(', ')}. Daily attendance and homework logs will appear in academic views.`
+              ? `Currently enrolled in ${student.enrollments.map((e) => e.batchName).join(', ')}. View real-time attendance, homework releases, assessment marks, and fee payment receipts in your child's unified timeline.`
               : 'No active batch enrollments configured.'}
           </p>
         </div>

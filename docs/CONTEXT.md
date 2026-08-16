@@ -245,9 +245,10 @@ PHASE 5 — PARENT PWA                                    🟡 IN EXECUTION
   ├── Phase 5.5 — Parent Home Dashboard & Activity UI   🟢 COMPLETED & VERIFIED
   ├── Phase 5.6 — Attendance & Homework Views UI        🟢 COMPLETED & VERIFIED
   ├── Phase 5.7 — Assessments, Marks & Performance Views 🟢 COMPLETED & VERIFIED
-  └── Phase 5.8 — Fee Status, Invoice History & Receipts 🟢 COMPLETED & VERIFIED
+  ├── Phase 5.8 — Fee Status, Invoice History & Receipts 🟢 COMPLETED & VERIFIED
+  └── Phase 5.9 — Unified Parent Timeline, Notifications & Acceptance 🟢 ACCEPTED & FROZEN
                                                          ↓
-                                                   PHASE 5 GATE (COMPLETED & VERIFIED)
+                                                   PHASE 5 GATE (ACCEPTED & FROZEN)
 PHASE 6  Staff Dashboard & UX                         ⏳ UPCOMING
     ↓
 PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
@@ -800,14 +801,19 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 4.8:** Security / Privacy / UX / E2E Matrix 🟢 (COMPLETED & VERIFIED)
   - **Phase 4.9:** Phase 4 Acceptance Gate & Milestone Freeze 🟢 (ACCEPTED & FROZEN)
 
-### 🟡 PHASE 5 — PARENT PWA (IN EXECUTION)
+### 🟢 PHASE 5 — PARENT PWA (ACCEPTED & FROZEN)
 
-- **Domain Contract Specification:** Documented in [docs/phases/05/phase5.0-parent-pwa-contract.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.0-parent-pwa-contract.md), [docs/phases/05/phase5.1-parent-authentication-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.1-parent-authentication-report.md), [docs/phases/05/phase5.2-parent-session-authorization-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.2-parent-session-authorization-report.md), and [docs/phases/05/phase5.3-child-profile-student-linking-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.3-child-profile-student-linking-report.md).
+- **Domain Contract Specification:** Documented in [docs/phases/05/phase5.0-parent-pwa-contract.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.0-parent-pwa-contract.md), [docs/phases/05/phase5.1-parent-authentication-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.1-parent-authentication-report.md), [docs/phases/05/phase5.2-parent-session-authorization-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.2-parent-session-authorization-report.md), [docs/phases/05/phase5.3-child-profile-student-linking-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.3-child-profile-student-linking-report.md), [docs/phases/05/phase5.4-parent-hub-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.4-parent-hub-report.md), [docs/phases/05/phase5.5-parent-home-dashboard-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.5-parent-home-dashboard-ui-report.md), [docs/phases/05/phase5.6-attendance-homework-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.6-attendance-homework-ui-report.md), [docs/phases/05/phase5.7-assessments-performance-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.7-assessments-performance-ui-report.md), [docs/phases/05/phase5.8-parent-billing-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.8-parent-billing-ui-report.md), and [docs/phases/05/phase5.9-parent-timeline-notifications-acceptance-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.9-parent-timeline-notifications-acceptance-report.md).
 - **Subphase Tracking Map:**
   - **Phase 5.0:** Architecture & Domain Contract Freeze 🟢 (ACCEPTED & FROZEN)
   - **Phase 5.1:** Parent Authentication & OTP Implementation 🟢 (COMPLETED & VERIFIED)
   - **Phase 5.2:** Parent Session & Authorization Engine 🟢 (COMPLETED & VERIFIED)
   - **Phase 5.3:** Child Profile & Student Linking Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 5.4:** Academic Hub Integration (Read-Only Parent Views) ⏳ (NEXT)
+  - **Phase 5.4:** Parent Hub & Cross-Institute Read Implementation 🟢 (COMPLETED & VERIFIED)
+  - **Phase 5.5:** Parent Home Dashboard & Today's Activity UI 🟢 (COMPLETED & VERIFIED)
+  - **Phase 5.6:** Attendance & Homework Views UI 🟢 (COMPLETED & VERIFIED)
+  - **Phase 5.7:** Assessments, Marks & Performance Views UI 🟢 (COMPLETED & VERIFIED)
+  - **Phase 5.8:** Parent Fee Status, Invoice History & Receipt Downloads UI 🟢 (COMPLETED & VERIFIED)
+  - **Phase 5.9:** Unified Parent Timeline, Notifications & Acceptance Gate 🟢 (ACCEPTED & FROZEN)
 
 

@@ -5,6 +5,9 @@ import type {
   ParentStudentAssessmentDTO,
   ParentStudentBillingDTO,
   ParentReceiptDetailDTO,
+  ParentTimelineEventDTO,
+  ParentNotificationDTO,
+  ParentUnreadCountDTO,
 } from '../types/parent-ui.types';
 
 export class ParentApiError extends Error {
@@ -82,6 +85,71 @@ export class ParentApiClient {
     return this.request<ParentReceiptDetailDTO>(
       `/api/v1/parent/students/${encodeURIComponent(studentId)}/receipts/${encodeURIComponent(receiptId)}`,
       { method: 'GET' },
+    );
+  }
+
+  static async getTimeline(options?: {
+    studentId?: string | null;
+    cursor?: string | null;
+    limit?: number;
+  }): Promise<{ items: ParentTimelineEventDTO[]; nextCursor: string | null; hasMore: boolean }> {
+    const params = new URLSearchParams();
+    if (options?.studentId) params.set('studentId', options.studentId);
+    if (options?.cursor) params.set('cursor', options.cursor);
+    if (options?.limit) params.set('limit', String(options.limit));
+
+    const url = `/api/v1/parent/timeline${params.toString() ? `?${params.toString()}` : ''}`;
+    const res = await this.request<ParentTimelineEventDTO[]>(url, { method: 'GET' });
+    // Handle paginated response wrapper if present
+    const responseWithPagination = res as unknown as {
+      data: ParentTimelineEventDTO[];
+      pagination?: { nextCursor: string | null; hasMore: boolean };
+    };
+
+    return {
+      items: Array.isArray(res) ? res : responseWithPagination.data || [],
+      nextCursor: responseWithPagination.pagination?.nextCursor ?? null,
+      hasMore: responseWithPagination.pagination?.hasMore ?? false,
+    };
+  }
+
+  static async getNotifications(options?: {
+    isRead?: boolean;
+    cursor?: string | null;
+    limit?: number;
+  }): Promise<{ items: ParentNotificationDTO[]; nextCursor: string | null; hasMore: boolean }> {
+    const params = new URLSearchParams();
+    if (options?.isRead !== undefined) params.set('isRead', String(options.isRead));
+    if (options?.cursor) params.set('cursor', options.cursor);
+    if (options?.limit) params.set('limit', String(options.limit));
+
+    const url = `/api/v1/parent/notifications${params.toString() ? `?${params.toString()}` : ''}`;
+    const res = await this.request<ParentNotificationDTO[]>(url, { method: 'GET' });
+    const responseWithPagination = res as unknown as {
+      data: ParentNotificationDTO[];
+      pagination?: { nextCursor: string | null; hasMore: boolean };
+    };
+
+    return {
+      items: Array.isArray(res) ? res : responseWithPagination.data || [],
+      nextCursor: responseWithPagination.pagination?.nextCursor ?? null,
+      hasMore: responseWithPagination.pagination?.hasMore ?? false,
+    };
+  }
+
+  static async getUnreadNotificationCount(): Promise<ParentUnreadCountDTO> {
+    return this.request<ParentUnreadCountDTO>(
+      `/api/v1/parent/notifications/unread-count`,
+      { method: 'GET' },
+    );
+  }
+
+  static async markNotificationAsRead(
+    notificationId: string,
+  ): Promise<{ id: string; isRead: boolean; readAt: string | null }> {
+    return this.request<{ id: string; isRead: boolean; readAt: string | null }>(
+      `/api/v1/parent/notifications/${encodeURIComponent(notificationId)}/read`,
+      { method: 'POST' },
     );
   }
 }

@@ -10,6 +10,7 @@ import { AttendanceList } from './attendance/attendance-list';
 import { HomeworkList } from './homework/homework-list';
 import { AssessmentList } from './assessments/assessment-list';
 import { BillingView } from './billing/billing-view';
+import { ParentTimeline } from './timeline/parent-timeline';
 import { Skeleton, Card, CardContent } from '@coaching-os/ui';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@coaching-os/ui';
@@ -17,7 +18,7 @@ import { Button } from '@coaching-os/ui';
 interface ParentAcademicViewsProps {
   studentId: string | null;
   studentName?: string;
-  activeView: 'attendance' | 'homework' | 'assessments' | 'fees';
+  activeView: 'timeline' | 'attendance' | 'homework' | 'assessments' | 'fees';
 }
 
 export function ParentAcademicViews({
@@ -29,6 +30,11 @@ export function ParentAcademicViews({
   const homeworkQuery = useParentHomework(activeView === 'homework' ? studentId : null);
   const assessmentsQuery = useParentAssessments(activeView === 'assessments' ? studentId : null);
   const billingQuery = useParentBilling(activeView === 'fees' ? studentId : null);
+
+  // Render Timeline View
+  if (activeView === 'timeline') {
+    return <ParentTimeline studentId={studentId} />;
+  }
 
   if (!studentId) {
     return (

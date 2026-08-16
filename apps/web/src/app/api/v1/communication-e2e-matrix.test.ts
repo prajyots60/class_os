@@ -8,24 +8,12 @@ import {
   ProjectActivityUseCase,
   ActivityProjectionService,
   NotificationProjectionService,
-  handleAttendanceRecorded,
-  handleHomeworkPublished,
-  validateEventEnvelope,
-  type StudentParentResolver,
-  type BatchEnrollmentResolver,
 } from '@coaching-os/communication';
-import { PrismaInstituteMembershipRepository, InstituteMembershipEntity } from '@coaching-os/identity';
 
 // Route Handlers
-import { GET as announcementsGET, POST as announcementsPOST } from './communication/announcements/route';
-import { GET as announcementByIdGET, PATCH as announcementByIdPATCH, DELETE as announcementByIdDELETE } from './communication/announcements/[id]/route';
-import { POST as publishPOST } from './communication/announcements/[id]/publish/route';
-import { POST as archivePOST } from './communication/announcements/[id]/archive/route';
-import { GET as notificationsGET } from './communication/notifications/route';
-import { GET as notificationByIdGET } from './communication/notifications/[id]/route';
-import { POST as readPOST } from './communication/notifications/[id]/read/route';
-import { GET as activitiesGET, POST as activitiesPOST, PUT as activitiesPUT, PATCH as activitiesPATCH, DELETE as activitiesDELETE } from './students/[id]/activities/route';
-import { GET as activityByIdGET } from './students/[id]/activities/[activityId]/route';
+import { POST as announcementsPOST } from './communication/announcements/route';
+import { GET as announcementByIdGET, PATCH as announcementByIdPATCH } from './communication/announcements/[id]/route';
+import { GET as activitiesGET } from './students/[id]/activities/route';
 
 describe('Phase 4.8 — Communication Security, Privacy, UX & E2E Verification Matrix', () => {
   beforeAll(() => {
