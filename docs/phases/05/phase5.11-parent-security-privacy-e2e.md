@@ -1,9 +1,9 @@
-# Phase 5.11 — Parent PWA Security, Privacy & Adversarial E2E Matrix
+# Phase 5.11 — Parent PWA Security, Privacy & Adversarial Matrix
 
 **Phase Status**: 🟢 **COMPLETED & VERIFIED**  
 **Milestone Version**: `v0.5.11`  
 **Security Architecture Authority**: [`docs/sdd.md`](file:///home/supra/Desktop/class_os/docs/sdd.md), [`docs/dadd.md`](file:///home/supra/Desktop/class_os/docs/dadd.md), [`docs/phases/05/phase5.0-parent-pwa-contract.md`](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.0-parent-pwa-contract.md)  
-**Verification Baseline**: 55/55 Phase 5.11 Adversarial Tests Passed; 837/837 Total Monorepo Tests Passed Clean.
+**Verification Baseline**: 34/34 Phase 5.11 Adversarial Integration & UI Tests Passed; 837/837 Total Monorepo Tests Passed Clean.
 
 ---
 
@@ -17,66 +17,55 @@ The Parent PWA security model is grounded in a fundamental invariant:
 
 ---
 
-## 2. Threat Matrix (55 Scenarios)
+## 2. Threat Matrix (34 Scenarios)
 
-### A. Authentication & Session Security
+### A. Authentication & Session Security (PARENT-SEC-001 - 007)
 - `PARENT-SEC-001`: Unauthenticated request without session cookie → `401 Unauthorized`.
 - `PARENT-SEC-002`: Invalid session token string → `401 Unauthorized`.
 - `PARENT-SEC-003`: Expired session token → `401 Unauthorized`.
 - `PARENT-SEC-004`: Malformed session token structure → `401 Unauthorized`.
 - `PARENT-SEC-005`: Forged session token signature → `401 Unauthorized`.
-- `PARENT-SEC-006`: Session token belonging to another user → `401 / 404` (Isolated).
-- `PARENT-SEC-007`: Authenticated staff user without ParentIdentity attempting Parent endpoints → `401 / 404`.
-- `PARENT-SEC-008`: Parent identity resolution failure → `401 Unauthorized`.
-- `PARENT-SEC-009`: Invalid bearer / authorization header format → `401 Unauthorized`.
-- `PARENT-SEC-010`: Invalidated session post-logout → `401 Unauthorized`.
+- `PARENT-SEC-006`: Staff user without ParentIdentity attempting Parent endpoints → `401`.
+- `PARENT-SEC-007`: Cookie-based auth enforcement: missing cookie returns 401 even with arbitrary headers.
 
-### B. Parent Authorization & IDOR Resistance
-- `PARENT-SEC-011`: Parent A accesses authorized Child A1 → `200 OK` (Permitted).
-- `PARENT-SEC-012`: Parent A accesses Student B1 (linked to Parent B) → `404 NOT_FOUND` (Universal Masking).
-- `PARENT-SEC-013`: Parent A accesses arbitrary random UUID → `404 NOT_FOUND` (Universal Masking).
-- `PARENT-SEC-014`: Parent A accesses deleted student UUID → `404 NOT_FOUND` (Universal Masking).
-- `PARENT-SEC-015`: Parent A attempts client-supplied `x-institute-id` header of Institute B → Client header ignored; server authorization enforced.
-- `PARENT-SEC-016`: Parent A attempts client-supplied `x-tenant-id` header → Client header ignored; server authorization enforced.
-- `PARENT-SEC-017`: Parent A accesses Student A2 at Institute B → `200 OK` (Cross-Institute Authorized).
-- `PARENT-SEC-018`: Parent A attempts access after `StudentLink` unlinking → `404 NOT_FOUND`.
+### B. Parent Authorization, Cross-Parent & IDOR Protection (PARENT-SEC-011 - 016)
+- `PARENT-SEC-011`: Parent A accesses authorized Student A1 attendance → `200 OK`.
+- `PARENT-SEC-012`: Parent A accesses Student B1 (Parent B) attendance → `404 NOT_FOUND` (Universal Masking).
+- `PARENT-SEC-013`: Parent A accesses random non-existent UUID → `404 NOT_FOUND` (Universal Masking).
+- `PARENT-SEC-014`: Parent A accesses Student A2 (Institute B) → `200 OK` (Cross-Institute Authorized).
+- `PARENT-SEC-015`: Client-supplied x-institute-id header cannot bypass authorization.
+- `PARENT-SEC-016`: Parent A attempts to access student after relationship unlinking → `404 NOT_FOUND`.
 
-### C. Academic Privacy (Attendance, Homework, Assessments)
-- `PARENT-SEC-019`: Attendance: Parent A requests Student B1 attendance → `404 NOT_FOUND`.
-- `PARENT-SEC-020`: Attendance: Date query parameter tampering → Retains student boundary (`404` if unauthorized).
-- `PARENT-SEC-021`: Homework: Parent A requests Student B1 homework → `404 NOT_FOUND`.
-- `PARENT-SEC-022`: Homework: Draft homework items → Excluded from parent API projection (`200` with 0 draft items).
-- `PARENT-SEC-023`: Assessments: Parent A requests Student B1 assessments → `404 NOT_FOUND`.
-- `PARENT-SEC-024`: Assessments: Unpublished test results / draft tests → Excluded from parent assessment DTO.
-- `PARENT-SEC-025`: Assessments: Cross-institute assessment IDOR attempt → `404 NOT_FOUND`.
+### C. Academic Privacy & Data Isolation (PARENT-SEC-021 - 024)
+- `PARENT-SEC-021`: Parent A requests Student B1 homework → `404 NOT_FOUND`.
+- `PARENT-SEC-022`: Draft homework assignments are excluded from parent homework feed.
+- `PARENT-SEC-023`: Parent A requests Student B1 assessments → `404 NOT_FOUND`.
+- `PARENT-SEC-024`: Draft assessment tests are excluded from parent assessment feed.
 
-### D. Financial & Receipt Privacy
-- `PARENT-SEC-026`: Billing: Parent A requests Student B1 billing summary → `404 NOT_FOUND`.
-- `PARENT-SEC-027`: Billing: Parent A requests Student B1 invoice details → `404 NOT_FOUND`.
-- `PARENT-SEC-028`: Receipts: Parent A requests Student B1 receipt via `/students/[id]/receipts/[receiptId]` → `404 NOT_FOUND`.
-- `PARENT-SEC-029`: Receipts: Parent A supplies Student A1 ID with Student B1's valid `receiptId` → `404 NOT_FOUND` (Dual validation enforced).
-- `PARENT-SEC-030`: Receipts: Random `receiptId` enumeration attempt → `404 NOT_FOUND`.
-- `PARENT-SEC-031`: Financial PII: DTO responses verify zero exposure of raw payment gateway keys, database credentials, or internal transaction hashes.
+### D. Financial & Receipt Privacy (PARENT-SEC-031 - 034)
+- `PARENT-SEC-031`: Parent A requests Student B1 billing summary → `404 NOT_FOUND`.
+- `PARENT-SEC-032`: Parent A requests Student B1 receipt via API → `404 NOT_FOUND`.
+- `PARENT-SEC-033`: Parent A requests Student A1 with Student B1 receiptId → `404 NOT_FOUND` (Dual Authorization).
+- `PARENT-SEC-034`: Receipt endpoint returns exact DTO without leaking raw database attributes.
 
-### E. Notification & Timeline Privacy
-- `PARENT-SEC-032`: Notifications: Parent A lists notifications → returns only notifications where `recipientUserId == Parent A`.
-- `PARENT-SEC-033`: Notifications: Parent A requests Parent B's unread count → Returns only Parent A's unread count.
-- `PARENT-SEC-034`: Notifications: Parent A attempts to mark Parent B's notification as read via `POST /notifications/[id]/read` → `404 NOT_FOUND`.
-- `PARENT-SEC-035`: Timeline: Parent A lists activity timeline → Returns events for Student A1 & Student A2 only.
-- `PARENT-SEC-036`: Timeline: Parent A requests timeline with `?studentId=<Student B1>` → `404 NOT_FOUND`.
-- `PARENT-SEC-037`: Timeline: Timeline cursor generated for Parent B passed by Parent A → Safely returns empty / isolated result without data leakage.
+### E. Notification & Timeline Privacy (PARENT-SEC-041 - 045)
+- `PARENT-SEC-041`: Parent A lists notifications → returns strictly Parent A notifications.
+- `PARENT-SEC-042`: Parent A unread count ignores Parent B notifications.
+- `PARENT-SEC-043`: Parent A attempts to mark Parent B notification as read → `404 NOT_FOUND`.
+- `PARENT-SEC-044`: Parent A timeline contains Student A1 & A2 events only.
+- `PARENT-SEC-045`: Parent A requests timeline with unauthorized ?studentId=<Student B1> → `404 NOT_FOUND`.
 
-### F. HTTP Method Safety & Mass Assignment
-- `PARENT-SEC-038`: Read-only endpoint `POST /api/v1/parent/academic` → `405 Method Not Allowed`.
-- `PARENT-SEC-039`: Read-only endpoint `PUT /api/v1/parent/billing` → `405 Method Not Allowed`.
-- `PARENT-SEC-040`: Read-only endpoint `PATCH /api/v1/parent/timeline` → `405 Method Not Allowed`.
-- `PARENT-SEC-041`: Read-only endpoint `DELETE /api/v1/parent/hub` → `405 Method Not Allowed`.
-- `PARENT-SEC-042`: Body payload tampering on GET endpoints (`{ "role": "admin", "isRead": true }`) → Ignored safely.
+### F. HTTP Method Safety & Mass Assignment (PARENT-SEC-051 - 055)
+- `PARENT-SEC-051`: Unsupported POST on read-only academic route → `405 Method Not Allowed`.
+- `PARENT-SEC-052`: Unsupported POST on read-only billing route → `405 Method Not Allowed`.
+- `PARENT-SEC-053`: Unsupported POST on timeline route → `405 Method Not Allowed`.
+- `PARENT-SEC-054`: Query parameter tampering on GET endpoints is ignored safely.
+- `PARENT-SEC-055`: Unexpected query parameters on hub route do not cause internal error.
 
-### G. Client Trust Boundary & Cache Privacy
-- `PARENT-SEC-043`: React Query cache keys include explicit `studentId` (`['parent', 'attendance', studentId]`) → Prevents stale cross-child data flash.
-- `PARENT-SEC-044`: XSS Input Sanitization: Teacher homework instructions, announcement titles, notification messages with script tags (`<script>alert(1)</script>`) render as text strings.
-- `PARENT-SEC-045`: Logout Privacy: Post-logout navigation clears session state and blocks API access (`401`).
+### G. Client UI Privacy, XSS & Cache Isolation (3 Scenarios)
+- `PARENT-SEC-043` (UI): React Query cache key structure includes explicit studentId boundary to prevent stale cross-child data flash.
+- `PARENT-SEC-044` (UI): Homework details modal escapes malicious XSS script tags in instructions.
+- `PARENT-SEC-045` (UI): Assessment details modal renders test title and instructions safely without raw script execution.
 
 ---
 
