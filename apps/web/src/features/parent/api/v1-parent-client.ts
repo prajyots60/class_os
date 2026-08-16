@@ -1,4 +1,8 @@
-import type { ParentHubDTO } from '../types/parent-ui.types';
+import type {
+  ParentHubDTO,
+  ParentStudentAttendanceDTO,
+  ParentStudentHomeworkDTO,
+} from '../types/parent-ui.types';
 
 export class ParentApiError extends Error {
   constructor(
@@ -38,5 +42,19 @@ export class ParentApiClient {
     return this.request<ParentHubDTO>('/api/v1/parent/hub', {
       method: 'GET',
     });
+  }
+
+  static async getStudentAttendance(studentId: string): Promise<ParentStudentAttendanceDTO> {
+    return this.request<ParentStudentAttendanceDTO>(
+      `/api/v1/parent/students/${encodeURIComponent(studentId)}/attendance`,
+      { method: 'GET' },
+    );
+  }
+
+  static async getStudentHomework(studentId: string): Promise<ParentStudentHomeworkDTO> {
+    return this.request<ParentStudentHomeworkDTO>(
+      `/api/v1/parent/students/${encodeURIComponent(studentId)}/homework`,
+      { method: 'GET' },
+    );
   }
 }
