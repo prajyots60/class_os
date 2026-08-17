@@ -953,15 +953,21 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Frozen Contract & UX Compliance**: Implemented Today's Attendance breakdown preserving session completion (taken/total) vs student attendance (present/eligible) separately, color-independent counts, real navigation quick actions (`/students`, `/billing`, `/academics`), pending fee summary, scheduled classes & tests, and announcements empty state.
 - **Verification Matrix**: Authored and passed `owner-dashboard.test.tsx` (`OWNER-DASH-001..018`) and security tests (`P6.2-SEC-001..006`). Verified 100% quality gates across `env:check`, `db:validate`, `db:health`, `typecheck`, `lint`, `test` (886/886 tests passed), and `build`. **Phase 6.2 COMPLETED & VERIFIED.**
 
+### 🟢 Phase 6.3 — Teacher Dashboard UI & Operational Workspace (COMPLETED & VERIFIED)
+
+- **UI Implementation & React Query Integration**: Built production-ready `TeacherDashboardView`, `TeacherTodaySessions`, `TeacherPendingHomework`, `TeacherUpcomingTests`, `useTeacherDashboard` hook consuming `GET /api/v1/dashboard/teacher`, and updated `/dashboard/page.tsx` for server-side RSC role composition.
+- **Frozen "Today's Batches" Contract**: Enforced Today's Batches scope to strictly represent today's generated `BatchSession` records for the authenticated teacher in institute local timezone. Excluded future and historical sessions. Surfaces session details (`batchName`, `subjectName`, `startTime`, `status`, `attendanceTaken`) and direct actions to `/academics`.
+- **Verification Matrix**: Authored and passed `teacher-dashboard.test.tsx` (`TEACHER-DASH-001..030`) and security tests (`P6.3-SEC-001..010`). Verified 100% quality gates across `env:check`, `db:validate`, `db:health`, `typecheck`, `lint`, `test` (923/923 tests passed), and `build`. **Phase 6.3 COMPLETED & VERIFIED.**
+
 ### 🟡 PHASE 6 — STAFF DASHBOARD & UX POLISH (IN EXECUTION)
 
-- **Domain Contract Specification:** Documented in [docs/phases/06/phase6.0-staff-dashboard-contract.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-staff-dashboard-contract.md), [docs/phases/06/phase6.0-ux-information-architecture.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-ux-information-architecture.md), [docs/phases/06/phase6.1-staff-dashboard-foundation.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.1-staff-dashboard-foundation.md), and [docs/phases/06/phase6.2-owner-dashboard-ui.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.2-owner-dashboard-ui.md).
+- **Domain Contract Specification:** Documented in [docs/phases/06/phase6.0-staff-dashboard-contract.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-staff-dashboard-contract.md), [docs/phases/06/phase6.0-ux-information-architecture.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-ux-information-architecture.md), [docs/phases/06/phase6.1-staff-dashboard-foundation.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.1-staff-dashboard-foundation.md), [docs/phases/06/phase6.2-owner-dashboard-ui.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.2-owner-dashboard-ui.md), and [docs/phases/06/phase6.3-teacher-dashboard-ui.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.3-teacher-dashboard-ui.md).
 - **Subphase Tracking Map:**
   - **Phase 6.0:** Architecture & UX Contract Freeze 🟢 (ACCEPTED & FROZEN)
   - **Phase 6.1:** Staff Dashboard Foundation & Read Orchestration 🟢 (COMPLETED & VERIFIED)
   - **Phase 6.2:** Founder / Owner Dashboard UI 🟢 (COMPLETED & VERIFIED)
-  - **Phase 6.3:** Teacher Dashboard UI ⏳ (NEXT ACTIVE TARGET)
-  - **Phase 6.4:** Assistant Dashboard UI ⏳ (UPCOMING)
+  - **Phase 6.3:** Teacher Dashboard UI 🟢 (COMPLETED & VERIFIED)
+  - **Phase 6.4:** Assistant Dashboard UI ⏳ (NEXT ACTIVE TARGET)
   - **Phase 6.5:** Global Search Implementation ⏳ (UPCOMING)
   - **Phase 6.6:** Operational Tables & Multi-Criteria Filtering ⏳ (UPCOMING)
   - **Phase 6.7:** Operational Reports UI ⏳ (UPCOMING)
