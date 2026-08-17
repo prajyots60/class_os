@@ -6,6 +6,8 @@ import type { UserDisplay, TenantDisplay } from '../types/app-shell-types';
 import { Breadcrumbs } from './breadcrumbs';
 import { UserMenu } from './user-menu';
 
+import { GlobalSearchBar } from '../../search';
+
 export interface AppHeaderProps {
   user: UserDisplay;
   tenant: TenantDisplay;
@@ -15,12 +17,12 @@ export interface AppHeaderProps {
 /**
  * AppHeader — sticky top navigation bar for the workspace shell.
  *
- * Renders mobile drawer toggle on small viewports, breadcrumbs, and user menu dropdown.
+ * Renders mobile drawer toggle on small viewports, breadcrumbs, global search bar, and user menu dropdown.
  */
 export function AppHeader({ user, tenant, onOpenMobileMenu }: AppHeaderProps) {
   return (
-    <header className="sticky top-0 z-20 flex h-16 w-full items-center justify-between border-b border-[hsl(var(--border))] bg-[hsl(var(--card))] px-4 shadow-xs md:px-6">
-      <div className="flex items-center space-x-3">
+    <header className="sticky top-0 z-20 flex h-16 w-full items-center justify-between border-b border-[hsl(var(--border))] bg-[hsl(var(--card))] px-4 shadow-xs md:px-6 gap-2">
+      <div className="flex items-center space-x-3 shrink-0">
         {/* Mobile menu toggle button */}
         <button
           type="button"
@@ -35,10 +37,16 @@ export function AppHeader({ user, tenant, onOpenMobileMenu }: AppHeaderProps) {
         <Breadcrumbs />
       </div>
 
+      {/* Global Search Bar */}
+      <div className="flex-1 max-w-md mx-2">
+        <GlobalSearchBar />
+      </div>
+
       {/* Right User Menu */}
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-3 shrink-0">
         <UserMenu user={user} tenant={tenant} />
       </div>
     </header>
   );
 }
+
