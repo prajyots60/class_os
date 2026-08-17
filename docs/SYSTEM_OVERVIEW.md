@@ -2,8 +2,8 @@
 
 > **Authoritative Technical & Product Summary Document**  
 > **Target Audience:** Engineering Staff, Product Lead, Architecture Reviewers, Onboarding Engineers  
-> **Status:** Phase 0 (ACCEPTED & FROZEN) | Phase 1 (ACCEPTED & FROZEN) | Phase 2 (ACCEPTED & FROZEN) | Phase 3 (ACCEPTED & FROZEN) | Phase 4 (ACCEPTED & FROZEN)  
-> **Updated:** August 15, 2026
+> **Status:** Phase 0 (ACCEPTED & FROZEN) | Phase 1 (ACCEPTED & FROZEN) | Phase 2 (ACCEPTED & FROZEN) | Phase 3 (ACCEPTED & FROZEN) | Phase 4 (ACCEPTED & FROZEN) | Phase 5 (ACCEPTED & FROZEN)  
+> **Updated:** August 17, 2026
 
 ---
 
@@ -29,7 +29,7 @@ Unlike generic school ERPs, LMS platforms, or enterprise software, CoachingOS is
 
 ```text
 ========================================================================================
-                               COACHINGOS ROADMAP PROGRESSION
+                                COACHINGOS ROADMAP PROGRESSION
 ========================================================================================
 
 PHASE 0 — ENGINEERING FOUNDATION                         ✅ ACCEPTED & FROZEN
@@ -50,10 +50,10 @@ PHASE 3 — BILLING MODULE                                 ✅ ACCEPTED & FROZEN
 PHASE 4 — COMMUNICATION MODULE                           ✅ ACCEPTED & FROZEN
   └── Announcements, Notification Engine, Child Activity Timeline & Outbound WhatsApp Queue.
 
-PHASE 5 — PARENT PWA                                     ⏳ UPCOMING (ACTIVE FOCUS)
+PHASE 5 — PARENT PWA                                     ✅ ACCEPTED & FROZEN
   └── Mobile-first Parent Portal across multi-institute child profiles.
 
-PHASE 6 — STAFF DASHBOARD POLISH                         ⏳ UPCOMING
+PHASE 6 — STAFF DASHBOARD POLISH                         ⏳ UPCOMING (ACTIVE FOCUS)
   └── Founder, Teacher, and Assistant role-tailored dashboards and analytics.
 
 PHASE 7 — PRODUCTION & BETA READINESS                    ⏳ UPCOMING
@@ -421,7 +421,88 @@ PHASE 4 — COMMUNICATION MODULE EXECUTION ROADMAP
 
 ---
 
-## 8. Verification & Quality Standards Summary
+## 8. What We Implemented & Achieved in Phase 5 (Parent PWA)
+
+Phase 5 established the **mobile-first Parent PWA portal** enabling parents to log in via phone number + OTP, link child student records across one or more coaching institutes, and monitor real-time attendance, homework, assessments, test performance, and billing/receipt ledgers.
+
+```text
+                               PHASE 5 PARENT PWA GRAPH
+                                          │
+                               (Global Identity Layer)
+                                   ParentIdentity
+                                          │
+                   ┌──────────────────────┴──────────────────────┐
+                   ▼                                             ▼
+             ChildProfile                               InstituteMembership
+            ("Aarav", "Riya")                                    │
+                   │                                             ▼
+                   ▼                                      InstituteParent
+              StudentLink                                  (Tenant CRM)
+             (Join Table)                                        │
+                   │                                             │
+                   └──────────────────────┬──────────────────────┘
+                                          ▼
+                                   TENANT LAYER
+                                 Institute Student
+                                (Attendance, Homework,
+                                 Tests, Marks, Invoices)
+```
+
+---
+
+### Core Areas & Business Rules of Phase 5
+
+#### 1. Architecture & Two-Layer Parent Identity Model (ADR-001)
+- **Rule:** Global `ParentIdentity` (phone-anchored platform identity) separated from tenant-scoped `InstituteParent` CRM records, parent-owned `ChildProfile` entities, and `StudentLink` join tables connecting children to institute student profiles.
+- **Rule:** Unlinking a `StudentLink` performs a hard deletion of the join row without altering or deleting institute-side `Student`, `InstituteParent`, or `Enrollment` records.
+
+#### 2. Parent OTP Authentication & Session Engine (`POST /api/v1/parent/otp/*`)
+- **Rule:** Phone number + 6-digit OTP verification issuing HTTP-only, secure, SameSite `better-auth.session_token` cookies (30-day maxAge).
+- **Rule:** Single-use SHA-256 hashed OTP storage, 5-minute validity window, max 3 verification attempts per 15-minute rate limit window.
+
+#### 3. Parent Authorization Engine & Universal 404 Masking
+- **Rule:** Server-authoritative `ParentAuthorizationEngine` enforcing relationship-based access (`ParentIdentity` $\rightarrow$ `ChildProfile` $\rightarrow$ `StudentLink` $\rightarrow$ `Student`).
+- **Rule:** Universal 404 Masking: unauthorized or non-existent student queries return `404 NOT_FOUND` to prevent resource enumeration attacks.
+
+#### 4. Unified Parent Hub & Multi-Child Switcher (`GET /api/v1/parent/hub`)
+- **Rule:** Aggregates parent identity details, connected institutes, child profiles, and linked student profiles across multiple coaching institutes.
+- **Rule:** Mobile PWA child profile switcher dynamically scopes active student context with React Query cache key boundaries (`['parent', 'attendance', studentId]`).
+
+#### 5. Academic & Financial Views
+- **Rule:** Excludes draft homework assignments (`publishedAt: null`) and draft tests (`status: 'draft'`).
+- **Rule:** Dual authorization on receipt downloads (`GET /api/v1/parent/students/[id]/receipts/[receiptId]`) verifying both student access and receipt ownership.
+- **Rule:** Recipient-isolated notifications (`recipientUserId`) and timeline activity stream.
+
+#### 6. Mobile UX & Accessibility Standards
+- **Rule:** Hardened for `320px` to `1024px+` viewports. Minimum $\ge 44 \times 44\text{px}$ touch targets across all controls.
+- **Rule:** WAI-ARIA `role="dialog"` modal focus trap, Escape key handling, focus restoration, and Left/Right arrow tab navigation.
+
+---
+
+### Phase 5 Implementation Subphase Roadmap
+
+```text
+PHASE 5 — PARENT PWA EXECUTION ROADMAP
+  ├── Phase 5.0 — Architecture & Domain Contract Freeze        🟢 ACCEPTED & FROZEN
+  ├── Phase 5.1 — Parent Authentication & OTP Implementation   🟢 ACCEPTED & FROZEN
+  ├── Phase 5.2 — Parent Session & Authorization Engine        🟢 ACCEPTED & FROZEN
+  ├── Phase 5.3 — Child Profile & Student Linking Implementation 🟢 ACCEPTED & FROZEN
+  ├── Phase 5.4 — Parent Hub & Cross-Institute Read Implementation 🟢 ACCEPTED & FROZEN
+  ├── Phase 5.5 — Parent Home Dashboard & Today's Activity UI  🟢 ACCEPTED & FROZEN
+  ├── Phase 5.6 — Attendance & Homework Views UI              🟢 ACCEPTED & FROZEN
+  ├── Phase 5.7 — Assessments, Marks & Performance Views UI   🟢 ACCEPTED & FROZEN
+  ├── Phase 5.8 — Parent Fee Status, Invoice History & Receipts UI 🟢 ACCEPTED & FROZEN
+  ├── Phase 5.9 — Notifications & Unified Timeline Feed UI     🟢 ACCEPTED & FROZEN
+  ├── Phase 5.10 — PWA Mobile UX, Touch Targets & Accessibility 🟢 ACCEPTED & FROZEN
+  ├── Phase 5.11 — Security, Privacy & Adversarial Matrix      🟢 ACCEPTED & FROZEN
+  └── Phase 5.12 — Phase 5 Acceptance Gate & Milestone Freeze  🟢 ACCEPTED & FROZEN
+                                                        ↓
+                                                  PHASE 5 GATE (PASSED & FROZEN)
+```
+
+---
+
+## 9. Verification & Quality Standards Summary
 
 Every phase and subphase in CoachingOS is governed by strict senior staff engineering standards defined in `AGENTS.md` and `ENGINEERING_PLAYBOOK.md`:
 
@@ -437,11 +518,10 @@ pnpm build              # Run Next.js App Router & package builds
 
 ---
 
-## 9. Future Horizons (Phases 5 – 7 Overview)
+## 10. Future Horizons (Phases 6 – 7 Overview)
 
 | Phase | Core Focus | Key Deliverables |
 | :--- | :--- | :--- |
-| **Phase 5** | **Parent PWA** | Mobile parent portal for attendance, homework, marks, fee history, and child profiles across institutes. |
 | **Phase 6** | **Staff Dashboard Polish** | Role-tailored dashboards for Founder/Owner, Teacher, and Assistant with operational analytics. |
 | **Phase 7** | **Beta & Production** | Query performance tuning, rate-limiting, security audits, and onboarding 3–5 beta institutes. |
 

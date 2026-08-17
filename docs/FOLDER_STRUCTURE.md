@@ -98,6 +98,7 @@ apps/web/
 │   │   │   └── onboarding/       ← Institute setup onboarding wizard (`page.tsx`)
 │   │   ├── (auth)/               ← Public authentication flow routes (`/sign-in`, `/sign-up`)
 │   │   ├── (marketing)/          ← Public product landing page (`page.tsx`)
+│   │   ├── parent/               ← Parent PWA Mobile Portal (`page.tsx`, `attendance/`, `homework/`, `assessments/`, `fees/`, `timeline/`, `notifications/`)
 │   │   ├── api/                  ← HTTP Route Handler Adapters
 │   │   │   ├── auth/             ← Better Auth catch-all route (`/api/auth/[...all]`)
 │   │   │   ├── dashboard/        ← Server tenant context handler (`GET /api/dashboard/context`)
@@ -112,6 +113,7 @@ apps/web/
 │   │   │       ├── enrollments/  ← Protected Enrollment REST API
 │   │   │       ├── guardians/    ← Protected Guardian REST API
 │   │   │       ├── invoices/     ← Protected Invoice REST API (`GET`, `POST`, `[id]`)
+│   │   │       ├── parent/       ← Protected Parent PWA REST API (`otp/`, `profiles/`, `students/`, `hub`, `timeline`, `notifications`)
 │   │   │       ├── payments/     ← Protected Payment REST API (`GET`, `POST`, `[id]`)
 │   │   │       ├── receipts/     ← Protected Receipt REST API (`GET`, `POST`, `[id]`)
 │   │   │       ├── staff/        ← Protected Staff REST API
@@ -135,6 +137,7 @@ apps/web/
 │   │   ├── institute-parent/     ← Tenant Parent CRM UI components & modals
 │   │   ├── institute-settings/   ← White-label settings & branding form UI components
 │   │   ├── onboarding/           ← Multi-step institute setup onboarding wizard
+│   │   ├── parent/               ← Parent PWA Mobile Portal components, hooks, DTOs & API client
 │   │   ├── staff/                ← Staff management workspace components, table, card list & modals
 │   │   └── student/              ← Student admission & profile UI components & modals
 │   ├── lib/                      ← API clients, auth guards, fetch helpers
@@ -382,7 +385,8 @@ docs/
 │   ├── 01/                       ← Phase 1 Contracts, RBAC, API & Freeze Reports
 │   ├── 02/                       ← Phase 2 Contracts, Academics Contract, UI & Acceptance Reports
 │   ├── 03/                       ← Phase 3 Contracts, Billing Contracts, REST API & Acceptance Reports
-│   └── 04/                       ← Phase 4 Contracts, Communication Contracts, Event Integration, WhatsApp Queue, REST API, UI & Acceptance Reports
+│   ├── 04/                       ← Phase 4 Contracts, Communication Contracts, Event Integration, WhatsApp Queue, REST API, UI & Acceptance Reports
+│   └── 05/                       ← Phase 5 Contracts, Parent PWA Contract, Security Matrix, Mobile UX, REST API, UI & Final Acceptance Reports
 ├── BACKLOG.md                    ← Product backlog & future phase items
 ├── CONTEXT.md                    ← Active milestone tracker & phase history
 ├── ENGINEERING_PLAYBOOK.md       ← Monorepo development guidelines & rules
@@ -400,8 +404,8 @@ docs/
 
 | Package / App | Category | Purpose | Core Tech Stack |
 |---|---|---|---|
-| `@coaching-os/web` | Application | Presentation UI & API Route Handlers | Next.js 16, React 19, Vanilla CSS (CSS Variables) |
-| `@coaching-os/identity` | Package | Multi-tenant Identity, Memberships, RBAC, Parents, Students & Staff | TypeScript, Zod, Vitest |
+| `@coaching-os/web` | Application | Presentation UI, Parent PWA & API Route Handlers (Completed & Verified) | Next.js 16, React 19, Vanilla CSS (CSS Variables) |
+| `@coaching-os/identity` | Package | Multi-tenant Identity, Memberships, RBAC, Parents, Students, Staff & Parent Identity (Completed & Verified) | TypeScript, Zod, Vitest |
 | `@coaching-os/academics` | Package | Batches, Schedules, Sessions, Attendance, Homework, Tests & Marks | TypeScript, Zod, Vitest |
 | `@coaching-os/billing` | Package | Billing Plans, Invoices, Receipts, Payments (Completed & Verified) | TypeScript, Zod, Vitest |
 | `@coaching-os/communication` | Package | Announcements, Notifications, Child Activity Timeline, Outbound WhatsApp Queue, Projections (Completed & Verified) | TypeScript, Zod, Vitest |

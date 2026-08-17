@@ -786,6 +786,167 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
     - **Phase 3.7.1:** Security / UX / E2E Test Suite Execution 🟢 (COMPLETED & VERIFIED)
   - **Phase 3.8:** Phase 3 Acceptance Gate & Milestone Freeze 🟢 (PASSED & FROZEN)
 
+### 🟢 Phase 4.0 — Communication Architecture & Domain Contract Freeze (ACCEPTED & FROZEN)
+
+- **Contract Specification**: Authored and froze authoritative Phase 4 Communication contract in `docs/phases/04/phase4.0-communication-contract.md`.
+- **Domain Boundaries**: Defined 5 sub-domains: Announcements, In-App Notifications, Child Activity Timeline, Domain Event Projections, and Outbound WhatsApp Queue.
+- **Invariants**: Established recipient-isolated notifications, append-only student activity ledger, draft-to-published announcement lifecycle state machine, and provider-isolated async outbound messaging. **Phase 4.0 ACCEPTED & FROZEN.**
+
+### 🟢 Phase 4.1 — Announcement Engine Core (COMPLETED & VERIFIED)
+
+- **Domain Entities & Persistence**: Implemented `AnnouncementEntity` with state machine (`draft` → `published` → `archived`), optional attachments, target scopes (`institute` or specific `batchId`), and `PrismaAnnouncementRepository`.
+- **Use Cases & Immutability**: Implemented `CreateAnnouncementUseCase`, `PublishAnnouncementUseCase`, `ArchiveAnnouncementUseCase`, `GetAnnouncementUseCase`, and `ListAnnouncementsUseCase`. Published notices are strictly immutable. **Phase 4.1 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 4.2 — Notification Core & In-App Engine (COMPLETED & VERIFIED)
+
+- **Domain Entities & Persistence**: Implemented `NotificationEntity` bound to `recipientUserId` (`isRead` flag, `readAt` timestamp) and `PrismaNotificationRepository`.
+- **Use Cases & Unread Tracking**: Implemented `ProjectNotificationUseCase`, `ListNotificationsUseCase`, `GetUnreadCountUseCase`, and `MarkNotificationReadUseCase`. Enforced recipient-only access boundaries. **Phase 4.2 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 4.3 — Child Activity Timeline Engine (COMPLETED & VERIFIED)
+
+- **Domain Entities & Persistence**: Implemented `ActivityEntity` append-only student activity ledger and `PrismaActivityRepository`.
+- **Use Cases & Activity Projections**: Implemented `ProjectActivityUseCase` and `ListStudentActivitiesUseCase` mapping attendance, homework, test marks, and payment milestones. Prohibited mutations/deletions. **Phase 4.3 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 4.4 — Domain Event Integration & Projections (ACCEPTED & FROZEN)
+
+- **Contract & Event Handlers**: Documented event projection contract in `docs/phases/04/phase4.4-event-integration-contract.md`. Implemented subscribers for `Academics` and `Billing` domain events (`academics.attendance.recorded`, `academics.homework.published`, `academics.results.published`, `billing.payment.recorded`). **Phase 4.4 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 4.5 — Outbound Messaging & WhatsApp Provider (COMPLETED & VERIFIED)
+
+- **Outbound Queue & Worker**: Built `OutboundMessageEntity` queue and worker servicing `WhatsAppProvider` (`MetaWhatsAppProvider` & `MockWhatsAppProvider`).
+- **Failure Isolation**: Verified that external gateway timeouts or API errors fail safely without rolling back core business database transactions. **Phase 4.5 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 4.6 — Protected Communication REST APIs (ACCEPTED & FROZEN)
+
+- **REST API Boundaries**: Implemented versioned REST API routes under `/api/v1/communication/...` and `/api/v1/students/[id]/activities`.
+- **Security & Authorization**: Enforced `withV1ReadGuard`, `withV1MutationGuard`, server tenant resolution (`resolveV1TenantContext`), RBAC capabilities (`ANNOUNCEMENT_READ`, `ANNOUNCEMENT_CREATE`, `NOTIFICATION_READ`, `ACTIVITY_READ`), cross-tenant `404 Not Found` masking, and Zod validation. **Phase 4.6 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 4.7 — Staff Communication Workspace UI (COMPLETED & VERIFIED)
+
+- **UI & API Client Integration**: Implemented `/communication` staff workspace with sub-views (`Announcements`, `Notifications`, `Student Activity Timeline`), dynamic capability controls, and `v1CommunicationClient`. **Phase 4.7 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 4.8 — Security / Privacy / UX / E2E Matrix (COMPLETED & VERIFIED)
+
+- **Adversarial Matrix & E2E Verification**: Executed adversarial security test suite and Playwright E2E suite verifying notification isolation, activity feed immutability, XSS escaping, and 375px mobile responsiveness. **Phase 4.8 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 4.9 — Phase 4 Acceptance Gate & Milestone Freeze (PASSED & FROZEN)
+
+- **Final Milestone Acceptance**: Conducted final audit across all Communication subphases. Authored `docs/phases/04/phase4.9-acceptance-freeze-report.md`. Passed 100% monorepo quality gates. **PHASE 4 COMMUNICATION MODULE PASSED & FROZEN.**
+
+### 🟢 Phase 5.0 — Architecture & Domain Contract Freeze (ACCEPTED & FROZEN)
+
+- **Contract Specification**: Authored and froze authoritative Phase 5 Parent PWA contract in `docs/phases/05/phase5.0-parent-pwa-contract.md`.
+- **Two-Layer Parent Architecture**: Established global `ParentIdentity` (phone-anchored platform user) separated from tenant-scoped `InstituteParent` CRM records, parent-owned `ChildProfile` entities, and `StudentLink` join tables connecting children to institute student profiles.
+- **Security & Invariants**: Enforced server-authoritative authorization (`ParentAuthorizationEngine`), Universal 404 Masking for unauthorized student lookups, and hard deletion of `StudentLink` rows without altering institute CRM records. **Phase 5.0 ACCEPTED & FROZEN.**
+
+### 🟢 Phase 5.1 — Parent Identity Domain & OTP Verification Engine (COMPLETED & VERIFIED)
+
+- **OTP Service & Use Cases**: Implemented `OTPProvider` abstraction (`MockOTPProvider` & `ProductionOTPProvider`), `RequestParentOTPUseCase`, and `VerifyParentOTPUseCase` backed by SHA-256 hashed single-use verification tokens in database (`OTPVerificationRepository`).
+- **API Boundary & Cookie Security**: Implemented `POST /api/v1/parent/otp/request` and `POST /api/v1/parent/otp/verify`. Issued HTTP-only, secure, SameSite `better-auth.session_token` cookie (30-day maxAge). Verified security suite (`PARENT-AUTH-001..020`). **Phase 5.1 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 5.2 — Session Management & Secure Parent Authorization Engine (COMPLETED & VERIFIED)
+
+- **Authorization Engine**: Implemented `ParentAuthorizationEngine` resolving parent identity context and enforcing relationship-based access (`requireParentAuth`, `requireStudentAccess`).
+- **Universal 404 Masking**: Enforced HTTP 404 Not Found masking for non-existent or unauthorized student resource lookups to prevent resource enumeration. Verified security suite. **Phase 5.2 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 5.3 — Child Profile Management & Cross-Institute Student Linking (COMPLETED & VERIFIED)
+
+- **Profile & Link Orchestration**: Implemented `ChildProfile` CRUD use cases (`CreateChildProfileUseCase`, `UpdateChildProfileUseCase`, `DeleteChildProfileUseCase`) and `StudentLink` management (`LinkStudentToChildProfileUseCase`, `UnlinkStudentFromChildProfileUseCase`).
+- **REST Route Handlers**: Implemented `/api/v1/parent/profiles`, `/api/v1/parent/profiles/[id]`, and `/api/v1/parent/profiles/[id]/links`. **Phase 5.3 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 5.4 — Unified Parent Hub Page & Cross-Institute Directory (COMPLETED & VERIFIED)
+
+- **Directory Aggregation**: Built `GetParentHubUseCase` returning unified `ParentHubDTO` containing parent profile details, connected institutes list, child profiles, and authorized student links across multiple coaching institutes.
+- **REST API**: Implemented `GET /api/v1/parent/hub` with method guards and rate limiting. **Phase 5.4 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 5.5 — Home Dashboard View, Quick Links & Today's Activity Feed (COMPLETED & VERIFIED)
+
+- **Dashboard UI**: Built `/parent` home dashboard in `apps/web/src/features/parent/` (`ParentDashboardContent`, `ParentHeader`, `ChildSwitcher`, `ChildSummaryCard`, `InstituteContext`, `TodayOverview`, `TodayActivity`).
+- **Multi-Child Switcher**: Implemented profile tab switcher dynamically scoping student context. **Phase 5.5 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 5.6 — Academic Attendance Calendar & Homework Detail Dialogs (COMPLETED & VERIFIED)
+
+- **Academic Views UI**: Built `/parent/attendance` and `/parent/homework` presentation views (`AttendanceSummary`, `AttendanceList`, `HomeworkCard`, `HomeworkList`, `HomeworkDetailModal`).
+- **Draft Exclusion**: Server-side APIs strictly filter out unpublished/draft homework items (`publishedAt: null`). **Phase 5.6 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 5.7 — Test Assessment Marks & Performance Analytics Trends (COMPLETED & VERIFIED)
+
+- **Assessments UI**: Built `/parent/assessments` presentation view (`MarksSummary`, `AssessmentCard`, `AssessmentList`, `AssessmentDetailModal`, `PerformanceTrend`).
+- **Draft Exclusion**: Excluded draft tests (`status: 'draft'`) and unpublished mark results. **Phase 5.7 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 5.8 — Fee Installments Schedule, Invoices & Receipt PDF Viewers (COMPLETED & VERIFIED)
+
+- **Billing Views UI**: Built `/parent/fees` view (`FeeSummary`, `InvoiceCard`, `InvoiceList`, `InvoiceDetailModal`, `PaymentList`, `ReceiptCard`, `ReceiptDetailModal`).
+- **Dual Authorization**: Receipt view (`GET /api/v1/parent/students/[id]/receipts/[receiptId]`) verifies both student access and receipt ownership before returning DTO. **Phase 5.8 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 5.9 — Unified Activity Timeline & Notification Center (COMPLETED & VERIFIED)
+
+- **Timeline & Notifications UI**: Built `/parent/timeline` (`ParentTimeline`, `TimelineEventCard`) and `/parent/notifications` (`NotificationBell`, `NotificationPanel`).
+- **Recipient Scoping**: `GET /api/v1/parent/notifications` and unread count route filter strictly by `recipientUserId`. **Phase 5.9 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 5.10 — PWA Mobile UX Optimization, Touch Targets & Accessibility Hardening (COMPLETED & VERIFIED)
+
+- **Mobile UX & Touch Targets**: Hardened layout against `320px` to `1024px+` viewports. Enforced minimum $\ge 44 \times 44\text{px}$ touch targets across all interactive buttons, header controls, tab switches, and modal actions.
+- **Accessibility & Focus Trapping**: Built WAI-ARIA `role="dialog"` modal focus trap, Escape key handling, focus restoration, and Left/Right arrow tab navigation. **Phase 5.10 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 5.11 — Privacy Boundaries & Security Adversarial Verification Matrix (COMPLETED & VERIFIED)
+
+- **Threat Matrix Verification**: Built 34-scenario adversarial integration & UI test suite (`parent-security-adversarial.test.ts` & `parent-security-privacy.test.tsx`) verifying session cookie protection, cross-parent IDOR masking (`404`), cross-institute isolation, draft exclusion, dual receipt authorization, and XSS script tag escaping.
+- **Security Audit**: Documented in `docs/phases/05/phase5.11-parent-security-privacy-e2e.md`. Zero database drift. **Phase 5.11 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 5.12 — Final Acceptance Gate & Milestone Freeze (PASSED & FROZEN)
+
+- **Milestone Freeze**: Executed full architectural and release acceptance audit. Authored `docs/phases/05/phase5-final-acceptance.md`. Verified 100% pass across 837 monorepo unit & integration tests, 0 type errors, 0 lint warnings, clean Next.js 16 build, and 7 monorepo quality gates. Formally **ACCEPTED and FROZEN Phase 5 — Parent PWA.**
+
+---
+
+## 4. Next Milestone Roadmap
+
+### 🟢 PHASE 1 — IDENTITY MODULE (ACCEPTED & FROZEN)
+
+- **Domain Contract Specification:** Documented in [docs/phases/phase1.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.md) (Phase 1.0 Architecture Freeze), [docs/phases/phase1.3-rbac.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.3-rbac.md) (Phase 1.3.0 RBAC Architecture Freeze), [docs/phases/phase1.4-onboarding.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.4-onboarding.md) (Phase 1.4.0 Onboarding Architecture Freeze), [docs/adr/0015-protected-identity-apis-v1.md](file:///home/supra/Desktop/class_os/docs/adr/0015-protected-identity-apis-v1.md), [docs/adr/0016-staff-management-architecture.md](file:///home/supra/Desktop/class_os/docs/adr/0016-staff-management-architecture.md), and [docs/adr/0017-multi-tenant-cross-tenant-security-hardening.md](file:///home/supra/Desktop/class_os/docs/adr/0017-multi-tenant-cross-tenant-security-hardening.md).
+- **Status**: 🟢 **ALL 15 SUBPHASES ACCEPTED & FROZEN.**
+
+### 🟢 PHASE 2 — ACADEMICS MODULE (ACCEPTED & FROZEN)
+
+- **Domain Contract Specification:** Documented in [docs/phases/02/phase2-academics-contract.md](file:///home/supra/Desktop/class_os/docs/phases/02/phase2-academics-contract.md) and [docs/phases/02/phase2-final-acceptance.md](file:///home/supra/Desktop/class_os/docs/phases/02/phase2-final-acceptance.md).
+- **Subphase Tracking Map:**
+  - **Phase 2.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.1:** Scheduling & Session Engine (`Schedule` & `BatchSession`) 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.2:** Session Attendance Core (`Attendance`) 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.3:** Homework Workflow (`Homework`) 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.4:** Assessment & Bulk Marks Engine (`Test` & `Marks`) 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.5:** Protected Academics APIs (`/api/v1/academics/...`) 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.6:** Staff Academic Workspace UI (Teacher & Staff Workspaces) 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.7:** UX / Accessibility & Security E2E Matrix 🟢 (ACCEPTED & FROZEN)
+  - **Phase 2.8:** Phase 2 Acceptance Gate & Milestone Freeze 🟢 (ACCEPTED & FROZEN)
+
+### 🟢 PHASE 3 — BILLING MODULE (ACCEPTED & FROZEN)
+
+- **Domain Contract Specification:** Documented in [docs/phases/03/phase3-billing-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3-billing-contract.md), [docs/phases/03/phase3.2-invoice-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.2-invoice-contract.md), [docs/phases/03/phase3.3-payment-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.3-payment-contract.md), [docs/phases/03/phase3.4-receipt-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.4-receipt-contract.md), [docs/phases/03/phase3.5-api-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.5-api-contract.md), [docs/phases/03/phase3.6-ui-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.6-ui-contract.md), [docs/phases/03/phase3.7-security-ux-e2e-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.7-security-ux-e2e-contract.md), and [docs/phases/03/phase3.7-security-ux-e2e-report.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.7-security-ux-e2e-report.md).
+- **Subphase Tracking Map:**
+  - **Phase 3.0:** Billing Architecture & Domain Contract Freeze 🟢 (ACCEPTED & FROZEN)
+  - **Phase 3.1:** BillingPlan Domain & Persistence 🟢 (COMPLETED & VERIFIED)
+  - **Phase 3.2:** Invoice Engine 🟢 (COMPLETED & FROZEN)
+    - **Phase 3.2.0:** Invoice Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 3.2.1:** Invoice Engine Implementation 🟢 (COMPLETED & VERIFIED)
+  - **Phase 3.3:** Payment Engine 🟢 (COMPLETED & VERIFIED)
+    - **Phase 3.3.0:** Payment Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 3.3.1:** Payment Engine Implementation 🟢 (COMPLETED & VERIFIED)
+  - **Phase 3.4:** Receipt Engine 🟢 (COMPLETED & VERIFIED)
+    - **Phase 3.4.0:** Receipt Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 3.4.1:** Receipt Engine Implementation 🟢 (COMPLETED & VERIFIED)
+  - **Phase 3.5:** Protected Billing APIs (`/api/v1/billing-plans`, `/api/v1/invoices`, `/api/v1/payments`, `/api/v1/receipts`) 🟢 (COMPLETED & VERIFIED)
+    - **Phase 3.5.0:** Protected Billing APIs Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 3.5.1:** Protected Billing APIs Implementation 🟢 (COMPLETED & VERIFIED)
+  - **Phase 3.6:** Staff Billing Workspace UI 🟢 (COMPLETED & VERIFIED)
+    - **Phase 3.6.0:** Staff Billing Workspace UI Architecture & UX Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 3.6.1:** Staff Billing Workspace UI Implementation 🟢 (COMPLETED & VERIFIED)
+  - **Phase 3.7:** Security / UX / E2E Matrix 🟢 (COMPLETED & VERIFIED)
+    - **Phase 3.7.0:** Security / UX / E2E Contract Freeze 🟢 (ACCEPTED & FROZEN)
+    - **Phase 3.7.1:** Security / UX / E2E Test Suite Execution 🟢 (COMPLETED & VERIFIED)
+  - **Phase 3.8:** Phase 3 Acceptance Gate & Milestone Freeze 🟢 (PASSED & FROZEN)
+
 ### 🟢 PHASE 4 — COMMUNICATION MODULE (ACCEPTED & FROZEN)
 
 - **Domain Contract Specification:** Documented in [docs/phases/04/phase4.0-communication-contract.md](file:///home/supra/Desktop/class_os/docs/phases/04/phase4.0-communication-contract.md), [docs/phases/04/phase4.4-event-integration-contract.md](file:///home/supra/Desktop/class_os/docs/phases/04/phase4.4-event-integration-contract.md), [docs/phases/04/phase4.6-api-contract.md](file:///home/supra/Desktop/class_os/docs/phases/04/phase4.6-api-contract.md), [docs/phases/04/phase4.7-ui-contract.md](file:///home/supra/Desktop/class_os/docs/phases/04/phase4.7-ui-contract.md), and [docs/phases/04/phase4.9-acceptance-freeze-report.md](file:///home/supra/Desktop/class_os/docs/phases/04/phase4.9-acceptance-freeze-report.md).
@@ -804,22 +965,23 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 4.8:** Security / Privacy / UX / E2E Matrix 🟢 (COMPLETED & VERIFIED)
   - **Phase 4.9:** Phase 4 Acceptance Gate & Milestone Freeze 🟢 (ACCEPTED & FROZEN)
 
-### 🟡 PHASE 5 — PARENT PWA (IN EXECUTION)
+### 🟢 PHASE 5 — PARENT PWA (ACCEPTED & FROZEN)
 
-- **Domain Contract Specification:** Documented in [docs/phases/05/phase5.0-parent-pwa-contract.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.0-parent-pwa-contract.md), [docs/phases/05/phase5.1-parent-authentication-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.1-parent-authentication-report.md), [docs/phases/05/phase5.2-parent-session-authorization-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.2-parent-session-authorization-report.md), [docs/phases/05/phase5.3-child-profile-student-linking-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.3-child-profile-student-linking-report.md), [docs/phases/05/phase5.4-parent-hub-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.4-parent-hub-report.md), [docs/phases/05/phase5.5-parent-home-dashboard-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.5-parent-home-dashboard-ui-report.md), [docs/phases/05/phase5.6-attendance-homework-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.6-attendance-homework-ui-report.md), [docs/phases/05/phase5.7-assessments-performance-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.7-assessments-performance-ui-report.md), [docs/phases/05/phase5.8-parent-billing-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.8-parent-billing-ui-report.md), and [docs/phases/05/phase5.9-parent-timeline-notifications-acceptance-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.9-parent-timeline-notifications-acceptance-report.md).
+- **Domain Contract Specification:** Documented in [docs/phases/05/phase5.0-parent-pwa-contract.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.0-parent-pwa-contract.md), [docs/phases/05/phase5.1-parent-authentication-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.1-parent-authentication-report.md), [docs/phases/05/phase5.2-parent-session-authorization-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.2-parent-session-authorization-report.md), [docs/phases/05/phase5.3-child-profile-student-linking-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.3-child-profile-student-linking-report.md), [docs/phases/05/phase5.4-parent-hub-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.4-parent-hub-report.md), [docs/phases/05/phase5.5-parent-home-dashboard-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.5-parent-home-dashboard-ui-report.md), [docs/phases/05/phase5.6-attendance-homework-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.6-attendance-homework-ui-report.md), [docs/phases/05/phase5.7-assessments-performance-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.7-assessments-performance-ui-report.md), [docs/phases/05/phase5.8-parent-billing-ui-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.8-parent-billing-ui-report.md), [docs/phases/05/phase5.9-parent-timeline-notifications-acceptance-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.9-parent-timeline-notifications-acceptance-report.md), [docs/phases/05/phase5.10-parent-mobile-ux-accessibility-report.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.10-parent-mobile-ux-accessibility-report.md), [docs/phases/05/phase5.11-parent-security-privacy-e2e.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5.11-parent-security-privacy-e2e.md), and [docs/phases/05/phase5-final-acceptance.md](file:///home/supra/Desktop/class_os/docs/phases/05/phase5-final-acceptance.md).
 - **Subphase Tracking Map:**
   - **Phase 5.0:** Architecture & Domain Contract Freeze 🟢 (ACCEPTED & FROZEN)
-  - **Phase 5.1:** Parent Authentication & OTP Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 5.2:** Parent Session & Authorization Engine 🟢 (COMPLETED & VERIFIED)
-  - **Phase 5.3:** Child Profile & Student Linking Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 5.4:** Parent Hub & Cross-Institute Read Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 5.5:** Parent Home Dashboard & Today's Activity UI 🟢 (COMPLETED & VERIFIED)
-  - **Phase 5.6:** Attendance & Homework Views UI 🟢 (COMPLETED & VERIFIED)
-  - **Phase 5.7:** Assessments, Marks & Performance Views UI 🟢 (COMPLETED & VERIFIED)
-  - **Phase 5.8:** Parent Fee Status, Invoice History & Receipt Downloads UI 🟢 (COMPLETED & VERIFIED)
-  - **Phase 5.9:** Notifications & Unified Timeline Feed UI 🟢 (COMPLETED & VERIFIED)
-  - **Phase 5.10:** PWA Mobile UX, Touch Targets & Accessibility Hardening ⏳ (NEXT)
-  - **Phase 5.11:** Security, Privacy & Adversarial E2E Matrix ⏳ (PENDING)
-  - **Phase 5.12:** Phase 5 Acceptance Gate & Milestone Freeze ⏳ (PENDING)
+  - **Phase 5.1:** Parent Authentication & OTP Implementation 🟢 (ACCEPTED & FROZEN)
+  - **Phase 5.2:** Parent Session & Authorization Engine 🟢 (ACCEPTED & FROZEN)
+  - **Phase 5.3:** Child Profile & Student Linking Implementation 🟢 (ACCEPTED & FROZEN)
+  - **Phase 5.4:** Parent Hub & Cross-Institute Read Implementation 🟢 (ACCEPTED & FROZEN)
+  - **Phase 5.5:** Parent Home Dashboard & Today's Activity UI 🟢 (ACCEPTED & FROZEN)
+  - **Phase 5.6:** Attendance & Homework Views UI 🟢 (ACCEPTED & FROZEN)
+  - **Phase 5.7:** Assessments, Marks & Performance Views UI 🟢 (ACCEPTED & FROZEN)
+  - **Phase 5.8:** Parent Fee Status, Invoice History & Receipt Downloads UI 🟢 (ACCEPTED & FROZEN)
+  - **Phase 5.9:** Notifications & Unified Timeline Feed UI 🟢 (ACCEPTED & FROZEN)
+  - **Phase 5.10:** PWA Mobile UX, Touch Targets & Accessibility Hardening 🟢 (ACCEPTED & FROZEN)
+  - **Phase 5.11:** Security, Privacy & Adversarial Matrix 🟢 (ACCEPTED & FROZEN)
+  - **Phase 5.12:** Phase 5 Acceptance Gate & Milestone Freeze 🟢 (ACCEPTED & FROZEN)
+
 
 
