@@ -990,9 +990,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 6.5:** Global Search Implementation 🟢 (COMPLETED & VERIFIED)
   - Phase 6.6: Operational Tables & Multi-Criteria Filtering 🟢 (COMPLETED & VERIFIED)
   - Phase 6.7: Staff Workspace UX Integration & Operational Actions 🟢 (COMPLETED & VERIFIED)
-  - Phase 6.8: Operational Reports UI 🟢 (COMPLETED & VERIFIED)
-  - Phase 6.9: Advanced Settings UX Refinement ⏳ (NEXT ACTIVE TARGET)
-  - Phase 6.10: UX / Accessibility / Security Matrix ⏳ (UPCOMING)
+  - Phase 6.9: Advanced Settings UX Refinement 🟢 (COMPLETED & VERIFIED)
+  - Phase 6.10: UX / Accessibility / Security Matrix ⏳ (NEXT ACTIVE TARGET)
   - Phase 6.11: Phase 6 Final Acceptance Gate & Milestone Freeze ⏳ (UPCOMING)
 
 ### 🟢 Phase 6.7 — Staff Workspace UX Integration & Operational Actions (COMPLETED & VERIFIED)
@@ -1008,6 +1007,14 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Server Timezone & Date Range Bounds:** Date query boundaries (`from`, `to`) resolved server-side using institute local timezone (`startOfDay`, `endOfDay`). Enforced 90-day maximum date range limit per query.
 - **Role-Based Capability Scoping:** Owner/Staff get full reports. Assistant receives fee collection reports (`billing:read`). Teacher receives attendance reports restricted to assigned batches (`academic:read`) with 403 Forbidden on fee collection reports. Parent receives 403 Forbidden on all staff reports.
 - **Verification Matrix:** Authored and passed security tests (`P6.8-SEC-001..018`) and UI integration tests (`REPORT-001..030`). Verified 100% quality gates across `env:check`, `db:validate`, `db:health`, `typecheck` (13/13 packages), `lint` (13/13 packages, 0 errors), `test` (1142/1142 passed), and `build`. **Phase 6.8 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 6.9 — Advanced Settings UX Refinement (COMPLETED & VERIFIED)
+
+- **Multi-Section Settings Workspace Navigation:** Refined `/settings` into three distinct sections (**Institute Details**, **White-Label Branding**, and **Academic Defaults**) with URL state sync (`/settings?section=...`), active tab styling, and keyboard navigation (`tablist`/`tab`).
+- **Domain & Endpoint Preservation:** Reused existing `@coaching-os/identity` use cases (`GetInstituteSettingsUseCase`, `UpdateInstituteSettingsUseCase`) and REST endpoint `/api/institute/settings`. Zero schema changes or database migrations (`Schema changes: 0`, `Migrations: 0`).
+- **Academic System Defaults:** Rendered supported system defaults (Timezone `Asia/Kolkata`, Session-level attendance rules, Grading matrix standards, Row-level isolation policies) with clear notice documentation.
+- **Verification Matrix:** Authored and passed security tests (`SETTINGS-6.9-SEC-001..012`), UI tests (`SETTINGS-UX-001..013`), and Phase 1.5 regression suite (`route.test.ts`, 19/19 passed). Verified 100% quality gates across `env:check`, `db:validate`, `db:health`, `typecheck` (13/13 packages), `lint` (13/13 packages, 0 errors), `test` (1167/1167 passed), and `build`. **Phase 6.9 COMPLETED & VERIFIED.**
+
 
 
 

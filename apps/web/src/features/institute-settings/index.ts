@@ -2,6 +2,7 @@ export { InstituteSettingsContent } from './components/institute-settings-conten
 export { SettingsSkeleton } from './components/settings-skeleton';
 export { InstituteProfileForm } from './components/institute-profile-form';
 export { InstituteBrandingForm } from './components/institute-branding-form';
+export { AcademicDefaultsSection } from './components/academic-defaults-section';
 export { LogoPreview } from './components/logo-preview';
 export { ColorPreview } from './components/color-preview';
 export { instituteSettingsFormSchema } from './schemas/institute-settings-form-schema';
