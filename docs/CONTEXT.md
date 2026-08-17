@@ -739,53 +739,6 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 
 ---
 
-## 4. Next Milestone Roadmap
-
-### 🟢 PHASE 1 — IDENTITY MODULE (ACCEPTED & FROZEN)
-
-- **Domain Contract Specification:** Documented in [docs/phases/phase1.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.md) (Phase 1.0 Architecture Freeze), [docs/phases/phase1.3-rbac.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.3-rbac.md) (Phase 1.3.0 RBAC Architecture Freeze), [docs/phases/phase1.4-onboarding.md](file:///home/supra/Desktop/class_os/docs/phases/phase1.4-onboarding.md) (Phase 1.4.0 Onboarding Architecture Freeze), [docs/adr/0015-protected-identity-apis-v1.md](file:///home/supra/Desktop/class_os/docs/adr/0015-protected-identity-apis-v1.md), [docs/adr/0016-staff-management-architecture.md](file:///home/supra/Desktop/class_os/docs/adr/0016-staff-management-architecture.md), and [docs/adr/0017-multi-tenant-cross-tenant-security-hardening.md](file:///home/supra/Desktop/class_os/docs/adr/0017-multi-tenant-cross-tenant-security-hardening.md).
-- **Status**: 🟢 **ALL 15 SUBPHASES ACCEPTED & FROZEN.**
-
-### 🟢 PHASE 2 — ACADEMICS MODULE (ACCEPTED & FROZEN)
-
-- **Domain Contract Specification:** Documented in [docs/phases/02/phase2-academics-contract.md](file:///home/supra/Desktop/class_os/docs/phases/02/phase2-academics-contract.md) and [docs/phases/02/phase2-final-acceptance.md](file:///home/supra/Desktop/class_os/docs/phases/02/phase2-final-acceptance.md).
-- **Subphase Tracking Map:**
-  - **Phase 2.0:** Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-  - **Phase 2.1:** Scheduling & Session Engine (`Schedule` & `BatchSession`) 🟢 (ACCEPTED & FROZEN)
-  - **Phase 2.2:** Session Attendance Core (`Attendance`) 🟢 (ACCEPTED & FROZEN)
-  - **Phase 2.3:** Homework Workflow (`Homework`) 🟢 (ACCEPTED & FROZEN)
-  - **Phase 2.4:** Assessment & Bulk Marks Engine (`Test` & `Marks`) 🟢 (ACCEPTED & FROZEN)
-  - **Phase 2.5:** Protected Academics APIs (`/api/v1/academics/...`) 🟢 (ACCEPTED & FROZEN)
-  - **Phase 2.6:** Staff Academic Workspace UI (Teacher & Staff Workspaces) 🟢 (ACCEPTED & FROZEN)
-  - **Phase 2.7:** UX / Accessibility & Security E2E Matrix 🟢 (ACCEPTED & FROZEN)
-  - **Phase 2.8:** Phase 2 Acceptance Gate & Milestone Freeze 🟢 (ACCEPTED & FROZEN)
-
-### 🟢 PHASE 3 — BILLING MODULE (ACCEPTED & FROZEN)
-
-- **Domain Contract Specification:** Documented in [docs/phases/03/phase3-billing-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3-billing-contract.md), [docs/phases/03/phase3.2-invoice-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.2-invoice-contract.md), [docs/phases/03/phase3.3-payment-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.3-payment-contract.md), [docs/phases/03/phase3.4-receipt-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.4-receipt-contract.md), [docs/phases/03/phase3.5-api-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.5-api-contract.md), [docs/phases/03/phase3.6-ui-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.6-ui-contract.md), [docs/phases/03/phase3.7-security-ux-e2e-contract.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.7-security-ux-e2e-contract.md), and [docs/phases/03/phase3.7-security-ux-e2e-report.md](file:///home/supra/Desktop/class_os/docs/phases/03/phase3.7-security-ux-e2e-report.md).
-- **Subphase Tracking Map:**
-  - **Phase 3.0:** Billing Architecture & Domain Contract Freeze 🟢 (ACCEPTED & FROZEN)
-  - **Phase 3.1:** BillingPlan Domain & Persistence 🟢 (COMPLETED & VERIFIED)
-  - **Phase 3.2:** Invoice Engine 🟢 (COMPLETED & FROZEN)
-    - **Phase 3.2.0:** Invoice Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 3.2.1:** Invoice Engine Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 3.3:** Payment Engine 🟢 (COMPLETED & VERIFIED)
-    - **Phase 3.3.0:** Payment Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 3.3.1:** Payment Engine Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 3.4:** Receipt Engine 🟢 (COMPLETED & VERIFIED)
-    - **Phase 3.4.0:** Receipt Architecture & Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 3.4.1:** Receipt Engine Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 3.5:** Protected Billing APIs (`/api/v1/billing-plans`, `/api/v1/invoices`, `/api/v1/payments`, `/api/v1/receipts`) 🟢 (COMPLETED & VERIFIED)
-    - **Phase 3.5.0:** Protected Billing APIs Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 3.5.1:** Protected Billing APIs Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 3.6:** Staff Billing Workspace UI 🟢 (COMPLETED & VERIFIED)
-    - **Phase 3.6.0:** Staff Billing Workspace UI Architecture & UX Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 3.6.1:** Staff Billing Workspace UI Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 3.7:** Security / UX / E2E Matrix 🟢 (COMPLETED & VERIFIED)
-    - **Phase 3.7.0:** Security / UX / E2E Contract Freeze 🟢 (ACCEPTED & FROZEN)
-    - **Phase 3.7.1:** Security / UX / E2E Test Suite Execution 🟢 (COMPLETED & VERIFIED)
-  - **Phase 3.8:** Phase 3 Acceptance Gate & Milestone Freeze 🟢 (PASSED & FROZEN)
-
 ### 🟢 Phase 4.0 — Communication Architecture & Domain Contract Freeze (ACCEPTED & FROZEN)
 
 - **Contract Specification**: Authored and froze authoritative Phase 4 Communication contract in `docs/phases/04/phase4.0-communication-contract.md`.
@@ -983,5 +936,24 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 5.11:** Security, Privacy & Adversarial Matrix 🟢 (ACCEPTED & FROZEN)
   - **Phase 5.12:** Phase 5 Acceptance Gate & Milestone Freeze 🟢 (ACCEPTED & FROZEN)
 
+### 🟢 Phase 6.0 — Architecture & UX Contract Freeze (ACCEPTED & FROZEN)
 
+- **Contract Specification**: Authored and froze authoritative Phase 6.0 contracts in [docs/phases/06/phase6.0-staff-dashboard-contract.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-staff-dashboard-contract.md) and [docs/phases/06/phase6.0-ux-information-architecture.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-ux-information-architecture.md).
+- **Product & UX Decisions**: Settled 6 core product/UX decisions (Owner Attendance completion ratio, Teacher generated BatchSession scope, Assistant collection amount + pending receipts, Global Search direct navigation, On-screen interactive reporting, Advanced Settings refinement of existing fields). Zero schema changes (`Schema changes: 0`, `Migrations: 0`). **Phase 6.0 ACCEPTED & FROZEN.**
+
+### 🟡 PHASE 6 — STAFF DASHBOARD & UX POLISH (IN EXECUTION)
+
+- **Domain Contract Specification:** Documented in [docs/phases/06/phase6.0-staff-dashboard-contract.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-staff-dashboard-contract.md) and [docs/phases/06/phase6.0-ux-information-architecture.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-ux-information-architecture.md).
+- **Subphase Tracking Map:**
+  - **Phase 6.0:** Architecture & UX Contract Freeze 🟢 (ACCEPTED & FROZEN)
+  - **Phase 6.1:** Staff Dashboard Foundation & Read Orchestration ⏳ (NEXT ACTIVE TARGET)
+  - **Phase 6.2:** Founder / Owner Dashboard UI ⏳ (UPCOMING)
+  - **Phase 6.3:** Teacher Dashboard UI ⏳ (UPCOMING)
+  - **Phase 6.4:** Assistant Dashboard UI ⏳ (UPCOMING)
+  - **Phase 6.5:** Global Search Implementation ⏳ (UPCOMING)
+  - **Phase 6.6:** Operational Tables & Multi-Criteria Filtering ⏳ (UPCOMING)
+  - **Phase 6.7:** Operational Reports UI ⏳ (UPCOMING)
+  - **Phase 6.8:** Advanced Settings UX Refinement ⏳ (UPCOMING)
+  - **Phase 6.9:** UX / Accessibility / Security Matrix ⏳ (UPCOMING)
+  - **Phase 6.10:** Phase 6 Final Acceptance Gate & Milestone Freeze ⏳ (UPCOMING)
 
