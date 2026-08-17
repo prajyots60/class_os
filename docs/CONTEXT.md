@@ -990,8 +990,8 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 6.5:** Global Search Implementation 🟢 (COMPLETED & VERIFIED)
   - Phase 6.6: Operational Tables & Multi-Criteria Filtering 🟢 (COMPLETED & VERIFIED)
   - Phase 6.7: Staff Workspace UX Integration & Operational Actions 🟢 (COMPLETED & VERIFIED)
-  - Phase 6.8: Operational Reports UI ⏳ (NEXT ACTIVE TARGET)
-  - Phase 6.9: Advanced Settings UX Refinement ⏳ (UPCOMING)
+  - Phase 6.8: Operational Reports UI 🟢 (COMPLETED & VERIFIED)
+  - Phase 6.9: Advanced Settings UX Refinement ⏳ (NEXT ACTIVE TARGET)
   - Phase 6.10: UX / Accessibility / Security Matrix ⏳ (UPCOMING)
   - Phase 6.11: Phase 6 Final Acceptance Gate & Milestone Freeze ⏳ (UPCOMING)
 
@@ -1001,6 +1001,14 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **URL & Deep-Link Preservation:** Wrapped `StudentContent`, `BillingWorkspace`, and `AcademicWorkspace` with `useSearchParams()` for instant deep-linking, automatic tab selection, modal opening, and back/forward browser navigation.
 - **Row Action Menus:** Introduced `OperationalTableRowActions` trigger primitive with $\ge 44 \times 44\text{px}$ touch targets, ARIA accessibility, focus management, and keyboard navigation (`Enter`, `Space`, `Escape`).
 - **Verification Matrix:** Authored and passed security tests (`P6.7-SEC-001..015`) and UI integration tests (`STAFF-UX-001..025`). Verified 100% quality gates across `env:check`, `db:validate`, `db:health`, `typecheck` (13/13 packages), `lint` (13/13 packages, 0 errors), `test` (79/79 passed), and `build`. **Phase 6.7 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 6.8 — Operational Reports UI & Read-Only Reporting Workspace (COMPLETED & VERIFIED)
+
+- **Read-Only Operational Reports Workspace:** Delivered `/reports` workspace route featuring two on-screen interactive report views: **Attendance Reports** and **Fee Collection Reports**. Explicitly zero exports (no CSV/Excel/PDF/predictive analytics) per Phase 6.0 contract freeze.
+- **Server Timezone & Date Range Bounds:** Date query boundaries (`from`, `to`) resolved server-side using institute local timezone (`startOfDay`, `endOfDay`). Enforced 90-day maximum date range limit per query.
+- **Role-Based Capability Scoping:** Owner/Staff get full reports. Assistant receives fee collection reports (`billing:read`). Teacher receives attendance reports restricted to assigned batches (`academic:read`) with 403 Forbidden on fee collection reports. Parent receives 403 Forbidden on all staff reports.
+- **Verification Matrix:** Authored and passed security tests (`P6.8-SEC-001..018`) and UI integration tests (`REPORT-001..030`). Verified 100% quality gates across `env:check`, `db:validate`, `db:health`, `typecheck` (13/13 packages), `lint` (13/13 packages, 0 errors), `test` (1142/1142 passed), and `build`. **Phase 6.8 COMPLETED & VERIFIED.**
+
 
 
 

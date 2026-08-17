@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import * as React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { BillingWorkspace } from './BillingWorkspace';
+import { BillingWorkspace, BillingWorkspaceInner } from './BillingWorkspace';
 import { BillingOverviewView } from './BillingOverviewView';
 import { RecordPaymentModal } from './RecordPaymentModal';
 import { ReceiptDetailsModal } from './ReceiptDetailsModal';
@@ -97,7 +97,7 @@ describe('Phase 3.6.1 — Staff Billing Workspace UI Component Suite', () => {
   describe('3. Billing Workspace Navigation & Capability Degradation', () => {
     it('renders workspace shell when user possesses billing:read', () => {
       const html = renderToStaticMarkup(
-        <BillingWorkspace userCapabilities={['billing:read']} />
+        <BillingWorkspaceInner userCapabilities={['billing:read']} />
       );
       expect(html).toContain('Billing Workspace');
       expect(html).toContain('Overview');
@@ -108,7 +108,7 @@ describe('Phase 3.6.1 — Staff Billing Workspace UI Component Suite', () => {
     });
 
     it('renders Access Denied (403) when user lacks billing:read', () => {
-      const html = renderToStaticMarkup(<BillingWorkspace userCapabilities={[]} />);
+      const html = renderToStaticMarkup(<BillingWorkspaceInner userCapabilities={[]} />);
       expect(html).toContain('Access Denied (403)');
       expect(html).toContain('billing:read');
     });

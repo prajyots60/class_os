@@ -24,7 +24,7 @@ export interface BillingWorkspaceProps {
   initialTab?: BillingTab;
 }
 
-function BillingWorkspaceInner({
+export function BillingWorkspaceInner({
   userCapabilities = [
     'billing:read',
     'billing:write',
@@ -35,9 +35,9 @@ function BillingWorkspaceInner({
   initialTab = 'overview',
 }: BillingWorkspaceProps) {
   const searchParams = useSearchParams();
-  const urlTab = searchParams.get('tab') as BillingTab | null;
-  const urlInvoiceId = searchParams.get('invoiceId');
-  const urlAction = searchParams.get('action');
+  const urlTab = searchParams?.get('tab') as BillingTab | null;
+  const urlInvoiceId = searchParams?.get('invoiceId');
+  const urlAction = searchParams?.get('action');
 
   const [activeTab, setActiveTab] = React.useState<BillingTab>(() => {
     if (urlTab && ['overview', 'plans', 'invoices', 'payments', 'receipts'].includes(urlTab)) {

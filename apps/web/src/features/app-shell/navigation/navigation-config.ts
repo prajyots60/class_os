@@ -92,6 +92,14 @@ export const APP_NAVIGATION_CONFIG: readonly NavigationSection[] = Object.freeze
         capability: 'academic:read',
         isImplemented: true,
       },
+      {
+        id: 'reports',
+        label: 'Operational Reports',
+        href: '/reports',
+        iconName: 'BarChart3',
+        capability: 'academic:read',
+        isImplemented: true,
+      },
     ],
   },
   {
