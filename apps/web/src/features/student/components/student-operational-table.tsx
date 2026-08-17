@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,13 +9,15 @@ import {
   createColumnHelper,
 } from '@tanstack/react-table';
 import { Badge } from '@coaching-os/ui';
-import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, Eye, Edit, CreditCard, BookOpen, UserCheck, UserX, Archive } from 'lucide-react';
 import {
   OperationalTableToolbar,
   OperationalTablePagination,
   OperationalTableSkeleton,
   OperationalTableEmpty,
   OperationalTableError,
+  OperationalTableRowActions,
+  type RowActionItem,
 } from '../../shared/components/operational-table';
 import { useStudentsTable } from '../hooks/use-students-table';
 
@@ -29,9 +32,34 @@ export interface StudentRowItem {
   createdAt: string;
 }
 
+export interface StudentOperationalTableProps {
+  onViewDetails?: (student: StudentRowItem) => void;
+  onEdit?: (student: StudentRowItem) => void;
+  onAdmit?: (student: StudentRowItem) => void;
+  onReject?: (student: StudentRowItem) => void;
+  onCancel?: (student: StudentRowItem) => void;
+  onActivate?: (student: StudentRowItem) => void;
+  onDeactivate?: (student: StudentRowItem) => void;
+  onArchive?: (student: StudentRowItem) => void;
+  canUpdate?: boolean;
+  canArchive?: boolean;
+}
+
 const columnHelper = createColumnHelper<StudentRowItem>();
 
-export function StudentOperationalTable() {
+export function StudentOperationalTable({
+  onViewDetails,
+  onEdit,
+  onAdmit,
+  onReject,
+  onCancel,
+  onActivate,
+  onDeactivate,
+  onArchive,
+  canUpdate = true,
+  canArchive = true,
+}: StudentOperationalTableProps = {}) {
+  const router = useRouter();
   const {
     filters,
     updateFilter,
@@ -57,7 +85,6 @@ export function StudentOperationalTable() {
       createdAt: item.createdAt ? new Date(String(item.createdAt)).toLocaleDateString() : '—',
     }));
   }, [apiResponse]);
-
 
   const total = apiResponse?.meta?.total ?? students.length;
   const page = apiResponse?.meta?.page ?? filters.page;
@@ -173,8 +200,87 @@ export function StudentOperationalTable() {
         header: 'Registered',
         cell: (info) => <span className="text-xs text-[hsl(var(--muted-foreground))]">{info.getValue()}</span>,
       }),
+
+      columnHelper.display({
+        id: 'actions',
+        header: 'Actions',
+        cell: (info) => {
+          const s = info.row.original;
+          const actions: RowActionItem[] = [];
+
+          if (onViewDetails) {
+            actions.push({
+              id: 'view-details',
+              label: 'View Details',
+              icon: Eye,
+              onClick: () => onViewDetails(s),
+            });
+          }
+
+          if (canUpdate && onEdit) {
+            actions.push({
+              id: 'edit',
+              label: 'Edit Profile',
+              icon: Edit,
+              onClick: () => onEdit(s),
+            });
+          }
+
+          if (canUpdate && s.admissionStatus === 'pending') {
+            if (onAdmit) {
+              actions.push({
+                id: 'admit',
+                label: 'Admit Student',
+                icon: UserCheck,
+                onClick: () => onAdmit(s),
+              });
+            }
+            if (onReject) {
+              actions.push({
+                id: 'reject',
+                label: 'Reject Admission',
+                icon: UserX,
+                variant: 'danger',
+                onClick: () => onReject(s),
+              });
+            }
+          }
+
+          actions.push({
+            id: 'view-billing',
+            label: 'View Billing',
+            icon: CreditCard,
+            onClick: () => router.push(`/billing?tab=invoices&search=${encodeURIComponent(s.displayName)}`),
+          });
+
+          actions.push({
+            id: 'view-academics',
+            label: 'View Academics',
+            icon: BookOpen,
+            onClick: () => router.push(`/academics?tab=sessions&search=${encodeURIComponent(s.displayName)}`),
+          });
+
+          if (canArchive && onArchive && s.status !== 'archived') {
+            actions.push({
+              id: 'archive',
+              label: 'Archive Student',
+              icon: Archive,
+              variant: 'danger',
+              onClick: () => onArchive(s),
+            });
+          }
+
+          return (
+            <OperationalTableRowActions
+              actions={actions}
+              rowId={s.id}
+              resourceName={s.displayName}
+            />
+          );
+        },
+      }),
     ],
-    [filters.sortBy, filters.sortOrder, handleSort],
+    [filters.sortBy, filters.sortOrder, handleSort, onViewDetails, onEdit, onAdmit, onReject, onArchive, canUpdate, canArchive, router],
   );
 
   const table = useReactTable({
@@ -229,7 +335,7 @@ export function StudentOperationalTable() {
       </OperationalTableToolbar>
 
       {/* Loading State */}
-      {isLoading && <OperationalTableSkeleton rows={5} columns={6} />}
+      {isLoading && <OperationalTableSkeleton rows={5} columns={7} />}
 
       {/* Error State */}
       {isError && (

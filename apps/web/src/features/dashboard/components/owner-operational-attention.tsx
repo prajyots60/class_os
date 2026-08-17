@@ -57,7 +57,7 @@ export function OwnerOperationalAttention({ fees, operational }: OwnerOperationa
         </div>
         <CardFooter className="pt-2 border-t border-[hsl(var(--border))]">
           <Link
-            href={fees.targetPath || '/billing'}
+            href={fees.targetPath || '/billing?tab=invoices&status=pending'}
             className={buttonVariants({ variant: 'outline', size: 'default' }) + ' w-full justify-between min-h-[44px]'}
             aria-label="Navigate to Billing workspace to manage invoices"
           >
@@ -106,13 +106,14 @@ export function OwnerOperationalAttention({ fees, operational }: OwnerOperationa
         </div>
         <CardFooter className="pt-2 border-t border-[hsl(var(--border))]">
           <Link
-            href="/academics"
+            href="/academics?tab=sessions"
             className={buttonVariants({ variant: 'outline', size: 'default' }) + ' w-full justify-between min-h-[44px]'}
             aria-label="Navigate to Academics workspace to view full schedule"
           >
             <span className="font-semibold text-xs">View Full Schedule</span>
             <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
           </Link>
+
         </CardFooter>
       </Card>
     </div>

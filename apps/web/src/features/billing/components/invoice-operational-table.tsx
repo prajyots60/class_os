@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,13 +9,15 @@ import {
   createColumnHelper,
 } from '@tanstack/react-table';
 import { Badge } from '@coaching-os/ui';
-import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, Eye, CreditCard, User } from 'lucide-react';
 import {
   OperationalTableToolbar,
   OperationalTablePagination,
   OperationalTableSkeleton,
   OperationalTableEmpty,
   OperationalTableError,
+  OperationalTableRowActions,
+  type RowActionItem,
 } from '../../shared/components/operational-table';
 import { useInvoicesTable } from '../hooks/use-invoices-table';
 
@@ -31,9 +34,20 @@ export interface InvoiceRowItem {
   createdAtIso: string;
 }
 
+export interface InvoiceOperationalTableProps {
+  onViewDetails?: (invoice: InvoiceRowItem) => void;
+  onRecordPayment?: (invoice: InvoiceRowItem) => void;
+  canRecordPayment?: boolean;
+}
+
 const columnHelper = createColumnHelper<InvoiceRowItem>();
 
-export function InvoiceOperationalTable() {
+export function InvoiceOperationalTable({
+  onViewDetails,
+  onRecordPayment,
+  canRecordPayment = true,
+}: InvoiceOperationalTableProps = {}) {
+  const router = useRouter();
   const {
     filters,
     updateFilter,
@@ -64,7 +78,6 @@ export function InvoiceOperationalTable() {
       };
     });
   }, [apiResponse]);
-
 
   const total = apiResponse?.meta?.total ?? invoices.length;
   const page = apiResponse?.meta?.page ?? filters.page;
@@ -186,8 +199,60 @@ export function InvoiceOperationalTable() {
           );
         },
       }),
+
+      columnHelper.display({
+        id: 'actions',
+        header: 'Actions',
+        cell: (info) => {
+          const inv = info.row.original;
+          const actions: RowActionItem[] = [
+            {
+              id: 'view-details',
+              label: 'View Invoice Details',
+              icon: Eye,
+              onClick: () => {
+                if (onViewDetails) {
+                  onViewDetails(inv);
+                } else {
+                  router.push(`/billing?tab=invoices&invoiceId=${inv.id}`);
+                }
+              },
+            },
+          ];
+
+          if (canRecordPayment && inv.status !== 'paid') {
+            actions.push({
+              id: 'record-payment',
+              label: 'Record Payment',
+              icon: CreditCard,
+              onClick: () => {
+                if (onRecordPayment) {
+                  onRecordPayment(inv);
+                } else {
+                  router.push(`/billing?tab=invoices&invoiceId=${inv.id}&action=record-payment`);
+                }
+              },
+            });
+          }
+
+          actions.push({
+            id: 'view-student',
+            label: 'View Student',
+            icon: User,
+            onClick: () => router.push(`/students?search=${encodeURIComponent(inv.studentName)}`),
+          });
+
+          return (
+            <OperationalTableRowActions
+              actions={actions}
+              rowId={inv.id}
+              resourceName={inv.invoiceNumber}
+            />
+          );
+        },
+      }),
     ],
-    [filters.sortBy, filters.sortOrder, handleSort],
+    [filters.sortBy, filters.sortOrder, handleSort, onViewDetails, onRecordPayment, canRecordPayment, router],
   );
 
   const table = useReactTable({
@@ -245,7 +310,7 @@ export function InvoiceOperationalTable() {
       </OperationalTableToolbar>
 
       {/* Loading State */}
-      {isLoading && <OperationalTableSkeleton rows={5} columns={6} />}
+      {isLoading && <OperationalTableSkeleton rows={5} columns={7} />}
 
       {/* Error State */}
       {isError && (

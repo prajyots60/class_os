@@ -4,6 +4,11 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { SessionOperationalTable } from './components/session-operational-table';
 import { useSessionsTable } from './hooks/use-sessions-table';
 
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
+
 vi.mock('./hooks/use-sessions-table', async (importOriginal) => {
   const actual = await importOriginal<typeof import('./hooks/use-sessions-table')>();
   return {

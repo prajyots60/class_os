@@ -1,15 +1,14 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Alert, AlertTitle, AlertDescription, Button } from '@coaching-os/ui';
 import { ShieldAlert, AlertCircle, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { StudentHeader } from './student-header';
 import { StudentSkeleton } from './student-skeleton';
 import { StudentEmptyState } from './student-empty-state';
-import { StudentTable } from './student-table';
-import { StudentCard } from './student-card';
+import { StudentOperationalTable, type StudentRowItem } from './student-operational-table';
 import { StudentDetailsModal } from './student-details-modal';
 import { StudentFormModal } from './student-form-modal';
 import { StudentAdmissionModal } from './student-admission-actions';
@@ -77,8 +76,12 @@ function getRoleCapabilities(role: string): string[] {
   }
 }
 
-export function StudentContent() {
+function StudentContentInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // URL Context Initialization
+  const initialAction = searchParams.get('action');
 
   // Tenant & Capability State
   const [userCapabilities, setUserCapabilities] = useState<string[]>([]);
@@ -86,24 +89,13 @@ export function StudentContent() {
   const [accessDenied, setAccessDenied] = useState(false);
 
   // List & Data State
-  const [students, setStudents] = useState<StudentDTO[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-  // Filter & Pagination State
-  const [search, setSearch] = useState('');
-  const [admissionStatusFilter, setAdmissionStatusFilter] = useState<'all' | StudentAdmissionStatus>('all');
-  const [statusFilter, setStatusFilter] = useState<'all' | StudentStatus>('all');
-  const [page, setPage] = useState(1);
-  const [limit] = useState(10);
-  const [total, setTotal] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
 
   // Modal States
   const [selectedStudentForDetails, setSelectedStudentForDetails] = useState<StudentDTO | null>(null);
   const [selectedStudentForEdit, setSelectedStudentForEdit] = useState<StudentDTO | null>(null);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(initialAction === 'add');
 
   const [admissionModalType, setAdmissionModalType] = useState<'admit' | 'reject' | 'cancel' | null>(null);
   const [selectedStudentForAdmission, setSelectedStudentForAdmission] = useState<StudentDTO | null>(null);
@@ -168,181 +160,131 @@ export function StudentContent() {
     };
   }, [router]);
 
-  // 2. Fetch Students List
-  const loadStudents = useCallback(async () => {
-    if (isContextLoading || accessDenied || !canRead) return;
+  // Convert RowItem to StudentDTO
+  const rowToDto = (s: StudentRowItem): StudentDTO => ({
+    id: s.id,
+    instituteId: '',
+    admissionNumber: s.admissionNumber,
+    firstName: s.displayName.split(' ')[0] || s.displayName,
+    middleName: null,
+    lastName: s.displayName.split(' ').slice(1).join(' ') || '',
+    displayName: s.displayName,
+    dateOfBirth: null,
+    gender: null,
+    phone: s.phone || null,
+    email: s.email || null,
+    address: null,
+    city: null,
+    state: null,
+    postalCode: null,
+    admissionDate: null,
+    status: s.status as StudentStatus,
+    admissionStatus: s.admissionStatus as StudentAdmissionStatus,
+    createdAt: s.createdAt,
+    updatedAt: s.createdAt,
+    deletedAt: null,
+  });
 
-    setIsLoading(true);
-    setError(null);
-
-    const res = await fetchStudentsList({
-      search,
-      admissionStatus: admissionStatusFilter,
-      status: statusFilter,
-      page,
-      limit,
-    });
-
-    if (res.success) {
-      setStudents(res.data || []);
-      setTotal(res.meta?.total || 0);
-      setTotalPages(res.meta?.totalPages || 1);
-    } else {
-      setError(res.error?.message || 'Failed to load student records.');
-    }
-
-    setIsLoading(false);
-  }, [isContextLoading, accessDenied, canRead, search, admissionStatusFilter, statusFilter, page, limit]);
-
-  useEffect(() => {
-    let active = true;
-    Promise.resolve().then(() => {
-      if (active) {
-        loadStudents();
-      }
-    });
-    return () => {
-      active = false;
-    };
-  }, [loadStudents]);
-
-  // Success Message Auto-Dismiss
-  useEffect(() => {
-    if (successMessage) {
-      const timer = setTimeout(() => setSuccessMessage(null), 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [successMessage]);
-
-  // Reset pagination when filters change
-  const handleSearchChange = (val: string) => {
-    setSearch(val);
-    setPage(1);
-  };
-
-  const handleAdmissionStatusFilterChange = (val: 'all' | StudentAdmissionStatus) => {
-    setAdmissionStatusFilter(val);
-    setPage(1);
-  };
-
-  const handleStatusFilterChange = (val: 'all' | StudentStatus) => {
-    setStatusFilter(val);
-    setPage(1);
-  };
-
-  // Form Submission (Add or Edit)
+  // Action Handlers
   const handleFormSubmit = async (values: CreateStudentFormValues | EditStudentFormValues) => {
     setIsSubmitting(true);
     setModalError(null);
 
-    if (selectedStudentForEdit) {
-      const res = await updateStudent(selectedStudentForEdit.id, values as EditStudentFormValues);
-      if (res.success) {
-        setSuccessMessage(`Updated profile for ${selectedStudentForEdit.displayName}.`);
-        setSelectedStudentForEdit(null);
-        await loadStudents();
+    try {
+      if (selectedStudentForEdit) {
+        const res = await updateStudent(selectedStudentForEdit.id, values as EditStudentFormValues);
+        if (res.success) {
+          setSuccessMessage(`Updated profile for ${values.firstName} ${values.lastName}.`);
+          setSelectedStudentForEdit(null);
+        } else {
+          setModalError(res.error?.message || 'Failed to update student profile.');
+        }
       } else {
-        setModalError(res.error?.message || 'Failed to update student profile.');
+        const res = await createStudent(values as CreateStudentFormValues);
+        if (res.success) {
+          setSuccessMessage(`Created student record for ${values.firstName} ${values.lastName}.`);
+          setIsAddModalOpen(false);
+        } else {
+          setModalError(res.error?.message || 'Failed to create student record.');
+        }
       }
-    } else {
-      const res = await createStudent(values as CreateStudentFormValues);
-      if (res.success) {
-        setSuccessMessage('Student record created successfully in pending admission state.');
-        setIsAddModalOpen(false);
-        await loadStudents();
-      } else {
-        setModalError(res.error?.message || 'Failed to create student record.');
-      }
+    } catch {
+      setModalError('An unexpected network error occurred.');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   };
 
-  // Admission Action Confirm
-  const handleAdmissionConfirm = async (admissionDate?: string) => {
+  const handleAdmissionConfirm = async (notes?: string) => {
     if (!selectedStudentForAdmission || !admissionModalType) return;
     setIsSubmitting(true);
     setModalError(null);
 
-    let res;
-    if (admissionModalType === 'admit') {
-      res = await admitStudent(selectedStudentForAdmission.id, { admissionDate });
-    } else if (admissionModalType === 'reject') {
-      res = await rejectStudent(selectedStudentForAdmission.id);
-    } else {
-      res = await cancelStudentAdmission(selectedStudentForAdmission.id);
-    }
+    try {
+      let res;
+      if (admissionModalType === 'admit') {
+        res = await admitStudent(selectedStudentForAdmission.id, { admissionDate: new Date().toISOString().split('T')[0] });
+      } else if (admissionModalType === 'reject') {
+        res = await rejectStudent(selectedStudentForAdmission.id);
+      } else {
+        res = await cancelStudentAdmission(selectedStudentForAdmission.id);
+      }
 
-    if (res.success) {
-      setSuccessMessage(
-        admissionModalType === 'admit'
-          ? `Admitted ${selectedStudentForAdmission.displayName} successfully.`
-          : admissionModalType === 'reject'
-            ? `Rejected admission for ${selectedStudentForAdmission.displayName}.`
-            : `Cancelled admission for ${selectedStudentForAdmission.displayName}.`,
-      );
-      setSelectedStudentForAdmission(null);
-      setAdmissionModalType(null);
-      await loadStudents();
-    } else {
-      setModalError(res.error?.message || 'Failed to complete admission action.');
+      if (res.success) {
+        setSuccessMessage(`Admission status updated for ${selectedStudentForAdmission.firstName}.`);
+        setSelectedStudentForAdmission(null);
+        setAdmissionModalType(null);
+      } else {
+        setModalError(res.error?.message || 'Failed to update admission status.');
+      }
+    } catch {
+      setModalError('An unexpected error occurred during admission update.');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   };
 
-  // Lifecycle Action Confirm
   const handleLifecycleConfirm = async () => {
     if (!selectedStudentForLifecycle || !lifecycleModalType) return;
     setIsSubmitting(true);
     setModalError(null);
 
-    let res;
-    if (lifecycleModalType === 'activate') {
-      res = await activateStudent(selectedStudentForLifecycle.id);
-    } else if (lifecycleModalType === 'deactivate') {
-      res = await deactivateStudent(selectedStudentForLifecycle.id);
-    } else {
-      res = await archiveStudent(selectedStudentForLifecycle.id);
-    }
+    try {
+      let res;
+      if (lifecycleModalType === 'activate') {
+        res = await activateStudent(selectedStudentForLifecycle.id);
+      } else if (lifecycleModalType === 'deactivate') {
+        res = await deactivateStudent(selectedStudentForLifecycle.id);
+      } else {
+        res = await archiveStudent(selectedStudentForLifecycle.id);
+      }
 
-    if (res.success) {
-      setSuccessMessage(
-        lifecycleModalType === 'activate'
-          ? `Activated standing for ${selectedStudentForLifecycle.displayName}.`
-          : lifecycleModalType === 'deactivate'
-            ? `Deactivated standing for ${selectedStudentForLifecycle.displayName}.`
-            : `Archived record for ${selectedStudentForLifecycle.displayName}.`,
-      );
-      setSelectedStudentForLifecycle(null);
-      setLifecycleModalType(null);
-      await loadStudents();
-    } else {
-      setModalError(res.error?.message || 'Failed to complete standing lifecycle action.');
+      if (res.success) {
+        setSuccessMessage(`Status updated for ${selectedStudentForLifecycle.firstName}.`);
+        setSelectedStudentForLifecycle(null);
+        setLifecycleModalType(null);
+      } else {
+        setModalError(res.error?.message || 'Failed to update status.');
+      }
+    } catch {
+      setModalError('An unexpected error occurred during lifecycle update.');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   };
 
-  const isSearchOrFilterActive = useMemo(
-    () => !!search.trim() || admissionStatusFilter !== 'all' || statusFilter !== 'all',
-    [search, admissionStatusFilter, statusFilter],
-  );
-
-  // Render Skeleton while loading context
   if (isContextLoading) {
     return <StudentSkeleton />;
   }
 
-  // Access Denied State
-  if (accessDenied || !canRead) {
+  if (accessDenied) {
     return (
       <div className="p-6">
-        <Alert variant="destructive">
-          <ShieldAlert className="h-5 w-5" />
-          <AlertTitle>Access Denied</AlertTitle>
+        <Alert variant="destructive" data-testid="student-access-denied">
+          <ShieldAlert className="h-4 w-4" />
+          <AlertTitle>Access Denied (403)</AlertTitle>
           <AlertDescription>
-            You do not have the required permissions (<code className="font-mono text-xs">student:read</code>) to access the Student CRM module.
+            You do not have permission (<code className="font-mono text-xs">student:read</code>) to view the student directory.
           </AlertDescription>
         </Alert>
       </div>
@@ -350,183 +292,72 @@ export function StudentContent() {
   }
 
   return (
-    <div className="space-y-6" data-testid="student-content">
-      {/* Header & Controls */}
+    <div className="p-6 space-y-6 max-w-7xl mx-auto" data-testid="students-workspace">
+      {/* Header */}
       <StudentHeader
-        totalCount={total}
-        search={search}
-        onSearchChange={handleSearchChange}
-        admissionStatusFilter={admissionStatusFilter}
-        onAdmissionStatusFilterChange={handleAdmissionStatusFilterChange}
-        statusFilter={statusFilter}
-        onStatusFilterChange={handleStatusFilterChange}
         canCreate={canCreate}
         onAddStudentClick={() => {
           setSelectedStudentForEdit(null);
-          setModalError(null);
           setIsAddModalOpen(true);
         }}
       />
 
-      {/* Success Notification Alert */}
+      {/* Global Alerts */}
       {successMessage && (
-        <Alert className="bg-emerald-50 text-emerald-900 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800">
-          <AlertTitle className="text-xs font-semibold">Operation Successful</AlertTitle>
+        <Alert variant="default" className="border-emerald-500/30 bg-emerald-500/10 text-emerald-900 dark:text-emerald-200">
+          <AlertTitle>Success</AlertTitle>
           <AlertDescription className="text-xs">{successMessage}</AlertDescription>
         </Alert>
       )}
 
-      {/* Error Notification Alert */}
       {error && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
-          <AlertDescription className="flex items-center justify-between text-xs">
-            <span>{error}</span>
-            <Button variant="outline" size="sm" onClick={() => loadStudents()} className="h-7 px-2 gap-1 text-xs">
-              <RefreshCw className="h-3 w-3" /> Retry
-            </Button>
-          </AlertDescription>
+          <AlertDescription className="text-xs">{error}</AlertDescription>
         </Alert>
       )}
 
-      {/* Data Presentation (Loading / Empty / Table & Cards) */}
-      {isLoading ? (
-        <StudentSkeleton />
-      ) : students.length === 0 ? (
-        <StudentEmptyState
-          isSearchOrFilterActive={isSearchOrFilterActive}
-          canCreate={canCreate}
-          onAddStudentClick={() => setIsAddModalOpen(true)}
-          onResetFiltersClick={() => {
-            setSearch('');
-            setAdmissionStatusFilter('all');
-            setStatusFilter('all');
-            setPage(1);
-          }}
-        />
-      ) : (
-        <div className="space-y-4">
-          {/* Desktop Table View */}
-          <StudentTable
-            students={students}
-            canUpdate={canUpdate}
-            canArchive={canArchive}
-            onViewDetails={(s) => setSelectedStudentForDetails(s)}
-            onEdit={(s) => {
-              setSelectedStudentForEdit(s);
-              setModalError(null);
-            }}
-            onAdmit={(s) => {
-              setSelectedStudentForAdmission(s);
-              setAdmissionModalType('admit');
-              setModalError(null);
-            }}
-            onReject={(s) => {
-              setSelectedStudentForAdmission(s);
-              setAdmissionModalType('reject');
-              setModalError(null);
-            }}
-            onCancel={(s) => {
-              setSelectedStudentForAdmission(s);
-              setAdmissionModalType('cancel');
-              setModalError(null);
-            }}
-            onActivate={(s) => {
-              setSelectedStudentForLifecycle(s);
-              setLifecycleModalType('activate');
-              setModalError(null);
-            }}
-            onDeactivate={(s) => {
-              setSelectedStudentForLifecycle(s);
-              setLifecycleModalType('deactivate');
-              setModalError(null);
-            }}
-            onArchive={(s) => {
-              setSelectedStudentForLifecycle(s);
-              setLifecycleModalType('archive');
-              setModalError(null);
-            }}
-          />
-
-          {/* Mobile Card List View */}
-          <div className="grid grid-cols-1 gap-4 md:hidden">
-            {students.map((s) => (
-              <StudentCard
-                key={s.id}
-                student={s}
-                canUpdate={canUpdate}
-                canArchive={canArchive}
-                onViewDetails={(s) => setSelectedStudentForDetails(s)}
-                onEdit={(s) => {
-                  setSelectedStudentForEdit(s);
-                  setModalError(null);
-                }}
-                onAdmit={(s) => {
-                  setSelectedStudentForAdmission(s);
-                  setAdmissionModalType('admit');
-                  setModalError(null);
-                }}
-                onReject={(s) => {
-                  setSelectedStudentForAdmission(s);
-                  setAdmissionModalType('reject');
-                  setModalError(null);
-                }}
-                onCancel={(s) => {
-                  setSelectedStudentForAdmission(s);
-                  setAdmissionModalType('cancel');
-                  setModalError(null);
-                }}
-                onActivate={(s) => {
-                  setSelectedStudentForLifecycle(s);
-                  setLifecycleModalType('activate');
-                  setModalError(null);
-                }}
-                onDeactivate={(s) => {
-                  setSelectedStudentForLifecycle(s);
-                  setLifecycleModalType('deactivate');
-                  setModalError(null);
-                }}
-                onArchive={(s) => {
-                  setSelectedStudentForLifecycle(s);
-                  setLifecycleModalType('archive');
-                  setModalError(null);
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Pagination Controls */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between border border-[hsl(var(--border))] rounded-xl bg-[hsl(var(--card))] px-4 py-3 text-xs">
-              <span className="text-[hsl(var(--muted-foreground))]">
-                Page <strong className="text-[hsl(var(--foreground))]">{page}</strong> of{' '}
-                <strong className="text-[hsl(var(--foreground))]">{totalPages}</strong> ({total} total records)
-              </span>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={page <= 1}
-                  className="h-8 gap-1"
-                >
-                  <ChevronLeft className="h-3.5 w-3.5" /> Previous
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={page >= totalPages}
-                  className="h-8 gap-1"
-                >
-                  Next <ChevronRight className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+      {/* Operational Table */}
+      <StudentOperationalTable
+        canUpdate={canUpdate}
+        canArchive={canArchive}
+        onViewDetails={(s) => setSelectedStudentForDetails(rowToDto(s))}
+        onEdit={(s) => {
+          setSelectedStudentForEdit(rowToDto(s));
+          setModalError(null);
+        }}
+        onAdmit={(s) => {
+          setSelectedStudentForAdmission(rowToDto(s));
+          setAdmissionModalType('admit');
+          setModalError(null);
+        }}
+        onReject={(s) => {
+          setSelectedStudentForAdmission(rowToDto(s));
+          setAdmissionModalType('reject');
+          setModalError(null);
+        }}
+        onCancel={(s) => {
+          setSelectedStudentForAdmission(rowToDto(s));
+          setAdmissionModalType('cancel');
+          setModalError(null);
+        }}
+        onActivate={(s) => {
+          setSelectedStudentForLifecycle(rowToDto(s));
+          setLifecycleModalType('activate');
+          setModalError(null);
+        }}
+        onDeactivate={(s) => {
+          setSelectedStudentForLifecycle(rowToDto(s));
+          setLifecycleModalType('deactivate');
+          setModalError(null);
+        }}
+        onArchive={(s) => {
+          setSelectedStudentForLifecycle(rowToDto(s));
+          setLifecycleModalType('archive');
+          setModalError(null);
+        }}
+      />
 
       {/* Details View Modal */}
       <StudentDetailsModal
@@ -580,5 +411,13 @@ export function StudentContent() {
         error={modalError}
       />
     </div>
+  );
+}
+
+export function StudentContent() {
+  return (
+    <Suspense fallback={<StudentSkeleton />}>
+      <StudentContentInner />
+    </Suspense>
   );
 }

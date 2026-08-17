@@ -4,6 +4,11 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { InvoiceOperationalTable } from './components/invoice-operational-table';
 import { useInvoicesTable } from './hooks/use-invoices-table';
 
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
+
 vi.mock('./hooks/use-invoices-table', async (importOriginal) => {
   const actual = await importOriginal<typeof import('./hooks/use-invoices-table')>();
   return {

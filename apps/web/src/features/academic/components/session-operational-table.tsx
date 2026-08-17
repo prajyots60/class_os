@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,13 +9,15 @@ import {
   createColumnHelper,
 } from '@tanstack/react-table';
 import { Badge } from '@coaching-os/ui';
-import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, ClipboardCheck, BookOpen } from 'lucide-react';
 import {
   OperationalTableToolbar,
   OperationalTablePagination,
   OperationalTableSkeleton,
   OperationalTableEmpty,
   OperationalTableError,
+  OperationalTableRowActions,
+  type RowActionItem,
 } from '../../shared/components/operational-table';
 import { useSessionsTable } from '../hooks/use-sessions-table';
 
@@ -31,9 +34,18 @@ export interface SessionRowItem {
   attendanceTaken: boolean;
 }
 
+export interface SessionOperationalTableProps {
+  onTakeAttendance?: (session: SessionRowItem) => void;
+  canRecordAttendance?: boolean;
+}
+
 const columnHelper = createColumnHelper<SessionRowItem>();
 
-export function SessionOperationalTable() {
+export function SessionOperationalTable({
+  onTakeAttendance,
+  canRecordAttendance = true,
+}: SessionOperationalTableProps = {}) {
+  const router = useRouter();
   const {
     filters,
     updateFilter,
@@ -61,7 +73,6 @@ export function SessionOperationalTable() {
       attendanceTaken: Boolean(item.attendanceTaken),
     }));
   }, [apiResponse]);
-
 
   const total = apiResponse?.meta?.total ?? sessions.length;
   const page = apiResponse?.meta?.page ?? filters.page;
@@ -166,8 +177,47 @@ export function SessionOperationalTable() {
           );
         },
       }),
+
+      columnHelper.display({
+        id: 'actions',
+        header: 'Actions',
+        cell: (info) => {
+          const sess = info.row.original;
+          const actions: RowActionItem[] = [];
+
+          if (canRecordAttendance && sess.status !== 'cancelled') {
+            actions.push({
+              id: 'take-attendance',
+              label: sess.attendanceTaken ? 'View Attendance' : 'Take Attendance',
+              icon: ClipboardCheck,
+              onClick: () => {
+                if (onTakeAttendance) {
+                  onTakeAttendance(sess);
+                } else {
+                  router.push(`/academics?tab=attendance&sessionId=${sess.id}`);
+                }
+              },
+            });
+          }
+
+          actions.push({
+            id: 'view-batch',
+            label: 'View Batch Context',
+            icon: BookOpen,
+            onClick: () => router.push(`/academics?tab=hierarchy&subTab=batches&batchId=${sess.batchId}`),
+          });
+
+          return (
+            <OperationalTableRowActions
+              actions={actions}
+              rowId={sess.id}
+              resourceName={sess.batchName}
+            />
+          );
+        },
+      }),
     ],
-    [filters.sortBy, filters.sortOrder, handleSort],
+    [filters.sortBy, filters.sortOrder, handleSort, onTakeAttendance, canRecordAttendance, router],
   );
 
   const table = useReactTable({
@@ -220,7 +270,7 @@ export function SessionOperationalTable() {
       </OperationalTableToolbar>
 
       {/* Loading State */}
-      {isLoading && <OperationalTableSkeleton rows={5} columns={6} />}
+      {isLoading && <OperationalTableSkeleton rows={5} columns={7} />}
 
       {/* Error State */}
       {isError && (

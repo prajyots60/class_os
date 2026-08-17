@@ -106,10 +106,11 @@ export function AssistantCollectionCard({ collection }: AssistantCollectionCardP
 
       <CardFooter className="pt-2 border-t border-[hsl(var(--border))]">
         <Link
-          href={collection.targetPath || '/billing'}
+          href={collection.targetPath || '/billing?tab=payments'}
           className={buttonVariants({ variant: 'outline', size: 'default' }) + ' w-full justify-between min-h-[44px]'}
           aria-label="Navigate to Billing workspace to view collections and receipts"
         >
+
           <span className="font-semibold text-xs">View Billing &amp; Receipts</span>
           <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
         </Link>

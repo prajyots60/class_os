@@ -4,6 +4,11 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { StudentOperationalTable } from './components/student-operational-table';
 import { useStudentsTable } from './hooks/use-students-table';
 
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
+
 vi.mock('./hooks/use-students-table', async (importOriginal) => {
   const actual = await importOriginal<typeof import('./hooks/use-students-table')>();
   return {

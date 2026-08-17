@@ -1,7 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { Card } from '@coaching-os/ui';
+import { useSearchParams } from 'next/navigation';
+import { Card, Skeleton } from '@coaching-os/ui';
 import { v1BillingClient } from '../api/v1-billing-client';
 import type { BillingPlanDTO, InvoiceDTO, PaymentDTO, ReceiptDTO } from '../types';
 import { BillingOverviewView } from './BillingOverviewView';
@@ -23,7 +24,7 @@ export interface BillingWorkspaceProps {
   initialTab?: BillingTab;
 }
 
-export function BillingWorkspace({
+function BillingWorkspaceInner({
   userCapabilities = [
     'billing:read',
     'billing:write',
@@ -33,7 +34,20 @@ export function BillingWorkspace({
   ],
   initialTab = 'overview',
 }: BillingWorkspaceProps) {
-  const [activeTab, setActiveTab] = React.useState<BillingTab>(initialTab);
+  const searchParams = useSearchParams();
+  const urlTab = searchParams.get('tab') as BillingTab | null;
+  const urlInvoiceId = searchParams.get('invoiceId');
+  const urlAction = searchParams.get('action');
+
+  const [activeTab, setActiveTab] = React.useState<BillingTab>(() => {
+    if (urlTab && ['overview', 'plans', 'invoices', 'payments', 'receipts'].includes(urlTab)) {
+      return urlTab;
+    }
+    if (urlInvoiceId || urlAction === 'record-payment') {
+      return 'invoices';
+    }
+    return initialTab;
+  });
 
   // Capability Flags
   const canReadBilling = userCapabilities.includes('billing:read');
@@ -72,9 +86,11 @@ export function BillingWorkspace({
       v1BillingClient.listPayments({ limit: 100 }).catch(() => ({ items: [] })),
     ])
       .then(([plansRes, invoicesRes, paymentsRes]) => {
+        const loadedInvoices = invoicesRes.items || [];
         setPlans(plansRes.items || []);
-        setInvoices(invoicesRes.items || []);
+        setInvoices(loadedInvoices);
         setPayments(paymentsRes.items || []);
+
         const mappedReceipts: ReceiptDTO[] = (paymentsRes.items || [])
           .filter((p) => p.receiptNumber && p.receiptId)
           .map((p) => ({
@@ -89,11 +105,23 @@ export function BillingWorkspace({
             downloadUrl: null,
           }));
         setReceipts(mappedReceipts);
+
+        // Auto-open modal if URL parameters passed
+        if (urlInvoiceId) {
+          const match = loadedInvoices.find((i) => i.id === urlInvoiceId);
+          if (match) {
+            if (urlAction === 'record-payment' && canRecordPayment) {
+              setRecordPaymentInvoice(match);
+            } else {
+              setSelectedInvoice(match);
+            }
+          }
+        }
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [canReadBilling]);
+  }, [canReadBilling, urlInvoiceId, urlAction, canRecordPayment]);
 
   React.useEffect(() => {
     loadData();
@@ -105,7 +133,7 @@ export function BillingWorkspace({
         <Card className="p-6 border-rose-200 bg-rose-50 text-rose-900 dark:bg-rose-950 dark:text-rose-200 dark:border-rose-900 max-w-md mx-auto">
           <h2 className="font-bold text-lg">Access Denied (403)</h2>
           <p className="text-xs mt-1">
-            You do not have the required capability (<code className="font-mono">billing:read</code>) to access the Fees & Billing workspace.
+            You do not have the required capability (<code className="font-mono">billing:read</code>) to access the Fees &amp; Billing workspace.
           </p>
         </Card>
       </div>
@@ -126,7 +154,7 @@ export function BillingWorkspace({
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="p-6 space-y-6 max-w-7xl mx-auto" data-testid="billing-workspace">
       {/* Toast Notification */}
       {toastMessage && (
         <div
@@ -140,7 +168,7 @@ export function BillingWorkspace({
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Fees & Billing Workspace</h1>
+          <h1 className="text-2xl font-bold text-foreground">Fees &amp; Billing Workspace</h1>
           <p className="text-xs text-muted-foreground">
             Manage billing plans, track invoices, record payments, and issue receipts
           </p>
@@ -185,11 +213,7 @@ export function BillingWorkspace({
           onOpenCreatePlan={() => setIsCreatePlanOpen(true)}
           onOpenGenerateInvoice={() => setIsGenerateInvoiceOpen(true)}
           onSelectInvoice={(inv) => setSelectedInvoice(inv)}
-          onSelectPayment={(pay) => {
-            if (pay.receiptId && canReadReceipt) {
-              v1BillingClient.getReceiptById(pay.receiptId).then(setSelectedReceipt).catch(() => {});
-            }
-          }}
+          onSelectPayment={() => {}}
           onNavigateTab={(tab) => setActiveTab(tab)}
         />
       )}
@@ -200,7 +224,7 @@ export function BillingWorkspace({
           loading={loading}
           canWriteBilling={canWriteBilling}
           onOpenCreatePlan={() => setIsCreatePlanOpen(true)}
-          onSelectPlan={(plan) => setSelectedPlanForUpdate(plan)}
+          onSelectPlan={(plan: BillingPlanDTO) => setSelectedPlanForUpdate(plan)}
         />
       )}
 
@@ -221,12 +245,8 @@ export function BillingWorkspace({
           payments={payments}
           loading={loading}
           canIssueReceipt={canIssueReceipt}
-          onSelectPayment={(pay) => {
-            if (pay.receiptId && canReadReceipt) {
-              v1BillingClient.getReceiptById(pay.receiptId).then(setSelectedReceipt).catch(() => {});
-            }
-          }}
           onIssueReceipt={handleIssueReceipt}
+          onSelectPayment={() => {}}
         />
       )}
 
@@ -239,70 +259,72 @@ export function BillingWorkspace({
       )}
 
       {/* Modals */}
-      {isCreatePlanOpen && (
-        <BillingPlanFormModal
-          isOpen={isCreatePlanOpen}
-          onClose={() => setIsCreatePlanOpen(false)}
-          onSuccess={() => {
-            showToast(`Billing plan created.`);
-            loadData();
-          }}
-        />
-      )}
+      <BillingPlanFormModal
+        isOpen={isCreatePlanOpen}
+        onClose={() => setIsCreatePlanOpen(false)}
+        onSuccess={() => {
+          setIsCreatePlanOpen(false);
+          showToast('Billing plan created successfully.');
+          loadData();
+        }}
+      />
 
-      {selectedPlanForUpdate && (
-        <BillingPlanUpdateModal
-          isOpen={!!selectedPlanForUpdate}
-          plan={selectedPlanForUpdate}
-          onClose={() => setSelectedPlanForUpdate(null)}
-          onSuccess={() => {
-            showToast(`Billing plan updated.`);
-            loadData();
-          }}
-        />
-      )}
+      <BillingPlanUpdateModal
+        plan={selectedPlanForUpdate}
+        isOpen={!!selectedPlanForUpdate}
+        onClose={() => setSelectedPlanForUpdate(null)}
+        onSuccess={() => {
+          setSelectedPlanForUpdate(null);
+          showToast('Billing plan updated successfully.');
+          loadData();
+        }}
+      />
 
-      {isGenerateInvoiceOpen && (
-        <GenerateInvoiceModal
-          isOpen={isGenerateInvoiceOpen}
-          onClose={() => setIsGenerateInvoiceOpen(false)}
-          onSuccess={(inv) => {
-            showToast(`Invoice ${inv.invoiceNumber} generated.`);
-            loadData();
-          }}
-        />
-      )}
+      <GenerateInvoiceModal
+        isOpen={isGenerateInvoiceOpen}
+        onClose={() => setIsGenerateInvoiceOpen(false)}
+        onSuccess={() => {
+          setIsGenerateInvoiceOpen(false);
+          showToast('Invoice generated successfully.');
+          loadData();
+        }}
+      />
 
-      {selectedInvoice && (
-        <InvoiceDetailsModal
-          isOpen={!!selectedInvoice}
-          invoice={selectedInvoice}
-          payments={payments.filter((p) => p.invoiceId === selectedInvoice.id)}
-          canRecordPayment={canRecordPayment}
-          onClose={() => setSelectedInvoice(null)}
-          onRecordPayment={(inv) => setRecordPaymentInvoice(inv)}
-        />
-      )}
+      <InvoiceDetailsModal
+        invoice={selectedInvoice}
+        isOpen={!!selectedInvoice}
+        canRecordPayment={canRecordPayment}
+        onClose={() => setSelectedInvoice(null)}
+        onRecordPayment={(inv) => {
+          setSelectedInvoice(null);
+          setRecordPaymentInvoice(inv);
+        }}
+      />
 
-      {recordPaymentInvoice && (
-        <RecordPaymentModal
-          isOpen={!!recordPaymentInvoice}
-          invoice={recordPaymentInvoice}
-          onClose={() => setRecordPaymentInvoice(null)}
-          onSuccess={(payment) => {
-            showToast(`Payment of ₹${payment.amount.toLocaleString('en-IN')} recorded.`);
-            loadData();
-          }}
-        />
-      )}
+      <RecordPaymentModal
+        invoice={recordPaymentInvoice}
+        isOpen={!!recordPaymentInvoice}
+        onClose={() => setRecordPaymentInvoice(null)}
+        onSuccess={(payment) => {
+          setRecordPaymentInvoice(null);
+          showToast(`Payment recorded. Receipt: ${payment.receiptNumber || 'N/A'}`);
+          loadData();
+        }}
+      />
 
-      {selectedReceipt && (
-        <ReceiptDetailsModal
-          isOpen={!!selectedReceipt}
-          receipt={selectedReceipt}
-          onClose={() => setSelectedReceipt(null)}
-        />
-      )}
+      <ReceiptDetailsModal
+        receipt={selectedReceipt}
+        isOpen={!!selectedReceipt}
+        onClose={() => setSelectedReceipt(null)}
+      />
     </div>
+  );
+}
+
+export function BillingWorkspace(props: BillingWorkspaceProps) {
+  return (
+    <React.Suspense fallback={<Skeleton className="h-64 w-full" />}>
+      <BillingWorkspaceInner {...props} />
+    </React.Suspense>
   );
 }
