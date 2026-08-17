@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { requireAuthSession, resolveServerTenantContext } from '../../../../lib/auth-guards';
-import { OwnerDashboardView, TeacherDashboardView } from '../../../../features/dashboard';
+import { OwnerDashboardView, TeacherDashboardView, AssistantDashboardView } from '../../../../features/dashboard';
 
 export const metadata: Metadata = {
   title: 'Dashboard — CoachingOS',
@@ -23,6 +23,10 @@ export default async function DashboardPage() {
 
   if (role === 'teacher') {
     return <TeacherDashboardView />;
+  }
+
+  if (role === 'assistant') {
+    return <AssistantDashboardView />;
   }
 
   return <OwnerDashboardView />;

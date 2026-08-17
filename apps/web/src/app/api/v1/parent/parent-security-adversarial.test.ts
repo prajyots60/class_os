@@ -50,6 +50,8 @@ describe('Phase 5.11 — Parent PWA Security, Privacy & Adversarial E2E Matrix',
   let notificationB: { id: string };
 
   let sessionTokenA: string;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  let sessionTokenB: string;
 
   beforeEach(async () => {
     const rawId = Date.now().toString();

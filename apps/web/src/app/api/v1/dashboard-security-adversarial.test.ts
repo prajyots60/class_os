@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 import { GET as getOwnerDashboard, POST as postOwnerDashboard } from './dashboard/owner/route';
 import { GET as getTeacherDashboard, POST as postTeacherDashboard } from './dashboard/teacher/route';
+import { GET as getAssistantDashboard, POST as postAssistantDashboard } from './dashboard/assistant/route';
 import { AuthorizationError } from '@coaching-os/shared';
 import {
   GetOwnerDashboardUseCase,
@@ -88,7 +89,7 @@ vi.mock('@coaching-os/administration', async (importOriginal) => {
   };
 });
 
-describe('Phase 6.1, 6.2 & 6.3 — Staff Dashboard Security & Adversarial Test Matrix', () => {
+describe('Phase 6.1, 6.2, 6.3 & 6.4 — Staff Dashboard Security & Adversarial Test Matrix', () => {
   describe('P6.1-SEC-001 / P6.2-SEC-001: Unauthenticated request handling', () => {
     it('should reject unauthenticated request to Owner dashboard', async () => {
       const { getAuthenticatedSession } = await import('@coaching-os/auth');
@@ -294,6 +295,144 @@ describe('Phase 6.1, 6.2 & 6.3 — Staff Dashboard Security & Adversarial Test M
 
     it('P6.3-SEC-010: HTTP POST on Teacher dashboard endpoint returns 405 Method Not Allowed', async () => {
       const res = await postTeacherDashboard();
+      expect(res.status).toBe(405);
+      expect(res.headers.get('Allow')).toBe('GET');
+    });
+  });
+
+  describe('P6.4-SEC-001..010: Assistant Dashboard Security & Boundary Invariants', () => {
+    it('P6.4-SEC-001: Unauthenticated Assistant Dashboard access is rejected with 401', async () => {
+      const { getAuthenticatedSession } = await import('@coaching-os/auth');
+      vi.mocked(getAuthenticatedSession).mockResolvedValueOnce(null);
+
+      const req = new NextRequest('http://localhost:3000/api/v1/dashboard/assistant');
+      const res = await getAssistantDashboard(req);
+
+      expect(res.status).toBe(401);
+    });
+
+    it('P6.4-SEC-002 & P6.4-SEC-003: Client cannot override instituteId or user identity via query params', async () => {
+      const { getAuthenticatedSession } = await import('@coaching-os/auth');
+      vi.mocked(getAuthenticatedSession).mockResolvedValue({
+        user: { id: 'usr-owner-1', email: 'assistant@test.com', name: 'Assistant User' },
+        session: { id: 'sess-3' },
+      } as unknown as Awaited<ReturnType<typeof getAuthenticatedSession>>);
+
+      const req = new NextRequest(
+        'http://localhost:3000/api/v1/dashboard/assistant?instituteId=ATTACKER&userId=ATTACKER',
+      );
+      const res = await getAssistantDashboard(req);
+
+      expect(res.status).toBe(200);
+      const body = await res.json();
+      expect(body.data.instituteId).toBe('inst-100');
+      expect(body.data.assistantUserId).not.toBe('ATTACKER');
+      expect(body.data.assistantUserId).toBe('usr-owner-1');
+    });
+
+    it("P6.4-SEC-004 & P6.4-SEC-005: Non-assistant role blocked; teacher cannot access Assistant Dashboard", async () => {
+      const useCase = new GetAssistantDashboardUseCase({
+        getOwnerData: vi.fn(),
+        getTeacherData: vi.fn(),
+        getAssistantData: vi.fn(),
+      });
+
+      await expect(
+        useCase.execute({
+          instituteId: 'inst-100',
+          authenticatedUserId: 'usr-teacher-1',
+          userRole: 'teacher',
+        }),
+      ).rejects.toThrow(AuthorizationError);
+    });
+
+    it('P6.4-SEC-006: Collection amounts are derived server-side — client date param is ignored', async () => {
+      const { getAuthenticatedSession } = await import('@coaching-os/auth');
+      vi.mocked(getAuthenticatedSession).mockResolvedValue({
+        user: { id: 'usr-owner-1', email: 'assistant@test.com', name: 'Assistant User' },
+        session: { id: 'sess-3' },
+      } as unknown as Awaited<ReturnType<typeof getAuthenticatedSession>>);
+
+      const req = new NextRequest(
+        'http://localhost:3000/api/v1/dashboard/assistant?date=2099-01-01&startDate=2099-01-01&endDate=2099-12-31',
+      );
+      const res = await getAssistantDashboard(req);
+
+      expect(res.status).toBe(200);
+      const body = await res.json();
+      // Server derives today — should not be the injected future date
+      expect(body.data.todayIso).not.toBe('2099-01-01');
+    });
+
+    it('P6.4-SEC-007: No internal Prisma models or secrets are exposed in Assistant DTO response', async () => {
+      const { getAuthenticatedSession } = await import('@coaching-os/auth');
+      vi.mocked(getAuthenticatedSession).mockResolvedValue({
+        user: { id: 'usr-owner-1', email: 'assistant@test.com', name: 'Assistant User' },
+        session: { id: 'sess-3' },
+      } as unknown as Awaited<ReturnType<typeof getAuthenticatedSession>>);
+
+      const req = new NextRequest('http://localhost:3000/api/v1/dashboard/assistant');
+      const res = await getAssistantDashboard(req);
+      const body = await res.json();
+
+      expect(body.success).toBe(true);
+      expect(body.data).not.toHaveProperty('prisma');
+      expect(body.data).not.toHaveProperty('password');
+      expect(body.data).not.toHaveProperty('secret');
+      expect(body.data).not.toHaveProperty('_count');
+    });
+
+    it('P6.4-SEC-008: Assistant financial aggregation is server-owned — collection data reflects server-computed values', async () => {
+      const mockRepo = {
+        getOwnerData: vi.fn(),
+        getTeacherData: vi.fn(),
+        getAssistantData: vi.fn().mockResolvedValue({
+          timezone: 'Asia/Kolkata',
+          collectedTodayAmount: 25000,
+          transactionCount: 4,
+          pendingReceiptCount: 1,
+          admissionsTodayCount: 2,
+          pendingEnrollmentsCount: 0,
+        }),
+      };
+
+      const useCase = new GetAssistantDashboardUseCase(mockRepo);
+      const result = await useCase.execute({
+        instituteId: 'inst-100',
+        authenticatedUserId: 'usr-assistant-1',
+        userRole: 'assistant',
+      });
+
+      // Collection data comes from server aggregation, not client computation
+      expect(result.collection.collectedTodayAmount).toBe(25000);
+      expect(result.collection.transactionCount).toBe(4);
+      expect(mockRepo.getAssistantData).toHaveBeenCalledWith(
+        'inst-100',
+        'usr-assistant-1',
+        expect.any(String),
+        expect.any(Date),
+        expect.any(Date),
+      );
+    });
+
+    it('P6.4-SEC-009: Parent role cannot access Assistant Dashboard', async () => {
+      const useCase = new GetAssistantDashboardUseCase({
+        getOwnerData: vi.fn(),
+        getTeacherData: vi.fn(),
+        getAssistantData: vi.fn(),
+      });
+
+      await expect(
+        useCase.execute({
+          instituteId: 'inst-100',
+          authenticatedUserId: 'usr-parent-1',
+          userRole: 'parent',
+        }),
+      ).rejects.toThrow(AuthorizationError);
+    });
+
+    it('P6.4-SEC-010: HTTP POST on Assistant dashboard endpoint returns 405 Method Not Allowed', async () => {
+      const res = await postAssistantDashboard();
       expect(res.status).toBe(405);
       expect(res.headers.get('Allow')).toBe('GET');
     });

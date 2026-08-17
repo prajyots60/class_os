@@ -1,6 +1,7 @@
 export * from './api/dashboard-client';
 export * from './hooks/use-owner-dashboard';
 export * from './hooks/use-teacher-dashboard';
+export * from './hooks/use-assistant-dashboard';
 export * from './components/owner-dashboard-view';
 export * from './components/owner-attendance-card';
 export * from './components/owner-quick-actions';
@@ -10,3 +11,7 @@ export * from './components/teacher-dashboard-view';
 export * from './components/teacher-today-sessions';
 export * from './components/teacher-pending-homework';
 export * from './components/teacher-upcoming-tests';
+export * from './components/assistant-dashboard-view';
+export * from './components/assistant-collection-card';
+export * from './components/assistant-admissions-summary';
+export * from './components/assistant-quick-actions';

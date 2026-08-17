@@ -961,14 +961,14 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 
 ### 🟡 PHASE 6 — STAFF DASHBOARD & UX POLISH (IN EXECUTION)
 
-- **Domain Contract Specification:** Documented in [docs/phases/06/phase6.0-staff-dashboard-contract.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-staff-dashboard-contract.md), [docs/phases/06/phase6.0-ux-information-architecture.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-ux-information-architecture.md), [docs/phases/06/phase6.1-staff-dashboard-foundation.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.1-staff-dashboard-foundation.md), [docs/phases/06/phase6.2-owner-dashboard-ui.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.2-owner-dashboard-ui.md), and [docs/phases/06/phase6.3-teacher-dashboard-ui.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.3-teacher-dashboard-ui.md).
+- **Domain Contract Specification:** Documented in [docs/phases/06/phase6.0-staff-dashboard-contract.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-staff-dashboard-contract.md), [docs/phases/06/phase6.0-ux-information-architecture.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-ux-information-architecture.md), [docs/phases/06/phase6.1-staff-dashboard-foundation.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.1-staff-dashboard-foundation.md), [docs/phases/06/phase6.2-owner-dashboard-ui.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.2-owner-dashboard-ui.md), [docs/phases/06/phase6.3-teacher-dashboard-ui.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.3-teacher-dashboard-ui.md), and [docs/phases/06/phase6.4-assistant-dashboard-ui.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.4-assistant-dashboard-ui.md).
 - **Subphase Tracking Map:**
   - **Phase 6.0:** Architecture & UX Contract Freeze 🟢 (ACCEPTED & FROZEN)
   - **Phase 6.1:** Staff Dashboard Foundation & Read Orchestration 🟢 (COMPLETED & VERIFIED)
   - **Phase 6.2:** Founder / Owner Dashboard UI 🟢 (COMPLETED & VERIFIED)
   - **Phase 6.3:** Teacher Dashboard UI 🟢 (COMPLETED & VERIFIED)
-  - **Phase 6.4:** Assistant Dashboard UI ⏳ (NEXT ACTIVE TARGET)
-  - **Phase 6.5:** Global Search Implementation ⏳ (UPCOMING)
+  - **Phase 6.4:** Assistant Dashboard UI 🟢 (COMPLETED & VERIFIED)
+  - **Phase 6.5:** Global Search Implementation ⏳ (NEXT ACTIVE TARGET)
   - **Phase 6.6:** Operational Tables & Multi-Criteria Filtering ⏳ (UPCOMING)
   - **Phase 6.7:** Operational Reports UI ⏳ (UPCOMING)
   - **Phase 6.8:** Advanced Settings UX Refinement ⏳ (UPCOMING)
