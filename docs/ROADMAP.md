@@ -241,9 +241,9 @@ Parent monitors all children across different coaching institutes in one unified
 
 ---
 
-## Phase 6 — Staff Dashboard & UX Polish 🟡 IN EXECUTION (Phase 6.0 ACCEPTED & FROZEN, Phase 6.1 COMPLETED & VERIFIED)
+## Phase 6 — Staff Dashboard & UX Polish 🟡 IN EXECUTION (Phase 6.0 ACCEPTED & FROZEN, Phase 6.1 COMPLETED & VERIFIED, Phase 6.2 COMPLETED & VERIFIED)
 
-**Goal:** Role-tailored dashboards and administrative refinement. (Phase 6.0 Accepted & Frozen, Phase 6.1 Completed & Verified)
+**Goal:** Role-tailored dashboards and administrative refinement. (Phase 6.0 Accepted & Frozen, Phase 6.1 Completed & Verified, Phase 6.2 Completed & Verified)
 
 ### 1. Role-Specific Dashboards
 
