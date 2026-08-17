@@ -5,17 +5,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { ParentHeader } from './components/parent-header';
 import { ChildSwitcher } from './components/child-switcher';
-import { ChildSummaryCard } from './components/child-summary-card';
-import { InstituteContext } from './components/institute-context';
 import { TodayOverview } from './components/today-overview';
-import { TodayActivity } from './components/today-activity';
 import { AttendanceSummary } from './components/attendance/attendance-summary';
 import { AttendanceList } from './components/attendance/attendance-list';
 import { HomeworkCard } from './components/homework/homework-card';
 import { HomeworkList } from './components/homework/homework-list';
 import { HomeworkDetailModal } from './components/homework/homework-detail-modal';
 import { MarksSummary } from './components/assessments/marks-summary';
-import { PerformanceTrend } from './components/assessments/performance-trend';
 import { AssessmentCard } from './components/assessments/assessment-card';
 import { AssessmentList } from './components/assessments/assessment-list';
 import { AssessmentDetailModal } from './components/assessments/assessment-detail-modal';

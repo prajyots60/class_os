@@ -15,6 +15,12 @@ describe('Phase 5.11 — Client UI Privacy, XSS & Cache Isolation Matrix', () =>
     expect(keyStudentA).not.toEqual(keyStudentB);
     expect(keyStudentA[2]).toBe('student-uuid-A');
     expect(keyStudentB[2]).toBe('student-uuid-B');
+
+    const hwKeyStudentA = getHomeworkQueryKey('student-uuid-A');
+    const hwKeyStudentB = getHomeworkQueryKey('student-uuid-B');
+    expect(hwKeyStudentA).not.toEqual(hwKeyStudentB);
+    expect(hwKeyStudentA[2]).toBe('student-uuid-A');
+    expect(hwKeyStudentB[2]).toBe('student-uuid-B');
   });
 
   it('PARENT-SEC-044: Homework details modal escapes malicious XSS script tags in instructions', () => {

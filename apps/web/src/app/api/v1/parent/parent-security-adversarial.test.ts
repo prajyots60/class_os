@@ -50,7 +50,6 @@ describe('Phase 5.11 — Parent PWA Security, Privacy & Adversarial E2E Matrix',
   let notificationB: { id: string };
 
   let sessionTokenA: string;
-  let sessionTokenB: string;
 
   beforeEach(async () => {
     const rawId = Date.now().toString();
@@ -614,20 +613,12 @@ describe('Phase 5.11 — Parent PWA Security, Privacy & Adversarial E2E Matrix',
   describe('HTTP Method Safety & Mass Assignment (PARENT-SEC-051 - 055)', () => {
     it('PARENT-SEC-051: Unsupported POST on read-only academic route -> 405 Method Not Allowed', async () => {
       const { POST: academicPOST } = await import('./students/[id]/attendance/route');
-      const req = new NextRequest(
-        `http://localhost:3000/api/v1/parent/students/${studentA1.id}/attendance`,
-        { method: 'POST', headers: { Cookie: `better-auth.session_token=${sessionTokenA}` } },
-      );
       const res = await academicPOST();
       expect(res.status).toBe(405);
     });
 
     it('PARENT-SEC-052: Unsupported POST on read-only billing route -> 405 Method Not Allowed', async () => {
       const { POST: billingPOST } = await import('./students/[id]/billing/route');
-      const req = new NextRequest(
-        `http://localhost:3000/api/v1/parent/students/${studentA1.id}/billing`,
-        { method: 'POST', headers: { Cookie: `better-auth.session_token=${sessionTokenA}` } },
-      );
       const res = await billingPOST();
       expect(res.status).toBe(405);
     });
