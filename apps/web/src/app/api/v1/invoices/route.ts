@@ -40,8 +40,13 @@ export async function GET(req: NextRequest) {
       studentId: searchParams.get('studentId') ?? undefined,
       status: searchParams.get('status') ?? undefined,
       overdue: searchParams.get('overdue') ?? undefined,
+      search: searchParams.get('search') ?? undefined,
       cursor: searchParams.get('cursor') ?? undefined,
       limit: searchParams.get('limit') ?? undefined,
+      page: searchParams.get('page') ?? undefined,
+      pageSize: searchParams.get('pageSize') ?? undefined,
+      sortBy: searchParams.get('sortBy') ?? undefined,
+      sortOrder: searchParams.get('sortOrder') ?? undefined,
     };
 
     const parsed = v1ListInvoicesQuerySchema.safeParse(raw);
@@ -54,33 +59,36 @@ export async function GET(req: NextRequest) {
 
     const prisma = db;
     const invoiceRepo = new PrismaInvoiceRepository(prisma);
-    const useCase = new ListInvoicesUseCase(invoiceRepo);
 
-    const invoices = await useCase.execute(ctx.instituteId, {
+    const result = await invoiceRepo.listOperationalInvoices(ctx.instituteId, {
       billingPlanId: parsed.data.billingPlanId,
       enrollmentId: parsed.data.enrollmentId,
       studentId: parsed.data.studentId,
       status: parsed.data.status,
       overdue: parsed.data.overdue,
-      cursor: parsed.data.cursor,
-      limit: parsed.data.limit,
+      search: parsed.data.search,
+      page: parsed.data.page,
+      pageSize: parsed.data.pageSize ?? parsed.data.limit,
+      sortBy: parsed.data.sortBy,
+      sortOrder: parsed.data.sortOrder,
     });
 
-    const pageSize = parsed.data.limit ?? invoices.length;
-    const hasMore = invoices.length === pageSize;
-    const lastItem = invoices.length > 0 ? invoices[invoices.length - 1] : null;
+    const hasMore = result.page < result.totalPages;
 
     return apiCollection(
-      invoices,
+      result.items,
       {
         cursor: parsed.data.cursor ?? null,
-        nextCursor: hasMore && lastItem ? lastItem.id : null,
+        nextCursor: null,
         hasMore,
-        pageSize,
-        total: invoices.length,
+        pageSize: result.pageSize,
+        total: result.total,
+        page: result.page,
+        totalPages: result.totalPages,
       },
       requestId
     );
+
   });
 }
 

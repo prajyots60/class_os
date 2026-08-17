@@ -191,4 +191,147 @@ export class PrismaInvoiceRepository implements InvoiceRepository {
 
     return records.map((rec) => this.mapToDomain(rec));
   }
+
+  public async listOperationalInvoices(
+    instituteId: string,
+    options?: {
+      billingPlanId?: string;
+      enrollmentId?: string;
+      studentId?: string;
+      status?: string;
+      overdue?: boolean;
+      search?: string;
+      page?: number;
+      pageSize?: number;
+      sortBy?: 'dueDate' | 'amount' | 'createdAt' | 'status';
+      sortOrder?: 'asc' | 'desc';
+    },
+  ) {
+    if (!instituteId) {
+      return { items: [], total: 0, page: 1, pageSize: 25, totalPages: 0 };
+    }
+
+    const page = Math.max(1, options?.page ?? 1);
+    const pageSize = Math.max(1, Math.min(100, options?.pageSize ?? 25));
+    const skip = (page - 1) * pageSize;
+
+    const where: any = {
+      billingPlan: {
+        enrollment: {
+          instituteId,
+        },
+      },
+      ...(options?.billingPlanId ? { billingPlanId: options.billingPlanId } : {}),
+      ...(options?.status ? { status: options.status } : {}),
+    };
+
+    if (options?.enrollmentId) {
+      where.billingPlan.enrollmentId = options.enrollmentId;
+    }
+
+    if (options?.studentId) {
+      where.billingPlan.enrollment = {
+        ...where.billingPlan.enrollment,
+        studentId: options.studentId,
+      };
+    }
+
+    if (options?.overdue !== undefined) {
+      const now = new Date();
+      if (options.overdue) {
+        where.dueDate = { lt: now };
+        where.status = { not: 'paid' };
+      } else {
+        where.OR = [{ dueDate: { gte: now } }, { status: 'paid' }];
+      }
+    }
+
+    if (options?.search && options.search.trim() !== '') {
+      const s = options.search.trim();
+      const isUuid = s.length === 36 && /^[0-9a-fA-F-]{36}$/.test(s);
+      where.AND = [
+        {
+          OR: [
+            ...(isUuid ? [{ id: s }] : []),
+            {
+              billingPlan: {
+                enrollment: {
+                  student: {
+                    OR: [
+                      { firstName: { contains: s, mode: 'insensitive' } },
+                      { lastName: { contains: s, mode: 'insensitive' } },
+                      { admissionNumber: { contains: s, mode: 'insensitive' } },
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+        },
+      ];
+    }
+
+    const sortField = options?.sortBy || 'dueDate';
+    const sortDir = options?.sortOrder || 'desc';
+    const orderBy: any = {};
+    orderBy[sortField] = sortDir;
+
+    const [records, total] = await Promise.all([
+      this.prisma.invoice.findMany({
+        where,
+        include: {
+          billingPlan: {
+            include: {
+              enrollment: {
+                include: {
+                  student: true,
+                },
+              },
+            },
+          },
+          payments: true,
+        },
+        orderBy: [orderBy, { id: 'asc' }],
+        skip,
+        take: pageSize,
+      }),
+      this.prisma.invoice.count({ where }),
+    ]);
+
+    const totalPages = Math.ceil(total / pageSize);
+
+    const items = records.map((inv: any) => {
+      const student = inv.billingPlan?.enrollment?.student;
+      const studentName = student ? `${student.firstName} ${student.lastName}`.trim() : undefined;
+      const shortId = inv.id.slice(0, 8).toUpperCase();
+      const amountVal = typeof inv.amount === 'number' ? inv.amount : inv.amount?.toNumber?.() ?? Number(inv.amount);
+      const paidVal = (inv.payments || []).reduce((acc: number, p: any) => {
+        const pAmt = typeof p.amount === 'number' ? p.amount : p.amount?.toNumber?.() ?? Number(p.amount);
+        return acc + pAmt;
+      }, 0);
+
+      return {
+        id: inv.id,
+        invoiceNumber: `INV-${shortId}`,
+        studentId: student?.id,
+        studentName: studentName || 'Student',
+        admissionNumber: student?.admissionNumber || '',
+        amount: amountVal,
+        paidAmount: paidVal,
+        outstandingAmount: Math.max(0, amountVal - paidVal),
+        dueDateIso: inv.dueDate.toISOString().split('T')[0] || '',
+        status: inv.status,
+        createdAtIso: inv.createdAt.toISOString().split('T')[0] || '',
+      };
+    });
+
+    return {
+      items,
+      total,
+      page,
+      pageSize,
+      totalPages,
+    };
+  }
 }
+

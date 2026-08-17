@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import * as React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AppShell } from './app-shell';
 import type { UserDisplay, TenantDisplay, InstituteDisplay } from '../types/app-shell-types';
 
@@ -31,9 +32,24 @@ const MOCK_INSTITUTE: InstituteDisplay = {
   status: 'active',
 };
 
+function renderWithQueryClient(ui: React.ReactElement) {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+  return renderToStaticMarkup(
+    <QueryClientProvider client={queryClient}>
+      {ui}
+    </QueryClientProvider>,
+  );
+}
+
 describe('AppShell Component Architecture & Boundary Suite', () => {
   it('renders AppShell HTML with user name, institute name, and dashboard heading', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithQueryClient(
       <AppShell user={MOCK_USER} tenant={MOCK_TENANT} institute={MOCK_INSTITUTE}>
         <div>Workspace Dashboard Page</div>
       </AppShell>,
@@ -47,7 +63,7 @@ describe('AppShell Component Architecture & Boundary Suite', () => {
   });
 
   it('renders semantic <aside>, <header>, and <main> landmarks', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithQueryClient(
       <AppShell user={MOCK_USER} tenant={MOCK_TENANT} institute={MOCK_INSTITUTE}>
         <div>Workspace Content</div>
       </AppShell>,

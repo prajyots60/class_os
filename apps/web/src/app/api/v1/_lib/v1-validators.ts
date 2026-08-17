@@ -54,6 +54,7 @@ export const v1ListStudentsQuerySchema = z
     search: z.string().trim().max(200, 'Search term too long').optional(),
     status: z.enum(['active', 'inactive', 'archived']).optional(),
     admissionStatus: z.enum(['pending', 'admitted', 'rejected', 'cancelled']).optional(),
+    batchId: z.string().uuid('batchId must be a valid UUID').optional(),
     cursor: z.string().optional(),
     limit: z.coerce
       .number()
@@ -62,8 +63,19 @@ export const v1ListStudentsQuerySchema = z
       .max(MAX_PAGE_SIZE, `Limit cannot exceed ${MAX_PAGE_SIZE}`)
       .optional()
       .default(DEFAULT_PAGE_SIZE),
+    page: z.coerce.number().int().positive().optional().default(1),
+    pageSize: z.coerce
+      .number()
+      .int()
+      .positive()
+      .max(MAX_PAGE_SIZE, `Page size cannot exceed ${MAX_PAGE_SIZE}`)
+      .optional()
+      .default(DEFAULT_PAGE_SIZE),
+    sortBy: z.enum(['displayName', 'admissionNumber', 'createdAt', 'status']).optional(),
+    sortOrder: z.enum(['asc', 'desc']).optional().default('asc'),
   })
   .strict();
+
 
 export type V1ListStudentsQueryInput = z.infer<typeof v1ListStudentsQuerySchema>;
 
@@ -287,6 +299,7 @@ export const v1ListInvoicesQuerySchema = z
     studentId: z.string().uuid('studentId must be a valid UUID').optional(),
     status: z.enum(['pending', 'partial', 'paid']).optional(),
     overdue: z.coerce.boolean().optional(),
+    search: z.string().trim().max(200).optional(),
     cursor: z.string().optional(),
     limit: z.coerce
       .number()
@@ -295,10 +308,58 @@ export const v1ListInvoicesQuerySchema = z
       .max(MAX_PAGE_SIZE)
       .optional()
       .default(DEFAULT_PAGE_SIZE),
+    page: z.coerce.number().int().positive().optional().default(1),
+    pageSize: z.coerce
+      .number()
+      .int()
+      .positive()
+      .max(MAX_PAGE_SIZE, `Page size cannot exceed ${MAX_PAGE_SIZE}`)
+      .optional()
+      .default(DEFAULT_PAGE_SIZE),
+    sortBy: z.enum(['dueDate', 'amount', 'createdAt', 'status']).optional(),
+    sortOrder: z.enum(['asc', 'desc']).optional().default('desc'),
   })
   .strict();
 
+
 export type V1ListInvoicesQueryInput = z.infer<typeof v1ListInvoicesQuerySchema>;
+
+/**
+ * GET /api/v1/academics/sessions
+ */
+export const v1ListSessionsQuerySchema = z
+  .object({
+    batchId: z.string().uuid('batchId must be a valid UUID').optional(),
+    subjectId: z.string().uuid('subjectId must be a valid UUID').optional(),
+    teacherId: z.string().uuid('teacherId must be a valid UUID').optional(),
+    status: z.enum(['scheduled', 'completed', 'cancelled']).optional(),
+    attendanceStatus: z.enum(['taken', 'pending']).optional(),
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
+    search: z.string().trim().max(200).optional(),
+    cursor: z.string().optional(),
+    limit: z.coerce
+      .number()
+      .int()
+      .positive()
+      .max(MAX_PAGE_SIZE)
+      .optional()
+      .default(DEFAULT_PAGE_SIZE),
+    page: z.coerce.number().int().positive().optional().default(1),
+    pageSize: z.coerce
+      .number()
+      .int()
+      .positive()
+      .max(MAX_PAGE_SIZE, `Page size cannot exceed ${MAX_PAGE_SIZE}`)
+      .optional()
+      .default(DEFAULT_PAGE_SIZE),
+    sortBy: z.enum(['date', 'status', 'createdAt']).optional(),
+    sortOrder: z.enum(['asc', 'desc']).optional().default('asc'),
+  })
+  .strict();
+
+export type V1ListSessionsQueryInput = z.infer<typeof v1ListSessionsQuerySchema>;
+
 
 /**
  * POST /api/v1/invoices

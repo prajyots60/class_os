@@ -15,5 +15,8 @@ export * from './components/student-lifecycle-actions';
 export * from './components/student-status-badge';
 export * from './components/student-empty-state';
 export * from './components/student-skeleton';
+export * from './components/student-operational-table';
+export * from './hooks/use-students-table';
 export * from './types/student-ui.types';
 export * from './api/student-api';
+

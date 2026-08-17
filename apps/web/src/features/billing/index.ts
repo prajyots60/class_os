@@ -18,3 +18,6 @@ export * from './components/RecordPaymentModal';
 export * from './components/ReceiptsView';
 export * from './components/ReceiptDetailsModal';
 export * from './components/BillingWorkspace';
+export * from './components/invoice-operational-table';
+export * from './hooks/use-invoices-table';
+

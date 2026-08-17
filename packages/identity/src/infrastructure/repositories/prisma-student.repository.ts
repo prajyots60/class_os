@@ -163,6 +163,100 @@ export class PrismaStudentRepository implements StudentRepository {
     return records.map((record) => this.toDomainEntity(record));
   }
 
+  public async listOperationalStudents(
+    instituteId: string,
+    options?: {
+      search?: string;
+      status?: string;
+      admissionStatus?: string;
+      batchId?: string;
+      page?: number;
+      pageSize?: number;
+      sortBy?: 'displayName' | 'admissionNumber' | 'createdAt' | 'status';
+      sortOrder?: 'asc' | 'desc';
+    },
+  ) {
+    if (!instituteId) {
+      return { items: [], total: 0, page: 1, pageSize: 25, totalPages: 0 };
+    }
+
+    const page = Math.max(1, options?.page ?? 1);
+    const pageSize = Math.max(1, Math.min(100, options?.pageSize ?? 25));
+    const skip = (page - 1) * pageSize;
+
+    const whereClause: any = {
+      instituteId,
+      ...(options?.status ? { status: options.status } : {}),
+      ...(options?.admissionStatus ? { admissionStatus: options.admissionStatus } : {}),
+    };
+
+    if (options?.batchId) {
+      whereClause.enrollments = {
+        some: {
+          batchId: options.batchId,
+        },
+      };
+    }
+
+    if (options?.search && options.search.trim() !== '') {
+      const searchTerm = options.search.trim();
+      whereClause.OR = [
+        { firstName: { contains: searchTerm, mode: 'insensitive' } },
+        { lastName: { contains: searchTerm, mode: 'insensitive' } },
+        { admissionNumber: { contains: searchTerm, mode: 'insensitive' } },
+        { phone: { contains: searchTerm, mode: 'insensitive' } },
+        { email: { contains: searchTerm, mode: 'insensitive' } },
+      ];
+    }
+
+    const sortFieldMap: Record<string, any> = {
+      displayName: { firstName: options?.sortOrder || 'asc' },
+      admissionNumber: { admissionNumber: options?.sortOrder || 'asc' },
+      createdAt: { createdAt: options?.sortOrder || 'desc' },
+      status: { status: options?.sortOrder || 'asc' },
+    };
+
+    const orderBy = sortFieldMap[options?.sortBy || 'displayName'] || { createdAt: 'desc' };
+
+    const [records, total] = await Promise.all([
+      db.student.findMany({
+        where: whereClause,
+        orderBy: [orderBy, { id: 'asc' }],
+        skip,
+        take: pageSize,
+      }),
+      db.student.count({ where: whereClause }),
+    ]);
+
+    const totalPages = Math.ceil(total / pageSize);
+
+    const items = records.map((record) => {
+      const entity = this.toDomainEntity(record);
+      return {
+        id: entity.id,
+        instituteId: entity.instituteId,
+        displayName: entity.displayName,
+        firstName: entity.firstName,
+        lastName: entity.lastName,
+        admissionNumber: entity.admissionNumber,
+        phone: entity.phone,
+        email: entity.email,
+        status: entity.status,
+        admissionStatus: entity.admissionStatus,
+        createdAt: entity.createdAt.toISOString(),
+      };
+    });
+
+    return {
+      items,
+      total,
+      page,
+      pageSize,
+      totalPages,
+    };
+  }
+
+
   /**
    * Update an existing Student record strictly within tenant context.
    */

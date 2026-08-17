@@ -959,9 +959,28 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Frozen "Today's Batches" Contract**: Enforced Today's Batches scope to strictly represent today's generated `BatchSession` records for the authenticated teacher in institute local timezone. Excluded future and historical sessions. Surfaces session details (`batchName`, `subjectName`, `startTime`, `status`, `attendanceTaken`) and direct actions to `/academics`.
 - **Verification Matrix**: Authored and passed `teacher-dashboard.test.tsx` (`TEACHER-DASH-001..030`) and security tests (`P6.3-SEC-001..010`). Verified 100% quality gates across `env:check`, `db:validate`, `db:health`, `typecheck`, `lint`, `test` (923/923 tests passed), and `build`. **Phase 6.3 COMPLETED & VERIFIED.**
 
+### 🟢 Phase 6.4 — Assistant Dashboard UI & Operational Workspace (COMPLETED & VERIFIED)
+
+- **UI Implementation & React Query Integration**: Built production-ready `AssistantDashboardView`, `AssistantCollectionMetricsCard`, `AssistantPendingReceiptsCard`, `AssistantAttendanceCard`, `AssistantAnnouncementsCard`, `useAssistantDashboard` hook consuming `GET /api/v1/dashboard/assistant`, and updated `/dashboard/page.tsx` for server-side RSC role composition.
+- **Frozen Contract Compliance**: Delivered Today's Collection summary (`collectedToday`, `pendingReceiptsCount`, `pendingReceiptsTotalAmount`), color-independent status badges, and real navigation quick actions (`/billing`, `/students`, `/academics`).
+- **Verification Matrix**: Authored and passed `assistant-dashboard.test.tsx` (`ASSISTANT-DASH-001..025`) and security tests (`P6.4-SEC-001..008`). Verified 100% quality gates across `env:check`, `db:validate`, `db:health`, `typecheck`, `lint`, `test` (956/956 tests passed), and `build`. **Phase 6.4 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 6.5 — Global Search Implementation (COMPLETED & VERIFIED)
+
+- **Search Architecture & REST Endpoints**: Implemented search domain orchestration across Students, Invoices, and Batches via `/api/v1/search` endpoint guarded by `withV1ReadGuard`.
+- **Header Search Bar UI**: Integrated accessible `GlobalSearchBar` into app shell header featuring 300ms debounce, keyboard shortcuts (`Ctrl+K` / `⌘K`), keyboard navigation (`ArrowUp`/`ArrowDown`/`Enter`/`Esc`), clear empty/error states, and role-based result visibility.
+- **Verification Matrix**: Authored and passed `global-search.test.tsx` (`GLOBAL-SEARCH-001..020`) and security tests (`P6.5-SEC-001..012`). Verified 100% quality gates across `env:check`, `db:validate`, `db:health`, `typecheck`, `lint`, `test` (988/988 tests passed), and `build`. **Phase 6.5 COMPLETED & VERIFIED.**
+
+### 🟢 Phase 6.6 — Operational Tables & Multi-Criteria Filtering (COMPLETED & VERIFIED)
+
+- **Reusable Operational Table Primitives**: Built `@tanstack/react-table` (v8) controlled components (`OperationalTableToolbar`, `OperationalTablePagination`, `OperationalTableEmpty`, `OperationalTableError`, `OperationalTableSkeleton`) with $\ge 44 \times 44\text{px}$ touch targets and ARIA support.
+- **Domain Tables**: Delivered server-filtered, deterministically sorted operational tables for **Students** (`/api/v1/students`), **Invoices** (`/api/v1/invoices`), and **Sessions** (`/api/v1/academics/sessions`). Supported dual state sync (URL query params & React state) and zero SQL/Prisma error leaks.
+- **Multi-Tenant & Security Guards**: Verified `withV1ReadGuard` session resolution, teacher role scoping on sessions, 403 Forbidden block on Parent role, and 404 anti-enumeration guard on foreign `batchId`.
+- **Verification Matrix**: Authored and passed 78 UI and security tests (`STUDENT-TABLE-001..018`, `INVOICE-TABLE-001..018`, `SESSION-TABLE-001..018`, `P6.6-SEC-001..024`). Verified 100% quality gates across `env:check`, `db:validate`, `db:health`, `typecheck`, `lint`, `test` (1084/1084 tests passed), and `build`. **Phase 6.6 COMPLETED & VERIFIED.**
+
 ### 🟡 PHASE 6 — STAFF DASHBOARD & UX POLISH (IN EXECUTION)
 
-- **Domain Contract Specification:** Documented in [docs/phases/06/phase6.0-staff-dashboard-contract.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-staff-dashboard-contract.md), [docs/phases/06/phase6.0-ux-information-architecture.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-ux-information-architecture.md), [docs/phases/06/phase6.1-staff-dashboard-foundation.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.1-staff-dashboard-foundation.md), [docs/phases/06/phase6.2-owner-dashboard-ui.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.2-owner-dashboard-ui.md), [docs/phases/06/phase6.3-teacher-dashboard-ui.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.3-teacher-dashboard-ui.md), [docs/phases/06/phase6.4-assistant-dashboard-ui.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.4-assistant-dashboard-ui.md), and [docs/phases/06/phase6.5-global-search.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.5-global-search.md).
+- **Domain Contract Specification:** Documented in [docs/phases/06/phase6.0-staff-dashboard-contract.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-staff-dashboard-contract.md), [docs/phases/06/phase6.0-ux-information-architecture.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-ux-information-architecture.md), [docs/phases/06/phase6.1-staff-dashboard-foundation.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.1-staff-dashboard-foundation.md), [docs/phases/06/phase6.2-owner-dashboard-ui.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.2-owner-dashboard-ui.md), [docs/phases/06/phase6.3-teacher-dashboard-ui.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.3-teacher-dashboard-ui.md), [docs/phases/06/phase6.4-assistant-dashboard-ui.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.4-assistant-dashboard-ui.md), [docs/phases/06/phase6.5-global-search.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.5-global-search.md), and [docs/phases/06/phase6.6-operational-tables.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.6-operational-tables.md).
 - **Subphase Tracking Map:**
   - **Phase 6.0:** Architecture & UX Contract Freeze 🟢 (ACCEPTED & FROZEN)
   - **Phase 6.1:** Staff Dashboard Foundation & Read Orchestration 🟢 (COMPLETED & VERIFIED)
@@ -969,9 +988,10 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
   - **Phase 6.3:** Teacher Dashboard UI 🟢 (COMPLETED & VERIFIED)
   - **Phase 6.4:** Assistant Dashboard UI 🟢 (COMPLETED & VERIFIED)
   - **Phase 6.5:** Global Search Implementation 🟢 (COMPLETED & VERIFIED)
-  - **Phase 6.6:** Operational Tables & Multi-Criteria Filtering ⏳ (NEXT ACTIVE TARGET)
-  - **Phase 6.7:** Operational Reports UI ⏳ (UPCOMING)
+  - **Phase 6.6:** Operational Tables & Multi-Criteria Filtering 🟢 (COMPLETED & VERIFIED)
+  - **Phase 6.7:** Operational Reports UI ⏳ (NEXT ACTIVE TARGET)
   - **Phase 6.8:** Advanced Settings UX Refinement ⏳ (UPCOMING)
   - **Phase 6.9:** UX / Accessibility / Security Matrix ⏳ (UPCOMING)
   - **Phase 6.10:** Phase 6 Final Acceptance Gate & Milestone Freeze ⏳ (UPCOMING)
+
 

@@ -26,13 +26,21 @@ export async function GET(req: NextRequest) {
     AuthorizationEngine.requireCapability(ctx, CAPABILITIES.STUDENT_READ);
 
     const { searchParams } = new URL(req.url);
+    const rawLimit = searchParams.get('limit') ?? undefined;
+    const rawPageSize = searchParams.get('pageSize') ?? rawLimit;
     const raw = {
       search: searchParams.get('search') ?? undefined,
       status: searchParams.get('status') ?? undefined,
       admissionStatus: searchParams.get('admissionStatus') ?? undefined,
+      batchId: searchParams.get('batchId') ?? undefined,
       cursor: searchParams.get('cursor') ?? undefined,
-      limit: searchParams.get('limit') ?? undefined,
+      limit: rawLimit,
+      page: searchParams.get('page') ?? undefined,
+      pageSize: rawPageSize,
+      sortBy: searchParams.get('sortBy') ?? undefined,
+      sortOrder: searchParams.get('sortOrder') ?? undefined,
     };
+
 
     const parsed = v1ListStudentsQuerySchema.safeParse(raw);
     if (!parsed.success) {
@@ -40,26 +48,30 @@ export async function GET(req: NextRequest) {
     }
 
     const repo = new PrismaStudentRepository();
-    const useCase = new ListStudentsUseCase(repo);
 
-    const students = await useCase.execute(ctx, {
+    const result = await repo.listOperationalStudents(ctx.instituteId, {
       search: parsed.data.search,
       status: parsed.data.status,
       admissionStatus: parsed.data.admissionStatus,
-      limit: parsed.data.limit,
+      batchId: parsed.data.batchId,
+      page: parsed.data.page,
+      pageSize: parsed.data.pageSize ?? parsed.data.limit,
+      sortBy: parsed.data.sortBy,
+      sortOrder: parsed.data.sortOrder,
     });
 
-    const pageSize = parsed.data.limit ?? students.length;
-    const hasMore = students.length === pageSize;
-    const lastItem = students.length > 0 ? students[students.length - 1] : null;
+    const hasMore = result.page < result.totalPages;
 
-    return apiCollection(students, {
+    return apiCollection(result.items, {
       cursor: parsed.data.cursor ?? null,
-      nextCursor: hasMore && lastItem ? lastItem.id : null,
+      nextCursor: null,
       hasMore,
-      pageSize,
-      total: students.length,
+      pageSize: result.pageSize,
+      total: result.total,
+      page: result.page,
+      totalPages: result.totalPages,
     }, requestId);
+
   });
 }
 

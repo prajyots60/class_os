@@ -49,7 +49,10 @@ export function apiCollection<T>(
     hasMore: boolean;
     pageSize: number;
     total?: number;
+    page?: number;
+    totalPages?: number;
   },
+
   requestId: string,
   status = 200,
 ): NextResponse {

@@ -212,7 +212,136 @@ export class PrismaBatchSessionRepository implements BatchSessionRepository {
     }
   }
 
+  public async listSessions(
+    instituteId: string,
+    options?: {
+      batchId?: string;
+      subjectId?: string;
+      teacherId?: string;
+      status?: string;
+      attendanceStatus?: 'taken' | 'pending';
+      startDate?: string;
+      endDate?: string;
+      search?: string;
+      page?: number;
+      pageSize?: number;
+      sortBy?: 'date' | 'status' | 'createdAt';
+      sortOrder?: 'asc' | 'desc';
+      teacherUserIdFilter?: string;
+    },
+  ) {
+    if (!instituteId) {
+      return { items: [], total: 0, page: 1, pageSize: 25, totalPages: 0 };
+    }
+
+    const page = Math.max(1, options?.page ?? 1);
+    const pageSize = Math.max(1, Math.min(100, options?.pageSize ?? 25));
+    const skip = (page - 1) * pageSize;
+
+    const whereClause: any = {
+      instituteId,
+      ...(options?.batchId ? { batchId: options.batchId } : {}),
+      ...(options?.status ? { status: options.status } : {}),
+      ...(options?.attendanceStatus
+        ? { attendanceTaken: options.attendanceStatus === 'taken' }
+        : {}),
+    };
+
+    if (options?.subjectId) {
+      whereClause.batch = { subjectId: options.subjectId };
+    }
+
+    if (options?.teacherId || options?.teacherUserIdFilter) {
+      const teacherTarget = options.teacherId || options.teacherUserIdFilter;
+      whereClause.OR = [
+        { batch: { teacherId: teacherTarget } },
+        { substituteTeacherId: teacherTarget },
+      ];
+    }
+
+    if (options?.startDate || options?.endDate) {
+      whereClause.date = {};
+      if (options.startDate) {
+        whereClause.date.gte = this.normalizeToUtcDate(options.startDate);
+      }
+      if (options.endDate) {
+        whereClause.date.lte = this.normalizeToUtcDate(options.endDate);
+      }
+    }
+
+    if (options?.search && options.search.trim() !== '') {
+      const s = options.search.trim();
+      whereClause.AND = [
+        {
+          OR: [
+            { batch: { name: { contains: s, mode: 'insensitive' } } },
+            { batch: { code: { contains: s, mode: 'insensitive' } } },
+            { batch: { subject: { name: { contains: s, mode: 'insensitive' } } } },
+          ],
+        },
+      ];
+    }
+
+    const sortField = options?.sortBy || 'date';
+    const sortDir = options?.sortOrder || 'asc';
+    const orderBy: any = {};
+    orderBy[sortField] = sortDir;
+
+    const [records, total] = await Promise.all([
+      db.batchSession.findMany({
+        where: whereClause,
+        include: {
+          batch: {
+            include: {
+              subject: true,
+              teacher: {
+                include: {
+                  parentIdentity: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy: [orderBy, { id: 'asc' }],
+        skip,
+        take: pageSize,
+      }),
+      db.batchSession.count({ where: whereClause }),
+    ]);
+
+    const totalPages = Math.ceil(total / pageSize);
+
+    const items = records.map((record: any) => {
+      const teacherIdentity = record.batch?.teacher?.parentIdentity;
+      const teacherName = teacherIdentity?.name || undefined;
+      return {
+        id: record.id,
+        instituteId: record.instituteId,
+        batchId: record.batchId,
+        batchName: record.batch?.name || 'Unknown Batch',
+        batchCode: record.batch?.code || '',
+        subjectName: record.batch?.subject?.name,
+        teacherName,
+        dateIso: record.date.toISOString().split('T')[0] || '',
+        startTime: record.startTime || undefined,
+        endTime: record.endTime || undefined,
+        status: record.status,
+        attendanceTaken: record.attendanceTaken,
+      };
+    });
+
+
+    return {
+      items,
+      total,
+      page,
+      pageSize,
+      totalPages,
+    };
+  }
+
   private normalizeToUtcDate(dateInput: Date | string): Date {
+
     const d = dateInput instanceof Date ? dateInput : new Date(dateInput);
     return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
   }
