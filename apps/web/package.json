@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@coaching-os/academics": "workspace:*",
+    "@coaching-os/administration": "workspace:*",
     "@coaching-os/auth": "workspace:*",
     "@coaching-os/billing": "workspace:*",
     "@coaching-os/communication": "workspace:*",

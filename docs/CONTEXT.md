@@ -941,13 +941,19 @@ PHASE 7  Production & Beta Readiness                  ⏳ UPCOMING
 - **Contract Specification**: Authored and froze authoritative Phase 6.0 contracts in [docs/phases/06/phase6.0-staff-dashboard-contract.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-staff-dashboard-contract.md) and [docs/phases/06/phase6.0-ux-information-architecture.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-ux-information-architecture.md).
 - **Product & UX Decisions**: Settled 6 core product/UX decisions (Owner Attendance completion ratio, Teacher generated BatchSession scope, Assistant collection amount + pending receipts, Global Search direct navigation, On-screen interactive reporting, Advanced Settings refinement of existing fields). Zero schema changes (`Schema changes: 0`, `Migrations: 0`). **Phase 6.0 ACCEPTED & FROZEN.**
 
+### 🟢 Phase 6.1 — Staff Dashboard Foundation & Read Orchestration (COMPLETED & VERIFIED)
+
+- **Application Read Layer & DTOs**: Implemented strongly typed DTO contracts (`OwnerDashboardDTO`, `TeacherDashboardDTO`, `AssistantDashboardDTO`), timezone calendar boundary service `getInstituteLocalTodayRange()`, three role-tailored read use cases (`GetOwnerDashboardUseCase`, `GetTeacherDashboardUseCase`, `GetAssistantDashboardUseCase`), and `PrismaDashboardReadRepository` in `@coaching-os/administration`.
+- **API Adapters & Security**: Exposed thin REST API route adapters under `/api/v1/dashboard/owner`, `/api/v1/dashboard/teacher`, `/api/v1/dashboard/assistant` guarded by `withV1ReadGuard`. Enforced tenant isolation, role authorization, non-GET method protection (`405`), and zero Prisma model leakage.
+- **Verification Matrix**: Authored and passed unit test suites and `dashboard-security-adversarial.test.ts` (`P6.1-SEC-001..008`). Passed 100% quality gates (`env:check`, `db:validate`, `db:health`, `typecheck`, `test` with 869/869 passed, `build`). **Phase 6.1 COMPLETED & VERIFIED.**
+
 ### 🟡 PHASE 6 — STAFF DASHBOARD & UX POLISH (IN EXECUTION)
 
-- **Domain Contract Specification:** Documented in [docs/phases/06/phase6.0-staff-dashboard-contract.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-staff-dashboard-contract.md) and [docs/phases/06/phase6.0-ux-information-architecture.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-ux-information-architecture.md).
+- **Domain Contract Specification:** Documented in [docs/phases/06/phase6.0-staff-dashboard-contract.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-staff-dashboard-contract.md), [docs/phases/06/phase6.0-ux-information-architecture.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.0-ux-information-architecture.md), and [docs/phases/06/phase6.1-staff-dashboard-foundation.md](file:///home/supra/Desktop/class_os/docs/phases/06/phase6.1-staff-dashboard-foundation.md).
 - **Subphase Tracking Map:**
   - **Phase 6.0:** Architecture & UX Contract Freeze 🟢 (ACCEPTED & FROZEN)
-  - **Phase 6.1:** Staff Dashboard Foundation & Read Orchestration ⏳ (NEXT ACTIVE TARGET)
-  - **Phase 6.2:** Founder / Owner Dashboard UI ⏳ (UPCOMING)
+  - **Phase 6.1:** Staff Dashboard Foundation & Read Orchestration 🟢 (COMPLETED & VERIFIED)
+  - **Phase 6.2:** Founder / Owner Dashboard UI ⏳ (NEXT ACTIVE TARGET)
   - **Phase 6.3:** Teacher Dashboard UI ⏳ (UPCOMING)
   - **Phase 6.4:** Assistant Dashboard UI ⏳ (UPCOMING)
   - **Phase 6.5:** Global Search Implementation ⏳ (UPCOMING)
