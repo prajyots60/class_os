@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { Calendar, Users, Receipt, MessageSquare } from 'lucide-react';
 import { Container, Section } from '../layout/container';
@@ -21,18 +23,18 @@ export function OperationalPillarsSection() {
           </p>
         </div>
 
-        {/* Asymmetrical Bento Grid */}
+        {/* Asymmetrical Bento Grid with Interactive Hover Elevations */}
         <div className="space-y-5 sm:space-y-6 lg:space-y-8">
           
           {/* Row 1: Batches & Schedules (7 cols) + Attendance & Academics (5 cols) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-8">
             
             {/* Pillar 1: Batches & schedules (7 cols) */}
-            <div className="lg:col-span-7 bg-surface border border-border rounded-2xl p-5 sm:p-7 lg:p-10 flex flex-col justify-between shadow-[0_4px_24px_rgba(20,21,26,0.03)] hover:border-primary/40 hover:shadow-[0_8px_30px_rgba(20,21,26,0.06)] transition-all duration-300">
+            <div className="bento-card lg:col-span-7 bg-surface border border-border rounded-2xl p-5 sm:p-7 lg:p-10 flex flex-col justify-between shadow-[0_4px_20px_rgba(20,21,26,0.03)] hover:border-primary/50 hover:shadow-[0_12px_32px_rgba(83,70,217,0.08)] transition-all duration-300 group">
               <div className="mb-5 sm:mb-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2 text-primary">
-                    <div className="w-7 h-7 rounded-lg bg-soft-brand flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-lg bg-soft-brand flex items-center justify-center transition-transform group-hover:scale-110 duration-200">
                       <Calendar className="w-4 h-4" />
                     </div>
                     <span className="font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.1em] text-primary">
@@ -69,7 +71,7 @@ export function OperationalPillarsSection() {
                       <span className="text-[10px] sm:text-[11px] text-text-secondary font-mono truncate block">07:00 - 09:00 AM • Prof. Rao</span>
                     </div>
                     <span className="text-[10px] sm:text-[11px] font-mono font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded bg-[#19714b]/10 text-[#19714b] flex items-center gap-1 shrink-0">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#19714b]" /> In Progress
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#19714b] animate-pulse-live" /> In Progress
                     </span>
                   </div>
                   <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg bg-surface border border-border/60">
@@ -86,11 +88,11 @@ export function OperationalPillarsSection() {
             </div>
 
             {/* Pillar 2: Attendance & academics (5 cols) */}
-            <div className="lg:col-span-5 bg-surface border border-border rounded-2xl p-5 sm:p-7 lg:p-10 flex flex-col justify-between shadow-[0_4px_24px_rgba(20,21,26,0.03)] hover:border-primary/40 hover:shadow-[0_8px_30px_rgba(20,21,26,0.06)] transition-all duration-300">
+            <div className="bento-card lg:col-span-5 bg-surface border border-border rounded-2xl p-5 sm:p-7 lg:p-10 flex flex-col justify-between shadow-[0_4px_20px_rgba(20,21,26,0.03)] hover:border-primary/50 hover:shadow-[0_12px_32px_rgba(83,70,217,0.08)] transition-all duration-300 group">
               <div className="mb-5 sm:mb-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2 text-primary">
-                    <div className="w-7 h-7 rounded-lg bg-soft-brand flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-lg bg-soft-brand flex items-center justify-center transition-transform group-hover:scale-110 duration-200">
                       <Users className="w-4 h-4" />
                     </div>
                     <span className="font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.1em] text-primary">
@@ -137,11 +139,11 @@ export function OperationalPillarsSection() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-8">
             
             {/* Pillar 3: Fees & receipts (5 cols) */}
-            <div className="lg:col-span-5 bg-surface border border-border rounded-2xl p-5 sm:p-7 lg:p-10 flex flex-col justify-between shadow-[0_4px_24px_rgba(20,21,26,0.03)] hover:border-primary/40 hover:shadow-[0_8px_30px_rgba(20,21,26,0.06)] transition-all duration-300">
+            <div className="bento-card lg:col-span-5 bg-surface border border-border rounded-2xl p-5 sm:p-7 lg:p-10 flex flex-col justify-between shadow-[0_4px_20px_rgba(20,21,26,0.03)] hover:border-primary/50 hover:shadow-[0_12px_32px_rgba(83,70,217,0.08)] transition-all duration-300 group">
               <div className="mb-5 sm:mb-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2 text-primary">
-                    <div className="w-7 h-7 rounded-lg bg-soft-brand flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-lg bg-soft-brand flex items-center justify-center transition-transform group-hover:scale-110 duration-200">
                       <Receipt className="w-4 h-4" />
                     </div>
                     <span className="font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.1em] text-primary">
@@ -181,11 +183,11 @@ export function OperationalPillarsSection() {
             </div>
 
             {/* Pillar 4: Family updates (7 cols) */}
-            <div className="lg:col-span-7 bg-surface border border-border rounded-2xl p-5 sm:p-7 lg:p-10 flex flex-col justify-between shadow-[0_4px_24px_rgba(20,21,26,0.03)] hover:border-primary/40 hover:shadow-[0_8px_30px_rgba(20,21,26,0.06)] transition-all duration-300">
+            <div className="bento-card lg:col-span-7 bg-surface border border-border rounded-2xl p-5 sm:p-7 lg:p-10 flex flex-col justify-between shadow-[0_4px_20px_rgba(20,21,26,0.03)] hover:border-primary/50 hover:shadow-[0_12px_32px_rgba(83,70,217,0.08)] transition-all duration-300 group">
               <div className="mb-5 sm:mb-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2 text-primary">
-                    <div className="w-7 h-7 rounded-lg bg-soft-brand flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-lg bg-soft-brand flex items-center justify-center transition-transform group-hover:scale-110 duration-200">
                       <MessageSquare className="w-4 h-4" />
                     </div>
                     <span className="font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.1em] text-primary">

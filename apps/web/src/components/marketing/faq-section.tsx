@@ -69,7 +69,7 @@ const FAQS: FaqItem[] = [
 ];
 
 export function FaqSection() {
-  const [openIndex, setOpenIndex] = React.useState<number | null>(0); // First open by default for rich visual balance
+  const [openIndex, setOpenIndex] = React.useState<number | null>(0); // First open by default
 
   const toggle = (i: number) => {
     setOpenIndex(openIndex === i ? null : i);
@@ -85,7 +85,7 @@ export function FaqSection() {
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 xl:gap-20 items-start">
           
           {/* Left Column: Editorial Header & Support Touchpoint */}
-          <div className="w-full lg:w-[40%] flex flex-col items-start lg:sticky lg:top-28">
+          <div className="w-full lg:w-[40%] flex flex-col items-start self-start shrink-0">
             <span className="block mb-2.5 font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.12em] text-primary">
               FREQUENTLY ASKED QUESTIONS
             </span>
@@ -97,7 +97,7 @@ export function FaqSection() {
             </p>
 
             {/* Direct Founder Contact Box */}
-            <div className="w-full p-4 sm:p-6 rounded-xl bg-surface border border-border/80 shadow-[0_4px_20px_rgba(16,36,38,0.03)] space-y-2.5 sm:space-y-3">
+            <div className="w-full p-4 sm:p-6 rounded-xl bg-surface border border-border/80 shadow-[0_4px_20px_rgba(16,36,38,0.03)] space-y-2.5 sm:space-y-3 transition-all hover:border-primary/40 hover:shadow-[0_8px_24px_rgba(83,70,217,0.06)]">
               <div className="flex items-center gap-2 text-primary">
                 <MessageSquareCheck className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="font-bold text-[13px] sm:text-[14px] text-ink">Have a specific question?</span>
@@ -111,14 +111,14 @@ export function FaqSection() {
                   className="inline-flex items-center gap-1.5 text-[12px] sm:text-[13px] font-semibold text-primary hover:text-primary-hover transition-colors group"
                 >
                   <span>Request beta consultation</span>
-                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 duration-200" />
                 </Link>
               </div>
             </div>
           </div>
 
           {/* Right Column: High-Craft Editorial Accordion */}
-          <div className="w-full lg:w-[60%] mt-4 lg:mt-0">
+          <div className="w-full lg:w-[60%] shrink-0 mt-4 lg:mt-0">
             <div className="border-t border-border/80 divide-y divide-border/80">
               {FAQS.map((faq, index) => {
                 const isOpen = openIndex === index;
@@ -126,12 +126,12 @@ export function FaqSection() {
                   <div
                     key={faq.id}
                     className={`transition-colors duration-200 ${
-                      isOpen ? 'bg-surface/50' : 'hover:bg-surface/30'
+                      isOpen ? 'bg-surface/60' : 'hover:bg-surface/30'
                     }`}
                   >
                     <button
                       onClick={() => toggle(index)}
-                      className="w-full py-4 sm:py-5 px-2 sm:px-4 flex items-start justify-between text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg transition-colors gap-3 sm:gap-4"
+                      className="w-full py-4 sm:py-5 px-2 sm:px-4 flex items-start justify-between text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg transition-colors gap-3 sm:gap-4 cursor-pointer"
                       aria-expanded={isOpen}
                     >
                       <div className="flex items-start gap-2.5 sm:gap-4 pr-2">
@@ -143,9 +143,9 @@ export function FaqSection() {
                         </span>
                       </div>
                       <div
-                        className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center shrink-0 border transition-all duration-200 ${
+                        className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center shrink-0 border transition-all duration-300 ease-out ${
                           isOpen
-                            ? 'bg-primary text-canvas border-primary rotate-180'
+                            ? 'bg-primary text-white border-primary rotate-180 shadow-xs'
                             : 'bg-surface border-border text-text-secondary hover:border-text-secondary'
                         }`}
                       >
@@ -153,13 +153,20 @@ export function FaqSection() {
                       </div>
                     </button>
 
-                    {isOpen && (
-                      <div className="px-2 sm:px-4 pb-5 pt-1 ml-5 sm:ml-8 pr-4 sm:pr-8">
-                        <p className="font-ui text-[13px] sm:text-[15px] text-text-secondary leading-[1.65]">
-                          {faq.answer}
-                        </p>
+                    {/* Smooth Grid-Height Expansion */}
+                    <div
+                      className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+                        isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        <div className="px-2 sm:px-4 pb-5 pt-1 ml-5 sm:ml-8 pr-4 sm:pr-8">
+                          <p className="font-ui text-[13px] sm:text-[15px] text-text-secondary leading-[1.65]">
+                            {faq.answer}
+                          </p>
+                        </div>
                       </div>
-                    )}
+                    </div>
                   </div>
                 );
               })}

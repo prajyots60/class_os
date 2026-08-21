@@ -23,16 +23,16 @@ export function FamilyExperienceSection() {
       <Container size="lg" className="relative max-w-[1240px] z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 xl:gap-16 items-center">
           
-          {/* Left Column: Prominent Large Visual with Scaled Circular Orbit Rings */}
+          {/* Left Column: Prominent Large Visual with Slowly Rotating Circular Orbit Rings */}
           <div className="lg:col-span-6 xl:col-span-7 relative flex items-center justify-center min-h-[400px] sm:min-h-[520px] lg:min-h-[600px] order-2 lg:order-1">
-            {/* Outer Orbit Circle */}
+            {/* Outer Stationary Orbit Circle */}
             <div className="absolute w-[340px] sm:w-[480px] lg:w-[580px] h-[340px] sm:h-[480px] lg:h-[580px] rounded-full border border-primary/20 pointer-events-none" />
             
-            {/* Inner Dashed Orbit Circle */}
-            <div className="absolute w-[250px] sm:w-[360px] lg:w-[440px] h-[250px] sm:h-[360px] lg:h-[440px] rounded-full border border-dashed border-primary/30 pointer-events-none" />
+            {/* Inner Dashed Orbit Circle with Continuous Ultra-Slow Rotation */}
+            <div className="absolute w-[250px] sm:w-[360px] lg:w-[440px] h-[250px] sm:h-[360px] lg:h-[440px] rounded-full border border-dashed border-primary/35 pointer-events-none animate-spin-slow" />
 
-            {/* Large Mobile Showcase Asset */}
-            <div className="relative z-10 w-full max-w-[320px] sm:max-w-[460px] lg:max-w-[520px] xl:max-w-[560px] transition-transform duration-300 hover:scale-[1.02]">
+            {/* Large Mobile Showcase Asset with Hover Elevation */}
+            <div className="relative z-10 w-full max-w-[320px] sm:max-w-[460px] lg:max-w-[520px] xl:max-w-[560px] transition-transform duration-500 hover:scale-[1.03]">
               <Image 
                 src="/family-identity.png" 
                 alt="CoachingOS Parent Portal Mobile Application" 
@@ -58,14 +58,14 @@ export function FamilyExperienceSection() {
               Give every parent a clear place to check their child’s attendance, homework, test results, fees, and announcements — without asking your staff to repeat the same answer all day.
             </p>
 
-            {/* Feature Points */}
+            {/* Feature Points with Micro-Interactions */}
             <div className="space-y-4 sm:space-y-5 mb-8 sm:mb-10 w-full">
-              <div className="flex items-start gap-3.5 sm:gap-4">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-soft-brand text-primary mt-0.5 shadow-sm">
+              <div className="flex items-start gap-3.5 sm:gap-4 group cursor-default">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-soft-brand text-primary mt-0.5 shadow-sm transition-transform duration-200 group-hover:scale-110">
                   <Smartphone className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-ui font-bold text-[15px] sm:text-[16px] text-ink mb-0.5">
+                  <h3 className="font-ui font-bold text-[15px] sm:text-[16px] text-ink mb-0.5 transition-colors group-hover:text-primary">
                     Made for real phones
                   </h3>
                   <p className="text-[13px] sm:text-[14px] text-text-secondary leading-[1.5]">
@@ -74,12 +74,12 @@ export function FamilyExperienceSection() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3.5 sm:gap-4">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-soft-brand text-primary mt-0.5 shadow-sm">
+              <div className="flex items-start gap-3.5 sm:gap-4 group cursor-default">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-soft-brand text-primary mt-0.5 shadow-sm transition-transform duration-200 group-hover:scale-110">
                   <Bell className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-ui font-bold text-[15px] sm:text-[16px] text-ink mb-0.5">
+                  <h3 className="font-ui font-bold text-[15px] sm:text-[16px] text-ink mb-0.5 transition-colors group-hover:text-primary">
                     Updates that matter
                   </h3>
                   <p className="text-[13px] sm:text-[14px] text-text-secondary leading-[1.5]">
@@ -91,9 +91,9 @@ export function FamilyExperienceSection() {
 
             {/* Indigo Action CTA */}
             <Link href="/sign-up" className="w-full sm:w-auto">
-              <button className="w-full sm:w-auto h-12 sm:h-13 rounded-xl bg-primary text-white px-8 text-[15px] font-bold hover:bg-primary-hover shadow-[0_3px_0_#3e32b7] active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2">
+              <button className="w-full sm:w-auto h-12 sm:h-13 rounded-xl bg-primary text-white px-8 text-[15px] font-bold hover:bg-primary-hover shadow-[0_3px_0_#3e32b7] hover:shadow-[0_6px_20px_rgba(83,70,217,0.35)] active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer">
                 <span>Bring parents into the loop</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 duration-200" />
               </button>
             </Link>
           </div>

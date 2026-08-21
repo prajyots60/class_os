@@ -45,12 +45,12 @@ export function ManifestoBanner() {
             </div>
           </div>
 
-          {/* Right: High-Contrast Action Button */}
+          {/* Right: High-Contrast Action Button with 3D Shadow & Glow */}
           <div className="shrink-0 flex flex-col items-center lg:items-end gap-2.5 sm:gap-3 w-full sm:w-auto">
             <Link href="/sign-up" className="w-full sm:w-auto">
-              <button className="w-full sm:w-auto h-13 sm:h-14 rounded-xl bg-white text-primary px-8 sm:px-9 text-[15px] sm:text-[16px] font-extrabold hover:bg-[#f0edff] shadow-[0_4px_0_#3e32b7] hover:shadow-[0_6px_24px_rgba(255,255,255,0.2)] active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2.5">
+              <button className="w-full sm:w-auto h-13 sm:h-14 rounded-xl bg-white text-primary px-8 sm:px-9 text-[15px] sm:text-[16px] font-extrabold hover:bg-[#f0edff] shadow-[0_4px_0_#3e32b7] hover:shadow-[0_8px_28px_rgba(255,255,255,0.25)] active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2.5 group cursor-pointer">
                 <span>Request beta access</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 duration-200" />
               </button>
             </Link>
             <span className="font-mono text-[10px] sm:text-[11px] text-[#d9d6ff]/75 tracking-tight">

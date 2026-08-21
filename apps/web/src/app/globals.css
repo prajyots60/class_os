@@ -49,23 +49,6 @@
     --ring: #5346d9;
     --radius: 0.65rem;
 
-    /* Manus Raw Variables */
-    --ink: #14151a;
-    --ink-soft: #5c5e66;
-    --paper: #fafaf8;
-    --paper-2: #f2f2ee;
-    --line: #deded7;
-    --route: #5346d9;
-    --route-dark: #3e32b7;
-    --night: #131319;
-    --night-soft: #202027;
-    --green: #19714b;
-    --green-bg: #e8f5ed;
-    --amber: #a45d0b;
-    --amber-bg: #fff0d8;
-    --coral: #b84f45;
-    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-
     /* Typography */
     --font-display: var(--font-dm-serif-display), Georgia, serif;
     --font-ui: var(--font-manrope), Arial, sans-serif;
@@ -153,6 +136,71 @@ html {
 ::selection {
   background-color: var(--color-soft-brand);
   color: var(--color-primary);
+}
+
+/* Keyframe Animations for Modern Luxury Craft */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes float-slow-reverse {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+@keyframes spin-ultra-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-live {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.15);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 4.5s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: float-slow-reverse 5s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-ultra-slow 75s linear infinite;
+}
+
+.animate-pulse-live {
+  animation: pulse-live 2s ease-in-out infinite;
+}
+
+/* Interactive Bento Spotlight */
+.bento-card {
+  position: relative;
+  transition: transform 0.25s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.25s cubic-bezier(0.23, 1, 0.32, 1), border-color 0.25s ease;
+}
+
+.bento-card:hover {
+  transform: translateY(-2px);
 }
 
 .co-primary-button { background: var(--color-primary); color: #ffffff; }

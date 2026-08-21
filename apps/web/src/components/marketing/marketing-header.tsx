@@ -15,7 +15,13 @@ const NAV_LINKS = [
 
 export function MarketingHeader() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-canvas/90 backdrop-blur-md transition-all">
+    <header 
+      className="sticky top-0 z-50 w-full border-b border-border/70 bg-canvas/80 backdrop-blur-md backdrop-saturate-150 shadow-[0_2px_12px_rgba(20,21,26,0.03)] transition-all"
+      style={{
+        WebkitBackdropFilter: 'blur(12px)',
+        backdropFilter: 'blur(12px)',
+      }}
+    >
       <Container size="lg" className="flex h-18 items-center justify-between px-4 sm:px-6 lg:px-12">
         {/* Brand Logo */}
         <Link
@@ -63,7 +69,7 @@ export function MarketingHeader() {
 
           <Link href="/sign-up">
             <button
-              className="h-10 rounded-lg text-[14px] font-bold bg-primary text-white px-5 shadow-[0_3px_0_#3e32b7] hover:bg-primary-hover hover:shadow-[0_4px_12px_rgba(83,70,217,0.3)] active:translate-y-0.5 active:shadow-none transition-all"
+              className="h-10 rounded-lg text-[14px] font-bold bg-primary text-white px-5 shadow-[0_3px_0_#3e32b7] hover:bg-primary-hover hover:shadow-[0_4px_12px_rgba(83,70,217,0.3)] active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
             >
               Request beta access
             </button>

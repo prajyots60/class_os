@@ -3,6 +3,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Check, Layers, BookOpen, UserCog, HeartHandshake } from 'lucide-react';
 import { Container, Section } from '../layout/container';
 
@@ -106,8 +107,8 @@ export function WorkflowsSection() {
           </p>
         </div>
 
-        {/* Minimal Responsive Segmented Tab Bar */}
-        <div className="grid grid-cols-2 sm:flex sm:flex-row items-center gap-1.5 p-1 bg-[#efefeb] border border-border rounded-xl w-full max-w-xl mb-6 sm:mb-8">
+        {/* Minimal Responsive Segmented Tab Bar with Layout Animations */}
+        <div className="grid grid-cols-2 sm:flex sm:flex-row items-center gap-1.5 p-1 bg-[#efefeb] border border-border rounded-xl w-full max-w-xl mb-6 sm:mb-8 relative">
           {(['owner', 'teacher', 'assistant', 'parent'] as RoleKey[]).map((key) => {
             const role = ROLES_DATA[key];
             const isSelected = selectedRole === key;
@@ -115,92 +116,104 @@ export function WorkflowsSection() {
               <button
                 key={key}
                 onClick={() => setSelectedRole(key)}
-                className={`w-full sm:flex-1 py-2 px-3 rounded-lg text-[13px] font-bold transition-all duration-150 text-center ${
-                  isSelected
-                    ? 'bg-surface text-primary shadow-sm'
-                    : 'text-text-secondary hover:text-ink'
+                className={`relative w-full sm:flex-1 py-2 px-3 rounded-lg text-[13px] font-bold transition-colors duration-150 text-center z-10 ${
+                  isSelected ? 'text-primary' : 'text-text-secondary hover:text-ink'
                 }`}
               >
+                {isSelected && (
+                  <motion.div
+                    layoutId="active-role-tab"
+                    className="absolute inset-0 bg-surface rounded-lg shadow-sm border border-border/80 -z-10"
+                    transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+                  />
+                )}
                 {role.label}
               </button>
             );
           })}
         </div>
 
-        {/* Sleek Minimal Workspace Showcase */}
+        {/* Sleek Animated Workspace Showcase Card */}
         <div className="bg-surface border border-border rounded-2xl p-5 sm:p-8 lg:p-12 shadow-[0_4px_24px_rgba(20,21,26,0.03)] w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-14 items-center">
-            
-            {/* Left Column: Role Details */}
-            <div className="lg:col-span-5 flex flex-col items-start">
-              <div className="w-9 h-9 rounded-lg bg-soft-brand flex items-center justify-center text-primary mb-4 sm:mb-5">
-                <Icon className="w-4 h-4" />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedRole}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
+              className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-14 items-center"
+            >
+              {/* Left Column: Role Details */}
+              <div className="lg:col-span-5 flex flex-col items-start">
+                <div className="w-9 h-9 rounded-lg bg-soft-brand flex items-center justify-center text-primary mb-4 sm:mb-5">
+                  <Icon className="w-4 h-4" />
+                </div>
+                
+                <span className="font-mono text-[10px] sm:text-[11px] font-bold text-primary uppercase tracking-widest block mb-1.5 sm:mb-2">
+                  {activeData.badge}
+                </span>
+                
+                <h3 className="font-ui font-extrabold text-[22px] sm:text-[26px] lg:text-[28px] text-ink leading-[1.18] mb-3">
+                  {activeData.title}
+                </h3>
+                
+                <p className="font-ui text-[14px] sm:text-[15px] text-text-secondary leading-[1.6] mb-5 sm:mb-6">
+                  {activeData.description}
+                </p>
+
+                {/* Minimal Checkmark Points */}
+                <ul className="space-y-2.5 mb-6 sm:mb-7 w-full">
+                  {activeData.points.map((point) => (
+                    <li key={point} className="flex items-center gap-2.5 text-[13px] font-semibold text-ink">
+                      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-soft-brand text-primary">
+                        <Check className="h-2.5 w-2.5 stroke-[3]" />
+                      </span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Link
+                  href="/sign-up"
+                  className="group inline-flex items-center gap-1.5 text-[14px] font-bold text-primary hover:text-primary-hover transition-colors"
+                >
+                  <span>{activeData.linkText}</span>
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 duration-200" />
+                </Link>
               </div>
-              
-              <span className="font-mono text-[10px] sm:text-[11px] font-bold text-primary uppercase tracking-widest block mb-1.5 sm:mb-2">
-                {activeData.badge}
-              </span>
-              
-              <h3 className="font-ui font-extrabold text-[22px] sm:text-[26px] lg:text-[28px] text-ink leading-[1.18] mb-3">
-                {activeData.title}
-              </h3>
-              
-              <p className="font-ui text-[14px] sm:text-[15px] text-text-secondary leading-[1.6] mb-5 sm:mb-6">
-                {activeData.description}
-              </p>
 
-              {/* Minimal Checkmark Points */}
-              <ul className="space-y-2.5 mb-6 sm:mb-7 w-full">
-                {activeData.points.map((point) => (
-                  <li key={point} className="flex items-center gap-2.5 text-[13px] font-semibold text-ink">
-                    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-soft-brand text-primary">
-                      <Check className="h-2.5 w-2.5 stroke-[3]" />
-                    </span>
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                href="/sign-up"
-                className="group inline-flex items-center gap-1.5 text-[14px] font-bold text-primary hover:text-primary-hover transition-colors"
-              >
-                <span>{activeData.linkText}</span>
-                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
-
-            {/* Right Column: Sleek Product Frame */}
-            <div className="lg:col-span-7 relative w-full mt-2 lg:mt-0">
-              <div className="relative rounded-xl border border-border overflow-hidden bg-canvas shadow-sm w-full">
-                {/* Minimal Browser Top Bar */}
-                <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-2.5 bg-surface border-b border-border/80 text-[10px] font-mono text-text-secondary">
-                  <div className="flex items-center gap-1.5 sm:gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#19714b]" />
-                    <span className="font-bold text-ink uppercase tracking-wider">{activeData.label} WORKSPACE</span>
+              {/* Right Column: Sleek Product Frame */}
+              <div className="lg:col-span-7 relative w-full mt-2 lg:mt-0">
+                <div className="relative rounded-xl border border-border overflow-hidden bg-canvas shadow-sm w-full">
+                  {/* Minimal Browser Top Bar */}
+                  <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-2.5 bg-surface border-b border-border/80 text-[10px] font-mono text-text-secondary">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#19714b] animate-pulse-live" />
+                      <span className="font-bold text-ink uppercase tracking-wider">{activeData.label} WORKSPACE</span>
+                    </div>
+                    <span>CoachingOS</span>
                   </div>
-                  <span>CoachingOS</span>
+
+                  <div className="p-2.5 sm:p-4">
+                    <Image 
+                      src={activeData.previewImage}
+                      alt={activeData.title}
+                      width={1200}
+                      height={800}
+                      className="w-full h-auto object-cover rounded-lg border border-border/80"
+                    />
+                  </div>
                 </div>
 
-                <div className="p-2.5 sm:p-4">
-                  <Image 
-                    src={activeData.previewImage}
-                    alt={activeData.title}
-                    width={1200}
-                    height={800}
-                    className="w-full h-auto object-cover rounded-lg border border-border/80"
-                  />
+                {/* Floating Status Pill with float animation */}
+                <div className="hidden sm:flex absolute -bottom-3 right-4 z-20 items-center gap-2 bg-surface border border-border px-3 py-1.5 rounded-lg shadow-lg text-[11px] font-ui animate-float-slow">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#19714b] animate-pulse-live" />
+                  <span className="font-bold text-ink">{activeData.floatingBadge}</span>
                 </div>
               </div>
-
-              {/* Floating Status Pill */}
-              <div className="hidden sm:flex absolute -bottom-3 right-4 z-20 items-center gap-2 bg-surface border border-border px-3 py-1.5 rounded-lg shadow-lg text-[11px] font-ui">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#19714b] animate-pulse" />
-                <span className="font-bold text-ink">{activeData.floatingBadge}</span>
-              </div>
-            </div>
-
-          </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </Container>
     </Section>
