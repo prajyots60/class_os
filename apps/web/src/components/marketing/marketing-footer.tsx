@@ -11,7 +11,11 @@ export function MarketingFooter() {
           
           {/* Brand Column (5 cols) */}
           <div className="md:col-span-5 flex flex-col items-start pr-0 md:pr-4">
-            <Link href="/" className="flex items-center gap-2.5 mb-3.5 sm:mb-4 group">
+            <Link 
+              href="/" 
+              className="flex items-center gap-2.5 mb-3.5 sm:mb-4 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg p-1"
+              aria-label="CoachingOS Home"
+            >
               <Image
                 src="/logo.png"
                 alt="CoachingOS Logo"
@@ -29,7 +33,7 @@ export function MarketingFooter() {
             </p>
 
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1b1b22] border border-[#2e2e38] text-[10px] sm:text-[11px] font-mono text-[#b7b7c1]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#19714b] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#19714b] animate-pulse-live" />
               <span>Beta intake is open</span>
             </div>
           </div>
@@ -43,22 +47,22 @@ export function MarketingFooter() {
               </h3>
               <ul className="space-y-2.5 sm:space-y-3 text-[13px]">
                 <li>
-                  <Link href="/#how-it-works" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors">
+                  <Link href="/#how-it-works" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm">
                     How it works
                   </Link>
                 </li>
                 <li>
-                  <Link href="/#workflows" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors">
+                  <Link href="/#workflows" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm">
                     Workspaces
                   </Link>
                 </li>
                 <li>
-                  <Link href="/#for-families" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors">
+                  <Link href="/#for-families" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm">
                     Parent portal
                   </Link>
                 </li>
                 <li>
-                  <Link href="/#pillars" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors">
+                  <Link href="/#pillars" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm">
                     Capabilities
                   </Link>
                 </li>
@@ -72,17 +76,17 @@ export function MarketingFooter() {
               </h3>
               <ul className="space-y-2.5 sm:space-y-3 text-[13px]">
                 <li>
-                  <Link href="/sign-up" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors">
+                  <Link href="/sign-up" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm">
                     Beta access
                   </Link>
                 </li>
                 <li>
-                  <Link href="/#faq" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors">
+                  <Link href="/#faq" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm">
                     FAQ
                   </Link>
                 </li>
                 <li>
-                  <Link href="/sign-in" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors">
+                  <Link href="/sign-in" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm">
                     Staff Login
                   </Link>
                 </li>
@@ -96,17 +100,17 @@ export function MarketingFooter() {
               </h3>
               <ul className="space-y-2.5 sm:space-y-3 text-[13px]">
                 <li>
-                  <Link href="/privacy" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors">
+                  <Link href="/sign-up" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm">
                     Privacy &amp; security
                   </Link>
                 </li>
                 <li>
-                  <Link href="/terms" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors">
+                  <Link href="/sign-up" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm">
                     Workflow first
                   </Link>
                 </li>
                 <li>
-                  <a href="#hero" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors">
+                  <a href="#hero" className="text-[#a7a7b2] hover:text-[#b1aaff] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm">
                     Back to top ↑
                   </a>
                 </li>

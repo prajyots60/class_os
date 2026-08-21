@@ -107,16 +107,24 @@ export function WorkflowsSection() {
           </p>
         </div>
 
-        {/* Minimal Responsive Segmented Tab Bar with Layout Animations */}
-        <div className="grid grid-cols-2 sm:flex sm:flex-row items-center gap-1.5 p-1 bg-[#efefeb] border border-border rounded-xl w-full max-w-xl mb-6 sm:mb-8 relative">
+        {/* Minimal Responsive Segmented Tab Bar with ARIA Roles */}
+        <div 
+          role="tablist"
+          aria-label="Role workspaces"
+          className="grid grid-cols-2 sm:flex sm:flex-row items-center gap-1.5 p-1 bg-[#efefeb] border border-border rounded-xl w-full max-w-xl mb-6 sm:mb-8 relative"
+        >
           {(['owner', 'teacher', 'assistant', 'parent'] as RoleKey[]).map((key) => {
             const role = ROLES_DATA[key];
             const isSelected = selectedRole === key;
             return (
               <button
                 key={key}
+                role="tab"
+                id={`tab-${key}`}
+                aria-selected={isSelected}
+                aria-controls={`panel-${key}`}
                 onClick={() => setSelectedRole(key)}
-                className={`relative w-full sm:flex-1 py-2 px-3 rounded-lg text-[13px] font-bold transition-colors duration-150 text-center z-10 ${
+                className={`relative w-full sm:flex-1 py-2 px-3 rounded-lg text-[13px] font-bold transition-colors duration-150 text-center z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   isSelected ? 'text-primary' : 'text-text-secondary hover:text-ink'
                 }`}
               >
@@ -134,7 +142,12 @@ export function WorkflowsSection() {
         </div>
 
         {/* Sleek Animated Workspace Showcase Card */}
-        <div className="bg-surface border border-border rounded-2xl p-5 sm:p-8 lg:p-12 shadow-[0_4px_24px_rgba(20,21,26,0.03)] w-full">
+        <div 
+          role="tabpanel"
+          id={`panel-${selectedRole}`}
+          aria-labelledby={`tab-${selectedRole}`}
+          className="bg-surface border border-border rounded-2xl p-5 sm:p-8 lg:p-12 shadow-[0_4px_24px_rgba(20,21,26,0.03)] w-full"
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={selectedRole}
@@ -176,7 +189,7 @@ export function WorkflowsSection() {
 
                 <Link
                   href="/sign-up"
-                  className="group inline-flex items-center gap-1.5 text-[14px] font-bold text-primary hover:text-primary-hover transition-colors"
+                  className="group inline-flex items-center gap-1.5 text-[14px] font-bold text-primary hover:text-primary-hover transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md p-1"
                 >
                   <span>{activeData.linkText}</span>
                   <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 duration-200" />
@@ -198,9 +211,10 @@ export function WorkflowsSection() {
                   <div className="p-2.5 sm:p-4">
                     <Image 
                       src={activeData.previewImage}
-                      alt={activeData.title}
+                      alt={`${activeData.label} workspace interface`}
                       width={1200}
                       height={800}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
                       className="w-full h-auto object-cover rounded-lg border border-border/80"
                     />
                   </div>

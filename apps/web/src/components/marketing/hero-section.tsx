@@ -51,13 +51,13 @@ export function HeroSection() {
             <div className="mt-6 sm:mt-8 lg:mt-10 flex flex-col sm:flex-row items-center gap-3.5 sm:gap-5 w-full sm:w-auto">
               <Link href="/sign-up" className="w-full sm:w-auto">
                 <button
-                  className="w-full sm:w-auto h-12 rounded-lg bg-primary text-white px-8 text-[15px] font-bold hover:bg-primary-hover shadow-[0_3px_0_#3e32b7] hover:shadow-[0_6px_20px_rgba(83,70,217,0.35)] active:translate-y-0.5 active:shadow-none transition-all duration-150 flex items-center justify-center cursor-pointer"
+                  className="w-full sm:w-auto h-12 rounded-lg bg-primary text-white px-8 text-[15px] font-bold hover:bg-primary-hover shadow-[0_3px_0_#3e32b7] hover:shadow-[0_6px_20px_rgba(83,70,217,0.35)] active:translate-y-0.5 active:shadow-none transition-all duration-150 flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                 >
                   Request beta access
                 </button>
               </Link>
               
-              <Link href="/#how-it-works" className="group flex items-center justify-center gap-2 text-[14px] sm:text-[15px] font-bold text-ink hover:text-primary transition-colors py-2">
+              <Link href="/#how-it-works" className="group flex items-center justify-center gap-2 text-[14px] sm:text-[15px] font-bold text-ink hover:text-primary transition-colors py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md px-2">
                 <span>See how it works</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 duration-200" />
               </Link>
@@ -92,14 +92,16 @@ export function HeroSection() {
                 <span className="text-text-secondary hidden sm:inline">12 of 14 sessions marked</span>
               </div>
 
-              {/* Main Screenshot Asset */}
+              {/* Main Screenshot Asset with Responsive sizes and Priority for Fast LCP */}
               <Image 
                 src="/Hero_Desktop.png" 
-                alt="CoachingOS Owner Dashboard" 
+                alt="CoachingOS Owner Dashboard workspace view" 
                 width={1440}
                 height={900}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 55vw, 650px"
                 className="w-full h-auto object-cover"
                 priority
+                loading="eager"
               />
 
               {/* Bottom Floating Callout Pill with Subtle Float Animation */}

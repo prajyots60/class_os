@@ -80,9 +80,10 @@ export function InstituteIdentitySection() {
             >
               <Image
                 src="/Customization_Branding.png"
-                alt="CoachingOS Dashboard with Custom Institute Branding"
+                alt="CoachingOS Dashboard showing custom institute branding and identity settings"
                 width={1440}
                 height={1080}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 55vw, 650px"
                 className="w-full h-auto object-cover"
               />
             </div>

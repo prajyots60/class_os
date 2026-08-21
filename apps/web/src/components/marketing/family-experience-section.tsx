@@ -35,11 +35,11 @@ export function FamilyExperienceSection() {
             <div className="relative z-10 w-full max-w-[320px] sm:max-w-[460px] lg:max-w-[520px] xl:max-w-[560px] transition-transform duration-500 hover:scale-[1.03]">
               <Image 
                 src="/family-identity.png" 
-                alt="CoachingOS Parent Portal Mobile Application" 
+                alt="CoachingOS Parent Portal mobile web app preview" 
                 width={1200}
                 height={1350}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 560px"
                 className="w-full h-auto object-contain drop-shadow-[0_24px_48px_rgba(20,21,26,0.16)] sm:drop-shadow-[0_32px_64px_rgba(20,21,26,0.2)]"
-                priority
               />
             </div>
           </div>
@@ -91,7 +91,7 @@ export function FamilyExperienceSection() {
 
             {/* Indigo Action CTA */}
             <Link href="/sign-up" className="w-full sm:w-auto">
-              <button className="w-full sm:w-auto h-12 sm:h-13 rounded-xl bg-primary text-white px-8 text-[15px] font-bold hover:bg-primary-hover shadow-[0_3px_0_#3e32b7] hover:shadow-[0_6px_20px_rgba(83,70,217,0.35)] active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer">
+              <button className="w-full sm:w-auto h-12 sm:h-13 rounded-xl bg-primary text-white px-8 text-[15px] font-bold hover:bg-primary-hover shadow-[0_3px_0_#3e32b7] hover:shadow-[0_6px_20px_rgba(83,70,217,0.35)] active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
                 <span>Bring parents into the loop</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 duration-200" />
               </button>

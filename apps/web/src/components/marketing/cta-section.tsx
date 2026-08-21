@@ -86,9 +86,9 @@ export function CTASection() {
                 </ul>
 
                 <Link href="/sign-up" className="block w-full">
-                  <button className="w-full h-12 sm:h-13 rounded-xl bg-primary text-white font-bold text-[15px] sm:text-[16px] hover:bg-primary-hover shadow-[0_3px_0_#3e32b7] active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2">
+                  <button className="w-full h-12 sm:h-13 rounded-xl bg-primary text-white font-bold text-[15px] sm:text-[16px] hover:bg-primary-hover shadow-[0_3px_0_#3e32b7] hover:shadow-[0_6px_20px_rgba(83,70,217,0.4)] active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
                     <span>Request beta access</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 duration-200" />
                   </button>
                 </Link>
 
