@@ -21,8 +21,14 @@ export function MobileNav({ navLinks }: MobileNavProps) {
     };
     if (isOpen) {
       window.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   return (
@@ -33,38 +39,50 @@ export function MobileNav({ navLinks }: MobileNavProps) {
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
+        className="text-brand-ink hover:bg-surface-subtle"
       >
         {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </Button>
 
       {isOpen && (
-        <div className="absolute left-0 top-full w-full border-b border-[hsl(var(--border))] bg-[hsl(var(--background))] p-6 shadow-lg animate-in fade-in-0 slide-in-from-top-2">
-          <nav className="flex flex-col space-y-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                className="text-base font-medium text-[hsl(var(--foreground))] transition-colors hover:text-[hsl(var(--primary))]"
-              >
-                {link.label}
-              </Link>
-            ))}
-            <hr className="border-[hsl(var(--border))]" />
-            <div className="flex flex-col space-y-2 pt-2">
-              <Link href="/sign-in" onClick={() => setIsOpen(false)}>
-                <Button variant="outline" className="w-full">
-                  Sign In
-                </Button>
-              </Link>
-              <Link href="/sign-up" onClick={() => setIsOpen(false)}>
-                <Button variant="default" className="w-full">
-                  Get Started
-                </Button>
-              </Link>
-            </div>
-          </nav>
-        </div>
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 z-40 bg-brand-ink/50 backdrop-blur-sm"
+            onClick={() => setIsOpen(false)}
+          />
+          {/* Menu */}
+          <div className="fixed inset-x-0 top-16 z-50 border-b border-border bg-surface p-6 shadow-xl">
+            <nav className="flex flex-col space-y-4">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  className="text-base font-medium text-brand-ink transition-colors hover:text-brand-blue"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <hr className="border-border" />
+              <div className="flex flex-col space-y-2 pt-2">
+                <Link href="/sign-in" onClick={() => setIsOpen(false)}>
+                  <Button
+                    variant="outline"
+                    className="w-full border-border bg-transparent text-brand-ink hover:bg-surface-subtle"
+                  >
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/sign-up" onClick={() => setIsOpen(false)}>
+                  <Button className="w-full bg-brand-blue text-white hover:bg-brand-blue-dark">
+                    Get Started
+                  </Button>
+                </Link>
+              </div>
+            </nav>
+          </div>
+        </>
       )}
     </div>
   );

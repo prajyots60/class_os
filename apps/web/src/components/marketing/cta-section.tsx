@@ -1,58 +1,49 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import { Button, Badge } from '@coaching-os/ui';
 import { Container, Section } from '../layout/container';
 
 export function CTASection() {
   return (
-    <Section padding="lg" id="get-started" className="scroll-mt-16 border-t border-[hsl(var(--border))] bg-[hsl(var(--muted))]/20">
-      <Container size="lg">
-        <div className="relative overflow-hidden rounded-3xl border border-[hsl(var(--primary))]/20 bg-[hsl(var(--primary))]/5 px-6 py-12 text-center sm:px-12 sm:py-16">
-          {/* Subtle Background Lighting Accent */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -top-24 left-1/2 -z-10 h-64 w-96 -translate-x-1/2 rounded-full bg-[hsl(var(--primary))]/10 blur-3xl"
-          />
+    <Section
+      padding="none"
+      id="beta-cta"
+      className="relative bg-ink py-24 sm:py-32 lg:py-36 overflow-hidden border-t border-border/40"
+    >
+      {/* Subtle Ambient Radial Highlight */}
+      <div 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[800px] h-[400px] sm:h-[500px] bg-primary/25 rounded-full blur-[120px] pointer-events-none" 
+      />
 
-          {/* Section Eyebrow */}
-          <Badge
-            variant="secondary"
-            className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold uppercase tracking-wider"
-          >
-            <Sparkles className="h-3.5 w-3.5 text-[hsl(var(--primary))]" />
-            Ready to Organize Your Institute?
-          </Badge>
+      <Container size="lg" className="relative max-w-[720px] text-center z-10">
+        {/* Eyebrow */}
+        <span className="inline-flex items-center gap-2 mb-4 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-soft-brand bg-soft-brand/10 border border-soft-brand/20 px-3 py-1 rounded-full">
+          <Sparkles className="w-3 h-3" />
+          PRIVATE BETA PROGRAM
+        </span>
 
-          {/* Headline H2 */}
-          <h2 className="mx-auto max-w-2xl text-3xl font-extrabold tracking-tight text-[hsl(var(--foreground))] sm:text-4xl sm:leading-tight">
-            Bring your institute&apos;s operations into one connected workspace.
-          </h2>
+        {/* Headline */}
+        <h2 className="font-display text-[2.5rem] sm:text-[3.25rem] md:text-[3.75rem] lg:text-[4.25rem] leading-[1.1] text-surface mb-6">
+          Give your institute one clear operating rhythm.
+        </h2>
 
-          {/* Supporting Copy */}
-          <p className="mx-auto mt-4 max-w-xl text-base text-[hsl(var(--muted-foreground))] sm:text-lg">
-            Set up your CoachingOS workspace and start organizing the students, academics, attendance, tests, fees, staff, and daily operations that keep your institute running.
-          </p>
+        {/* Subtitle */}
+        <p className="font-ui text-[17px] sm:text-[19px] text-surface/75 leading-[1.6] mb-10 max-w-[540px] mx-auto">
+          We&apos;re partnering with founder-led coaching institutes to shape CoachingOS around the daily realities of running your institute.
+        </p>
 
-          {/* Action CTAs */}
-          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link href="/sign-up" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto gap-2 px-8 font-semibold shadow-md">
-                Get Started
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Link href="/sign-in" className="w-full sm:w-auto">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto px-8 font-semibold">
-                Sign In
-              </Button>
-            </Link>
-          </div>
+        {/* CTA Button & Trust Note */}
+        <div className="flex flex-col items-center gap-4">
+          <Link href="/sign-up" className="w-full sm:w-auto">
+            <button className="group w-full sm:w-auto h-13 rounded-lg bg-soft-brand text-ink px-9 text-[16px] font-bold hover:bg-[#d0e5e3] shadow-[0_4px_24px_rgba(189,217,215,0.18)] hover:shadow-[0_6px_30px_rgba(189,217,215,0.28)] transition-all duration-200 flex items-center justify-center gap-2">
+              <span>Request beta access</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </button>
+          </Link>
 
-          {/* Trust Micro-copy */}
-          <p className="mt-6 text-xs text-[hsl(var(--muted-foreground))]">
-            Multi-tenant isolation &bull; Role-based security &bull; Zero credit card required
-          </p>
+          <span className="font-mono text-[12px] text-surface/50 tracking-tight pt-1">
+            Zero setup fees · Direct founder onboarding &amp; data migration support
+          </span>
         </div>
       </Container>
     </Section>

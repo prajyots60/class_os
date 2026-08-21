@@ -1,89 +1,121 @@
 import * as React from 'react';
 import Link from 'next/link';
-import { Badge } from '@coaching-os/ui';
-import { CoachingOSLogo } from '../brand/logo';
-import { Container, Section } from '../layout/container';
+import { Container } from '../layout/container';
 
 export function MarketingFooter() {
-  const currentYear = new Date().getFullYear();
-
   return (
-    <footer className="border-t border-[hsl(var(--border))] bg-[hsl(var(--background))] text-[hsl(var(--foreground))]">
-      <Section padding="lg">
-        <Container size="lg">
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
-            {/* Brand Column */}
-            <div className="space-y-4 md:col-span-2">
-              <CoachingOSLogo size="md" showText={true} />
-              <p className="max-w-sm text-sm text-[hsl(var(--muted-foreground))]">
-                The operating system for founder-led coaching institutes. Streamline academics, students, attendance, staff, and fee billing in one unified platform.
-              </p>
-              <div className="flex items-center gap-2 pt-2">
-                <Badge variant="success" className="gap-1.5 py-1">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
-                  </span>
-                  System Operational
-                </Badge>
-              </div>
+    <footer className="bg-ink pt-16 pb-12 text-surface/60 font-ui text-[14px] border-t border-surface/10">
+      <Container size="lg" className="max-w-[1200px]">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-12 mb-16">
+          
+          {/* Brand Column (4 cols) */}
+          <div className="md:col-span-4 lg:col-span-5 flex flex-col items-start pr-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="font-mono font-bold text-[11px] bg-surface/15 text-surface px-1.5 py-0.5 rounded tracking-tight">
+                c/0
+              </span>
+              <span className="font-bold text-[18px] text-surface tracking-tight">
+                CoachingOS
+              </span>
             </div>
-
-            {/* Product Column */}
-            <div className="space-y-3">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-[hsl(var(--foreground))]">
-                Product
-              </h4>
-              <ul className="space-y-2 text-sm text-[hsl(var(--muted-foreground))]">
-                <li>
-                  <Link href="/#features" className="transition-colors hover:text-[hsl(var(--foreground))]">
-                    Features
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/#workflow" className="transition-colors hover:text-[hsl(var(--foreground))]">
-                    Workflow
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/#roles" className="transition-colors hover:text-[hsl(var(--foreground))]">
-                    Roles & Value
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/#security" className="transition-colors hover:text-[hsl(var(--foreground))]">
-                    Security & Trust
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Account Column */}
-            <div className="space-y-3">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-[hsl(var(--foreground))]">
-                Account
-              </h4>
-              <ul className="space-y-2 text-sm text-[hsl(var(--muted-foreground))]">
-                <li>
-                  <Link href="/sign-in" className="transition-colors hover:text-[hsl(var(--foreground))]">
-                    Sign In
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/sign-up" className="transition-colors hover:text-[hsl(var(--foreground))]">
-                    Get Started
-                  </Link>
-                </li>
-              </ul>
-            </div>
+            <p className="text-[14px] text-surface/60 leading-[1.6] max-w-[320px] mb-4">
+              The operating system for founder-led coaching institutes.
+            </p>
+            <span className="font-mono text-[11px] text-surface/40 uppercase tracking-wider">
+              Calm • Disciplined • Connected
+            </span>
           </div>
 
-          <div className="mt-12 flex flex-col items-center justify-between border-t border-[hsl(var(--border))] pt-8 text-xs text-[hsl(var(--muted-foreground))] sm:flex-row">
-            <p>© {currentYear} CoachingOS. All rights reserved.</p>
-            <p className="mt-2 sm:mt-0">Built for coaching institutes.</p>
+          {/* Product Links (2-3 cols) */}
+          <div className="md:col-span-2 lg:col-span-2">
+            <h3 className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-surface/40 mb-4">
+              Product
+            </h3>
+            <ul className="space-y-3 text-[14px]">
+              <li>
+                <Link href="/#how-it-works" className="text-surface/75 hover:text-surface transition-colors">
+                  Operating Rhythm
+                </Link>
+              </li>
+              <li>
+                <Link href="/#workflows" className="text-surface/75 hover:text-surface transition-colors">
+                  One System
+                </Link>
+              </li>
+              <li>
+                <Link href="/#pillars" className="text-surface/75 hover:text-surface transition-colors">
+                  Capabilities
+                </Link>
+              </li>
+              <li>
+                <Link href="/#for-families" className="text-surface/75 hover:text-surface transition-colors">
+                  Family Experience
+                </Link>
+              </li>
+            </ul>
           </div>
-        </Container>
-      </Section>
+
+          {/* Account Links (2-3 cols) */}
+          <div className="md:col-span-3 lg:col-span-2">
+            <h3 className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-surface/40 mb-4">
+              Access
+            </h3>
+            <ul className="space-y-3 text-[14px]">
+              <li>
+                <Link href="/sign-in" className="text-surface/75 hover:text-surface transition-colors">
+                  Staff &amp; Parent Sign In
+                </Link>
+              </li>
+              <li>
+                <Link href="/sign-up" className="text-surface/75 hover:text-surface transition-colors">
+                  Request Beta Onboarding
+                </Link>
+              </li>
+              <li>
+                <Link href="/#faq" className="text-surface/75 hover:text-surface transition-colors">
+                  Frequently Asked Questions
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Legal Links (2-3 cols) */}
+          <div className="md:col-span-3 lg:col-span-3">
+            <h3 className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-surface/40 mb-4">
+              Trust &amp; Privacy
+            </h3>
+            <ul className="space-y-3 text-[14px]">
+              <li>
+                <Link href="/privacy" className="text-surface/75 hover:text-surface transition-colors">
+                  Institutional Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="text-surface/75 hover:text-surface transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <span className="text-[12px] font-mono text-surface/40 block pt-1">
+                  Tenant Isolation Verified
+                </span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-surface/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] font-mono text-surface/40">
+          <div>
+            &copy; {new Date().getFullYear()} CoachingOS. All rights reserved.
+          </div>
+          <div className="flex items-center gap-2 text-surface/50">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#237A5B]" />
+            <span>Private Beta Release</span>
+          </div>
+        </div>
+      </Container>
     </footer>
   );
 }

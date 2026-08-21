@@ -2,75 +2,57 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222.2 47.4% 11.2%;
+    --co-canvas: #F8F7F3;
+    --co-surface: #FFFFFF;
+    --co-ink: #102426;
+    --co-primary: #03363D;
+    --co-primary-hover: #022C32;
+    --co-soft-brand: #BDD9D7;
+    --co-soft-brand-dark: #9FC5C2;
+    --co-border: #D9E0DE;
+    --co-text-secondary: #526264;
+    --co-success: #237A5B;
+    --co-warning: #8A6200;
+    --co-error: #B74738;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 47.4% 11.2%;
+    --font-display: var(--font-dm-serif-display), Georgia, serif;
+    --font-ui: var(--font-manrope), Arial, sans-serif;
+    --font-mono: var(--font-ibm-plex-mono), monospace;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 47.4% 11.2%;
-
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 214.3 31.8% 91.4%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --accent: 199 89% 48%;
-    --accent-foreground: 210 40% 98%;
-
-    --muted: 210 40% 93.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 88%;
-    --input: 214.3 31.8% 88%;
-    --ring: 221.2 83.2% 53.3%;
-
-    --radius-sm: 0.25rem;
-    --radius-md: 0.5rem;
-    --radius-lg: 0.75rem;
-    --radius-card: 0.75rem;
-
-    --font-heading: var(--font-poppins), sans-serif;
-    --font-sans: var(--font-inter), sans-serif;
+    --radius-control: 0.25rem;
+    --radius-container: 0.5rem;
+    --shadow-quiet: 0 8px 24px rgba(16, 36, 38, 0.08);
   }
 }
 
 @theme inline {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
+  --color-canvas: var(--co-canvas);
+  --color-surface: var(--co-surface);
+  --color-ink: var(--co-ink);
+  --color-primary: var(--co-primary);
+  --color-primary-hover: var(--co-primary-hover);
+  --color-soft-brand: var(--co-soft-brand);
+  --color-soft-brand-dark: var(--co-soft-brand-dark);
+  --color-border: var(--co-border);
+  --color-text-secondary: var(--co-text-secondary);
+  --color-success: var(--co-success);
+  --color-warning: var(--co-warning);
+  --color-error: var(--co-error);
 
-  --radius-sm: var(--radius-sm);
-  --radius-md: var(--radius-md);
-  --radius-lg: var(--radius-lg);
-  --radius-card: var(--radius-card);
+  --font-display: var(--font-display);
+  --font-ui: var(--font-ui);
+  --font-mono: var(--font-mono);
+
+  --radius-control: var(--radius-control);
+  --radius-container: var(--radius-container);
+  
+  --shadow-quiet: var(--shadow-quiet);
 }
 
 body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  font-family: var(--font-sans);
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-ui);
 }
 
 h1,
@@ -79,5 +61,22 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-heading);
+  font-family: var(--font-display);
 }
+
+/* Smooth scroll for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--color-soft-brand);
+  color: var(--color-ink);
+}
+
+.co-primary-button { background: var(--color-primary); color: var(--color-canvas); }
+.co-primary-button:hover { background: var(--color-primary-hover); }
+.co-primary-button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+.co-soft-section { background: var(--color-soft-brand); color: var(--color-ink); }
+.co-dark-section { background: var(--color-primary); color: var(--color-canvas); }

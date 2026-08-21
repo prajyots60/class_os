@@ -1,35 +1,31 @@
 import type { Metadata } from 'next';
-import { Inter, Manrope, Poppins, Nunito } from 'next/font/google';
+import { DM_Serif_Display, Manrope, IBM_Plex_Mono } from 'next/font/google';
 import { Providers } from '../providers';
 import './globals.css';
 
-const inter = Inter({
+const dmSerifDisplay = DM_Serif_Display({
+  weight: '400',
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-dm-serif-display',
   display: 'swap',
 });
 
 const manrope = Manrope({
+  weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
   variable: '--font-manrope',
   display: 'swap',
 });
 
-const poppins = Poppins({
-  weight: ['400', '500', '600', '700'],
+const ibmPlexMono = IBM_Plex_Mono({
+  weight: '500',
   subsets: ['latin'],
-  variable: '--font-poppins',
-  display: 'swap',
-});
-
-const nunito = Nunito({
-  subsets: ['latin'],
-  variable: '--font-nunito',
+  variable: '--font-ibm-plex-mono',
   display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: 'CoachingOS — Engineering Foundation',
+  title: 'CoachingOS — Your Institute. Your Brand. One Platform.',
   description: 'Operating system for founder-led coaching institutes',
 };
 
@@ -41,9 +37,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${manrope.variable} ${poppins.variable} ${nunito.variable}`}
+      className={`${dmSerifDisplay.variable} ${manrope.variable} ${ibmPlexMono.variable}`}
     >
-      <body className="min-h-screen bg-[hsl(var(--background))] text-[hsl(var(--foreground))] antialiased">
+      <body className="min-h-screen bg-canvas text-ink antialiased">
         <Providers>{children}</Providers>
       </body>
     </html>

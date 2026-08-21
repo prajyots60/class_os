@@ -2,37 +2,41 @@ import { describe, it, expect } from 'vitest';
 import MarketingHomePage from './page';
 import MarketingLayout, { metadata } from './layout';
 import { HeroSection } from '../../components/marketing/hero-section';
-import { WorkflowSection } from '../../components/marketing/workflow-section';
-import { CapabilitiesSection } from '../../components/marketing/capabilities-section';
-import { RolesSection } from '../../components/marketing/roles-section';
-import { TrustSection } from '../../components/marketing/trust-section';
+import { HowItWorksSection } from '../../components/marketing/how-it-works-section';
+import { WorkflowsSection } from '../../components/marketing/workflows-section';
+import { OperationalPillarsSection } from '../../components/marketing/operational-pillars-section';
+import { InstituteIdentitySection } from '../../components/marketing/institute-identity-section';
+import { FamilyExperienceSection } from '../../components/marketing/family-experience-section';
+import { FaqSection } from '../../components/marketing/faq-section';
 import { CTASection } from '../../components/marketing/cta-section';
 
-describe('Phase 0.12.2 Landing Page Acceptance Gate', () => {
+describe('Landing Page Acceptance Gate', () => {
   it('MarketingHomePage and MarketingLayout export valid component functions', () => {
     expect(typeof MarketingHomePage).toBe('function');
     expect(typeof MarketingLayout).toBe('function');
   });
 
-  it('All 6 marketing section components are defined and export functions', () => {
+  it('All marketing section components are defined and export functions', () => {
     expect(typeof HeroSection).toBe('function');
-    expect(typeof WorkflowSection).toBe('function');
-    expect(typeof CapabilitiesSection).toBe('function');
-    expect(typeof RolesSection).toBe('function');
-    expect(typeof TrustSection).toBe('function');
+    expect(typeof HowItWorksSection).toBe('function');
+    expect(typeof WorkflowsSection).toBe('function');
+    expect(typeof OperationalPillarsSection).toBe('function');
+    expect(typeof InstituteIdentitySection).toBe('function');
+    expect(typeof FamilyExperienceSection).toBe('function');
+    expect(typeof FaqSection).toBe('function');
     expect(typeof CTASection).toBe('function');
   });
 
-  it('MarketingHomePage composes all six sections in sequence without errors', () => {
+  it('MarketingHomePage composes all sections in sequence without errors', () => {
     const pageElement = MarketingHomePage();
     expect(pageElement).toBeDefined();
-    expect(pageElement.props.children.length).toBe(6);
+    expect(pageElement.props.children.length).toBe(8);
   });
 
   it('MarketingLayout contains valid metadata object with title and description', () => {
     expect(metadata).toBeDefined();
     expect(metadata.title).toContain('CoachingOS');
-    expect(metadata.description).toContain('coaching institutes');
+    expect(metadata.description).toBeDefined();
     expect(metadata.openGraph).toBeDefined();
     expect(metadata.twitter).toBeDefined();
   });

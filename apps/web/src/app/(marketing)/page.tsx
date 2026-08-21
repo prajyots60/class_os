@@ -1,19 +1,23 @@
 import * as React from 'react';
 import { HeroSection } from '../../components/marketing/hero-section';
-import { WorkflowSection } from '../../components/marketing/workflow-section';
-import { CapabilitiesSection } from '../../components/marketing/capabilities-section';
-import { RolesSection } from '../../components/marketing/roles-section';
-import { TrustSection } from '../../components/marketing/trust-section';
+import { HowItWorksSection } from '../../components/marketing/how-it-works-section';
+import { WorkflowsSection } from '../../components/marketing/workflows-section';
+import { OperationalPillarsSection } from '../../components/marketing/operational-pillars-section';
+import { InstituteIdentitySection } from '../../components/marketing/institute-identity-section';
+import { FamilyExperienceSection } from '../../components/marketing/family-experience-section';
+import { FaqSection } from '../../components/marketing/faq-section';
 import { CTASection } from '../../components/marketing/cta-section';
 
 export default function MarketingHomePage() {
   return (
     <>
       <HeroSection />
-      <WorkflowSection />
-      <CapabilitiesSection />
-      <RolesSection />
-      <TrustSection />
+      <HowItWorksSection />
+      <WorkflowsSection />
+      <OperationalPillarsSection />
+      <InstituteIdentitySection />
+      <FamilyExperienceSection />
+      <FaqSection />
       <CTASection />
     </>
   );
