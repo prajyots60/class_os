@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Bell } from 'lucide-react';
 import { Container, Section } from '../layout/container';
 
 export function HeroSection() {
@@ -9,70 +9,110 @@ export function HeroSection() {
     <Section
       padding="none"
       id="hero"
-      // Pulled upward: reduced pt-20 to pt-12, lg:pt-28 to lg:pt-20
-      className="relative bg-canvas pt-12 pb-16 lg:pt-20 lg:pb-24 overflow-hidden"
+      className="relative bg-canvas pt-8 pb-14 sm:pt-12 sm:pb-18 lg:pt-20 lg:pb-28 overflow-hidden w-full"
     >
+      {/* Background Subtle Grid Texture */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-40"
+        style={{
+          backgroundImage: 'linear-gradient(#deded7 1px, transparent 1px), linear-gradient(90deg, #deded7 1px, transparent 1px)',
+          backgroundSize: '48px 48px',
+          maskImage: 'linear-gradient(180deg, black 40%, transparent 95%)',
+        }}
+      />
+
       <Container size="lg" className="relative">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-8 xl:gap-12 w-full">
+        <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-8 xl:gap-14 w-full">
           
           {/* Left Column (Text) */}
-          {/* Ratio: w-[42%] */}
-          <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full lg:w-[42%] z-10 shrink-0">
-            {/* Tighter gap */}
-            <span className="mb-4 font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-text-secondary">
-              Coaching Institute Operating System
-            </span>
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full lg:w-[48%] xl:w-[45%] z-10 shrink-0">
+            {/* Live Eyebrow Pill */}
+            <div className="mb-4 sm:mb-5 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-soft-brand border border-primary/20">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+              </span>
+              <span className="font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.1em] text-primary">
+                A NEW OPERATING RHYTHM
+              </span>
+            </div>
 
-            {/* Smaller headline, 3 lines via max-w */}
-            <h1 className="font-display text-[clamp(2.5rem,4.5vw,4.75rem)] leading-[1.1] text-ink max-w-[420px] lg:max-w-[480px]">
-              Run the institute day from one clear workspace.
+            {/* Dual-Tone Responsive Headline */}
+            <h1 className="font-ui font-extrabold text-[clamp(2.15rem,5.5vw,4.25rem)] leading-[1.04] tracking-tight text-ink max-w-[560px]">
+              Run the institute day. <span className="text-primary block sm:inline lg:block">From one workspace.</span>
             </h1>
 
-            {/* Slightly darker, heavier body copy */}
-            <p className="mt-5 lg:mt-6 text-[16px] lg:text-[18px] font-medium leading-[1.6] text-ink/80 max-w-[480px]">
-              Batches, attendance, fees, staff follow-up, and parent updates stay connected to the same operating rhythm.
+            {/* Body Copy */}
+            <p className="mt-4 sm:mt-5 lg:mt-6 text-[15px] sm:text-[17px] lg:text-[18px] font-medium leading-[1.6] text-text-secondary max-w-[480px]">
+              Batches, attendance, fee ledgers, staff follow-up, and parent updates stay connected to the same operating rhythm.
             </p>
 
-            <div className="mt-8 lg:mt-10 flex flex-col sm:flex-row items-center gap-4 lg:gap-6 w-full sm:w-auto">
+            {/* CTAs */}
+            <div className="mt-6 sm:mt-8 lg:mt-10 flex flex-col sm:flex-row items-center gap-3.5 sm:gap-5 w-full sm:w-auto">
               <Link href="/sign-up" className="w-full sm:w-auto">
                 <button
-                  className="w-full sm:w-auto h-12 rounded bg-primary text-canvas px-8 text-[16px] font-semibold hover:bg-primary-hover transition-colors"
+                  className="w-full sm:w-auto h-12 rounded-lg bg-primary text-white px-8 text-[15px] font-bold hover:bg-primary-hover shadow-[0_3px_0_#3e32b7] active:translate-y-0.5 active:shadow-none transition-all duration-150 flex items-center justify-center"
                 >
                   Request beta access
                 </button>
               </Link>
-              {/* Anchor CTA with short arrow */}
-              <Link href="/#architecture-trust" className="group flex items-center gap-2 text-[16px] font-semibold text-ink hover:text-primary transition-colors">
-                See how it works
+              
+              <Link href="/#how-it-works" className="group flex items-center justify-center gap-2 text-[14px] sm:text-[15px] font-bold text-ink hover:text-primary transition-colors py-2">
+                <span>See how it works</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
             
-            {/* Quieter "Designed for..." line */}
-            <div className="mt-12 lg:mt-14 w-full flex flex-col items-center lg:items-start border-t border-border/50 pt-5">
-               <p className="text-[12px] font-medium text-text-secondary/70 uppercase tracking-widest">
-                 Designed for founder-led coaching institutes.
-               </p>
+            {/* Value Guarantees Strip */}
+            <div className="mt-10 sm:mt-12 lg:mt-14 w-full flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-5 border-t border-border/70 pt-4 sm:pt-5 text-[11px] sm:text-[12px] font-semibold text-text-secondary">
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#19714b] shrink-0" />
+                <span>Zero complex setup</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#19714b] shrink-0" />
+                <span>Built for 50–500 students</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#19714b] shrink-0" />
+                <span>Your institute branding</span>
+              </div>
             </div>
           </div>
 
-          {/* Right Column (Visual) */}
-          {/* Ratio: w-[58%] */}
-          <div className="w-full lg:w-[58%] relative mt-8 lg:mt-0 flex justify-center lg:justify-end">
-             {/* Version A: just image with specific shadow: 0 8px 24px rgba(16,36,38,0.08) */}
-             <div 
-               className="relative w-full max-w-[800px] lg:w-[115%] lg:max-w-none lg:-mr-[15%] xl:-mr-[10%] rounded-xl border border-border/60 overflow-hidden"
-               style={{ boxShadow: '0 8px 24px rgba(16,36,38,0.08)' }}
-             >
-               <Image 
-                 src="/Hero_Desktop.png" 
-                 alt="CoachingOS Owner Dashboard" 
-                 width={1440}
-                 height={900}
-                 className="w-full h-auto object-cover"
-                 priority
-               />
-             </div>
+          {/* Right Column (Product Composite Visual) */}
+          <div className="w-full lg:w-[52%] xl:w-[55%] relative mt-4 lg:mt-0 flex justify-center lg:justify-end">
+            <div 
+              className="relative w-full max-w-[650px] lg:max-w-none rounded-xl border border-border overflow-hidden bg-surface shadow-[0_12px_36px_rgba(20,21,26,0.08)] sm:shadow-[0_24px_48px_rgba(20,21,26,0.12)]"
+            >
+              {/* Top Floating Badge Pill */}
+              <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 flex items-center gap-1.5 sm:gap-2 bg-surface/95 backdrop-blur-sm border border-border px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md shadow-md text-[10px] sm:text-[11px] font-mono font-bold text-ink">
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#19714b]" />
+                <span className="text-[#19714b]">LIVE</span>
+                <span className="text-text-secondary hidden sm:inline">12 of 14 sessions marked</span>
+              </div>
+
+              {/* Main Screenshot Asset */}
+              <Image 
+                src="/Hero_Desktop.png" 
+                alt="CoachingOS Owner Dashboard" 
+                width={1440}
+                height={900}
+                className="w-full h-auto object-cover"
+                priority
+              />
+
+              {/* Bottom Floating Callout Pill */}
+              <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-20 hidden xs:flex sm:flex items-center gap-2 sm:gap-2.5 bg-surface/95 backdrop-blur-sm border border-border px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg shadow-lg text-[11px] sm:text-[12px] font-ui">
+                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-soft-brand flex items-center justify-center text-primary shrink-0">
+                  <Bell className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                </div>
+                <div>
+                  <span className="font-bold text-ink block text-[10px] sm:text-[11px] leading-tight">Parent Update Sent</span>
+                  <span className="text-[9px] sm:text-[10px] text-text-secondary font-mono">18 reminders delivered</span>
+                </div>
+              </div>
+            </div>
           </div>
 
         </div>

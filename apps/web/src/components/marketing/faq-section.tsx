@@ -79,36 +79,36 @@ export function FaqSection() {
     <Section
       padding="none"
       id="faq"
-      className="bg-canvas py-20 sm:py-24 lg:py-32 border-t border-border/60"
+      className="bg-canvas py-16 sm:py-20 lg:py-28 border-t border-border/80 w-full overflow-hidden"
     >
       <Container size="lg" className="max-w-[1200px]">
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 xl:gap-20 items-start">
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 xl:gap-20 items-start">
           
           {/* Left Column: Editorial Header & Support Touchpoint */}
           <div className="w-full lg:w-[40%] flex flex-col items-start lg:sticky lg:top-28">
-            <span className="block mb-3 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-text-secondary">
+            <span className="block mb-2.5 font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.12em] text-primary">
               FREQUENTLY ASKED QUESTIONS
             </span>
-            <h2 className="font-display text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] lg:text-[3.5rem] leading-[1.1] text-ink mb-6">
-              Clear answers before you begin.
+            <h2 className="font-ui font-extrabold text-[clamp(2.15rem,4.5vw,3.75rem)] leading-[1.05] tracking-tight text-ink mb-4 sm:mb-6">
+              Clear answers. <span className="text-primary block sm:inline lg:block">Before you begin.</span>
             </h2>
-            <p className="font-ui text-[16px] sm:text-[17px] text-text-secondary leading-[1.6] mb-8 max-w-[460px]">
+            <p className="font-ui text-[15px] sm:text-[17px] text-text-secondary leading-[1.6] mb-6 sm:mb-8 max-w-[460px]">
               Everything you need to know about our operating system, onboarding workflow, and parent experience.
             </p>
 
             {/* Direct Founder Contact Box */}
-            <div className="w-full p-5 sm:p-6 rounded-xl bg-surface border border-border/80 shadow-[0_4px_20px_rgba(16,36,38,0.03)] space-y-3">
-              <div className="flex items-center gap-2.5 text-primary">
-                <MessageSquareCheck className="w-5 h-5" />
-                <span className="font-bold text-[14px] text-ink">Have a specific question?</span>
+            <div className="w-full p-4 sm:p-6 rounded-xl bg-surface border border-border/80 shadow-[0_4px_20px_rgba(16,36,38,0.03)] space-y-2.5 sm:space-y-3">
+              <div className="flex items-center gap-2 text-primary">
+                <MessageSquareCheck className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="font-bold text-[13px] sm:text-[14px] text-ink">Have a specific question?</span>
               </div>
-              <p className="text-[13px] text-text-secondary leading-[1.5]">
+              <p className="text-[12px] sm:text-[13px] text-text-secondary leading-[1.5]">
                 We work directly with founders to ensure CoachingOS fits the unique rhythms of your institute.
               </p>
               <div className="pt-1">
                 <Link
                   href="/sign-up"
-                  className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-primary hover:text-primary-hover transition-colors group"
+                  className="inline-flex items-center gap-1.5 text-[12px] sm:text-[13px] font-semibold text-primary hover:text-primary-hover transition-colors group"
                 >
                   <span>Request beta consultation</span>
                   <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
@@ -118,7 +118,7 @@ export function FaqSection() {
           </div>
 
           {/* Right Column: High-Craft Editorial Accordion */}
-          <div className="w-full lg:w-[60%]">
+          <div className="w-full lg:w-[60%] mt-4 lg:mt-0">
             <div className="border-t border-border/80 divide-y divide-border/80">
               {FAQS.map((faq, index) => {
                 const isOpen = openIndex === index;
@@ -131,31 +131,31 @@ export function FaqSection() {
                   >
                     <button
                       onClick={() => toggle(index)}
-                      className="w-full py-5 sm:py-6 px-3 sm:px-4 flex items-start justify-between text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg transition-colors gap-4"
+                      className="w-full py-4 sm:py-5 px-2 sm:px-4 flex items-start justify-between text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg transition-colors gap-3 sm:gap-4"
                       aria-expanded={isOpen}
                     >
-                      <div className="flex items-start gap-3 sm:gap-4">
-                        <span className="font-mono text-[12px] font-bold text-primary shrink-0 mt-0.5">
+                      <div className="flex items-start gap-2.5 sm:gap-4 pr-2">
+                        <span className="font-mono text-[11px] sm:text-[12px] font-bold text-primary shrink-0 mt-0.5">
                           0{index + 1}
                         </span>
-                        <span className="font-ui font-bold text-[16px] sm:text-[17px] text-ink leading-snug">
+                        <span className="font-ui font-bold text-[15px] sm:text-[17px] text-ink leading-snug">
                           {faq.question}
                         </span>
                       </div>
                       <div
-                        className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 border transition-all duration-200 ${
+                        className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center shrink-0 border transition-all duration-200 ${
                           isOpen
                             ? 'bg-primary text-canvas border-primary rotate-180'
                             : 'bg-surface border-border text-text-secondary hover:border-text-secondary'
                         }`}
                       >
-                        <ChevronDown className="w-4 h-4" />
+                        <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </div>
                     </button>
 
                     {isOpen && (
-                      <div className="px-3 sm:px-4 pb-6 pt-1 ml-7 sm:ml-8 pr-6 sm:pr-8">
-                        <p className="font-ui text-[14px] sm:text-[15px] text-text-secondary leading-[1.65]">
+                      <div className="px-2 sm:px-4 pb-5 pt-1 ml-5 sm:ml-8 pr-4 sm:pr-8">
+                        <p className="font-ui text-[13px] sm:text-[15px] text-text-secondary leading-[1.65]">
                           {faq.answer}
                         </p>
                       </div>

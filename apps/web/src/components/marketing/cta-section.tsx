@@ -1,49 +1,104 @@
 import * as React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Check, Sparkles } from 'lucide-react';
 import { Container, Section } from '../layout/container';
 
 export function CTASection() {
   return (
     <Section
       padding="none"
-      id="beta-cta"
-      className="relative bg-ink py-24 sm:py-32 lg:py-36 overflow-hidden border-t border-border/40"
+      id="beta-intake"
+      className="bg-night py-16 sm:py-24 lg:py-32 border-t border-border/20 text-white w-full overflow-hidden"
     >
-      {/* Subtle Ambient Radial Highlight */}
-      <div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[800px] h-[400px] sm:h-[500px] bg-primary/25 rounded-full blur-[120px] pointer-events-none" 
-      />
+      <Container size="lg" className="max-w-[1200px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-16 items-center">
+          
+          {/* Left Column (Copy & Founder Positioning) */}
+          <div className="lg:col-span-6 flex flex-col items-start">
+            <span className="mb-3 sm:mb-4 font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.12em] text-[#a7a0ff] block">
+              EARLY INSTITUTE BETA
+            </span>
 
-      <Container size="lg" className="relative max-w-[720px] text-center z-10">
-        {/* Eyebrow */}
-        <span className="inline-flex items-center gap-2 mb-4 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-soft-brand bg-soft-brand/10 border border-soft-brand/20 px-3 py-1 rounded-full">
-          <Sparkles className="w-3 h-3" />
-          PRIVATE BETA PROGRAM
-        </span>
+            <h2 className="font-ui font-extrabold text-[clamp(2.15rem,4.5vw,4rem)] leading-[1.05] tracking-tight text-white mb-4 sm:mb-6">
+              Build the better way to run your institute <span className="text-[#a7a0ff] block sm:inline lg:block">with us.</span>
+            </h2>
 
-        {/* Headline */}
-        <h2 className="font-display text-[2.5rem] sm:text-[3.25rem] md:text-[3.75rem] lg:text-[4.25rem] leading-[1.1] text-surface mb-6">
-          Give your institute one clear operating rhythm.
-        </h2>
+            <p className="font-ui text-[15px] sm:text-[17px] lg:text-[18px] text-[#babac5] leading-[1.65] mb-6 sm:mb-8 max-w-[500px]">
+              We are onboarding a select group of founder-led coaching institutes for the initial CoachingOS beta. In return for honest operational feedback, selected institutes receive focused engineering onboarding and full beta access at zero charge.
+            </p>
 
-        {/* Subtitle */}
-        <p className="font-ui text-[17px] sm:text-[19px] text-surface/75 leading-[1.6] mb-10 max-w-[540px] mx-auto">
-          We&apos;re partnering with founder-led coaching institutes to shape CoachingOS around the daily realities of running your institute.
-        </p>
+            {/* Value Trust Pills */}
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-[#202027] border border-[#393943] text-[11px] sm:text-[12px] font-semibold text-[#c4c4cd]">
+                <Check className="w-3.5 h-3.5 text-[#9e98f7] shrink-0" />
+                <span>No credit card</span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-[#202027] border border-[#393943] text-[11px] sm:text-[12px] font-semibold text-[#c4c4cd]">
+                <Check className="w-3.5 h-3.5 text-[#9e98f7] shrink-0" />
+                <span>Direct founder onboarding</span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-[#202027] border border-[#393943] text-[11px] sm:text-[12px] font-semibold text-[#c4c4cd]">
+                <Check className="w-3.5 h-3.5 text-[#9e98f7] shrink-0" />
+                <span>50–500 students</span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-[#202027] border border-[#393943] text-[11px] sm:text-[12px] font-semibold text-[#c4c4cd]">
+                <Check className="w-3.5 h-3.5 text-[#9e98f7] shrink-0" />
+                <span>Spreadsheet migration</span>
+              </div>
+            </div>
+          </div>
 
-        {/* CTA Button & Trust Note */}
-        <div className="flex flex-col items-center gap-4">
-          <Link href="/sign-up" className="w-full sm:w-auto">
-            <button className="group w-full sm:w-auto h-13 rounded-lg bg-soft-brand text-ink px-9 text-[16px] font-bold hover:bg-[#d0e5e3] shadow-[0_4px_24px_rgba(189,217,215,0.18)] hover:shadow-[0_6px_30px_rgba(189,217,215,0.28)] transition-all duration-200 flex items-center justify-center gap-2">
-              <span>Request beta access</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </button>
-          </Link>
+          {/* Right Column: Floating Qualification Beta Card */}
+          <div className="lg:col-span-6 w-full mt-4 lg:mt-0">
+            <div className="bg-surface text-ink border border-[#4c4b57] rounded-2xl shadow-2xl overflow-hidden w-full">
+              {/* Top Card Bar */}
+              <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-3.5 bg-[#fbfbfa] border-b border-border text-[10px] sm:text-[11px] font-mono text-text-secondary">
+                <span className="font-bold tracking-wider">COACHINGOS / BETA 01</span>
+                <span className="inline-flex items-center gap-1.5 font-bold text-primary">
+                  <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                  Limited Intake
+                </span>
+              </div>
 
-          <span className="font-mono text-[12px] text-surface/50 tracking-tight pt-1">
-            Zero setup fees · Direct founder onboarding &amp; data migration support
-          </span>
+              {/* Card Body */}
+              <div className="p-5 sm:p-8 lg:p-10">
+                <h3 className="font-ui font-extrabold text-[20px] sm:text-[24px] lg:text-[26px] text-ink leading-tight mb-4 sm:mb-6">
+                  Does this sound like your institute?
+                </h3>
+
+                <ul className="space-y-3 sm:space-y-4 mb-6 sm:mb-8 text-[13px] sm:text-[14px] text-text-secondary">
+                  <li className="flex items-start gap-2.5 sm:gap-3">
+                    <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                    <span>You manage batches, teachers, parents, and fees daily</span>
+                  </li>
+                  <li className="flex items-start gap-2.5 sm:gap-3">
+                    <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                    <span>WhatsApp groups and spreadsheets have become the operating system</span>
+                  </li>
+                  <li className="flex items-start gap-2.5 sm:gap-3">
+                    <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                    <span>You want clean, practical software — not an enterprise ERP</span>
+                  </li>
+                  <li className="flex items-start gap-2.5 sm:gap-3">
+                    <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                    <span>You want your institute’s brand and logo to lead the experience</span>
+                  </li>
+                </ul>
+
+                <Link href="/sign-up" className="block w-full">
+                  <button className="w-full h-12 sm:h-13 rounded-xl bg-primary text-white font-bold text-[15px] sm:text-[16px] hover:bg-primary-hover shadow-[0_3px_0_#3e32b7] active:translate-y-0.5 active:shadow-none transition-all flex items-center justify-center gap-2">
+                    <span>Request beta access</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </Link>
+
+                <p className="text-[11px] sm:text-[12px] text-center text-text-secondary/70 mt-3.5 sm:mt-4 font-ui">
+                  We will speak with you personally before confirming a beta slot.
+                </p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </Container>
     </Section>

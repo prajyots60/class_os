@@ -5,6 +5,7 @@ import { HeroSection } from '../../components/marketing/hero-section';
 import { HowItWorksSection } from '../../components/marketing/how-it-works-section';
 import { WorkflowsSection } from '../../components/marketing/workflows-section';
 import { OperationalPillarsSection } from '../../components/marketing/operational-pillars-section';
+import { ManifestoBanner } from '../../components/marketing/manifesto-banner';
 import { InstituteIdentitySection } from '../../components/marketing/institute-identity-section';
 import { FamilyExperienceSection } from '../../components/marketing/family-experience-section';
 import { FaqSection } from '../../components/marketing/faq-section';
@@ -21,6 +22,7 @@ describe('Landing Page Acceptance Gate', () => {
     expect(typeof HowItWorksSection).toBe('function');
     expect(typeof WorkflowsSection).toBe('function');
     expect(typeof OperationalPillarsSection).toBe('function');
+    expect(typeof ManifestoBanner).toBe('function');
     expect(typeof InstituteIdentitySection).toBe('function');
     expect(typeof FamilyExperienceSection).toBe('function');
     expect(typeof FaqSection).toBe('function');
@@ -30,7 +32,7 @@ describe('Landing Page Acceptance Gate', () => {
   it('MarketingHomePage composes all sections in sequence without errors', () => {
     const pageElement = MarketingHomePage();
     expect(pageElement).toBeDefined();
-    expect(pageElement.props.children.length).toBe(8);
+    expect(pageElement.props.children.length).toBe(9);
   });
 
   it('MarketingLayout contains valid metadata object with title and description', () => {

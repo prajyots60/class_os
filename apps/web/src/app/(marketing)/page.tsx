@@ -3,6 +3,7 @@ import { HeroSection } from '../../components/marketing/hero-section';
 import { HowItWorksSection } from '../../components/marketing/how-it-works-section';
 import { WorkflowsSection } from '../../components/marketing/workflows-section';
 import { OperationalPillarsSection } from '../../components/marketing/operational-pillars-section';
+import { ManifestoBanner } from '../../components/marketing/manifesto-banner';
 import { InstituteIdentitySection } from '../../components/marketing/institute-identity-section';
 import { FamilyExperienceSection } from '../../components/marketing/family-experience-section';
 import { FaqSection } from '../../components/marketing/faq-section';
@@ -15,6 +16,7 @@ export default function MarketingHomePage() {
       <HowItWorksSection />
       <WorkflowsSection />
       <OperationalPillarsSection />
+      <ManifestoBanner />
       <InstituteIdentitySection />
       <FamilyExperienceSection />
       <FaqSection />

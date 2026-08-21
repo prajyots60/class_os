@@ -39,7 +39,7 @@ export function MobileNav({ navLinks }: MobileNavProps) {
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
-        className="text-brand-ink hover:bg-surface-subtle"
+        className="text-ink hover:bg-muted"
       >
         {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </Button>
@@ -48,35 +48,35 @@ export function MobileNav({ navLinks }: MobileNavProps) {
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 z-40 bg-brand-ink/50 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-ink/50 backdrop-blur-sm"
             onClick={() => setIsOpen(false)}
           />
           {/* Menu */}
-          <div className="fixed inset-x-0 top-16 z-50 border-b border-border bg-surface p-6 shadow-xl">
+          <div className="fixed inset-x-0 top-18 z-50 border-b border-border bg-surface p-6 shadow-xl">
             <nav className="flex flex-col space-y-4">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="text-base font-medium text-brand-ink transition-colors hover:text-brand-blue"
+                  className="text-base font-semibold text-ink transition-colors hover:text-primary"
                 >
                   {link.label}
                 </Link>
               ))}
               <hr className="border-border" />
-              <div className="flex flex-col space-y-2 pt-2">
+              <div className="flex flex-col space-y-2.5 pt-2">
                 <Link href="/sign-in" onClick={() => setIsOpen(false)}>
                   <Button
                     variant="outline"
-                    className="w-full border-border bg-transparent text-brand-ink hover:bg-surface-subtle"
+                    className="w-full border-border bg-transparent text-ink hover:bg-muted font-bold"
                   >
-                    Sign In
+                    Staff Sign In
                   </Button>
                 </Link>
                 <Link href="/sign-up" onClick={() => setIsOpen(false)}>
-                  <Button className="w-full bg-brand-blue text-white hover:bg-brand-blue-dark">
-                    Get Started
+                  <Button className="w-full bg-primary text-white hover:bg-primary-hover font-bold shadow-[0_3px_0_#3e32b7]">
+                    Request beta access
                   </Button>
                 </Link>
               </div>
