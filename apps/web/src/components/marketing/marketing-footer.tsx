@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Container } from '../layout/container';
 
 export function MarketingFooter() {
@@ -11,9 +12,13 @@ export function MarketingFooter() {
           {/* Brand Column (5 cols) */}
           <div className="md:col-span-5 flex flex-col items-start pr-0 md:pr-4">
             <Link href="/" className="flex items-center gap-2.5 mb-3.5 sm:mb-4 group">
-              <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-white text-[11px] font-bold font-mono">
-                C/O
-              </div>
+              <Image
+                src="/logo.png"
+                alt="CoachingOS Logo"
+                width={28}
+                height={28}
+                className="h-7 w-7 object-contain transition-transform duration-200 group-hover:scale-105"
+              />
               <span className="text-[19px] sm:text-[20px] font-extrabold tracking-tight text-white">
                 Coaching<span className="text-[#a7a0ff]">OS</span>
               </span>

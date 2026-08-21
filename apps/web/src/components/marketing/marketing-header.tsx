@@ -1,8 +1,7 @@
-'use client';
-
 import * as React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowRight } from 'lucide-react';
 import { Container } from '../layout/container';
 import { MobileNav } from './mobile-nav';
 
@@ -17,15 +16,20 @@ const NAV_LINKS = [
 export function MarketingHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-canvas/90 backdrop-blur-md transition-all">
-      <Container size="lg" className="flex h-18 items-center justify-between px-6 lg:px-12">
+      <Container size="lg" className="flex h-18 items-center justify-between px-4 sm:px-6 lg:px-12">
         {/* Brand Logo */}
         <Link
           href="/"
           className="flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md group"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white shadow-sm transition-transform group-hover:scale-105">
-            <span className="text-[12px] font-extrabold font-mono tracking-tighter">C/O</span>
-          </div>
+          <Image
+            src="/logo.png"
+            alt="CoachingOS Logo"
+            width={32}
+            height={32}
+            className="h-8 w-8 object-contain transition-transform duration-200 group-hover:scale-105"
+            priority
+          />
           <span className="text-[20px] font-extrabold font-ui tracking-tight text-ink">
             Coaching<span className="text-primary">OS</span>
           </span>
